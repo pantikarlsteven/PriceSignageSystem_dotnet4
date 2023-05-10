@@ -1,0 +1,75 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+namespace PriceSignageSystem.Models.Dto
+{
+    public class STRPRCDto
+    {
+        public decimal O3LOC { get; set; }
+        [Display(Name = "ITEM NUMBER")]
+        public decimal O3SKU { get; set; }
+        [Display(Name = "STATUS CODE")]
+        public string O3SCCD { get; set; }
+        [Display(Name = "ITEM DESC")]
+        public string O3IDSC { get; set; }
+        [Display(Name = "UPC CODE")]
+        public decimal O3UPC { get; set; }
+        public decimal O3VNUM { get; set; }
+        public string O3TYPE { get; set; }
+        [Display(Name = "DEPARTMENT")]
+        public decimal O3DEPT { get; set; }
+        [Display(Name = "SUB-DEPARTMENT")]
+        public decimal O3SDPT { get; set; }
+        [Display(Name = "CLASS")]
+        public decimal O3CLAS { get; set; }
+        [Display(Name = "SUB-CLASS")]
+        public decimal O3SCLS { get; set; }
+        [Display(Name = "CURRENT POS PRICE")]
+        public decimal O3POS { get; set; }
+        public decimal O3POSU { get; set; }
+        public decimal O3REG { get; set; }
+        [Display(Name = "CUR REG UNIT PRICE")]
+        public decimal O3REGU { get; set; }
+        [Display(Name = "ORIGINAL PRICE")]
+        public decimal O3ORIG { get; set; }
+        public decimal O3ORGU { get; set; }
+        public decimal O3EVT { get; set; }
+        public decimal O3PMMX { get; set; }
+        public decimal O3PMTH { get; set; }
+        public decimal O3PDQT { get; set; }
+        public decimal O3PDPR { get; set; }
+        [Display(Name = "EVENT START DATE")]
+        public decimal O3SDT { get; set; }
+        [Display(Name = "EVENT END DATE")]
+        public decimal O3EDT { get; set; }
+        [Display(Name = "ATTRIBUTE 3")]
+        public string O3TRB3 { get; set; }
+        [Display(Name = "BRAND NAME")]
+        public decimal O3FGR { get; set; }
+        [Display(Name = "MANUF. NAME")]
+        public string O3FNAM { get; set; }
+        [Display(Name = "FROM U/M")]
+        public string O3SLUM { get; set; }
+        [Display(Name = "DIVISOR")]
+        public string O3DIV { get; set; }
+        [Display(Name = "TO UOM")]
+        public string O3TUOM { get; set; }
+        public decimal O3DATE { get; set; }
+        public decimal O3CURD { get; set; }
+        public string O3USER { get; set; }
+        public DateTime DateUpdated { get; set; }
+        [Display(Name = "Size")]
+        public int SelectedSizeId { get; set; } = 1;
+        [Display(Name = "Type")]
+        public int SelectedTypeId { get; set; } = 1;
+        [Display(Name = "Category")]
+        public int SelectedCategoryId { get; set; } = 1;
+        public List<SelectListItem> Sizes { get; set; }
+        public List<SelectListItem> Types { get; set; }
+        public List<SelectListItem> Categories { get; set; }
+    }
+}
