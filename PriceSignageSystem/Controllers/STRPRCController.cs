@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using PriceSignageSystem.Helper;
+﻿using PriceSignageSystem.Helper;
 using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
 using System;
@@ -18,16 +17,15 @@ namespace PriceSignageSystem.Controllers
         private readonly ITypeRepository _typeRepository;
         private readonly ISizeRepository _sizeRepository;
         private readonly ICategoryRepository _categoryRepository;
-        private readonly IMapper _mapper;
 
-        public STRPRCController(ISTRPRCRepository sTRPRCRepository, ITypeRepository typeRepository, ISizeRepository sizeRepository, ICategoryRepository categoryRepository, IMapper mapper)
+        public STRPRCController(ISTRPRCRepository sTRPRCRepository, ITypeRepository typeRepository, ISizeRepository sizeRepository, ICategoryRepository categoryRepository)
         {
             _sTRPRCRepository = sTRPRCRepository;
-            _mapper = mapper;
             _typeRepository = typeRepository;
             _sizeRepository = sizeRepository;
             _categoryRepository = categoryRepository;
         }
+
         public ActionResult Index()
         {
             return View();
@@ -35,29 +33,36 @@ namespace PriceSignageSystem.Controllers
 
         public ActionResult Search(string query)
         {
-            var data = _sTRPRCRepository.Fetch(query);
-            var dto = _mapper.Map<STRPRCDto>(data);
-
-            dto.Sizes = _sizeRepository.GetAllSizes().Select(a => new SelectListItem
+            try
             {
-                Value = a.Id.ToString(),
-                Text = a.Name
-            }).ToList();
+                var dto = _sTRPRCRepository.SearchString(query);
 
-            dto.Types = _typeRepository.GetAllTypes().Select(a => new SelectListItem
+                dto.Sizes = _sizeRepository.GetAllSizes().Select(a => new SelectListItem
+                {
+                    Value = a.Id.ToString(),
+                    Text = a.Name
+                }).ToList();
+
+                dto.Types = _typeRepository.GetAllTypes().Select(a => new SelectListItem
+                {
+                    Value = a.Id.ToString(),
+                    Text = a.Name
+                }).ToList();
+
+                dto.Categories = _categoryRepository.GetAllCategories().Select(a => new SelectListItem
+                {
+                    Value = a.Id.ToString(),
+                    Text = a.Name
+                }).ToList();
+
+                return PartialView("~/Views/STRPRC/_SearchResultPartialView.cshtml", dto);
+
+            }
+            catch (Exception ex)
             {
-                Value = a.Id.ToString(),
-                Text = a.Name
-            }).ToList();
+                return Content(ex.Message);
+            }
 
-            dto.Categories = _categoryRepository.GetAllCategories().Select(a => new SelectListItem
-            {
-                Value = a.Id.ToString(),
-                Text = a.Name
-            }).ToList();
-
-
-            return PartialView("~/Views/STRPRC/_SearchResultPartialView.cshtml", dto);
         }
 
         public ActionResult ListByDate()
@@ -78,7 +83,7 @@ namespace PriceSignageSystem.Controllers
         [HttpPost]
         public ActionResult LoadData()
         {
-            var rawData = _sTRPRCRepository.GetAll();
+            var rawData = _sTRPRCRepository.GetAll().AsQueryable();
             var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
             var start = Convert.ToInt32(HttpContext.Request.Form["start"].FirstOrDefault());
             var length = Convert.ToInt32(HttpContext.Request.Form["length"].FirstOrDefault());
@@ -93,11 +98,16 @@ namespace PriceSignageSystem.Controllers
                 rawData = rawData.OrderBy(orderBy + " " + orderDir);
             }
 
+            if (string.IsNullOrEmpty(searchValue))
+            {
+                searchValue = "230101";
+            }
             //Search
             if (!string.IsNullOrEmpty(searchValue))
             {
                 rawData = rawData.Where(c => c.O3SDT >= Convert.ToDecimal(searchValue));
             }
+            
 
             //if shows all data
             if (length == -1)

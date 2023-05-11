@@ -9,6 +9,7 @@ namespace PriceSignageSystem.Models.Interface
     public interface IUserRepository
     {
         IQueryable<User> GetAll();
+        List<User> GetUsers();
 
     }
 }

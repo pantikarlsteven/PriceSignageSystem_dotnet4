@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.ComponentModel.DataAnnotations;
 
 namespace PriceSignageSystem.Models
 {
     public class STRPRC
     {
+        [Key]
+        public int Id { get; set; }
         public decimal O3LOC { get; set; }
         public decimal O3SKU { get; set; }
         public string O3SCCD { get; set; }

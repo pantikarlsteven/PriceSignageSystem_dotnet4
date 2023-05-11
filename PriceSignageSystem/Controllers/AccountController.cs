@@ -28,11 +28,11 @@ namespace PriceSignageSystem.Controllers
         
         public ActionResult Login()
         {
-            var storelist = _sTRPRCRepository.GetAll().Select(a => new SelectListItem
+            var storelist = _sTRPRCRepository.GetStores().Select(a => new SelectListItem
             {
                 Value = a.O3LOC.ToString(),
                 Text = a.O3LOC.ToString()
-            }).Distinct().ToList();
+            }).ToList();
 
             var model = new UserStoreDto
             {
@@ -47,7 +47,7 @@ namespace PriceSignageSystem.Controllers
             if (ModelState.IsValid)
             {
                 var encryptedPassword = EncryptionHelper.Encrypt(model.Password);
-                var result = _userRepository.GetAll().Where(a => a.UserName == model.UserName && a.Password == encryptedPassword && a.IsActive == UserStatusConstants.Active).FirstOrDefault();
+                var result = _userRepository.GetUsers().Where(a => a.UserName == model.UserName && a.Password == encryptedPassword && a.IsActive == UserStatusConstants.Active).FirstOrDefault();
                 if (result != null)
                 {
                     return RedirectToAction("Index", "STRPRC", model);

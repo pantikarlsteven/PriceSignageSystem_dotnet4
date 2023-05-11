@@ -18,11 +18,6 @@ namespace PriceSignageSystem
     {
         protected void Application_Start()
         {
-            AreaRegistration.RegisterAllAreas();
-            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
-            BundleConfig.RegisterBundles(BundleTable.Bundles);
-
             // Create the DI container builder
             var builder = new ContainerBuilder();
 
@@ -44,6 +39,10 @@ namespace PriceSignageSystem
 
             // Set the MVC dependency resolver to use Autofac
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
+            AreaRegistration.RegisterAllAreas();
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
+            BundleConfig.RegisterBundles(BundleTable.Bundles);
 
         }
     }

@@ -8,6 +8,6 @@ namespace PriceSignageSystem.Models.Interface
 {
     public interface ISizeRepository
     {
-        IEnumerable<Size> GetAllSizes();
+        List<Size> GetAllSizes();
     }
 }

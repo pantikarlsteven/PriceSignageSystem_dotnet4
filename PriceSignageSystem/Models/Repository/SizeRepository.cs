@@ -16,9 +16,10 @@ namespace PriceSignageSystem.Models.Repository
             _db = db;
         }
 
-        public IEnumerable<Size> GetAllSizes()
+        public List<Size> GetAllSizes()
         {
-            var data = _db.Size;
+            var data = (from a in _db.Sizes
+                       select a).ToList();
             return data;
         }
     }

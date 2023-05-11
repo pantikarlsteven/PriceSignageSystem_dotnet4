@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PriceSignageSystem.Models.Dto;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +9,11 @@ namespace PriceSignageSystem.Models.Interface
 {
     public interface ISTRPRCRepository
     {
-        IQueryable<STRPRC> GetAll();
-        STRPRC Fetch(string query);
+        STRPRCDto SearchString(string query);
+        List<STRPRC> GetAll();
         IEnumerable<STRPRC> FilterByDate(decimal fromDate/*, decimal toDate*/);
+        List<STRPRCDto> GetStores();
+        List<STRPRC> GetData(decimal O3SKU);
+
     }
 }

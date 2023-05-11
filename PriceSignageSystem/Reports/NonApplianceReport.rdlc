@@ -22,7 +22,7 @@
         <Top>0.16542in</Top>
         <Left>0.12375in</Left>
         <Height>1.20833in</Height>
-        <Width>4.01042in</Width>
+        <Width>5.875in</Width>
         <Style>
           <Border>
             <Style>None</Style>
@@ -83,8 +83,8 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Top>2.85292in</Top>
-        <Left>4.70708in</Left>
+        <Top>2.85293in</Top>
+        <Left>4.08208in</Left>
         <Height>0.65625in</Height>
         <Width>2.21875in</Width>
         <ZIndex>2</ZIndex>
@@ -115,10 +115,10 @@
             <Style />
           </Paragraph>
         </Paragraphs>
-        <Top>2.48833in</Top>
-        <Left>6.95361in</Left>
+        <Top>2.48834in</Top>
+        <Left>6.32861in</Left>
         <Height>1.02083in</Height>
-        <Width>2.84375in</Width>
+        <Width>3.3125in</Width>
         <ZIndex>3</ZIndex>
         <Style>
           <Border>
@@ -147,10 +147,10 @@
             <Style />
           </Paragraph>
         </Paragraphs>
-        <Top>4.58208in</Top>
-        <Left>5.37028in</Left>
+        <Top>4.58209in</Top>
+        <Left>4.74528in</Left>
         <Height>1.54167in</Height>
-        <Width>4.42708in</Width>
+        <Width>4.89583in</Width>
         <ZIndex>4</ZIndex>
         <Style>
           <Border>
@@ -180,10 +180,10 @@
             <Style />
           </Paragraph>
         </Paragraphs>
-        <Top>3.55083in</Top>
-        <Left>6.95361in</Left>
+        <Top>3.55084in</Top>
+        <Left>6.32861in</Left>
         <Height>1.01042in</Height>
-        <Width>2.84375in</Width>
+        <Width>3.3125in</Width>
         <ZIndex>5</ZIndex>
         <Style>
           <Border>
@@ -215,7 +215,7 @@
           </Paragraph>
         </Paragraphs>
         <Top>6.53in</Top>
-        <Left>1.54042in</Left>
+        <Left>0.79042in</Left>
         <Height>0.32292in</Height>
         <Width>1.04167in</Width>
         <ZIndex>6</ZIndex>
@@ -266,7 +266,7 @@
           </Paragraph>
         </Paragraphs>
         <Top>6.53in</Top>
-        <Left>2.81771in</Left>
+        <Left>2.06771in</Left>
         <Height>0.32292in</Height>
         <Width>1.92709in</Width>
         <ZIndex>7</ZIndex>
@@ -288,7 +288,7 @@
             <TextRuns>
               <TextRun>
                 <Label>SDT</Label>
-                <Value>=First(Fields!O3SDT.Value, "STRPRCDS")</Value>
+                <Value>=CDate(First(Fields!O3SDT.Value, "STRPRCDS"))</Value>
                 <Style>
                   <FontFamily>Calibri</FontFamily>
                   <FontSize>16pt</FontSize>
@@ -319,7 +319,7 @@
           </Paragraph>
         </Paragraphs>
         <Top>6.53in</Top>
-        <Left>4.99528in</Left>
+        <Left>4.24528in</Left>
         <Height>0.32292in</Height>
         <Width>1.55209in</Width>
         <ZIndex>8</ZIndex>
@@ -410,9 +410,9 @@
           </Paragraph>
         </Paragraphs>
         <Top>6.40625in</Top>
-        <Left>6.80208in</Left>
+        <Left>6.05208in</Left>
         <Height>0.32292in</Height>
-        <Width>2.99528in</Width>
+        <Width>3.58903in</Width>
         <ZIndex>9</ZIndex>
         <Style>
           <Border>
@@ -458,9 +458,9 @@
           </Paragraph>
         </Paragraphs>
         <Top>6.74306in</Top>
-        <Left>7.27653in</Left>
+        <Left>6.52653in</Left>
         <Height>0.25in</Height>
-        <Width>1.95833in</Width>
+        <Width>3.11458in</Width>
         <ZIndex>10</ZIndex>
         <Style>
           <Border>
