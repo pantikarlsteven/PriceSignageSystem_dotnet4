@@ -10,10 +10,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row align-items-center">
-            <div class="col"><label>Enter SKU/UPC:</label> </div>
-            <div class="col"><input type="text" id="searchInput" placeholder="Search..."></div>
+    <br />
+    <div class="container">
+        <div class="row align-items-center justify-content-center">
+            <div class="col text-center">
+                <label for="searchInput">Enter SKU/UPC:</label>
+            </div>
+            <div class="col">
+                <input type="text" id="searchInput" class="form-control" style="max-width: 200px;" placeholder="Search...">
+            </div>
         </div>
     </div>
 
@@ -22,6 +27,7 @@
     <div id="searchResults">
         @Html.Partial("_SearchResultPartialView", new STRPRCDto())
     </div>
+    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
 </body>
 </html>
 <script>

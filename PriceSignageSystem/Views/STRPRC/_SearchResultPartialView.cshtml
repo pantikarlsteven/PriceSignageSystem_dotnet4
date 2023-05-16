@@ -1,123 +1,160 @@
 ﻿@using PriceSignageSystem.Models.Dto;
 @model STRPRCDto
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
-<body>
-    @if (Model != null)
-    {
-        @Html.HiddenFor(m => m.O3LOC)
-        <div class="container-fluid">
-            <div class="row">
-                @Html.LabelFor(m => m.O3SKU, new { @class = "col" })
-                @Html.TextBoxFor(m => m.O3SKU, new { @class = "col", @readonly = true })
 
-                @Html.LabelFor(m => m.O3SDT, new { @class = "col" })
-                @Html.TextBoxFor(m => m.O3SDT, new { @class = "col", @readonly = true })
+
+@if (Model != null)
+{
+    @Html.HiddenFor(m => m.O3LOC)
+    <div class="container">
+        <center><h2>Item Details</h2></center>
+        <hr />
+
+        <div class="row">
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3SKU)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SKU)</dd>
+
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3SDT)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SDT)</dd>
+                </dl>
             </div>
-            <div class="row">
-                @Html.LabelFor(m => m.O3SCCD, new { @class = "col" })
-                @Html.TextBoxFor(m => m.O3SCCD, new { @class = "col", @readonly = true })
 
-                @Html.LabelFor(m => m.O3EDT, new { @class = "col" })
-                @Html.TextBoxFor(m => m.O3EDT, new { @class = "col", @readonly = true })
-            </div>
-            <div class="row">
-                @Html.LabelFor(m => m.O3IDSC, new { @class = "col" })
-                @Html.TextAreaFor(m => m.O3IDSC, new { @class = "col", @readonly = true })
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3SCCD)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SCCD)</dd>
 
-                @Html.LabelFor(m => m.O3TRB3, new { @class = "col" })
-                @Html.TextBoxFor(m => m.O3TRB3, new { @class = "col", @readonly = true })
-            </div>
-            <div class="row">
-                @Html.LabelFor(m => m.O3UPC, new { @class = "col" })
-                @Html.TextBoxFor(m => m.O3UPC, new { @class = "col", @readonly = true })
-
-                @Html.LabelFor(m => m.O3FGR, new { @class = "col" })
-                @Html.TextBoxFor(m => m.O3FGR, new { @class = "col", @readonly = true })
-            </div>
-            <div class="row">
-                @Html.LabelFor(m => m.O3DEPT, new { @class = "col" })
-                @Html.TextBoxFor(m => m.O3DEPT, new { @class = "col", @readonly = true })
-
-                @Html.LabelFor(m => m.O3FNAM, new { @class = "col" })
-                @Html.TextBoxFor(m => m.O3FNAM, new { @class = "col", @readonly = true })
-            </div>
-            <div class="row">
-                @Html.LabelFor(m => m.O3SDPT, new { @class = "col" })
-                @Html.TextBoxFor(m => m.O3SDPT, new { @class = "col", @readonly = true })
-
-                @Html.LabelFor(m => m.O3SLUM, new { @class = "col" })
-                @Html.TextBoxFor(m => m.O3SLUM, new { @class = "col", @readonly = true })
-            </div>
-            <div class="row">
-                @Html.LabelFor(m => m.O3CLAS, new { @class = "col" })
-                @Html.TextBoxFor(m => m.O3CLAS, new { @class = "col", @readonly = true })
-
-                @Html.LabelFor(m => m.O3DIV, new { @class = "col" })
-                @Html.TextBoxFor(m => m.O3DIV, new { @class = "col", @readonly = true })
-            </div>
-            <div class="row">
-                @Html.LabelFor(m => m.O3SCLS, new { @class = "col" })
-                @Html.TextBoxFor(m => m.O3SCLS, new { @class = "col", @readonly = true })
-
-                @Html.LabelFor(m => m.O3TUOM, new { @class = "col" })
-                @Html.TextBoxFor(m => m.O3TUOM, new { @class = "col", @readonly = true })
-            </div>
-            <div class="row">
-                @Html.LabelFor(m => m.O3REGU, new { @class = "col" })
-                @Html.TextBoxFor(m => m.O3REGU, new { @class = "col", @readonly = true })
-
-                @Html.LabelFor(m => m.O3POS, new { @class = "col" })
-                @Html.TextBoxFor(m => m.O3POS, new { @class = "col", @readonly = true })
-            </div>
-            <div class="row">
-                @Html.LabelFor(m => m.O3ORIG, new { @class = "col" })
-                @Html.TextBoxFor(m => m.O3ORIG, new { @class = "col", @readonly = true })
-
-                <div class="col">
-                </div>
-                <div class="col">
-                </div>
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3EDT)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3EDT)</dd>
+                </dl>
             </div>
         </div>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col">@Html.LabelFor(m => m.SelectedTypeId)</div>
-                <div class="col">@Html.DropDownListFor(m => m.SelectedTypeId, Model.Types ?? new List<SelectListItem>(), "Select Type", new { @class = "form-control" })</div>
 
-                <div class="col">@Html.LabelFor(m => m.SelectedSizeId)</div>
-                <div class="col">@Html.DropDownListFor(m => m.SelectedSizeId, Model.Sizes ?? new List<SelectListItem>(), "Select Size", new { @class = "form-control" })</div>
+        <div class="row">
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3IDSC)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3IDSC)</dd>
 
-                <div class="col">@Html.LabelFor(m => m.SelectedCategoryId)</div>
-                <div class="col">@Html.DropDownListFor(m => m.SelectedCategoryId, Model.Categories ?? new List<SelectListItem>(), "Select Category", new { @class = "form-control" })</div>
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3TRB3)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3TRB3)</dd>
+                </dl>
             </div>
-            <div class="row">
-                <div class="col">
-                    <a href="@Url.Action("DisplayReport","Report", Model)" target="_blank">Print</a>
-                    @*                    <button type="submit" id="Print" class="btn btn-primary btn-block mb-4">Print</button>
-                    *@
-                </div>
-                <div class="col">
-                    @*<button type="submit" id="Queue" class="btn btn-success btn-block mb-4">Queue</button>*@
-                </div>
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3UPC)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3UPC)</dd>
+
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3FGR)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3FGR)</dd>
+                </dl>
             </div>
         </div>
 
 
-    }
-    else
-    {
-        <p>No results found.</p>
-    }
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
+        <div class="row">
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3DEPT)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3DEPT)</dd>
+
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3FNAM)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3FNAM)</dd>
+                </dl>
+            </div>
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3SDPT)</dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(m => m.O3SDPT)
+                    </dd>
+
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3SLUM)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SLUM)</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3CLAS)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3CLAS)</dd>
+
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3DIV)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3DIV)</dd>
+                </dl>
+            </div>
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3SCLS)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SCLS)</dd>
+
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3TUOM)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3TUOM)</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3REGU)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3REGU)</dd>
+
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3POS)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3POS)</dd>
+                </dl>
+            </div>
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3ORIG)</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3ORIG)</dd>
+
+                    <div class="col"></div>
+                    <div class="col"></div>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <hr/>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                @Html.LabelFor(m => m.SelectedTypeId)
+            </div>
+            <div class="col">
+                @Html.DropDownListFor(m => m.SelectedTypeId, Model.Types ?? new List<SelectListItem>(), "Select Type", new { @class = "form-control" })
+            </div>
+
+            <div class="col">
+                @Html.LabelFor(m => m.SelectedSizeId)
+            </div>
+            <div class="col">
+                @Html.DropDownListFor(m => m.SelectedSizeId, Model.Sizes ?? new List<SelectListItem>(), "Select Size", new { @class = "form-control" })
+            </div>
+
+            <div class="col">
+                @Html.LabelFor(m => m.SelectedCategoryId)
+            </div>
+            <div class="col">
+                @Html.DropDownListFor(m => m.SelectedCategoryId, Model.Categories ?? new List<SelectListItem>(), "Select Category", new { @class = "form-control" })
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col">
+                <a class="btn btn-primary" href="@Url.Action("DisplayReport", "Report", Model)" target="_blank" role="button">Print</a>
+            </div>
+            <div class="col">
+            </div>
+        </div>
+    </div>
+ }
+ else
+ {
+    <p>No results found.</p>
+ }

@@ -7,7 +7,6 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Web;
 
 namespace PriceSignageSystem.Models.Repository
 {
@@ -89,7 +88,7 @@ namespace PriceSignageSystem.Models.Repository
 
         public IEnumerable<STRPRC> FilterByDate(decimal fromDate/*, decimal toDate*/)
         {
-            var data = (from a in _db.STRPRC
+            var data = (from a in _db.STRPRCs
                         where a.O3SDT >= fromDate// && a.O3EDT <= toDate
                         select a).ToList();
 
@@ -258,6 +257,18 @@ namespace PriceSignageSystem.Models.Repository
                 reader.Close();
                 connection.Close();
             }
+
+            return data;
+        }
+
+        public IEnumerable<STRPRC> GetAllData()
+        {
+            return _db.STRPRCs;
+        }
+
+        public IEnumerable<STRPRC> GetDataByDate(decimal startDate, decimal endDate)
+        {
+            var data = _db.STRPRCs.Where(a => a.O3SDT >= startDate && a.O3EDT <= endDate);
 
             return data;
         }

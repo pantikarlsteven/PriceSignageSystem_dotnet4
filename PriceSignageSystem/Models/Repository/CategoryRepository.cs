@@ -1,9 +1,6 @@
 ﻿using PriceSignageSystem.Models.DatabaseContext;
 using PriceSignageSystem.Models.Interface;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace PriceSignageSystem.Models.Repository
 {
@@ -18,7 +15,7 @@ namespace PriceSignageSystem.Models.Repository
 
         public IEnumerable<Category> GetAllCategories()
         {
-            var data = _db.Category;
+            var data = _db.Categories;
             return data;
         }
     }

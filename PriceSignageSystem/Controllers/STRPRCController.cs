@@ -1,12 +1,8 @@
 ﻿using PriceSignageSystem.Helper;
-using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using System.Linq.Dynamic.Core;
 
 
 namespace PriceSignageSystem.Controllers
@@ -37,89 +33,57 @@ namespace PriceSignageSystem.Controllers
             {
                 var dto = _sTRPRCRepository.SearchString(query);
 
-                dto.Sizes = _sizeRepository.GetAllSizes().Select(a => new SelectListItem
+                if(dto != null)
                 {
-                    Value = a.Id.ToString(),
-                    Text = a.Name
-                }).ToList();
+                    dto.Sizes = _sizeRepository.GetAllSizes().Select(a => new SelectListItem
+                    {
+                        Value = a.Id.ToString(),
+                        Text = a.Name
+                    }).ToList();
 
-                dto.Types = _typeRepository.GetAllTypes().Select(a => new SelectListItem
-                {
-                    Value = a.Id.ToString(),
-                    Text = a.Name
-                }).ToList();
+                    dto.Types = _typeRepository.GetAllTypes().Select(a => new SelectListItem
+                    {
+                        Value = a.Id.ToString(),
+                        Text = a.Name
+                    }).ToList();
 
-                dto.Categories = _categoryRepository.GetAllCategories().Select(a => new SelectListItem
-                {
-                    Value = a.Id.ToString(),
-                    Text = a.Name
-                }).ToList();
-
+                    dto.Categories = _categoryRepository.GetAllCategories().Select(a => new SelectListItem
+                    {
+                        Value = a.Id.ToString(),
+                        Text = a.Name
+                    }).ToList();
+                }
+                
                 return PartialView("~/Views/STRPRC/_SearchResultPartialView.cshtml", dto);
 
             }
             catch (Exception ex)
             {
-                return Content(ex.Message);
+                Console.WriteLine("An exception occurred: " + ex.Message);
+                Console.WriteLine("InnerException: " + ex.InnerException?.Message);
+                return View();
             }
-
         }
 
-        public ActionResult ListByDate()
+        public ActionResult SearchByDate()
         {
             return View();
         }
 
         [HttpPost]
-        public ActionResult ListByDate(DateTime fromStartDate/*, DateTime toEndDate*/)
+        public ActionResult GetDataByDate(DateTime startDate, DateTime endDate)
         {
-            var startDateToDecimal = ConversionHelper.ToDecimal(fromStartDate);
-            //var endDateToDecimal = ConversionHelper.ToDecimal(toEndDate);
+            var startDateDecimal = ConversionHelper.ToDecimal(startDate);
+            var endDateDecimal = ConversionHelper.ToDecimal(endDate);
 
-            var data = _sTRPRCRepository.FilterByDate(startDateToDecimal/*, endDateToDecimal*/);
-            return PartialView("~/Views/STRPRC/_ListByDatePartialView.cshtml", data);
+            var data = _sTRPRCRepository.GetDataByDate(startDateDecimal, endDateDecimal).ToList();
+
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpPost]
-        public ActionResult LoadData()
+        public ActionResult GetDropdownsArray()
         {
-            var rawData = _sTRPRCRepository.GetAll().AsQueryable();
-            var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
-            var start = Convert.ToInt32(HttpContext.Request.Form["start"].FirstOrDefault());
-            var length = Convert.ToInt32(HttpContext.Request.Form["length"].FirstOrDefault());
-            var searchValue = Convert.ToString(HttpContext.Request.Form["search[value]"].FirstOrDefault());
-
-            var orderBy = Convert.ToString(HttpContext.Request.Form["columns[" + HttpContext.Request.Form["order[0][column]"].FirstOrDefault() + "][data]"].FirstOrDefault());
-            var orderDir = Convert.ToString(HttpContext.Request.Form["order[0][dir]"].FirstOrDefault());
-
-            //Sorting  
-            if (!(string.IsNullOrEmpty(orderBy) && string.IsNullOrEmpty(orderDir)))
-            {
-                rawData = rawData.OrderBy(orderBy + " " + orderDir);
-            }
-
-            if (string.IsNullOrEmpty(searchValue))
-            {
-                searchValue = "230101";
-            }
-            //Search
-            if (!string.IsNullOrEmpty(searchValue))
-            {
-                rawData = rawData.Where(c => c.O3SDT >= Convert.ToDecimal(searchValue));
-            }
-            
-
-            //if shows all data
-            if (length == -1)
-                length = int.MaxValue;
-
-            //Paging
-            var data = rawData.Skip(start).Take(length).ToList();
-
-            //Total number of filtered data
-            var recordsTotal = rawData.Count();
-
-            return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
+            return data;
         }
     }
 }

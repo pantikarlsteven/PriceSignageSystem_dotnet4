@@ -22,7 +22,7 @@ namespace PriceSignageSystem.Models.Repository
 
         public IQueryable<User> GetAll()
         {
-            var data = _db.User;
+            var data = _db.Users;
             return data;
         }
         public List<User> GetUsers()

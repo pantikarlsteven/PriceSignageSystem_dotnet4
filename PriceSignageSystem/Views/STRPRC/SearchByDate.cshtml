@@ -1,0 +1,195 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Search and Print Example</title>
+    <link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" />
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+
+    <style>
+
+        .center-content {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 20vh;
+        }
+
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#startDate").datepicker();
+            $("#endDate").datepicker();
+
+
+            $("#searchBtn").click(function () {
+                var startDate = $("#startDate").val();
+                var endDate = $("#endDate").val();
+
+                $.ajax({
+                    url: '@Url.Action("GetDataByDate", "STRPRC")',
+                    type: 'POST',
+                    data: { startDate: startDate, endDate: endDate },
+                    success: function (data) {
+
+                        // Destroy the existing DataTable instance if it exists
+                        if ($.fn.DataTable.isDataTable('#dataTable')) {
+                            $('#dataTable').DataTable().destroy();
+                        }
+
+                       // Initialize the DataTable with the retrieved data and scrollable property
+                        $('#dataTable').DataTable({
+                            scrollY: 500,
+                            data: data,
+                            columns: [
+                                { "data": "O3SKU", "name": "O3SKU", "autoWidth": true },
+                                { "data": "O3SCCD", "name": "O3SCCD", "autoWidth": true },
+                                { "data": "O3IDSC", "name": "O3IDSC", "autoWidth": true },
+                                { "data": "O3UPC", "name": "O3UPC", "autoWidth": true },
+                                { "data": "O3DEPT", "name": "O3DEPT", "autoWidth": true },
+                                { "data": "O3SDPT", "name": "O3SDPT", "autoWidth": true },
+                                { "data": "O3CLAS", "name": "O3CLAS", "autoWidth": true },
+                                { "data": "O3SCLS", "name": "O3SCLS", "autoWidth": true },
+                                { "data": "O3POS", "name": "O3POS", "autoWidth": true },
+                                { "data": "O3REGU", "name": "O3REGU", "autoWidth": true },
+                                { "data": "O3ORIG", "name": "O3ORIG", "autoWidth": true },
+                                { "data": "O3SDT", "name": "O3SDT", "autoWidth": true },
+                                { "data": "O3EDT", "name": "O3EDT", "autoWidth": true },
+                                { "data": "O3TRB3", "name": "O3TRB3", "autoWidth": true },
+                                { "data": "O3FGR", "name": "O3FGR", "autoWidth": true },
+                                { "data": "O3FNAM", "name": "O3FNAM", "autoWidth": true },
+                                { "data": "O3SLUM", "name": "O3SLUM", "autoWidth": true },
+                                { "data": "O3DIV", "name": "O3DIV", "autoWidth": true },
+                                { "data": "O3TUOM", "name": "O3TUOM", "autoWidth": true },
+                                {
+                                    data: null,
+                                    render: function (data, type, row) {
+                                        return '<button class="printBtn btn btn-primary btn-sm" data-id="' + data.Id + '">Print</button>';
+                                    }
+                                }
+                            ],
+                            "language": {
+                                "emptyTable": "No data available"
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Print button click event handler
+            $('#dataTable').on('click', '.printBtn', function () {
+                var id = $(this).data('id');
+                var rowData = dataTable.row($(this).closest('tr')).data(); 
+
+                // Retrieve dropdown data from the server
+                $.ajax({
+                    url: '@Url.Action("GetDropdownsArray","STRPRC")',
+                    method: 'GET',
+                    success: function (data) {
+                        // Populate the dropdowns with the retrieved data
+                        populateDropdown('typeDropdown', data.types);
+                        populateDropdown('sizeDropdown', data.sizes);
+                        populateDropdown('categoryDropdown', data.categories);
+
+                        // Show the modal
+                        $('#myModal').modal('show');
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            });
+
+        });
+
+        // Function to populate a dropdown with options
+        function populateDropdown(dropdownId, options) {
+            var dropdown = $('#' + dropdownId);
+            dropdown.empty(); // Clear previous options
+
+            // Add options to the dropdown
+            for (var i = 0; i < options.length; i++) {
+                var option = $('<option></option>').attr('value', options[i]).text(options[i]);
+                dropdown.append(option);
+            }
+        }
+
+        // Submit button click event handler
+        $('#submitBtn').click(function () {
+            // Get the selected values
+            var selectedType = $('#typeDropdown').val();
+            var selectedSize = $('#sizeDropdown').val();
+            var selectedCategory = $('#categoryDropdown').val();
+
+            // Perform further actions with the selected values (e.g., pass them to the server)
+
+            // Close the modal
+            $('#myModal').modal('hide');
+        });
+
+    </script>
+</head>
+
+<body>
+    <div class="center-content">
+        <div class="container">
+            <h2 class="mt-4">Search</h2>
+            <div class="row mt-4">
+                <div class="col-md-4 offset-md-2">
+                    <div class="form-group">
+                        <label for="startDate">Start Date:</label>
+                        <input type="text" id="startDate" name="startDate" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="endDate">End Date:</label>
+                        <input type="text" id="endDate" name="endDate" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <button id="searchBtn" class="btn btn-primary btn-block">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table id="dataTable" class="display" style="width:80%">
+        <thead>
+            <tr>
+                <th>Item No.</th>
+                <th>Status Code</th>
+                <th>Item Desc.</th>
+                <th>UPC Code</th>
+                <th>Department</th>
+                <th>Sub-Dept.</th>
+                <th>Class</th>
+                <th>Sub-Class</th>
+                <th>Cur Pos Price</th>
+                <th>Cur Reg Unit Price</th>
+                <th>Original Price</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Attribute 3</th>
+                <th>Brand Name</th>
+                <th>Manuf. Name</th>
+                <th>From U/M</th>
+                <th>Divisor</th>
+                <th>TO UOM</th>
+                <th> - </th>
+            </tr>
+        </thead>
+    </table>
+</body>
+</html>
+

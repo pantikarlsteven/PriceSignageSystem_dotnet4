@@ -1,9 +1,6 @@
 ﻿using PriceSignageSystem.Models.DatabaseContext;
 using PriceSignageSystem.Models.Interface;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace PriceSignageSystem.Models.Repository
 {
@@ -16,10 +13,9 @@ namespace PriceSignageSystem.Models.Repository
             _db = db;
         }
 
-        public List<Size> GetAllSizes()
+        public IEnumerable<Size> GetAllSizes()
         {
-            var data = (from a in _db.Sizes
-                       select a).ToList();
+            var data = _db.Sizes;
             return data;
         }
     }

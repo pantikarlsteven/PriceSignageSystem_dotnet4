@@ -2,7 +2,6 @@
 using PriceSignageSystem.Models.Constants;
 using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -18,54 +17,7 @@ namespace PriceSignageSystem.Controllers
         {
             _sTRPRCRepository = sTRPRCRepository;
         }
-        public ActionResult Index()
-        {
-            return View();
-        }
 
-        //public ActionResult DisplayReport(STRPRCDto model)
-        //{
-        //    model.O3SKU = 5068; // for testing
-        //    model.SelectedCategoryId = 2;
-
-        //    try
-        //    {
-        //        var data = GetData(model.O3SKU);
-
-        //        // Convert list to DataTable
-        //        DataTable dataTable = ConvertListToDataTable(data);
-
-        //        var localReport = new LocalReport();
-
-        //        if(model.SelectedCategoryId == CategoryConstants.NonAppliance)
-        //            localReport.ReportPath = Server.MapPath(ReportConstants.NonApplianceReportPath);
-        //        else localReport.ReportPath = Server.MapPath(ReportConstants.ApplianceReportPath);
-
-
-        //        // report data source 
-        //        var reportDataSource = new ReportDataSource("STRPRCDS", dataTable);
-
-        //        // Set the report data source
-        //        localReport.DataSources.Add(reportDataSource);
-
-        //        // Create and set the report parameter
-        //        //var parameter = new ReportParameter("MyParameter", "Parameter Value");
-        //        //localReport.SetParameters(new ReportParameter[] { parameter });
-
-
-        //        string reportType = "PDF";
-
-        //        // Render the report and get the report bytes
-        //        byte[] renderedBytes = localReport.Render(reportType);
-
-        //        // Return the report as a file download
-        //        return File(renderedBytes, "application/pdf", "MyReport.pdf");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Content(ex.Message);
-        //    }
-        //}
         private DataTable ConvertListToDataTable<T>(IEnumerable<T> list)
         {
             var dataTable = new DataTable();
@@ -96,23 +48,56 @@ namespace PriceSignageSystem.Controllers
 
         public ActionResult DisplayReport(STRPRCDto model)
         {
-            model.O3SKU = 5068; // for testing
-            model.SelectedCategoryId = 2;
+            //model.O3SKU = 10166; // 5068; // for testing PH
+            //model.SelectedCategoryId = 2;
 
-            var reportViewer = new ReportViewer();
-            reportViewer.ProcessingMode = ProcessingMode.Local;
-            reportViewer.LocalReport.ReportPath = Server.MapPath(ReportConstants.NonApplianceReportPath);
-            
-            var data = GetData(model.O3SKU);
+            var reportPath = "";
+            if(model.SelectedCategoryId == CategoryConstants.Appliance)
+            {
+                 reportPath = Server.MapPath(ReportConstants.ApplianceReportPath);
+            }
 
-            // Convert list to DataTable
-            DataTable dataTable = ConvertListToDataTable(data);
-            //Set the report data source if needed
-            reportViewer.LocalReport.DataSources.Add(new ReportDataSource("STRPRCDS", dataTable));
+            if (model.SelectedCategoryId == CategoryConstants.NonAppliance)
+            {
+                 reportPath = Server.MapPath(ReportConstants.NonApplianceReportPath);
+            }
 
-            ViewBag.ReportViewer = reportViewer;
+            var localReport = new LocalReport();
+            localReport.ReportPath = reportPath;
 
-            return View();
+            List<ReportParameter> parameters = new List<ReportParameter>();
+            parameters.Add(new ReportParameter("TypeId", model.SelectedTypeId.ToString()));
+            localReport.SetParameters(parameters);
+
+            var reportData = GetData(model.O3SKU);
+            //DataTable dataTable = ConvertListToDataTable(data);
+
+
+            var dataSource = new ReportDataSource("STRPRCDS", reportData);
+            localReport.DataSources.Add(dataSource);
+
+            var reportType = "PDF"; 
+            var mimeType = "";
+            var encoding = "";
+            var fileNameExtension = "";
+
+            var deviceInfo =
+                $"<DeviceInfo><OutputFormat>{reportType}</OutputFormat><EmbedFonts>None</EmbedFonts></DeviceInfo>";
+
+            Warning[] warnings;
+            string[] streams;
+            byte[] renderedBytes;
+
+            renderedBytes = localReport.Render(
+                reportType,
+                deviceInfo,
+                out mimeType,
+                out encoding,
+                out fileNameExtension,
+                out streams,
+                out warnings);
+
+            return File(renderedBytes, mimeType);
         }
     }
 }
