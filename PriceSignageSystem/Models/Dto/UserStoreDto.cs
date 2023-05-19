@@ -17,6 +17,7 @@ namespace PriceSignageSystem.Models.Dto
         [Display(Name = "Password")]
         public string Password { get; set; }
         public int IsActive { get; set; }
+        [Required(ErrorMessage = "Store ID is required")]
         [Display(Name = "Store ID")]
         public int SelectedStore { get; set; }
         public List<SelectListItem> StoreList { get; set; }

@@ -1,4 +1,5 @@
 ﻿using PriceSignageSystem.Helper;
+using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
 using System;
 using System.Linq;
@@ -78,12 +79,18 @@ namespace PriceSignageSystem.Controllers
 
             var data = _sTRPRCRepository.GetDataByDate(startDateDecimal, endDateDecimal).ToList();
 
-            return Json(data, JsonRequestBehavior.AllowGet);
+            return Json(data);
         }
 
-        public ActionResult GetDropdownsArray()
+        [HttpPost]
+        public JsonResult GetDataBySKU(decimal id)
         {
-            return data;
+            var dto = _sTRPRCRepository.GetDataBySKU(id);
+            dto.SizeArray = _sizeRepository.GetAllSizes().ToArray();
+            dto.TypeArray = _typeRepository.GetAllTypes().ToArray();
+            dto.CategoryArray = _categoryRepository.GetAllCategories().ToArray();
+
+            return Json(dto);
         }
     }
 }

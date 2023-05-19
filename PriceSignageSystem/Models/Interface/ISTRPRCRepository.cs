@@ -16,7 +16,6 @@ namespace PriceSignageSystem.Models.Interface
         List<STRPRC> GetData(decimal O3SKU);
         IEnumerable<STRPRC> GetAllData();
         IEnumerable<STRPRC> GetDataByDate(decimal startDate, decimal endDate);
-
-
+        STRPRCDto GetDataBySKU(decimal O3SKU);
     }
 }

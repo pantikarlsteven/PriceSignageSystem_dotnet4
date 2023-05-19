@@ -23,17 +23,17 @@
                     <div class="form-group">
                         @Html.LabelFor(m => m.UserName)
                         @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.UserName)
+                        @Html.ValidationMessageFor(m => m.UserName, "" ,new { @class = "text-danger" })
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(m => m.Password)
                         @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.Password)
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(m => m.SelectedStore)
                         @Html.DropDownListFor(m => m.SelectedStore, Model.StoreList, "Select Store", new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.SelectedStore)
+                        @Html.ValidationMessageFor(m => m.SelectedStore, "", new { @class = "text-danger" })
                     </div>
                     <button type="submit" class="btn btn-primary btn-block mb-4">Login</button>
 

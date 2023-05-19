@@ -5,156 +5,167 @@
 
 @if (Model != null)
 {
-    @Html.HiddenFor(m => m.O3LOC)
-    <div class="container">
-        <center><h2>Item Details</h2></center>
+    using (Html.BeginForm("DisplayReport", "Report", FormMethod.Post, new { id = "reportForm" }))
+    {
+        @Html.HiddenFor(m => m.O3SKU)
+        <div class="container">
+            <center><h2>Item Details</h2></center>
+            <hr />
+
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3SKU)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SKU)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3SDT)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SDT)</dd>
+                    </dl>
+                </div>
+
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3SCCD)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SCCD)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3EDT)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3EDT)</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3IDSC)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3IDSC)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3TRB3)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3TRB3)</dd>
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3UPC)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3UPC)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3FGR)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3FGR)</dd>
+                    </dl>
+                </div>
+            </div>
+
+
+
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3DEPT)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3DEPT)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3FNAM)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3FNAM)</dd>
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3SDPT)</dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(m => m.O3SDPT)
+                        </dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3SLUM)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SLUM)</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3CLAS)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3CLAS)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3DIV)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3DIV)</dd>
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3SCLS)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SCLS)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3TUOM)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3TUOM)</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3REGU)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3REGU)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3POS)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3POS)</dd>
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3ORIG)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3ORIG)</dd>
+
+                        <div class="col"></div>
+                        <div class="col"></div>
+                    </dl>
+                </div>
+            </div>
+        </div>
         <hr />
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    @Html.LabelFor(m => m.SelectedTypeId)
+                </div>
+                <div class="col">
+                    @Html.DropDownListFor(m => m.SelectedTypeId, Model.Types ?? new List<SelectListItem>(), "Select Type", new { @class = "form-control" })
+                </div>
 
-        <div class="row">
-            <div class="col-md-6">
-                <dl class="row">
-                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3SKU)</dt>
-                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SKU)</dd>
+                <div class="col">
+                    @Html.LabelFor(m => m.SelectedSizeId)
+                </div>
+                <div class="col">
+                    @Html.DropDownListFor(m => m.SelectedSizeId, Model.Sizes ?? new List<SelectListItem>(), "Select Size", new { @class = "form-control" })
+                </div>
 
-                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3SDT)</dt>
-                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SDT)</dd>
-                </dl>
+                <div class="col">
+                    @Html.LabelFor(m => m.SelectedCategoryId)
+                </div>
+                <div class="col">
+                    @Html.DropDownListFor(m => m.SelectedCategoryId, Model.Categories ?? new List<SelectListItem>(), "Select Category", new { @class = "form-control" })
+                </div>
             </div>
-
-            <div class="col-md-6">
-                <dl class="row">
-                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3SCCD)</dt>
-                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SCCD)</dd>
-
-                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3EDT)</dt>
-                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3EDT)</dd>
-                </dl>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6">
-                <dl class="row">
-                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3IDSC)</dt>
-                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3IDSC)</dd>
-
-                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3TRB3)</dt>
-                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3TRB3)</dd>
-                </dl>
-            </div>
-            <div class="col-md-6">
-                <dl class="row">
-                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3UPC)</dt>
-                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3UPC)</dd>
-
-                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3FGR)</dt>
-                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3FGR)</dd>
-                </dl>
+            <br />
+            <div class="row">
+                <div class="col">
+                    @*<a class="btn btn-primary" href="@Url.Action("DisplayReport", "Report", Model)" target="_blank" role="button">Print</a>*@
+                    <button type="button" class="btn btn-primary" onclick="openReportInNewTab()">Print</button>
+                </div>
+                <div class="col">
+                </div>
             </div>
         </div>
-
-
-
-        <div class="row">
-            <div class="col-md-6">
-                <dl class="row">
-                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3DEPT)</dt>
-                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3DEPT)</dd>
-
-                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3FNAM)</dt>
-                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3FNAM)</dd>
-                </dl>
-            </div>
-            <div class="col-md-6">
-                <dl class="row">
-                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3SDPT)</dt>
-                    <dd class="col-sm-8">
-                        @Html.DisplayFor(m => m.O3SDPT)
-                    </dd>
-
-                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3SLUM)</dt>
-                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SLUM)</dd>
-                </dl>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6">
-                <dl class="row">
-                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3CLAS)</dt>
-                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3CLAS)</dd>
-
-                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3DIV)</dt>
-                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3DIV)</dd>
-                </dl>
-            </div>
-            <div class="col-md-6">
-                <dl class="row">
-                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3SCLS)</dt>
-                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SCLS)</dd>
-
-                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3TUOM)</dt>
-                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3TUOM)</dd>
-                </dl>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6">
-                <dl class="row">
-                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3REGU)</dt>
-                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3REGU)</dd>
-
-                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3POS)</dt>
-                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3POS)</dd>
-                </dl>
-            </div>
-            <div class="col-md-6">
-                <dl class="row">
-                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3ORIG)</dt>
-                    <dd class="col-sm-8">@Html.DisplayFor(m => m.O3ORIG)</dd>
-
-                    <div class="col"></div>
-                    <div class="col"></div>
-                </dl>
-            </div>
-        </div>
-    </div>
-    <hr/>
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                @Html.LabelFor(m => m.SelectedTypeId)
-            </div>
-            <div class="col">
-                @Html.DropDownListFor(m => m.SelectedTypeId, Model.Types ?? new List<SelectListItem>(), "Select Type", new { @class = "form-control" })
-            </div>
-
-            <div class="col">
-                @Html.LabelFor(m => m.SelectedSizeId)
-            </div>
-            <div class="col">
-                @Html.DropDownListFor(m => m.SelectedSizeId, Model.Sizes ?? new List<SelectListItem>(), "Select Size", new { @class = "form-control" })
-            </div>
-
-            <div class="col">
-                @Html.LabelFor(m => m.SelectedCategoryId)
-            </div>
-            <div class="col">
-                @Html.DropDownListFor(m => m.SelectedCategoryId, Model.Categories ?? new List<SelectListItem>(), "Select Category", new { @class = "form-control" })
-            </div>
-        </div>
-        <br />
-        <div class="row">
-            <div class="col">
-                <a class="btn btn-primary" href="@Url.Action("DisplayReport", "Report", Model)" target="_blank" role="button">Print</a>
-            </div>
-            <div class="col">
-            </div>
-        </div>
-    </div>
- }
- else
- {
-    <p>No results found.</p>
- }
+    }
+}
+else
+{
+    < p > No results found.</ p >
+}
+<script>
+    function openReportInNewTab() {
+        var form = document.getElementById('reportForm');
+        form.target = '_blank';
+        form.submit();
+    }
+</script>

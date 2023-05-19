@@ -71,5 +71,8 @@ namespace PriceSignageSystem.Models.Dto
         public List<SelectListItem> Sizes { get; set; }
         public List<SelectListItem> Types { get; set; }
         public List<SelectListItem> Categories { get; set; }
+        public Size[] SizeArray {get;set;}
+        public Type[] TypeArray { get; set; }
+        public Category[] CategoryArray { get; set; }
     }
 }

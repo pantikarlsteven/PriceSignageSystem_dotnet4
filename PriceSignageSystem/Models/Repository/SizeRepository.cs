@@ -1,4 +1,5 @@
 ﻿using PriceSignageSystem.Models.DatabaseContext;
+using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
 using System.Collections.Generic;
 

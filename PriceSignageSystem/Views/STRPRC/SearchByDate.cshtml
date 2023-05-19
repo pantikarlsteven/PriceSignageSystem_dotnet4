@@ -1,17 +1,9 @@
 ﻿
-@{
-    Layout = null;
-}
-
 <!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Search and Print Example</title>
-    <link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet" />
-    <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" />
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
-
+    <title>Advance Printing</title>
     <style>
 
         .center-content {
@@ -20,17 +12,17 @@
             align-items: flex-start;
             min-height: 20vh;
         }
-
     </style>
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
 
     <script>
         $(document).ready(function () {
-            $("#startDate").datepicker();
-            $("#endDate").datepicker();
+            $("#startDate").datepicker({
+                dateFormat: 'yy-mm-dd'
+            });
+            $("#endDate").datepicker({
+                dateFormat: 'yy-mm-dd'
+            });
 
 
             $("#searchBtn").click(function () {
@@ -49,10 +41,12 @@
                         }
 
                        // Initialize the DataTable with the retrieved data and scrollable property
-                        $('#dataTable').DataTable({
-                            scrollY: 500,
-                            data: data,
-                            columns: [
+                         $('#dataTable').DataTable({
+                             scrollY: 500,
+                             scrollX: true,
+                             scroller: true,
+                             data: data,
+                             columns: [
                                 { "data": "O3SKU", "name": "O3SKU", "autoWidth": true },
                                 { "data": "O3SCCD", "name": "O3SCCD", "autoWidth": true },
                                 { "data": "O3IDSC", "name": "O3IDSC", "autoWidth": true },
@@ -75,7 +69,7 @@
                                 {
                                     data: null,
                                     render: function (data, type, row) {
-                                        return '<button class="printBtn btn btn-primary btn-sm" data-id="' + data.Id + '">Print</button>';
+                                        return '<button class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '">Print</button>';
                                     }
                                 }
                             ],
@@ -87,56 +81,148 @@
                 });
             });
 
-            // Print button click event handler
+            //PRINT BUTTON
             $('#dataTable').on('click', '.printBtn', function () {
-                var id = $(this).data('id');
-                var rowData = dataTable.row($(this).closest('tr')).data(); 
+                var rowId = $(this).data('id');
 
-                // Retrieve dropdown data from the server
                 $.ajax({
-                    url: '@Url.Action("GetDropdownsArray","STRPRC")',
-                    method: 'GET',
-                    success: function (data) {
-                        // Populate the dropdowns with the retrieved data
-                        populateDropdown('typeDropdown', data.types);
-                        populateDropdown('sizeDropdown', data.sizes);
-                        populateDropdown('categoryDropdown', data.categories);
+                    url: '@Url.Action("GetDataBySKU", "STRPRC")' ,
+                    type: 'POST',
+                    data: { id: rowId },
+                    success: function (response) {
 
-                        // Show the modal
-                        $('#myModal').modal('show');
-                    },
-                    error: function (error) {
-                        console.log(error);
+                        // Create the dropdown options
+                        var sizeOptions = '';
+                        var typeOptions = '';
+                        var categoryOptions = '';
+
+                        // Populate dropdown options from the server response
+                        for (var i = 0; i < response.SizeArray.length; i++) {
+                            var option = response.SizeArray[i];
+                            sizeOptions += '<option value="' + option.Id + '">' + option.Name + '</option>';
+                        }
+                        for (var i = 0; i < response.TypeArray.length; i++) {
+                            var option = response.TypeArray[i];
+                            typeOptions += '<option value="' + option.Id + '">' + option.Name + '</option>';
+                        }
+                        for (var i = 0; i < response.CategoryArray.length; i++) {
+                            var option = response.CategoryArray[i];
+                            categoryOptions += '<option value="' + option.Id + '">' + option.Name + '</option>';
+                        }
+
+                        //// Build the HTML to display the row data
+                        //var html = '';
+                        //for (var key in response) {
+                        //    if (response.hasOwnProperty(key)) {
+                        //        html += '<p><strong>' + key + ': </strong>' + response[key] + '</p>';
+                        //    }
+                        //}
+
+                        // Build the HTML for the dropdowns
+                        var dropdownHtml = '<div class="form-row">' +
+                            '<div class="form-group col-md-6">' +
+                            '<label for="sizeDropdown">Size:</label>' +
+                            '<select id="sizeDropdown" class="form-control">' +
+                            sizeOptions +
+                            '</select>' +
+                            '</div>' +
+                            '<div class="form-group col-md-6">' +
+                            '<label for="typeDropdown">Type:</label>' +
+                            '<select id="typeDropdown" class="form-control">' +
+                            typeOptions +
+                            '</select>' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="form-row">' +
+                            '<div class="form-group col-md-6">' +
+                            '<label for="categoryDropdown">Category:</label>' +
+                            '<select id="categoryDropdown" class="form-control">' +
+                            categoryOptions +
+                            '</select>' +
+                            '</div>' +
+                            '</div>';
+
+                        // Build the HTML for the print button
+                        var printButtonHtml = '<button id="printButton" class="btn btn-primary">Print</button>';
+
+                        // Create the modal content
+                        var modalContent = '<div class="modal-dialog modal-dialog-centered">' +
+                            '<div class="modal-content">' +
+                            '<div class="modal-header">' +
+                            '<h5 class="modal-title">Print Report</h5>' +
+                            '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
+                            '<span aria-hidden="true">&times;</span>' +
+                            '</button>' +
+                            '</div>' +
+                            '<div class="modal-body">' +
+                            dropdownHtml +
+                            '</div>' +
+                            '<div class="modal-footer">' +
+                            printButtonHtml +
+                            '</div>' +
+                            '</div>' +
+                            '</div>';
+
+                        // Remove any existing modals
+                        $('#modalView').remove();
+
+                        // Append the modal to the body
+                        $('body').append('<div id="modalView" class="modal">' + modalContent + '</div>');
+
+                        // Show the modal with fade-in effect from top
+                        $('#modalView').modal({
+                            show: true,
+                            backdrop: false,
+                            keyboard: false
+                        });
+
+                        // Print button click event handler
+                        $('#printButton').click(function () {
+                            debugger
+                            response.SelectedSizeId = $('#sizeDropdown').val();
+                            response.SelectedTypeId = $('#typeDropdown').val();
+                            response.SelectedCategoryId = $('#categoryDropdown').val();
+
+                            // Generate the URL for the DisplayReport action
+                            var url = '@Url.Action("DisplayReportFromAdvancePrinting", "Report")';
+
+                            // Serialize the response object to JSON
+                            var serializedResponse = JSON.stringify(response);
+
+                            // Append the serialized response as a query parameter to the URL
+                            url += '?response=' + encodeURIComponent(serializedResponse);
+
+                            // Open the URL in a new tab or window
+                            window.open(url, '_blank');
+                        });
                     }
                 });
             });
 
+            // Close the modal when the modal close button is clicked
+            $(document).on('click', '.modal .close', function () {
+                $('#modalView').modal('hide');
+            });
+
+            // Remove the modal from the DOM when it is hidden
+            $(document).on('hidden.bs.modal', '.modal', function () {
+                $(this).remove();
+            });
+
         });
 
-        // Function to populate a dropdown with options
-        function populateDropdown(dropdownId, options) {
-            var dropdown = $('#' + dropdownId);
-            dropdown.empty(); // Clear previous options
 
-            // Add options to the dropdown
-            for (var i = 0; i < options.length; i++) {
-                var option = $('<option></option>').attr('value', options[i]).text(options[i]);
-                dropdown.append(option);
-            }
-        }
 
-        // Submit button click event handler
-        $('#submitBtn').click(function () {
-            // Get the selected values
-            var selectedType = $('#typeDropdown').val();
-            var selectedSize = $('#sizeDropdown').val();
-            var selectedCategory = $('#categoryDropdown').val();
+        document.addEventListener("DOMContentLoaded", function () {
+            var today = new Date();
+            var tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            var formattedDate = tomorrow.toISOString().split('T')[0];
+            document.getElementById('startDate').value = formattedDate;
+            document.getElementById('endDate').value = formattedDate;
 
-            // Perform further actions with the selected values (e.g., pass them to the server)
-
-            // Close the modal
-            $('#myModal').modal('hide');
         });
+
 
     </script>
 </head>
@@ -144,7 +230,8 @@
 <body>
     <div class="center-content">
         <div class="container">
-            <h2 class="mt-4">Search</h2>
+            <center><h2 class="mt-4">Advance Printing</h2></center>
+            <hr />
             <div class="row mt-4">
                 <div class="col-md-4 offset-md-2">
                     <div class="form-group">
@@ -164,7 +251,8 @@
             </div>
         </div>
     </div>
-    <table id="dataTable" class="display" style="width:80%">
+    <br />
+    <table id="dataTable" class="display" style="width:100%">
         <thead>
             <tr>
                 <th>Item No.</th>
