@@ -285,7 +285,6 @@
                 <Source>Embedded</Source>
                 <Value>=Fields!O3TRB3.Value</Value>
                 <Sizing>FitProportional</Sizing>
-                <Top>0in</Top>
                 <Left>3.14956in</Left>
                 <Height>0.36713in</Height>
                 <Width>0.75533in</Width>
@@ -479,6 +478,9 @@
                 <Height>0.18803in</Height>
                 <Width>0.77566in</Width>
                 <ZIndex>7</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
+                </Visibility>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -849,7 +851,6 @@
                 <Source>Embedded</Source>
                 <Value>=Fields!O3TRB3.Value</Value>
                 <Sizing>FitProportional</Sizing>
-                <Top>0in</Top>
                 <Left>3.14956in</Left>
                 <Height>0.36713in</Height>
                 <Width>0.75533in</Width>
@@ -1043,6 +1044,9 @@
                 <Height>0.18803in</Height>
                 <Width>0.77566in</Width>
                 <ZIndex>7</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
+                </Visibility>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -1607,6 +1611,9 @@
                 <Height>0.18803in</Height>
                 <Width>0.77566in</Width>
                 <ZIndex>7</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
+                </Visibility>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -2112,6 +2119,9 @@
                 <Height>0.18803in</Height>
                 <Width>0.77566in</Width>
                 <ZIndex>7</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
+                </Visibility>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -2617,6 +2627,9 @@
                 <Height>0.18803in</Height>
                 <Width>0.77566in</Width>
                 <ZIndex>7</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
+                </Visibility>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -3181,6 +3194,9 @@
                 <Height>0.18803in</Height>
                 <Width>0.77566in</Width>
                 <ZIndex>7</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
+                </Visibility>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -3744,6 +3760,9 @@
                 <Height>0.18803in</Height>
                 <Width>0.77566in</Width>
                 <ZIndex>7</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
+                </Visibility>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -4366,6 +4385,9 @@
                 <Height>0.18803in</Height>
                 <Width>0.77566in</Width>
                 <ZIndex>9</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
+                </Visibility>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>

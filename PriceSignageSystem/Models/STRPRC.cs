@@ -34,6 +34,8 @@ namespace PriceSignageSystem.Models
         public string O3TRB3 { get; set; }
         public decimal O3FGR { get; set; }
         public string O3FNAM { get; set; }
+        public string O3MODL { get; set; }
+        public string O3LONG { get; set; }
         public string O3SLUM { get; set; }
         public string O3DIV { get; set; }
         public string O3TUOM { get; set; }

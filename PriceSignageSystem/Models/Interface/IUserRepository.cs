@@ -10,6 +10,6 @@ namespace PriceSignageSystem.Models.Interface
     {
         IQueryable<User> GetAll();
         List<User> GetUsers();
-
+        User AddUser(User user);
     }
 }

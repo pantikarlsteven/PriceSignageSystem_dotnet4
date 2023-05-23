@@ -23,9 +23,17 @@ namespace PriceSignageSystem.Controllers
             _categoryRepository = categoryRepository;
         }
 
-        public ActionResult Index()
+        public ActionResult Index(UserStoreDto dto)
         {
-            return View();
+            var date = _sTRPRCRepository.GetLatestUpdate();
+
+            if (date.Date == DateTime.Now.Date)
+            {
+                ViewBag.IsDateLatest = true;
+            }
+
+            ViewBag.DateVersion = date.Date.ToShortDateString();
+            return View(dto);
         }
 
         public ActionResult Search(string query)
@@ -91,6 +99,16 @@ namespace PriceSignageSystem.Controllers
             dto.CategoryArray = _categoryRepository.GetAllCategories().ToArray();
 
             return Json(dto);
+        }
+
+        public ActionResult UpdateSTRPRCData(int storeId)
+        {
+            var count = _sTRPRCRepository.UpdateSTRPRCTable(storeId);
+            var data = new UserStoreDto()
+            {
+                DataCount = count
+            };
+            return RedirectToAction("Index", data);
         }
     }
 }

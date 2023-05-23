@@ -1,5 +1,5 @@
-﻿@using PriceSignageSystem.Models.Dto;
-@model UserStoreDto
+﻿@using PriceSignageSystem.Models;
+@model User
 
 @{
     Layout = null;
@@ -13,19 +13,13 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+    @using (Html.BeginForm("Register", "Account", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         <div class="container-fluid">
             <div class="row justify-content-center mt-5">
                 <div class="col-md-4">
-                    <h2 class="text-center mb-4">Login</h2>
-                    @if (TempData["SuccessMessage"] != null)
-                    {
-                        <div class="alert alert-success">
-                            @TempData["SuccessMessage"]
-                        </div>
-                    }
+                    <h2 class="text-center mb-4">Register</h2>
                     <div class="form-group">
                         @Html.LabelFor(m => m.UserName)
                         @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
@@ -36,18 +30,10 @@
                         @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
                         @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
                     </div>
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.SelectedStore)
-                        @Html.DropDownListFor(m => m.SelectedStore, Model.StoreList, "Select Store", new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.SelectedStore, "", new { @class = "text-danger" })
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block mb-4">Login</button>
-                    @Html.ActionLink("Register", "Register", "Account", null, new { @class = "btn btn-secondary btn-block" })
-
+                    <button type="submit" class="btn btn-primary btn-block mb-4">Create</button>
                 </div>
             </div>
         </div>
-
     }
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

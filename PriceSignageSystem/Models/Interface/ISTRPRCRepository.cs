@@ -11,11 +11,13 @@ namespace PriceSignageSystem.Models.Interface
     {
         STRPRCDto SearchString(string query);
         List<STRPRC> GetAll();
-        IEnumerable<STRPRC> FilterByDate(decimal fromDate/*, decimal toDate*/);
         List<STRPRCDto> GetStores();
-        List<STRPRC> GetData(decimal O3SKU);
+        List<STRPRCDto> GetData(decimal O3SKU);
         IEnumerable<STRPRC> GetAllData();
-        IEnumerable<STRPRC> GetDataByDate(decimal startDate, decimal endDate);
+        List<STRPRC> GetDataByDate(decimal startDate, decimal endDate);
         STRPRCDto GetDataBySKU(decimal O3SKU);
+        DateTime GetLatestUpdate();
+        int UpdateSTRPRCTable(int storeId);
+        List<CountryDto> GetCountryImg(string country);
     }
 }

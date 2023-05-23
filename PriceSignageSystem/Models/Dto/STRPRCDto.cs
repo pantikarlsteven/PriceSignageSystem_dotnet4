@@ -52,6 +52,10 @@ namespace PriceSignageSystem.Models.Dto
         public decimal O3FGR { get; set; }
         [Display(Name = "MANUF. NAME")]
         public string O3FNAM { get; set; }
+        [Display(Name="MODEL")]
+        public string O3MODL { get; set; }
+        [Display(Name = "LONG DESC")]
+        public string O3LONG { get; set; }
         [Display(Name = "FROM U/M")]
         public string O3SLUM { get; set; }
         [Display(Name = "DIVISOR")]

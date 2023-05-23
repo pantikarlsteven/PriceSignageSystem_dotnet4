@@ -22,5 +22,6 @@ namespace PriceSignageSystem.Models.Dto
         public int SelectedStore { get; set; }
         public List<SelectListItem> StoreList { get; set; }
         public User User { get; set; }
+        public int DataCount { get; set; }
     }
 }

@@ -63,5 +63,13 @@ namespace PriceSignageSystem.Models.Repository
 
             return users;
         }
+
+        public User AddUser(User user)
+        {
+            var data = _db.Users.Add(user);
+            _db.SaveChanges();
+            return data;
+
+        }
     }
 }

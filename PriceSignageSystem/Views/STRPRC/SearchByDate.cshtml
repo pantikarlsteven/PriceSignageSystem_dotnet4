@@ -34,7 +34,7 @@
                     type: 'POST',
                     data: { startDate: startDate, endDate: endDate },
                     success: function (data) {
-
+                        debugger
                         // Destroy the existing DataTable instance if it exists
                         if ($.fn.DataTable.isDataTable('#dataTable')) {
                             $('#dataTable').DataTable().destroy();

@@ -125,6 +125,18 @@
           <DataField>O3FNAM</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="O3MSRP">
+          <DataField>O3MSRP</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="O3MODL">
+          <DataField>O3MODL</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="O3LONG">
+          <DataField>O3LONG</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
         <Field Name="O3SLUM">
           <DataField>O3SLUM</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -155,12 +167,12 @@
         </Field>
       </Fields>
       <rd:DataSetInfo>
-        <rd:DataSetName>STRPRC</rd:DataSetName>
-        <rd:SchemaPath>C:\Users\skarl\source\repos\vs2019\PriceSignageSystem\PriceSignageSystem\STRPRC.xsd</rd:SchemaPath>
-        <rd:TableName>STRPRC</rd:TableName>
+        <rd:DataSetName>STRPRCDS</rd:DataSetName>
+        <rd:SchemaPath>C:\Users\skarl\source\repos\vs2019\PriceSignageSystem\PriceSignageSystem\STRPRCDS.xsd</rd:SchemaPath>
+        <rd:TableName>STRPRCs</rd:TableName>
         <rd:TableAdapterFillMethod>Fill</rd:TableAdapterFillMethod>
         <rd:TableAdapterGetDataMethod>GetData</rd:TableAdapterGetDataMethod>
-        <rd:TableAdapterName>STRPRCTableAdapter</rd:TableAdapterName>
+        <rd:TableAdapterName>STRPRCsTableAdapter</rd:TableAdapterName>
       </rd:DataSetInfo>
     </DataSet>
   </DataSets>
@@ -170,162 +182,20 @@
         <ReportItems>
           <Rectangle Name="Container">
             <ReportItems>
-              <Textbox Name="REG">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>=First(Fields!O3REG.Value, "STRPRCDS")</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>16pt</FontSize>
-                          <Format>0.00;(0.00)</Format>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <Top>1.16338in</Top>
-                <Left>2.09848in</Left>
-                <Height>0.34682in</Height>
-                <Width>1.80654in</Width>
-                <Visibility>
-                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
-                </Visibility>
-                <Style>
-                  <Border />
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
-              <Textbox Name="Discount">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>-</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>16pt</FontSize>
-                          <Format>0.00;(0.00)</Format>
-                          <Color>Red</Color>
-                        </Style>
-                      </TextRun>
-                      <TextRun>
-                        <Value>=First(Fields!O3REG.Value, "STRPRCDS") - First(Fields!O3POS.Value, "STRPRCDS")</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>16pt</FontSize>
-                          <Format>0.00;(0.00)</Format>
-                          <Color>Red</Color>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <Top>1.51019in</Top>
-                <Left>2.09848in</Left>
-                <Height>0.32307in</Height>
-                <Width>1.80654in</Width>
-                <ZIndex>1</ZIndex>
-                <Visibility>
-                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
-                </Visibility>
-                <Style>
-                  <Border />
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
-              <Textbox Name="Textbox3">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>REG PRICE:</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>14pt</FontSize>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>1.19423in</Top>
-                <Left>0.95906in</Left>
-                <Height>0.30208in</Height>
-                <Width>1.13542in</Width>
-                <ZIndex>2</ZIndex>
-                <Visibility>
-                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
-                </Visibility>
-                <Style>
-                  <Border />
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
               <Image Name="ATTRIB">
                 <Source>Embedded</Source>
                 <Value>=Fields!O3TRB3.Value</Value>
                 <Sizing>FitProportional</Sizing>
-                <Left>3.14956in</Left>
+                <Top>0.06745in</Top>
+                <Left>3.06547in</Left>
                 <Height>0.36713in</Height>
                 <Width>0.75533in</Width>
-                <ZIndex>3</ZIndex>
                 <Style>
                   <Border>
                     <Style>None</Style>
                   </Border>
                 </Style>
               </Image>
-              <Textbox Name="POS">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>=First(Fields!O3POS.Value, "STRPRCDS")</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>22pt</FontSize>
-                          <Format>0.00;(0.00)</Format>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <Top>1.83326in</Top>
-                <Left>1.94569in</Left>
-                <Height>0.43484in</Height>
-                <Width>1.95933in</Width>
-                <ZIndex>4</ZIndex>
-                <Style>
-                  <Border />
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
               <Textbox Name="UPC">
                 <CanGrow>true</CanGrow>
                 <KeepTogether>true</KeepTogether>
@@ -347,11 +217,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.6392in</Top>
+                <Top>2.1392in</Top>
                 <Left>0.37811in</Left>
                 <Height>0.18803in</Height>
                 <Width>0.32354in</Width>
-                <ZIndex>5</ZIndex>
+                <ZIndex>1</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -398,11 +268,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.6392in</Top>
+                <Top>2.1392in</Top>
                 <Left>0.70165in</Left>
                 <Height>0.18803in</Height>
                 <Width>0.75278in</Width>
-                <ZIndex>6</ZIndex>
+                <ZIndex>2</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -473,11 +343,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.6392in</Top>
+                <Top>2.1392in</Top>
                 <Left>1.57943in</Left>
                 <Height>0.18803in</Height>
                 <Width>0.77566in</Width>
-                <ZIndex>7</ZIndex>
+                <ZIndex>3</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -560,11 +430,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.6392in</Top>
+                <Top>2.1392in</Top>
                 <Left>2.41064in</Left>
                 <Height>0.18803in</Height>
                 <Width>1.49443in</Width>
-                <ZIndex>8</ZIndex>
+                <ZIndex>4</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -609,11 +479,11 @@
                     <Style />
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.84111in</Top>
+                <Top>2.34111in</Top>
                 <Left>2.41064in</Left>
                 <Height>0.18803in</Height>
                 <Width>1.49443in</Width>
-                <ZIndex>9</ZIndex>
+                <ZIndex>5</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -623,7 +493,6 @@
                 </Style>
               </Textbox>
               <Textbox Name="Textbox1">
-                <CanGrow>true</CanGrow>
                 <KeepTogether>true</KeepTogether>
                 <Paragraphs>
                   <Paragraph>
@@ -643,15 +512,17 @@
                         </Style>
                       </TextRun>
                     </TextRuns>
-                    <Style />
+                    <Style>
+                      <TextAlign>Center</TextAlign>
+                    </Style>
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox1</rd:DefaultName>
-                <Top>2.32366in</Top>
-                <Left>2.1897in</Left>
-                <Height>0.25in</Height>
+                <Top>1.93477in</Top>
+                <Left>2.10552in</Left>
+                <Height>0.14584in</Height>
                 <Width>1.71528in</Width>
-                <ZIndex>10</ZIndex>
+                <ZIndex>6</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -661,7 +532,6 @@
                 </Style>
               </Textbox>
               <Textbox Name="DESC15">
-                <CanGrow>true</CanGrow>
                 <KeepTogether>true</KeepTogether>
                 <Paragraphs>
                   <Paragraph>
@@ -681,7 +551,7 @@
                 <Left>0.00421in</Left>
                 <Height>0.35379in</Height>
                 <Width>2.99182in</Width>
-                <ZIndex>11</ZIndex>
+                <ZIndex>7</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -691,7 +561,6 @@
                 </Style>
               </Textbox>
               <Textbox Name="BRAND15">
-                <CanGrow>true</CanGrow>
                 <KeepTogether>true</KeepTogether>
                 <Paragraphs>
                   <Paragraph>
@@ -710,7 +579,225 @@
                 <Left>0.0042in</Left>
                 <Height>0.43458in</Height>
                 <Width>2.99182in</Width>
+                <ZIndex>8</ZIndex>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox31">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3MODL.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Calibri</FontFamily>
+                          <FontSize>12pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox17</rd:DefaultName>
+                <Top>1.08193in</Top>
+                <Left>0.0044in</Left>
+                <Height>0.73958in</Height>
+                <Width>1.91014in</Width>
+                <ZIndex>9</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!CategoryId.Value = 2, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox32">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3MODL.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>14pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox17</rd:DefaultName>
+                <Top>0.80068in</Top>
+                <Left>0.01565in</Left>
+                <Height>0.28125in</Height>
+                <Width>1.91014in</Width>
+                <ZIndex>10</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!CategoryId.Value = 2, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox33">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>REG PRICE:</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>12pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox3</rd:DefaultName>
+                <Top>0.91339in</Top>
+                <Left>1.96746in</Left>
+                <Height>0.31597in</Height>
+                <Width>0.80891in</Width>
+                <ZIndex>11</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="REG11">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3REG.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>14pt</FontSize>
+                          <Format>0.00;(0.00)</Format>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <Top>0.91339in</Top>
+                <Left>2.77637in</Left>
+                <Height>0.30514in</Height>
+                <Width>1.13987in</Width>
                 <ZIndex>12</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Discount11">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>-</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>14pt</FontSize>
+                          <Format>0.00;(0.00)</Format>
+                          <Color>Red</Color>
+                        </Style>
+                      </TextRun>
+                      <TextRun>
+                        <Value>=First(Fields!O3REG.Value, "STRPRCDS") - First(Fields!O3POS.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>14pt</FontSize>
+                          <Format>0.00;(0.00)</Format>
+                          <Color>Red</Color>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <Top>1.21853in</Top>
+                <Left>2.77637in</Left>
+                <Height>0.29529in</Height>
+                <Width>1.13983in</Width>
+                <ZIndex>13</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="POS11">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3POS.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>20pt</FontSize>
+                          <Format>0.00;(0.00)</Format>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <Top>1.52771in</Top>
+                <Left>2.42208in</Left>
+                <Height>0.40707in</Height>
+                <Width>1.48299in</Width>
+                <ZIndex>14</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -721,10 +808,10 @@
               </Textbox>
             </ReportItems>
             <KeepTogether>true</KeepTogether>
-            <Top>0.56652in</Top>
+            <Top>0.31652in</Top>
             <Left>0.26598in</Left>
-            <Height>3.0697in</Height>
-            <Width>3.90507in</Width>
+            <Height>2.52914in</Height>
+            <Width>3.91624in</Width>
             <Style>
               <Border>
                 <Style>Solid</Style>
@@ -733,162 +820,20 @@
           </Rectangle>
           <Rectangle Name="Container3">
             <ReportItems>
-              <Textbox Name="REG2">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>=First(Fields!O3REG.Value, "STRPRCDS")</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>16pt</FontSize>
-                          <Format>0.00;(0.00)</Format>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <Top>1.16338in</Top>
-                <Left>2.0983in</Left>
-                <Height>0.34682in</Height>
-                <Width>1.80654in</Width>
-                <Visibility>
-                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
-                </Visibility>
-                <Style>
-                  <Border />
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
-              <Textbox Name="Discount2">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>-</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>16pt</FontSize>
-                          <Format>0.00;(0.00)</Format>
-                          <Color>Red</Color>
-                        </Style>
-                      </TextRun>
-                      <TextRun>
-                        <Value>=First(Fields!O3REG.Value, "STRPRCDS") - First(Fields!O3POS.Value, "STRPRCDS")</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>16pt</FontSize>
-                          <Format>0.00;(0.00)</Format>
-                          <Color>Red</Color>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <Top>1.51019in</Top>
-                <Left>2.0983in</Left>
-                <Height>0.32307in</Height>
-                <Width>1.80654in</Width>
-                <ZIndex>1</ZIndex>
-                <Visibility>
-                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
-                </Visibility>
-                <Style>
-                  <Border />
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
-              <Textbox Name="Textbox4">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>REG PRICE:</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>14pt</FontSize>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>1.19423in</Top>
-                <Left>0.95888in</Left>
-                <Height>0.30208in</Height>
-                <Width>1.13542in</Width>
-                <ZIndex>2</ZIndex>
-                <Visibility>
-                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
-                </Visibility>
-                <Style>
-                  <Border />
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
               <Image Name="ATTRIB2">
                 <Source>Embedded</Source>
                 <Value>=Fields!O3TRB3.Value</Value>
                 <Sizing>FitProportional</Sizing>
-                <Left>3.14956in</Left>
+                <Top>0.06745in</Top>
+                <Left>3.07491in</Left>
                 <Height>0.36713in</Height>
                 <Width>0.75533in</Width>
-                <ZIndex>3</ZIndex>
                 <Style>
                   <Border>
                     <Style>None</Style>
                   </Border>
                 </Style>
               </Image>
-              <Textbox Name="POS2">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>=First(Fields!O3POS.Value, "STRPRCDS")</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>22pt</FontSize>
-                          <Format>0.00;(0.00)</Format>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <Top>1.83326in</Top>
-                <Left>1.94551in</Left>
-                <Height>0.43484in</Height>
-                <Width>1.95933in</Width>
-                <ZIndex>4</ZIndex>
-                <Style>
-                  <Border />
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
               <Textbox Name="UPC5">
                 <CanGrow>true</CanGrow>
                 <KeepTogether>true</KeepTogether>
@@ -910,11 +855,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.6392in</Top>
-                <Left>0.37793in</Left>
+                <Top>2.1392in</Top>
+                <Left>0.38145in</Left>
                 <Height>0.18803in</Height>
                 <Width>0.32354in</Width>
-                <ZIndex>5</ZIndex>
+                <ZIndex>1</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -961,11 +906,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.6392in</Top>
-                <Left>0.70147in</Left>
+                <Top>2.1392in</Top>
+                <Left>0.70499in</Left>
                 <Height>0.18803in</Height>
                 <Width>0.75278in</Width>
-                <ZIndex>6</ZIndex>
+                <ZIndex>2</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -1036,11 +981,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.6392in</Top>
-                <Left>1.57925in</Left>
+                <Top>2.1392in</Top>
+                <Left>1.58277in</Left>
                 <Height>0.18803in</Height>
                 <Width>0.77566in</Width>
-                <ZIndex>7</ZIndex>
+                <ZIndex>3</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -1123,11 +1068,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.6392in</Top>
-                <Left>2.41046in</Left>
+                <Top>2.1392in</Top>
+                <Left>2.41398in</Left>
                 <Height>0.18803in</Height>
                 <Width>1.49443in</Width>
-                <ZIndex>8</ZIndex>
+                <ZIndex>4</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -1172,11 +1117,11 @@
                     <Style />
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.84111in</Top>
-                <Left>2.41046in</Left>
+                <Top>2.34111in</Top>
+                <Left>2.41398in</Left>
                 <Height>0.18803in</Height>
                 <Width>1.49443in</Width>
-                <ZIndex>9</ZIndex>
+                <ZIndex>5</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -1185,8 +1130,64 @@
                   <PaddingBottom>2pt</PaddingBottom>
                 </Style>
               </Textbox>
-              <Textbox Name="Textbox2">
-                <CanGrow>true</CanGrow>
+              <Textbox Name="DESC14">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3IDSC.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>16pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <Top>0.43299in</Top>
+                <Left>0.01365in</Left>
+                <Height>0.35379in</Height>
+                <Width>2.99182in</Width>
+                <ZIndex>6</ZIndex>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="BRAND14">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3FNAM.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontSize>22pt</FontSize>
+                          <FontWeight>Bold</FontWeight>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <Left>0.01364in</Left>
+                <Height>0.43458in</Height>
+                <Width>2.99182in</Width>
+                <ZIndex>7</ZIndex>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox5">
                 <KeepTogether>true</KeepTogether>
                 <Paragraphs>
                   <Paragraph>
@@ -1206,15 +1207,17 @@
                         </Style>
                       </TextRun>
                     </TextRuns>
-                    <Style />
+                    <Style>
+                      <TextAlign>Center</TextAlign>
+                    </Style>
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox1</rd:DefaultName>
-                <Top>2.32366in</Top>
-                <Left>2.18952in</Left>
-                <Height>0.25in</Height>
+                <Top>1.93478in</Top>
+                <Left>2.10873in</Left>
+                <Height>0.14583in</Height>
                 <Width>1.71528in</Width>
-                <ZIndex>10</ZIndex>
+                <ZIndex>8</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -1223,28 +1226,104 @@
                   <PaddingBottom>2pt</PaddingBottom>
                 </Style>
               </Textbox>
-              <Textbox Name="DESC14">
+              <Textbox Name="Textbox34">
                 <CanGrow>true</CanGrow>
                 <KeepTogether>true</KeepTogether>
                 <Paragraphs>
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value>=First(Fields!O3IDSC.Value, "STRPRCDS")</Value>
+                        <Value>=First(Fields!O3MODL.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Calibri</FontFamily>
+                          <FontSize>12pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox17</rd:DefaultName>
+                <Top>1.08192in</Top>
+                <Left>0.00769in</Left>
+                <Height>0.73958in</Height>
+                <Width>1.91014in</Width>
+                <ZIndex>9</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!CategoryId.Value = 2, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox35">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3MODL.Value, "STRPRCDS")</Value>
                         <Style>
                           <FontFamily>Impact</FontFamily>
-                          <FontSize>16pt</FontSize>
+                          <FontSize>14pt</FontSize>
                         </Style>
                       </TextRun>
                     </TextRuns>
                     <Style />
                   </Paragraph>
                 </Paragraphs>
-                <Top>0.43299in</Top>
-                <Left>0.01022in</Left>
-                <Height>0.35379in</Height>
-                <Width>2.99182in</Width>
+                <rd:DefaultName>Textbox17</rd:DefaultName>
+                <Top>0.80067in</Top>
+                <Left>0.01894in</Left>
+                <Height>0.28125in</Height>
+                <Width>1.91014in</Width>
+                <ZIndex>10</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!CategoryId.Value = 2, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox36">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>REG PRICE:</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>12pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox3</rd:DefaultName>
+                <Top>0.91338in</Top>
+                <Left>1.97075in</Left>
+                <Height>0.31597in</Height>
+                <Width>0.80891in</Width>
                 <ZIndex>11</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
+                </Visibility>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -1253,27 +1332,110 @@
                   <PaddingBottom>2pt</PaddingBottom>
                 </Style>
               </Textbox>
-              <Textbox Name="BRAND14">
-                <CanGrow>true</CanGrow>
+              <Textbox Name="REG12">
                 <KeepTogether>true</KeepTogether>
                 <Paragraphs>
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value>=First(Fields!O3FNAM.Value, "STRPRCDS")</Value>
+                        <Value>=First(Fields!O3REG.Value, "STRPRCDS")</Value>
                         <Style>
-                          <FontSize>22pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>14pt</FontSize>
+                          <Format>0.00;(0.00)</Format>
                         </Style>
                       </TextRun>
                     </TextRuns>
-                    <Style />
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Left>0.01021in</Left>
-                <Height>0.43458in</Height>
-                <Width>2.99182in</Width>
+                <Top>0.91338in</Top>
+                <Left>2.77966in</Left>
+                <Height>0.30514in</Height>
+                <Width>1.13987in</Width>
                 <ZIndex>12</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Discount12">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>-</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>14pt</FontSize>
+                          <Format>0.00;(0.00)</Format>
+                          <Color>Red</Color>
+                        </Style>
+                      </TextRun>
+                      <TextRun>
+                        <Value>=First(Fields!O3REG.Value, "STRPRCDS") - First(Fields!O3POS.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>14pt</FontSize>
+                          <Format>0.00;(0.00)</Format>
+                          <Color>Red</Color>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <Top>1.21852in</Top>
+                <Left>2.77966in</Left>
+                <Height>0.29529in</Height>
+                <Width>1.13983in</Width>
+                <ZIndex>13</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="POS12">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3POS.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>20pt</FontSize>
+                          <Format>0.00;(0.00)</Format>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <Top>1.5277in</Top>
+                <Left>2.42537in</Left>
+                <Height>0.40707in</Height>
+                <Width>1.48299in</Width>
+                <ZIndex>14</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -1284,10 +1446,10 @@
               </Textbox>
             </ReportItems>
             <KeepTogether>true</KeepTogether>
-            <Top>0.56652in</Top>
-            <Left>4.22927in</Left>
-            <Height>3.0697in</Height>
-            <Width>3.90498in</Width>
+            <Top>0.31652in</Top>
+            <Left>4.22584in</Left>
+            <Height>2.52914in</Height>
+            <Width>3.91953in</Width>
             <ZIndex>1</ZIndex>
             <Style>
               <Border>
@@ -1297,162 +1459,20 @@
           </Rectangle>
           <Rectangle Name="Container2">
             <ReportItems>
-              <Textbox Name="REG3">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>=First(Fields!O3REG.Value, "STRPRCDS")</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>16pt</FontSize>
-                          <Format>0.00;(0.00)</Format>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <Top>1.19463in</Top>
-                <Left>2.09858in</Left>
-                <Height>0.34682in</Height>
-                <Width>1.80654in</Width>
-                <Visibility>
-                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
-                </Visibility>
-                <Style>
-                  <Border />
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
-              <Textbox Name="Discount3">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>-</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>16pt</FontSize>
-                          <Format>0.00;(0.00)</Format>
-                          <Color>Red</Color>
-                        </Style>
-                      </TextRun>
-                      <TextRun>
-                        <Value>=First(Fields!O3REG.Value, "STRPRCDS") - First(Fields!O3POS.Value, "STRPRCDS")</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>16pt</FontSize>
-                          <Format>0.00;(0.00)</Format>
-                          <Color>Red</Color>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <Top>1.54144in</Top>
-                <Left>2.09858in</Left>
-                <Height>0.32307in</Height>
-                <Width>1.80654in</Width>
-                <ZIndex>1</ZIndex>
-                <Visibility>
-                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
-                </Visibility>
-                <Style>
-                  <Border />
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
-              <Textbox Name="Textbox5">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>REG PRICE:</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>14pt</FontSize>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>1.22548in</Top>
-                <Left>0.95916in</Left>
-                <Height>0.30208in</Height>
-                <Width>1.13542in</Width>
-                <ZIndex>2</ZIndex>
-                <Visibility>
-                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
-                </Visibility>
-                <Style>
-                  <Border />
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
               <Image Name="ATTRIB3">
                 <Source>Embedded</Source>
                 <Value>=Fields!O3TRB3.Value</Value>
                 <Sizing>FitProportional</Sizing>
-                <Left>3.14975in</Left>
+                <Top>0.06745in</Top>
+                <Left>3.07672in</Left>
                 <Height>0.36713in</Height>
                 <Width>0.75533in</Width>
-                <ZIndex>3</ZIndex>
                 <Style>
                   <Border>
                     <Style>None</Style>
                   </Border>
                 </Style>
               </Image>
-              <Textbox Name="POS3">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>=First(Fields!O3POS.Value, "STRPRCDS")</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>22pt</FontSize>
-                          <Format>0.00;(0.00)</Format>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <Top>1.86451in</Top>
-                <Left>1.94579in</Left>
-                <Height>0.43484in</Height>
-                <Width>1.95933in</Width>
-                <ZIndex>4</ZIndex>
-                <Style>
-                  <Border />
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
               <Textbox Name="UPC9">
                 <CanGrow>true</CanGrow>
                 <KeepTogether>true</KeepTogether>
@@ -1474,11 +1494,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.67045in</Top>
-                <Left>0.37821in</Left>
+                <Top>2.1392in</Top>
+                <Left>0.38936in</Left>
                 <Height>0.18803in</Height>
                 <Width>0.32354in</Width>
-                <ZIndex>5</ZIndex>
+                <ZIndex>1</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -1525,11 +1545,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.67045in</Top>
-                <Left>0.70175in</Left>
+                <Top>2.1392in</Top>
+                <Left>0.7129in</Left>
                 <Height>0.18803in</Height>
                 <Width>0.75278in</Width>
-                <ZIndex>6</ZIndex>
+                <ZIndex>2</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -1600,11 +1620,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.67045in</Top>
-                <Left>1.57953in</Left>
+                <Top>2.1392in</Top>
+                <Left>1.59068in</Left>
                 <Height>0.18803in</Height>
                 <Width>0.77566in</Width>
-                <ZIndex>7</ZIndex>
+                <ZIndex>3</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -1687,11 +1707,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.67045in</Top>
-                <Left>2.41074in</Left>
+                <Top>2.1392in</Top>
+                <Left>2.42189in</Left>
                 <Height>0.18803in</Height>
                 <Width>1.49443in</Width>
-                <ZIndex>8</ZIndex>
+                <ZIndex>4</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -1736,11 +1756,11 @@
                     <Style />
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.87236in</Top>
-                <Left>2.41074in</Left>
+                <Top>2.34111in</Top>
+                <Left>2.42189in</Left>
                 <Height>0.18803in</Height>
                 <Width>1.49443in</Width>
-                <ZIndex>9</ZIndex>
+                <ZIndex>5</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -1749,8 +1769,7 @@
                   <PaddingBottom>2pt</PaddingBottom>
                 </Style>
               </Textbox>
-              <Textbox Name="Textbox6">
-                <CanGrow>true</CanGrow>
+              <Textbox Name="Textbox2">
                 <KeepTogether>true</KeepTogether>
                 <Paragraphs>
                   <Paragraph>
@@ -1770,15 +1789,293 @@
                         </Style>
                       </TextRun>
                     </TextRuns>
-                    <Style />
+                    <Style>
+                      <TextAlign>Center</TextAlign>
+                    </Style>
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox1</rd:DefaultName>
-                <Top>2.35491in</Top>
-                <Left>2.1898in</Left>
-                <Height>0.25in</Height>
+                <Top>1.93477in</Top>
+                <Left>2.11677in</Left>
+                <Height>0.14584in</Height>
                 <Width>1.71528in</Width>
+                <ZIndex>6</ZIndex>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="DESC16">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3IDSC.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>16pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <Top>0.43299in</Top>
+                <Left>0.01546in</Left>
+                <Height>0.35379in</Height>
+                <Width>2.99182in</Width>
+                <ZIndex>7</ZIndex>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="BRAND16">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3FNAM.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontSize>22pt</FontSize>
+                          <FontWeight>Bold</FontWeight>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <Left>0.01545in</Left>
+                <Height>0.43458in</Height>
+                <Width>2.99182in</Width>
+                <ZIndex>8</ZIndex>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox25">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3MODL.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Calibri</FontFamily>
+                          <FontSize>12pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox17</rd:DefaultName>
+                <Top>1.06497in</Top>
+                <Left>0.01065in</Left>
+                <Height>0.73958in</Height>
+                <Width>1.91014in</Width>
+                <ZIndex>9</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!CategoryId.Value = 2, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox26">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3MODL.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>14pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox17</rd:DefaultName>
+                <Top>0.78372in</Top>
+                <Left>0.0219in</Left>
+                <Height>0.28125in</Height>
+                <Width>1.91014in</Width>
                 <ZIndex>10</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!CategoryId.Value = 2, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox27">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>REG PRICE:</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>12pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox3</rd:DefaultName>
+                <Top>0.89643in</Top>
+                <Left>1.97371in</Left>
+                <Height>0.31597in</Height>
+                <Width>0.80891in</Width>
+                <ZIndex>11</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="REG9">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3REG.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>14pt</FontSize>
+                          <Format>0.00;(0.00)</Format>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <Top>0.89643in</Top>
+                <Left>2.78262in</Left>
+                <Height>0.30514in</Height>
+                <Width>1.13987in</Width>
+                <ZIndex>12</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Discount9">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>-</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>14pt</FontSize>
+                          <Format>0.00;(0.00)</Format>
+                          <Color>Red</Color>
+                        </Style>
+                      </TextRun>
+                      <TextRun>
+                        <Value>=First(Fields!O3REG.Value, "STRPRCDS") - First(Fields!O3POS.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>14pt</FontSize>
+                          <Format>0.00;(0.00)</Format>
+                          <Color>Red</Color>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <Top>1.20157in</Top>
+                <Left>2.78262in</Left>
+                <Height>0.29529in</Height>
+                <Width>1.13983in</Width>
+                <ZIndex>13</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="POS9">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3POS.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>20pt</FontSize>
+                          <Format>0.00;(0.00)</Format>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <Top>1.51075in</Top>
+                <Left>2.42833in</Left>
+                <Height>0.40707in</Height>
+                <Width>1.48299in</Width>
+                <ZIndex>14</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -1789,10 +2086,10 @@
               </Textbox>
             </ReportItems>
             <KeepTogether>true</KeepTogether>
-            <Top>3.71719in</Top>
-            <Left>0.26579in</Left>
-            <Height>3.10095in</Height>
-            <Width>3.90526in</Width>
+            <Top>2.86261in</Top>
+            <Left>0.26177in</Left>
+            <Height>2.52914in</Height>
+            <Width>3.92249in</Width>
             <ZIndex>2</ZIndex>
             <Style>
               <Border>
@@ -1802,162 +2099,20 @@
           </Rectangle>
           <Rectangle Name="Container4">
             <ReportItems>
-              <Textbox Name="REG4">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>=First(Fields!O3REG.Value, "STRPRCDS")</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>16pt</FontSize>
-                          <Format>0.00;(0.00)</Format>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <Top>1.20616in</Top>
-                <Left>2.09858in</Left>
-                <Height>0.34682in</Height>
-                <Width>1.80654in</Width>
-                <Visibility>
-                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
-                </Visibility>
-                <Style>
-                  <Border />
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
-              <Textbox Name="Discount4">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>-</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>16pt</FontSize>
-                          <Format>0.00;(0.00)</Format>
-                          <Color>Red</Color>
-                        </Style>
-                      </TextRun>
-                      <TextRun>
-                        <Value>=First(Fields!O3REG.Value, "STRPRCDS") - First(Fields!O3POS.Value, "STRPRCDS")</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>16pt</FontSize>
-                          <Format>0.00;(0.00)</Format>
-                          <Color>Red</Color>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <Top>1.55297in</Top>
-                <Left>2.09858in</Left>
-                <Height>0.32307in</Height>
-                <Width>1.80654in</Width>
-                <ZIndex>1</ZIndex>
-                <Visibility>
-                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
-                </Visibility>
-                <Style>
-                  <Border />
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
-              <Textbox Name="Textbox7">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>REG PRICE:</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>14pt</FontSize>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>1.23701in</Top>
-                <Left>0.95916in</Left>
-                <Height>0.30208in</Height>
-                <Width>1.13542in</Width>
-                <ZIndex>2</ZIndex>
-                <Visibility>
-                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
-                </Visibility>
-                <Style>
-                  <Border />
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
               <Image Name="ATTRIB4">
                 <Source>Embedded</Source>
                 <Value>=Fields!O3TRB3.Value</Value>
                 <Sizing>FitProportional</Sizing>
-                <Left>3.14975in</Left>
+                <Top>0.06745in</Top>
+                <Left>3.08541in</Left>
                 <Height>0.36713in</Height>
                 <Width>0.75533in</Width>
-                <ZIndex>3</ZIndex>
                 <Style>
                   <Border>
                     <Style>None</Style>
                   </Border>
                 </Style>
               </Image>
-              <Textbox Name="POS4">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>=First(Fields!O3POS.Value, "STRPRCDS")</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>22pt</FontSize>
-                          <Format>0.00;(0.00)</Format>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <Top>1.87604in</Top>
-                <Left>1.94579in</Left>
-                <Height>0.43484in</Height>
-                <Width>1.95933in</Width>
-                <ZIndex>4</ZIndex>
-                <Style>
-                  <Border />
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
               <Textbox Name="UPC13">
                 <CanGrow>true</CanGrow>
                 <KeepTogether>true</KeepTogether>
@@ -1979,11 +2134,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.68198in</Top>
-                <Left>0.37821in</Left>
+                <Top>2.1392in</Top>
+                <Left>0.39195in</Left>
                 <Height>0.18803in</Height>
                 <Width>0.32354in</Width>
-                <ZIndex>5</ZIndex>
+                <ZIndex>1</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -2030,11 +2185,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.68198in</Top>
-                <Left>0.70175in</Left>
+                <Top>2.1392in</Top>
+                <Left>0.71549in</Left>
                 <Height>0.18803in</Height>
                 <Width>0.75278in</Width>
-                <ZIndex>6</ZIndex>
+                <ZIndex>2</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -2105,11 +2260,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.68198in</Top>
-                <Left>1.57953in</Left>
+                <Top>2.1392in</Top>
+                <Left>1.59327in</Left>
                 <Height>0.18803in</Height>
                 <Width>0.77566in</Width>
-                <ZIndex>7</ZIndex>
+                <ZIndex>3</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -2192,11 +2347,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.68198in</Top>
-                <Left>2.41074in</Left>
+                <Top>2.1392in</Top>
+                <Left>2.42448in</Left>
                 <Height>0.18803in</Height>
                 <Width>1.49443in</Width>
-                <ZIndex>8</ZIndex>
+                <ZIndex>4</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -2241,11 +2396,68 @@
                     <Style />
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.88389in</Top>
-                <Left>2.41074in</Left>
+                <Top>2.34111in</Top>
+                <Left>2.42448in</Left>
                 <Height>0.18803in</Height>
                 <Width>1.49443in</Width>
-                <ZIndex>9</ZIndex>
+                <ZIndex>5</ZIndex>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="DESC17">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3IDSC.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>16pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <Top>0.43299in</Top>
+                <Left>0.02415in</Left>
+                <Height>0.35379in</Height>
+                <Width>2.99182in</Width>
+                <ZIndex>6</ZIndex>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="BRAND17">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3FNAM.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontSize>22pt</FontSize>
+                          <FontWeight>Bold</FontWeight>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <Left>0.02414in</Left>
+                <Height>0.43458in</Height>
+                <Width>2.99182in</Width>
+                <ZIndex>7</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -2255,7 +2467,6 @@
                 </Style>
               </Textbox>
               <Textbox Name="Textbox8">
-                <CanGrow>true</CanGrow>
                 <KeepTogether>true</KeepTogether>
                 <Paragraphs>
                   <Paragraph>
@@ -2275,15 +2486,234 @@
                         </Style>
                       </TextRun>
                     </TextRuns>
-                    <Style />
+                    <Style>
+                      <TextAlign>Center</TextAlign>
+                    </Style>
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox1</rd:DefaultName>
-                <Top>2.36644in</Top>
-                <Left>2.1898in</Left>
-                <Height>0.25in</Height>
+                <Top>1.93478in</Top>
+                <Left>2.11923in</Left>
+                <Height>0.14583in</Height>
                 <Width>1.71528in</Width>
+                <ZIndex>8</ZIndex>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox28">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3MODL.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Calibri</FontFamily>
+                          <FontSize>12pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox17</rd:DefaultName>
+                <Top>1.06498in</Top>
+                <Height>0.73958in</Height>
+                <Width>1.91014in</Width>
+                <ZIndex>9</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!CategoryId.Value = 2, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox29">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3MODL.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>14pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox17</rd:DefaultName>
+                <Top>0.78373in</Top>
+                <Left>0.01125in</Left>
+                <Height>0.28125in</Height>
+                <Width>1.91014in</Width>
                 <ZIndex>10</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!CategoryId.Value = 2, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox30">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>REG PRICE:</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>12pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox3</rd:DefaultName>
+                <Top>0.89644in</Top>
+                <Left>1.96306in</Left>
+                <Height>0.31597in</Height>
+                <Width>0.80891in</Width>
+                <ZIndex>11</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="REG10">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3REG.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>14pt</FontSize>
+                          <Format>0.00;(0.00)</Format>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <Top>0.89644in</Top>
+                <Left>2.77197in</Left>
+                <Height>0.30514in</Height>
+                <Width>1.13987in</Width>
+                <ZIndex>12</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Discount10">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>-</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>14pt</FontSize>
+                          <Format>0.00;(0.00)</Format>
+                          <Color>Red</Color>
+                        </Style>
+                      </TextRun>
+                      <TextRun>
+                        <Value>=First(Fields!O3REG.Value, "STRPRCDS") - First(Fields!O3POS.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>14pt</FontSize>
+                          <Format>0.00;(0.00)</Format>
+                          <Color>Red</Color>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <Top>1.20158in</Top>
+                <Left>2.77197in</Left>
+                <Height>0.29529in</Height>
+                <Width>1.13983in</Width>
+                <ZIndex>13</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="POS10">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3POS.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>20pt</FontSize>
+                          <Format>0.00;(0.00)</Format>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <Top>1.51076in</Top>
+                <Left>2.41768in</Left>
+                <Height>0.40707in</Height>
+                <Width>1.48299in</Width>
+                <ZIndex>14</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -2294,10 +2724,10 @@
               </Textbox>
             </ReportItems>
             <KeepTogether>true</KeepTogether>
-            <Top>3.70566in</Top>
-            <Left>4.23948in</Left>
-            <Height>3.11248in</Height>
-            <Width>3.90517in</Width>
+            <Top>2.8626in</Top>
+            <Left>4.212in</Left>
+            <Height>2.52914in</Height>
+            <Width>3.91891in</Width>
             <ZIndex>3</ZIndex>
             <Style>
               <Border>
@@ -2308,7 +2738,6 @@
           <Rectangle Name="Container5">
             <ReportItems>
               <Textbox Name="REG5">
-                <CanGrow>true</CanGrow>
                 <KeepTogether>true</KeepTogether>
                 <Paragraphs>
                   <Paragraph>
@@ -2317,18 +2746,20 @@
                         <Value>=First(Fields!O3REG.Value, "STRPRCDS")</Value>
                         <Style>
                           <FontFamily>Impact</FontFamily>
-                          <FontSize>16pt</FontSize>
+                          <FontSize>14pt</FontSize>
                           <Format>0.00;(0.00)</Format>
                         </Style>
                       </TextRun>
                     </TextRuns>
-                    <Style />
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>1.19463in</Top>
-                <Left>2.09867in</Left>
-                <Height>0.34682in</Height>
-                <Width>1.80654in</Width>
+                <Top>0.91338in</Top>
+                <Left>2.77197in</Left>
+                <Height>0.30514in</Height>
+                <Width>1.13987in</Width>
                 <Visibility>
                   <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
                 </Visibility>
@@ -2341,7 +2772,6 @@
                 </Style>
               </Textbox>
               <Textbox Name="Discount5">
-                <CanGrow>true</CanGrow>
                 <KeepTogether>true</KeepTogether>
                 <Paragraphs>
                   <Paragraph>
@@ -2350,7 +2780,7 @@
                         <Value>-</Value>
                         <Style>
                           <FontFamily>Impact</FontFamily>
-                          <FontSize>16pt</FontSize>
+                          <FontSize>14pt</FontSize>
                           <Format>0.00;(0.00)</Format>
                           <Color>Red</Color>
                         </Style>
@@ -2359,19 +2789,21 @@
                         <Value>=First(Fields!O3REG.Value, "STRPRCDS") - First(Fields!O3POS.Value, "STRPRCDS")</Value>
                         <Style>
                           <FontFamily>Impact</FontFamily>
-                          <FontSize>16pt</FontSize>
+                          <FontSize>14pt</FontSize>
                           <Format>0.00;(0.00)</Format>
                           <Color>Red</Color>
                         </Style>
                       </TextRun>
                     </TextRuns>
-                    <Style />
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>1.54144in</Top>
-                <Left>2.09867in</Left>
-                <Height>0.32307in</Height>
-                <Width>1.80654in</Width>
+                <Top>1.21852in</Top>
+                <Left>2.77197in</Left>
+                <Height>0.29529in</Height>
+                <Width>1.13983in</Width>
                 <ZIndex>1</ZIndex>
                 <Visibility>
                   <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
@@ -2385,7 +2817,6 @@
                 </Style>
               </Textbox>
               <Textbox Name="Textbox9">
-                <CanGrow>true</CanGrow>
                 <KeepTogether>true</KeepTogether>
                 <Paragraphs>
                   <Paragraph>
@@ -2394,18 +2825,20 @@
                         <Value>REG PRICE:</Value>
                         <Style>
                           <FontFamily>Impact</FontFamily>
-                          <FontSize>14pt</FontSize>
+                          <FontSize>12pt</FontSize>
                         </Style>
                       </TextRun>
                     </TextRuns>
-                    <Style />
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>1.22548in</Top>
-                <Left>0.95925in</Left>
-                <Height>0.30208in</Height>
-                <Width>1.13542in</Width>
+                <Top>0.91338in</Top>
+                <Left>1.96306in</Left>
+                <Height>0.31597in</Height>
+                <Width>0.80891in</Width>
                 <ZIndex>2</ZIndex>
                 <Visibility>
                   <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
@@ -2422,7 +2855,8 @@
                 <Source>Embedded</Source>
                 <Value>=Fields!O3TRB3.Value</Value>
                 <Sizing>FitProportional</Sizing>
-                <Left>3.14975in</Left>
+                <Top>0.06745in</Top>
+                <Left>3.07229in</Left>
                 <Height>0.36713in</Height>
                 <Width>0.75533in</Width>
                 <ZIndex>3</ZIndex>
@@ -2432,37 +2866,6 @@
                   </Border>
                 </Style>
               </Image>
-              <Textbox Name="POS5">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>=First(Fields!O3POS.Value, "STRPRCDS")</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>22pt</FontSize>
-                          <Format>0.00;(0.00)</Format>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <Top>1.86451in</Top>
-                <Left>1.94588in</Left>
-                <Height>0.43484in</Height>
-                <Width>1.95933in</Width>
-                <ZIndex>4</ZIndex>
-                <Style>
-                  <Border />
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
               <Textbox Name="UPC17">
                 <CanGrow>true</CanGrow>
                 <KeepTogether>true</KeepTogether>
@@ -2484,11 +2887,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.67045in</Top>
-                <Left>0.3783in</Left>
+                <Top>2.1392in</Top>
+                <Left>0.38493in</Left>
                 <Height>0.18803in</Height>
                 <Width>0.32354in</Width>
-                <ZIndex>5</ZIndex>
+                <ZIndex>4</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -2535,11 +2938,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.67045in</Top>
-                <Left>0.70184in</Left>
+                <Top>2.1392in</Top>
+                <Left>0.70847in</Left>
                 <Height>0.18803in</Height>
                 <Width>0.75278in</Width>
-                <ZIndex>6</ZIndex>
+                <ZIndex>5</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -2610,11 +3013,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.67045in</Top>
-                <Left>1.57962in</Left>
+                <Top>2.1392in</Top>
+                <Left>1.58625in</Left>
                 <Height>0.18803in</Height>
                 <Width>0.77566in</Width>
-                <ZIndex>7</ZIndex>
+                <ZIndex>6</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -2697,11 +3100,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.67045in</Top>
-                <Left>2.41083in</Left>
+                <Top>2.1392in</Top>
+                <Left>2.41746in</Left>
                 <Height>0.18803in</Height>
                 <Width>1.49443in</Width>
-                <ZIndex>8</ZIndex>
+                <ZIndex>7</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -2746,11 +3149,11 @@
                     <Style />
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.87236in</Top>
-                <Left>2.41083in</Left>
+                <Top>2.34111in</Top>
+                <Left>2.41746in</Left>
                 <Height>0.18803in</Height>
                 <Width>1.49443in</Width>
-                <ZIndex>9</ZIndex>
+                <ZIndex>8</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -2760,7 +3163,6 @@
                 </Style>
               </Textbox>
               <Textbox Name="Textbox10">
-                <CanGrow>true</CanGrow>
                 <KeepTogether>true</KeepTogether>
                 <Paragraphs>
                   <Paragraph>
@@ -2780,15 +3182,17 @@
                         </Style>
                       </TextRun>
                     </TextRuns>
-                    <Style />
+                    <Style>
+                      <TextAlign>Center</TextAlign>
+                    </Style>
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox1</rd:DefaultName>
-                <Top>2.35491in</Top>
-                <Left>2.18989in</Left>
-                <Height>0.25in</Height>
+                <Top>1.93477in</Top>
+                <Left>2.11234in</Left>
+                <Height>0.14584in</Height>
                 <Width>1.71528in</Width>
-                <ZIndex>10</ZIndex>
+                <ZIndex>9</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -2797,8 +3201,7 @@
                   <PaddingBottom>2pt</PaddingBottom>
                 </Style>
               </Textbox>
-              <Textbox Name="DESC11">
-                <CanGrow>true</CanGrow>
+              <Textbox Name="DESC18">
                 <KeepTogether>true</KeepTogether>
                 <Paragraphs>
                   <Paragraph>
@@ -2814,11 +3217,11 @@
                     <Style />
                   </Paragraph>
                 </Paragraphs>
-                <Top>0.4434in</Top>
-                <Left>0.01451in</Left>
+                <Top>0.43299in</Top>
+                <Left>0.01103in</Left>
                 <Height>0.35379in</Height>
-                <Width>2.9816in</Width>
-                <ZIndex>11</ZIndex>
+                <Width>2.99182in</Width>
+                <ZIndex>10</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -2827,8 +3230,7 @@
                   <PaddingBottom>2pt</PaddingBottom>
                 </Style>
               </Textbox>
-              <Textbox Name="BRAND11">
-                <CanGrow>true</CanGrow>
+              <Textbox Name="BRAND18">
                 <KeepTogether>true</KeepTogether>
                 <Paragraphs>
                   <Paragraph>
@@ -2844,9 +3246,41 @@
                     <Style />
                   </Paragraph>
                 </Paragraphs>
-                <Left>0.00428in</Left>
+                <Left>0.01102in</Left>
                 <Height>0.43458in</Height>
                 <Width>2.99182in</Width>
+                <ZIndex>11</ZIndex>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="POS5">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3POS.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>20pt</FontSize>
+                          <Format>0.00;(0.00)</Format>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <Top>1.5277in</Top>
+                <Left>2.41768in</Left>
+                <Height>0.40707in</Height>
+                <Width>1.48299in</Width>
                 <ZIndex>12</ZIndex>
                 <Style>
                   <Border />
@@ -2856,106 +3290,13 @@
                   <PaddingBottom>2pt</PaddingBottom>
                 </Style>
               </Textbox>
-            </ReportItems>
-            <KeepTogether>true</KeepTogether>
-            <Top>6.8991in</Top>
-            <Left>0.26588in</Left>
-            <Height>3.10095in</Height>
-            <Width>3.90526in</Width>
-            <ZIndex>4</ZIndex>
-            <Style>
-              <Border>
-                <Style>Solid</Style>
-              </Border>
-            </Style>
-          </Rectangle>
-          <Rectangle Name="Container6">
-            <ReportItems>
-              <Textbox Name="REG6">
-                <CanGrow>true</CanGrow>
+              <Textbox Name="Textbox17">
                 <KeepTogether>true</KeepTogether>
                 <Paragraphs>
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value>=First(Fields!O3REG.Value, "STRPRCDS")</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>16pt</FontSize>
-                          <Format>0.00;(0.00)</Format>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <Top>1.19463in</Top>
-                <Left>2.09868in</Left>
-                <Height>0.34682in</Height>
-                <Width>1.80654in</Width>
-                <Visibility>
-                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
-                </Visibility>
-                <Style>
-                  <Border />
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
-              <Textbox Name="Discount6">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>-</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>16pt</FontSize>
-                          <Format>0.00;(0.00)</Format>
-                          <Color>Red</Color>
-                        </Style>
-                      </TextRun>
-                      <TextRun>
-                        <Value>=First(Fields!O3REG.Value, "STRPRCDS") - First(Fields!O3POS.Value, "STRPRCDS")</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>16pt</FontSize>
-                          <Format>0.00;(0.00)</Format>
-                          <Color>Red</Color>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <Top>1.54144in</Top>
-                <Left>2.09868in</Left>
-                <Height>0.32307in</Height>
-                <Width>1.80654in</Width>
-                <ZIndex>1</ZIndex>
-                <Visibility>
-                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
-                </Visibility>
-                <Style>
-                  <Border />
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
-              <Textbox Name="Textbox11">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>REG PRICE:</Value>
+                        <Value>=First(Fields!O3MODL.Value, "STRPRCDS")</Value>
                         <Style>
                           <FontFamily>Impact</FontFamily>
                           <FontSize>14pt</FontSize>
@@ -2965,68 +3306,89 @@
                     <Style />
                   </Paragraph>
                 </Paragraphs>
-                <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>1.22548in</Top>
-                <Left>0.95926in</Left>
-                <Height>0.30208in</Height>
-                <Width>1.13542in</Width>
-                <ZIndex>2</ZIndex>
+                <rd:DefaultName>Textbox17</rd:DefaultName>
+                <Top>0.80067in</Top>
+                <Left>0.01125in</Left>
+                <Height>0.28125in</Height>
+                <Width>1.91014in</Width>
+                <ZIndex>13</ZIndex>
                 <Visibility>
-                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
+                  <Hidden>=IIf(Parameters!CategoryId.Value = 2, True, False)</Hidden>
                 </Visibility>
                 <Style>
-                  <Border />
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
                   <PaddingLeft>2pt</PaddingLeft>
                   <PaddingRight>2pt</PaddingRight>
                   <PaddingTop>2pt</PaddingTop>
                   <PaddingBottom>2pt</PaddingBottom>
                 </Style>
               </Textbox>
-              <Image Name="ATTRIB6">
-                <Source>Embedded</Source>
-                <Value>=Fields!O3TRB3.Value</Value>
-                <Sizing>FitProportional</Sizing>
-                <Left>3.14967in</Left>
-                <Height>0.36713in</Height>
-                <Width>0.75533in</Width>
-                <ZIndex>3</ZIndex>
-                <Style>
-                  <Border>
-                    <Style>None</Style>
-                  </Border>
-                </Style>
-              </Image>
-              <Textbox Name="POS6">
+              <Textbox Name="Textbox18">
                 <CanGrow>true</CanGrow>
                 <KeepTogether>true</KeepTogether>
                 <Paragraphs>
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value>=First(Fields!O3POS.Value, "STRPRCDS")</Value>
+                        <Value>=First(Fields!O3MODL.Value, "STRPRCDS")</Value>
                         <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>22pt</FontSize>
-                          <Format>0.00;(0.00)</Format>
+                          <FontFamily>Calibri</FontFamily>
+                          <FontSize>12pt</FontSize>
                         </Style>
                       </TextRun>
                     </TextRuns>
                     <Style />
                   </Paragraph>
                 </Paragraphs>
-                <Top>1.86451in</Top>
-                <Left>1.94589in</Left>
-                <Height>0.43484in</Height>
-                <Width>1.95933in</Width>
-                <ZIndex>4</ZIndex>
+                <rd:DefaultName>Textbox17</rd:DefaultName>
+                <Top>1.08192in</Top>
+                <Height>0.73958in</Height>
+                <Width>1.91014in</Width>
+                <ZIndex>14</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!CategoryId.Value = 2, True, False)</Hidden>
+                </Visibility>
                 <Style>
-                  <Border />
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
                   <PaddingLeft>2pt</PaddingLeft>
                   <PaddingRight>2pt</PaddingRight>
                   <PaddingTop>2pt</PaddingTop>
                   <PaddingBottom>2pt</PaddingBottom>
                 </Style>
               </Textbox>
+            </ReportItems>
+            <KeepTogether>true</KeepTogether>
+            <Top>5.41992in</Top>
+            <Left>0.26598in</Left>
+            <Height>2.52914in</Height>
+            <Width>3.92173in</Width>
+            <ZIndex>4</ZIndex>
+            <Style>
+              <Border>
+                <Style>Solid</Style>
+              </Border>
+            </Style>
+          </Rectangle>
+          <Rectangle Name="Container6">
+            <ReportItems>
+              <Image Name="ATTRIB6">
+                <Source>Embedded</Source>
+                <Value>=Fields!O3TRB3.Value</Value>
+                <Sizing>FitProportional</Sizing>
+                <Top>0.06745in</Top>
+                <Left>3.07491in</Left>
+                <Height>0.36713in</Height>
+                <Width>0.75533in</Width>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                </Style>
+              </Image>
               <Textbox Name="UPC21">
                 <CanGrow>true</CanGrow>
                 <KeepTogether>true</KeepTogether>
@@ -3048,11 +3410,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.67045in</Top>
-                <Left>0.37831in</Left>
+                <Top>2.1392in</Top>
+                <Left>0.38145in</Left>
                 <Height>0.18803in</Height>
                 <Width>0.32354in</Width>
-                <ZIndex>5</ZIndex>
+                <ZIndex>1</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -3099,11 +3461,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.67045in</Top>
-                <Left>0.70185in</Left>
+                <Top>2.1392in</Top>
+                <Left>0.70499in</Left>
                 <Height>0.18803in</Height>
                 <Width>0.75278in</Width>
-                <ZIndex>6</ZIndex>
+                <ZIndex>2</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -3174,11 +3536,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.67045in</Top>
-                <Left>1.57963in</Left>
+                <Top>2.1392in</Top>
+                <Left>1.58277in</Left>
                 <Height>0.18803in</Height>
                 <Width>0.77566in</Width>
-                <ZIndex>7</ZIndex>
+                <ZIndex>3</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -3261,11 +3623,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.67045in</Top>
-                <Left>2.41084in</Left>
+                <Top>2.1392in</Top>
+                <Left>2.41398in</Left>
                 <Height>0.18803in</Height>
                 <Width>1.49443in</Width>
-                <ZIndex>8</ZIndex>
+                <ZIndex>4</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -3310,11 +3672,68 @@
                     <Style />
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.87236in</Top>
-                <Left>2.41084in</Left>
+                <Top>2.34111in</Top>
+                <Left>2.41398in</Left>
                 <Height>0.18803in</Height>
                 <Width>1.49443in</Width>
-                <ZIndex>9</ZIndex>
+                <ZIndex>5</ZIndex>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="DESC19">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3IDSC.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>16pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <Top>0.43299in</Top>
+                <Left>0.01365in</Left>
+                <Height>0.35379in</Height>
+                <Width>2.99182in</Width>
+                <ZIndex>6</ZIndex>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="BRAND19">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3FNAM.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontSize>22pt</FontSize>
+                          <FontWeight>Bold</FontWeight>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <Left>0.01364in</Left>
+                <Height>0.43458in</Height>
+                <Width>2.99182in</Width>
+                <ZIndex>7</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -3324,7 +3743,6 @@
                 </Style>
               </Textbox>
               <Textbox Name="Textbox12">
-                <CanGrow>true</CanGrow>
                 <KeepTogether>true</KeepTogether>
                 <Paragraphs>
                   <Paragraph>
@@ -3344,15 +3762,17 @@
                         </Style>
                       </TextRun>
                     </TextRuns>
-                    <Style />
+                    <Style>
+                      <TextAlign>Center</TextAlign>
+                    </Style>
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox1</rd:DefaultName>
-                <Top>2.35491in</Top>
-                <Left>2.1899in</Left>
-                <Height>0.25in</Height>
+                <Top>1.93478in</Top>
+                <Left>2.10873in</Left>
+                <Height>0.14583in</Height>
                 <Width>1.71528in</Width>
-                <ZIndex>10</ZIndex>
+                <ZIndex>8</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -3361,28 +3781,103 @@
                   <PaddingBottom>2pt</PaddingBottom>
                 </Style>
               </Textbox>
-              <Textbox Name="DESC9">
+              <Textbox Name="Textbox19">
                 <CanGrow>true</CanGrow>
                 <KeepTogether>true</KeepTogether>
                 <Paragraphs>
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value>=First(Fields!O3IDSC.Value, "STRPRCDS")</Value>
+                        <Value>=First(Fields!O3MODL.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Calibri</FontFamily>
+                          <FontSize>12pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox17</rd:DefaultName>
+                <Top>1.08193in</Top>
+                <Height>0.73958in</Height>
+                <Width>1.91014in</Width>
+                <ZIndex>9</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!CategoryId.Value = 2, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox20">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3MODL.Value, "STRPRCDS")</Value>
                         <Style>
                           <FontFamily>Impact</FontFamily>
-                          <FontSize>16pt</FontSize>
+                          <FontSize>14pt</FontSize>
                         </Style>
                       </TextRun>
                     </TextRuns>
                     <Style />
                   </Paragraph>
                 </Paragraphs>
-                <Top>0.43299in</Top>
-                <Left>0.00001in</Left>
-                <Height>0.35379in</Height>
-                <Width>2.99182in</Width>
+                <rd:DefaultName>Textbox17</rd:DefaultName>
+                <Top>0.80068in</Top>
+                <Left>0.01125in</Left>
+                <Height>0.28125in</Height>
+                <Width>1.91014in</Width>
+                <ZIndex>10</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!CategoryId.Value = 2, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox11">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>REG PRICE:</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>12pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox3</rd:DefaultName>
+                <Top>0.91339in</Top>
+                <Left>1.96306in</Left>
+                <Height>0.31597in</Height>
+                <Width>0.80891in</Width>
                 <ZIndex>11</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
+                </Visibility>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -3391,26 +3886,110 @@
                   <PaddingBottom>2pt</PaddingBottom>
                 </Style>
               </Textbox>
-              <Textbox Name="BRAND9">
-                <CanGrow>true</CanGrow>
+              <Textbox Name="REG6">
                 <KeepTogether>true</KeepTogether>
                 <Paragraphs>
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value>=First(Fields!O3FNAM.Value, "STRPRCDS")</Value>
+                        <Value>=First(Fields!O3REG.Value, "STRPRCDS")</Value>
                         <Style>
-                          <FontSize>22pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>14pt</FontSize>
+                          <Format>0.00;(0.00)</Format>
                         </Style>
                       </TextRun>
                     </TextRuns>
-                    <Style />
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Height>0.43458in</Height>
-                <Width>2.99182in</Width>
+                <Top>0.91339in</Top>
+                <Left>2.77197in</Left>
+                <Height>0.30514in</Height>
+                <Width>1.13987in</Width>
                 <ZIndex>12</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Discount6">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>-</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>14pt</FontSize>
+                          <Format>0.00;(0.00)</Format>
+                          <Color>Red</Color>
+                        </Style>
+                      </TextRun>
+                      <TextRun>
+                        <Value>=First(Fields!O3REG.Value, "STRPRCDS") - First(Fields!O3POS.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>14pt</FontSize>
+                          <Format>0.00;(0.00)</Format>
+                          <Color>Red</Color>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <Top>1.21853in</Top>
+                <Left>2.77197in</Left>
+                <Height>0.29529in</Height>
+                <Width>1.13983in</Width>
+                <ZIndex>13</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="POS6">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3POS.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>20pt</FontSize>
+                          <Format>0.00;(0.00)</Format>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <Top>1.52771in</Top>
+                <Left>2.41768in</Left>
+                <Height>0.40707in</Height>
+                <Width>1.48299in</Width>
+                <ZIndex>14</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -3421,10 +4000,10 @@
               </Textbox>
             </ReportItems>
             <KeepTogether>true</KeepTogether>
-            <Top>6.8991in</Top>
-            <Left>4.23929in</Left>
-            <Height>3.10095in</Height>
-            <Width>3.90527in</Width>
+            <Top>5.41991in</Top>
+            <Left>4.22228in</Left>
+            <Height>2.52914in</Height>
+            <Width>3.91184in</Width>
             <ZIndex>5</ZIndex>
             <Style>
               <Border>
@@ -3434,162 +4013,20 @@
           </Rectangle>
           <Rectangle Name="Container7">
             <ReportItems>
-              <Textbox Name="REG7">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>=First(Fields!O3REG.Value, "STRPRCDS")</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>16pt</FontSize>
-                          <Format>0.00;(0.00)</Format>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <Top>1.21734in</Top>
-                <Left>2.10899in</Left>
-                <Height>0.34682in</Height>
-                <Width>1.80654in</Width>
-                <Visibility>
-                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
-                </Visibility>
-                <Style>
-                  <Border />
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
-              <Textbox Name="Discount7">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>-</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>16pt</FontSize>
-                          <Format>0.00;(0.00)</Format>
-                          <Color>Red</Color>
-                        </Style>
-                      </TextRun>
-                      <TextRun>
-                        <Value>=First(Fields!O3REG.Value, "STRPRCDS") - First(Fields!O3POS.Value, "STRPRCDS")</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>16pt</FontSize>
-                          <Format>0.00;(0.00)</Format>
-                          <Color>Red</Color>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <Top>1.56415in</Top>
-                <Left>2.10899in</Left>
-                <Height>0.32307in</Height>
-                <Width>1.80654in</Width>
-                <ZIndex>1</ZIndex>
-                <Visibility>
-                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
-                </Visibility>
-                <Style>
-                  <Border />
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
-              <Textbox Name="Textbox13">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>REG PRICE:</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>14pt</FontSize>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>1.24819in</Top>
-                <Left>0.96957in</Left>
-                <Height>0.30208in</Height>
-                <Width>1.13542in</Width>
-                <ZIndex>2</ZIndex>
-                <Visibility>
-                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
-                </Visibility>
-                <Style>
-                  <Border />
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
               <Image Name="ATTRIB7">
                 <Source>Embedded</Source>
                 <Value>=Fields!O3TRB3.Value</Value>
                 <Sizing>FitProportional</Sizing>
-                <Left>3.15998in</Left>
+                <Top>0.06745in</Top>
+                <Left>3.06944in</Left>
                 <Height>0.36713in</Height>
                 <Width>0.75533in</Width>
-                <ZIndex>3</ZIndex>
                 <Style>
                   <Border>
                     <Style>None</Style>
                   </Border>
                 </Style>
               </Image>
-              <Textbox Name="POS7">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>=First(Fields!O3POS.Value, "STRPRCDS")</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>22pt</FontSize>
-                          <Format>0.00;(0.00)</Format>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <Top>1.88722in</Top>
-                <Left>1.9562in</Left>
-                <Height>0.43484in</Height>
-                <Width>1.95933in</Width>
-                <ZIndex>4</ZIndex>
-                <Style>
-                  <Border />
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
               <Textbox Name="UPC25">
                 <CanGrow>true</CanGrow>
                 <KeepTogether>true</KeepTogether>
@@ -3611,11 +4048,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.69316in</Top>
-                <Left>0.38862in</Left>
+                <Top>2.1392in</Top>
+                <Left>0.38208in</Left>
                 <Height>0.18803in</Height>
                 <Width>0.32354in</Width>
-                <ZIndex>5</ZIndex>
+                <ZIndex>1</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -3662,11 +4099,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.69316in</Top>
-                <Left>0.71216in</Left>
+                <Top>2.1392in</Top>
+                <Left>0.70562in</Left>
                 <Height>0.18803in</Height>
                 <Width>0.75278in</Width>
-                <ZIndex>6</ZIndex>
+                <ZIndex>2</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -3737,11 +4174,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.69316in</Top>
-                <Left>1.58994in</Left>
+                <Top>2.1392in</Top>
+                <Left>1.5834in</Left>
                 <Height>0.18803in</Height>
                 <Width>0.77566in</Width>
-                <ZIndex>7</ZIndex>
+                <ZIndex>3</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -3824,11 +4261,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.69316in</Top>
-                <Left>2.42115in</Left>
+                <Top>2.1392in</Top>
+                <Left>2.41461in</Left>
                 <Height>0.18803in</Height>
                 <Width>1.49443in</Width>
-                <ZIndex>8</ZIndex>
+                <ZIndex>4</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -3873,11 +4310,11 @@
                     <Style />
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.89507in</Top>
-                <Left>2.42115in</Left>
+                <Top>2.34111in</Top>
+                <Left>2.41461in</Left>
                 <Height>0.18803in</Height>
                 <Width>1.49443in</Width>
-                <ZIndex>9</ZIndex>
+                <ZIndex>5</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -3887,7 +4324,6 @@
                 </Style>
               </Textbox>
               <Textbox Name="Textbox14">
-                <CanGrow>true</CanGrow>
                 <KeepTogether>true</KeepTogether>
                 <Paragraphs>
                   <Paragraph>
@@ -3907,15 +4343,17 @@
                         </Style>
                       </TextRun>
                     </TextRuns>
-                    <Style />
+                    <Style>
+                      <TextAlign>Center</TextAlign>
+                    </Style>
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox1</rd:DefaultName>
-                <Top>2.37762in</Top>
-                <Left>2.20021in</Left>
-                <Height>0.25in</Height>
+                <Top>1.93477in</Top>
+                <Left>2.10949in</Left>
+                <Height>0.14584in</Height>
                 <Width>1.71528in</Width>
-                <ZIndex>10</ZIndex>
+                <ZIndex>6</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -3924,8 +4362,7 @@
                   <PaddingBottom>2pt</PaddingBottom>
                 </Style>
               </Textbox>
-              <Textbox Name="DESC10">
-                <CanGrow>true</CanGrow>
+              <Textbox Name="DESC20">
                 <KeepTogether>true</KeepTogether>
                 <Paragraphs>
                   <Paragraph>
@@ -3941,11 +4378,11 @@
                     <Style />
                   </Paragraph>
                 </Paragraphs>
-                <Top>0.4434in</Top>
-                <Left>0.01023in</Left>
+                <Top>0.43299in</Top>
+                <Left>0.00818in</Left>
                 <Height>0.35379in</Height>
-                <Width>2.98159in</Width>
-                <ZIndex>11</ZIndex>
+                <Width>2.99182in</Width>
+                <ZIndex>7</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -3954,8 +4391,7 @@
                   <PaddingBottom>2pt</PaddingBottom>
                 </Style>
               </Textbox>
-              <Textbox Name="BRAND10">
-                <CanGrow>true</CanGrow>
+              <Textbox Name="BRAND20">
                 <KeepTogether>true</KeepTogether>
                 <Paragraphs>
                   <Paragraph>
@@ -3971,9 +4407,227 @@
                     <Style />
                   </Paragraph>
                 </Paragraphs>
+                <Left>0.00817in</Left>
                 <Height>0.43458in</Height>
                 <Width>2.99182in</Width>
+                <ZIndex>8</ZIndex>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox21">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3MODL.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Calibri</FontFamily>
+                          <FontSize>12pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox17</rd:DefaultName>
+                <Top>1.08192in</Top>
+                <Height>0.73958in</Height>
+                <Width>1.91014in</Width>
+                <ZIndex>9</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!CategoryId.Value = 2, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox22">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3MODL.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>14pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox17</rd:DefaultName>
+                <Top>0.80067in</Top>
+                <Left>0.01125in</Left>
+                <Height>0.28125in</Height>
+                <Width>1.91014in</Width>
+                <ZIndex>10</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!CategoryId.Value = 2, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox13">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>REG PRICE:</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>12pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox3</rd:DefaultName>
+                <Top>0.91338in</Top>
+                <Left>1.96306in</Left>
+                <Height>0.31597in</Height>
+                <Width>0.80891in</Width>
+                <ZIndex>11</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="REG7">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3REG.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>14pt</FontSize>
+                          <Format>0.00;(0.00)</Format>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <Top>0.91338in</Top>
+                <Left>2.77197in</Left>
+                <Height>0.30514in</Height>
+                <Width>1.13987in</Width>
                 <ZIndex>12</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Discount7">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>-</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>14pt</FontSize>
+                          <Format>0.00;(0.00)</Format>
+                          <Color>Red</Color>
+                        </Style>
+                      </TextRun>
+                      <TextRun>
+                        <Value>=First(Fields!O3REG.Value, "STRPRCDS") - First(Fields!O3POS.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>14pt</FontSize>
+                          <Format>0.00;(0.00)</Format>
+                          <Color>Red</Color>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <Top>1.21852in</Top>
+                <Left>2.77197in</Left>
+                <Height>0.29529in</Height>
+                <Width>1.13983in</Width>
+                <ZIndex>13</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="POS7">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3POS.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>20pt</FontSize>
+                          <Format>0.00;(0.00)</Format>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <Top>1.5277in</Top>
+                <Left>2.41768in</Left>
+                <Height>0.40707in</Height>
+                <Width>1.48299in</Width>
+                <ZIndex>14</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -3984,10 +4638,10 @@
               </Textbox>
             </ReportItems>
             <KeepTogether>true</KeepTogether>
-            <Top>10.06949in</Top>
-            <Left>0.25556in</Left>
-            <Height>3.12366in</Height>
-            <Width>3.91558in</Width>
+            <Top>7.96295in</Top>
+            <Left>0.26905in</Left>
+            <Height>2.52914in</Height>
+            <Width>3.91888in</Width>
             <ZIndex>6</ZIndex>
             <Style>
               <Border>
@@ -3997,221 +4651,20 @@
           </Rectangle>
           <Rectangle Name="Container8">
             <ReportItems>
-              <Textbox Name="DESC8">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>=First(Fields!O3IDSC.Value, "STRPRCDS")</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>16pt</FontSize>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <Top>0.4434in</Top>
-                <Left>0.01042in</Left>
-                <Height>0.35379in</Height>
-                <Width>2.9814in</Width>
-                <Style>
-                  <Border />
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
-              <Textbox Name="BRAND8">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>=First(Fields!O3FNAM.Value, "STRPRCDS")</Value>
-                        <Style>
-                          <FontSize>22pt</FontSize>
-                          <FontWeight>Bold</FontWeight>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <Left>0.00019in</Left>
-                <Height>0.43458in</Height>
-                <Width>2.99182in</Width>
-                <ZIndex>1</ZIndex>
-                <Style>
-                  <Border />
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
-              <Textbox Name="REG8">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>=First(Fields!O3REG.Value, "STRPRCDS")</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>16pt</FontSize>
-                          <Format>0.00;(0.00)</Format>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <Top>1.21734in</Top>
-                <Left>2.09877in</Left>
-                <Height>0.34682in</Height>
-                <Width>1.80654in</Width>
-                <ZIndex>2</ZIndex>
-                <Visibility>
-                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
-                </Visibility>
-                <Style>
-                  <Border />
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
-              <Textbox Name="Discount8">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>-</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>16pt</FontSize>
-                          <Format>0.00;(0.00)</Format>
-                          <Color>Red</Color>
-                        </Style>
-                      </TextRun>
-                      <TextRun>
-                        <Value>=First(Fields!O3REG.Value, "STRPRCDS") - First(Fields!O3POS.Value, "STRPRCDS")</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>16pt</FontSize>
-                          <Format>0.00;(0.00)</Format>
-                          <Color>Red</Color>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <Top>1.56415in</Top>
-                <Left>2.09877in</Left>
-                <Height>0.32307in</Height>
-                <Width>1.80654in</Width>
-                <ZIndex>3</ZIndex>
-                <Visibility>
-                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
-                </Visibility>
-                <Style>
-                  <Border />
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
-              <Textbox Name="Textbox15">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>REG PRICE:</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>14pt</FontSize>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <rd:DefaultName>Textbox3</rd:DefaultName>
-                <Top>1.24819in</Top>
-                <Left>0.95935in</Left>
-                <Height>0.30208in</Height>
-                <Width>1.13542in</Width>
-                <ZIndex>4</ZIndex>
-                <Visibility>
-                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
-                </Visibility>
-                <Style>
-                  <Border />
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
               <Image Name="ATTRIB8">
                 <Source>Embedded</Source>
                 <Value>=Fields!O3TRB3.Value</Value>
                 <Sizing>FitProportional</Sizing>
-                <Left>3.14994in</Left>
+                <Top>0.06745in</Top>
+                <Left>3.07491in</Left>
                 <Height>0.36713in</Height>
                 <Width>0.75533in</Width>
-                <ZIndex>5</ZIndex>
                 <Style>
                   <Border>
                     <Style>None</Style>
                   </Border>
                 </Style>
               </Image>
-              <Textbox Name="POS8">
-                <CanGrow>true</CanGrow>
-                <KeepTogether>true</KeepTogether>
-                <Paragraphs>
-                  <Paragraph>
-                    <TextRuns>
-                      <TextRun>
-                        <Value>=First(Fields!O3POS.Value, "STRPRCDS")</Value>
-                        <Style>
-                          <FontFamily>Impact</FontFamily>
-                          <FontSize>22pt</FontSize>
-                          <Format>0.00;(0.00)</Format>
-                        </Style>
-                      </TextRun>
-                    </TextRuns>
-                    <Style />
-                  </Paragraph>
-                </Paragraphs>
-                <Top>1.88722in</Top>
-                <Left>1.94598in</Left>
-                <Height>0.43484in</Height>
-                <Width>1.95933in</Width>
-                <ZIndex>6</ZIndex>
-                <Style>
-                  <Border />
-                  <PaddingLeft>2pt</PaddingLeft>
-                  <PaddingRight>2pt</PaddingRight>
-                  <PaddingTop>2pt</PaddingTop>
-                  <PaddingBottom>2pt</PaddingBottom>
-                </Style>
-              </Textbox>
               <Textbox Name="UPC29">
                 <CanGrow>true</CanGrow>
                 <KeepTogether>true</KeepTogether>
@@ -4233,11 +4686,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.69316in</Top>
-                <Left>0.3784in</Left>
+                <Top>2.1392in</Top>
+                <Left>0.38145in</Left>
                 <Height>0.18803in</Height>
                 <Width>0.32354in</Width>
-                <ZIndex>7</ZIndex>
+                <ZIndex>1</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -4284,11 +4737,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.69316in</Top>
-                <Left>0.70194in</Left>
+                <Top>2.1392in</Top>
+                <Left>0.70499in</Left>
                 <Height>0.18803in</Height>
                 <Width>0.75278in</Width>
-                <ZIndex>8</ZIndex>
+                <ZIndex>2</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -4359,11 +4812,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.69316in</Top>
-                <Left>1.57972in</Left>
+                <Top>2.1392in</Top>
+                <Left>1.58277in</Left>
                 <Height>0.18803in</Height>
                 <Width>0.77566in</Width>
-                <ZIndex>9</ZIndex>
+                <ZIndex>3</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -4446,11 +4899,11 @@
                     </Style>
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.69316in</Top>
-                <Left>2.41093in</Left>
+                <Top>2.1392in</Top>
+                <Left>2.41398in</Left>
                 <Height>0.18803in</Height>
                 <Width>1.49443in</Width>
-                <ZIndex>10</ZIndex>
+                <ZIndex>4</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -4495,11 +4948,68 @@
                     <Style />
                   </Paragraph>
                 </Paragraphs>
-                <Top>2.89507in</Top>
-                <Left>2.41093in</Left>
+                <Top>2.34111in</Top>
+                <Left>2.41398in</Left>
                 <Height>0.18803in</Height>
                 <Width>1.49443in</Width>
-                <ZIndex>11</ZIndex>
+                <ZIndex>5</ZIndex>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="DESC21">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3IDSC.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>16pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <Top>0.43299in</Top>
+                <Left>0.01365in</Left>
+                <Height>0.35379in</Height>
+                <Width>2.99182in</Width>
+                <ZIndex>6</ZIndex>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="BRAND21">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3FNAM.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontSize>22pt</FontSize>
+                          <FontWeight>Bold</FontWeight>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <Left>0.01364in</Left>
+                <Height>0.43458in</Height>
+                <Width>2.99182in</Width>
+                <ZIndex>7</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -4509,7 +5019,6 @@
                 </Style>
               </Textbox>
               <Textbox Name="Textbox16">
-                <CanGrow>true</CanGrow>
                 <KeepTogether>true</KeepTogether>
                 <Paragraphs>
                   <Paragraph>
@@ -4529,15 +5038,234 @@
                         </Style>
                       </TextRun>
                     </TextRuns>
-                    <Style />
+                    <Style>
+                      <TextAlign>Center</TextAlign>
+                    </Style>
                   </Paragraph>
                 </Paragraphs>
                 <rd:DefaultName>Textbox1</rd:DefaultName>
-                <Top>2.37762in</Top>
-                <Left>2.18999in</Left>
-                <Height>0.25in</Height>
+                <Top>1.93478in</Top>
+                <Left>2.10873in</Left>
+                <Height>0.14583in</Height>
                 <Width>1.71528in</Width>
+                <ZIndex>8</ZIndex>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox23">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3MODL.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Calibri</FontFamily>
+                          <FontSize>12pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox17</rd:DefaultName>
+                <Top>1.08193in</Top>
+                <Height>0.73958in</Height>
+                <Width>1.91014in</Width>
+                <ZIndex>9</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!CategoryId.Value = 2, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox24">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3MODL.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>14pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox17</rd:DefaultName>
+                <Top>0.80068in</Top>
+                <Left>0.01125in</Left>
+                <Height>0.28125in</Height>
+                <Width>1.91014in</Width>
+                <ZIndex>10</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!CategoryId.Value = 2, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox15">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>REG PRICE:</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>12pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox3</rd:DefaultName>
+                <Top>0.91339in</Top>
+                <Left>1.96306in</Left>
+                <Height>0.31597in</Height>
+                <Width>0.80891in</Width>
+                <ZIndex>11</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="REG8">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3REG.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>14pt</FontSize>
+                          <Format>0.00;(0.00)</Format>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <Top>0.91339in</Top>
+                <Left>2.77197in</Left>
+                <Height>0.30514in</Height>
+                <Width>1.13987in</Width>
                 <ZIndex>12</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Discount8">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>-</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>14pt</FontSize>
+                          <Format>0.00;(0.00)</Format>
+                          <Color>Red</Color>
+                        </Style>
+                      </TextRun>
+                      <TextRun>
+                        <Value>=First(Fields!O3REG.Value, "STRPRCDS") - First(Fields!O3POS.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>14pt</FontSize>
+                          <Format>0.00;(0.00)</Format>
+                          <Color>Red</Color>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <Top>1.21853in</Top>
+                <Left>2.77197in</Left>
+                <Height>0.29529in</Height>
+                <Width>1.13983in</Width>
+                <ZIndex>13</ZIndex>
+                <Visibility>
+                  <Hidden>=IIf(Parameters!TypeId.Value = 1, True, False)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border />
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="POS8">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!O3POS.Value, "STRPRCDS")</Value>
+                        <Style>
+                          <FontFamily>Impact</FontFamily>
+                          <FontSize>20pt</FontSize>
+                          <Format>0.00;(0.00)</Format>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <Top>1.52771in</Top>
+                <Left>2.41768in</Left>
+                <Height>0.40707in</Height>
+                <Width>1.48299in</Width>
+                <ZIndex>14</ZIndex>
                 <Style>
                   <Border />
                   <PaddingLeft>2pt</PaddingLeft>
@@ -4548,10 +5276,10 @@
               </Textbox>
             </ReportItems>
             <KeepTogether>true</KeepTogether>
-            <Top>10.06949in</Top>
-            <Left>4.24058in</Left>
-            <Height>3.12366in</Height>
-            <Width>3.90536in</Width>
+            <Top>7.96294in</Top>
+            <Left>4.2225in</Left>
+            <Height>2.52914in</Height>
+            <Width>3.91184in</Width>
             <ZIndex>7</ZIndex>
             <Style>
               <Border>
@@ -4559,131 +5287,11 @@
               </Border>
             </Style>
           </Rectangle>
-          <Textbox Name="DESC12">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!O3IDSC.Value, "STRPRCDS")</Value>
-                    <Style>
-                      <FontFamily>Impact</FontFamily>
-                      <FontSize>16pt</FontSize>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <Top>4.15018in</Top>
-            <Left>4.32098in</Left>
-            <Height>0.35379in</Height>
-            <Width>2.99182in</Width>
-            <ZIndex>8</ZIndex>
-            <Style>
-              <Border />
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="BRAND12">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!O3FNAM.Value, "STRPRCDS")</Value>
-                    <Style>
-                      <FontSize>22pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <Top>3.71719in</Top>
-            <Left>4.32097in</Left>
-            <Height>0.43458in</Height>
-            <Width>2.99182in</Width>
-            <ZIndex>9</ZIndex>
-            <Style>
-              <Border />
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="DESC13">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!O3IDSC.Value, "STRPRCDS")</Value>
-                    <Style>
-                      <FontFamily>Impact</FontFamily>
-                      <FontSize>16pt</FontSize>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <Top>4.15018in</Top>
-            <Left>0.27018in</Left>
-            <Height>0.35379in</Height>
-            <Width>2.99182in</Width>
-            <ZIndex>10</ZIndex>
-            <Style>
-              <Border />
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="BRAND13">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!O3FNAM.Value, "STRPRCDS")</Value>
-                    <Style>
-                      <FontSize>22pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <Top>3.71719in</Top>
-            <Left>0.27017in</Left>
-            <Height>0.43458in</Height>
-            <Width>2.99182in</Width>
-            <ZIndex>11</ZIndex>
-            <Style>
-              <Border />
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
         </ReportItems>
-        <Height>13.51911in</Height>
+        <Height>10.70661in</Height>
         <Style />
       </Body>
-      <Width>8.30392in</Width>
+      <Width>8.25998in</Width>
       <Page>
         <Style />
       </Page>
@@ -4691,6 +5299,10 @@
   </ReportSections>
   <ReportParameters>
     <ReportParameter Name="TypeId">
+      <DataType>Integer</DataType>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="CategoryId">
       <DataType>Integer</DataType>
       <Prompt>ReportParameter1</Prompt>
     </ReportParameter>
@@ -4704,6 +5316,11 @@
           <ColumnIndex>0</ColumnIndex>
           <RowIndex>0</RowIndex>
           <ParameterName>TypeId</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>CategoryId</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>

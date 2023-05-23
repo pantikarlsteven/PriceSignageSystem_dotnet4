@@ -61,14 +61,7 @@ namespace PriceSignageSystem.Controllers
                     ModelState.AddModelError("", "Invalid username or password.");
                 }
             }
-            //else
-            //{
-            //    if (String.IsNullOrEmpty(model.UserName))
-            //    {
-            //        ModelState.AddModelError("", "Invalid username or password.");
-            //    }
-            //}
-
+         
             model.StoreList = GetStoreList();
             return View(model);
         }
@@ -81,6 +74,28 @@ namespace PriceSignageSystem.Controllers
                             Text = a.O3LOC.ToString()
                         }).ToList();
             return list;
+        }
+
+        public ActionResult Register()
+        {
+            var user = new User();
+            return View(user);
+        }
+
+        [HttpPost]
+        public ActionResult Register(User user)
+        {
+            if (ModelState.IsValid)
+            {
+                var encryptedPassword = EncryptionHelper.Encrypt(user.Password);
+                user.Password = encryptedPassword;
+                user.IsActive = 1;
+                var data = _userRepository.AddUser(user);
+
+                TempData["SuccessMessage"] = "Registration successful!";
+                return RedirectToAction("Login");
+            }
+            return View();
         }
     }
 }

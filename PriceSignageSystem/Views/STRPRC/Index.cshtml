@@ -1,5 +1,5 @@
 ﻿@using PriceSignageSystem.Models.Dto;
-
+@model UserStoreDto
 @{
     ViewData["Title"] = "Product Page";
 }
@@ -11,6 +11,25 @@
 </head>
 <body>
     <br />
+
+    @if (ViewBag.IsDateLatest == true)
+    {
+        <div class="alert alert-info">
+            <center>
+                The current data is up to date. (Current Version: @ViewBag.DateVersion)
+            </center>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning">
+            <center>
+                The current data is not yet updated. (Current Version: @ViewBag.DateVersion)
+                @Html.ActionLink("Update", "UpdateSTRPRCData", "STRPRC", new { storeId = Model.SelectedStore }, new { @class = "btn btn-secondary btn-block" })
+            </center>
+        </div>
+
+    }
     <div class="container">
         <div class="row align-items-center justify-content-center">
             <div class="col text-center">

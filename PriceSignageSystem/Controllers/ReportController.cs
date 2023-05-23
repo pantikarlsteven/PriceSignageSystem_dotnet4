@@ -1,12 +1,16 @@
 ﻿using Microsoft.Reporting.WebForms;
 using Newtonsoft.Json;
 using PriceSignageSystem.Helper;
+using PriceSignageSystem.Models;
 using PriceSignageSystem.Models.Constants;
 using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
@@ -22,53 +26,53 @@ namespace PriceSignageSystem.Controllers
             _sTRPRCRepository = sTRPRCRepository;
         }
 
-        public List<Models.STRPRC> GetData(decimal O3SKU)
+        public List<STRPRCDto> GetData(decimal O3SKU)
         {
             var data = _sTRPRCRepository.GetData(O3SKU);
             return data;
         }
 
+        public List<CountryDto> GetCountryImg(string country)
+        {
+            var data = _sTRPRCRepository.GetCountryImg(country);
+            return data;
+        }
+
         public ActionResult DisplayReport(STRPRCDto model)
         {
-            var reportPath = "";
-            if(model.SelectedCategoryId == ReportConstants.Category.Appliance)
+            var reportData = GetData(model.O3SKU);
+            var country = "";
+            var countryImgData = new List<CountryDto>();
+
+            foreach (var item in reportData)
             {
-                if (model.SelectedSizeId == ReportConstants.Size.Whole)
+                if (!String.IsNullOrEmpty(item.O3TRB3))
                 {
-                    reportPath = Server.MapPath(ReportConstants.ApplianceReportPath);
+                    country = reportData.FirstOrDefault().O3TRB3;
+                    countryImgData = GetCountryImg(country);
                 }
-                else if (model.SelectedSizeId == ReportConstants.Size.Half) 
-                {
-                    reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Half);
-                }
-                else if (model.SelectedSizeId == ReportConstants.Size.Jewelry) 
-                {
-                    reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Jewelry);
-                }
-                else if (model.SelectedSizeId == ReportConstants.Size.Skinny)
-                {
-                    reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Skinny);
-                }
+
+                var convertedImage = ConvertBinaryToJpeg(countryImgData.FirstOrDefault().country_img);
             }
 
-            else if (model.SelectedCategoryId == ReportConstants.Category.NonAppliance)
+
+            var reportPath = "";
+
+            if (model.SelectedSizeId == ReportConstants.Size.Whole)
             {
-                if (model.SelectedSizeId == ReportConstants.Size.Whole)
-                {
-                    reportPath = Server.MapPath(ReportConstants.NonApplianceReportPath);
-                }
-                else if (model.SelectedSizeId == ReportConstants.Size.Half)
-                {
-                    reportPath = Server.MapPath(ReportConstants.NonApplianceReportPath_Half);
-                }
-                else if (model.SelectedSizeId == ReportConstants.Size.Jewelry)
-                {
-                    reportPath = Server.MapPath(ReportConstants.NonApplianceReportPath_Jewelry);
-                }
-                else if (model.SelectedSizeId == ReportConstants.Size.Skinny)
-                {
-                    reportPath = Server.MapPath(ReportConstants.NonApplianceReportPath_Skinny);
-                }
+                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath);
+            }
+            else if (model.SelectedSizeId == ReportConstants.Size.Half)
+            {
+                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Half);
+            }
+            else if (model.SelectedSizeId == ReportConstants.Size.Jewelry)
+            {
+                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Jewelry);
+            }
+            else if (model.SelectedSizeId == ReportConstants.Size.Skinny)
+            {
+                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Skinny);
             }
 
             var localReport = new LocalReport();
@@ -76,15 +80,27 @@ namespace PriceSignageSystem.Controllers
 
             List<ReportParameter> parameters = new List<ReportParameter>();
             parameters.Add(new ReportParameter("TypeId", model.SelectedTypeId.ToString()));
+            parameters.Add(new ReportParameter("CategoryId", model.SelectedCategoryId.ToString()));
             localReport.SetParameters(parameters);
-
-            var reportData = GetData(model.O3SKU);
-
 
             var dataSource = new ReportDataSource("STRPRCDS", reportData);
             localReport.DataSources.Add(dataSource);
 
-            var reportType = "PDF"; 
+            foreach (var item2 in reportData)
+            {
+                if (!String.IsNullOrEmpty(item2.O3TRB3))
+                {
+                    var dataSource2 = new ReportDataSource("CountryImageDS", countryImgData);
+                    localReport.DataSources.Add(dataSource2);
+                }
+                else
+                {
+                    var dataSource2 = new ReportDataSource("CountryImageDS", new List<CountryDto>());
+                    localReport.DataSources.Add(dataSource2);
+                }
+            }
+
+            var reportType = "PDF";
             var mimeType = "";
             var encoding = "";
             var fileNameExtension = "";
@@ -110,33 +126,25 @@ namespace PriceSignageSystem.Controllers
 
         public ActionResult DisplayReportFromAdvancePrinting(string response)
         {
-            var dto  = JsonConvert.DeserializeObject<STRPRCDto>(response);
+            var dto = JsonConvert.DeserializeObject<STRPRCDto>(response);
 
             var reportPath = "";
-            if (dto.SelectedCategoryId == ReportConstants.Category.Appliance)
-            {
-                if (dto.SelectedSizeId == ReportConstants.Size.Whole)
-                {
-                    reportPath = Server.MapPath(ReportConstants.ApplianceReportPath);
-                }
 
-                else if (dto.SelectedSizeId == ReportConstants.Size.Half)
-                {
-                    reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Half);
-                }
+            if (dto.SelectedSizeId == ReportConstants.Size.Whole)
+            {
+                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath);
             }
-
-            else if (dto.SelectedCategoryId == ReportConstants.Category.NonAppliance)
+            else if (dto.SelectedSizeId == ReportConstants.Size.Half)
             {
-                if (dto.SelectedSizeId == ReportConstants.Size.Whole)
-                {
-                    reportPath = Server.MapPath(ReportConstants.NonApplianceReportPath);
-                }
-
-                else if (dto.SelectedSizeId == ReportConstants.Size.Half)
-                {
-                    reportPath = Server.MapPath(ReportConstants.NonApplianceReportPath_Half);
-                }
+                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Half);
+            }
+            else if (dto.SelectedSizeId == ReportConstants.Size.Jewelry)
+            {
+                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Jewelry);
+            }
+            else if (dto.SelectedSizeId == ReportConstants.Size.Skinny)
+            {
+                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Skinny);
             }
 
             var localReport = new LocalReport();
@@ -144,6 +152,8 @@ namespace PriceSignageSystem.Controllers
 
             List<ReportParameter> parameters = new List<ReportParameter>();
             parameters.Add(new ReportParameter("TypeId", dto.SelectedTypeId.ToString()));
+            parameters.Add(new ReportParameter("CategoryId", dto.SelectedCategoryId.ToString()));
+
             localReport.SetParameters(parameters);
 
             DataTable dataTable = ConversionHelper.ConvertObjectToDataTable(dto);
@@ -173,6 +183,25 @@ namespace PriceSignageSystem.Controllers
                 out warnings);
 
             return File(renderedBytes, mimeType);
+        }
+        public ActionResult ConvertBinaryToJpeg(byte[] binaryData)
+        {
+            // Create a MemoryStream from the binary data
+            using (MemoryStream memoryStream = new MemoryStream(binaryData))
+            {
+                // Create an Image object from the MemoryStream
+                Image image = Image.FromStream(memoryStream);
+
+                // Create a new MemoryStream to store the JPEG image
+                using (MemoryStream jpegStream = new MemoryStream())
+                {
+                    // Save the Image as a JPEG to the MemoryStream
+                    image.Save(jpegStream, ImageFormat.Jpeg);
+
+                    // Set the content type and return the JPEG image
+                    return File(jpegStream.ToArray(), "image/jpeg");
+                }
+            }
         }
     }
 }

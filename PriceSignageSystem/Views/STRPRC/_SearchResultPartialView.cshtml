@@ -70,9 +70,7 @@
                 <div class="col-md-6">
                     <dl class="row">
                         <dt class="col-sm-4">@Html.LabelFor(m => m.O3SDPT)</dt>
-                        <dd class="col-sm-8">
-                            @Html.DisplayFor(m => m.O3SDPT)
-                        </dd>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SDPT)</dd>
 
                         <dt class="col-sm-4">@Html.LabelFor(m => m.O3SLUM)</dt>
                         <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SLUM)</dd>
@@ -116,8 +114,19 @@
                         <dt class="col-sm-4">@Html.LabelFor(m => m.O3ORIG)</dt>
                         <dd class="col-sm-8">@Html.DisplayFor(m => m.O3ORIG)</dd>
 
-                        <div class="col"></div>
-                        <div class="col"></div>
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3MODL)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3MODL)</dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3LONG)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3LONG)</dd>
+
+                        <dt class="col-sm-4"></dt>
+                        <dd class="col-sm-8"></dd>
                     </dl>
                 </div>
             </div>
@@ -160,7 +169,7 @@
 }
 else
 {
-    < p > No results found.</ p >
+    <p><center>No results found.</center> </p>
 }
 <script>
     function openReportInNewTab() {
