@@ -54,6 +54,7 @@ namespace PriceSignageSystem.Controllers
                         model.StoreList = GetStoreList();
                         return View(model);
                     }
+                    System.Web.HttpContext.Current.Session["Username"] = model.UserName;
                     return RedirectToAction("Index", "STRPRC", model);
                 }
                 else
@@ -61,7 +62,7 @@ namespace PriceSignageSystem.Controllers
                     ModelState.AddModelError("", "Invalid username or password.");
                 }
             }
-         
+            
             model.StoreList = GetStoreList();
             return View(model);
         }

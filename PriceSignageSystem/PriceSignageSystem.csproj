@@ -173,6 +173,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\QueueController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\STRPRCController.cs" />
     <Compile Include="CountryImageDS.Designer.cs">
@@ -197,6 +198,22 @@
     <Compile Include="Migrations\202305230708075_add_CountryTbl.designer.cs">
       <DependentUpon>202305230708075_add_CountryTbl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202305240857443_add_Queuetbl.cs" />
+    <Compile Include="Migrations\202305240857443_add_Queuetbl.designer.cs">
+      <DependentUpon>202305240857443_add_Queuetbl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202305240914289_update_Queuetbl.cs" />
+    <Compile Include="Migrations\202305240914289_update_Queuetbl.designer.cs">
+      <DependentUpon>202305240914289_update_Queuetbl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202305240951003_update_QueueUpdatedDateToNullable.cs" />
+    <Compile Include="Migrations\202305240951003_update_QueueUpdatedDateToNullable.designer.cs">
+      <DependentUpon>202305240951003_update_QueueUpdatedDateToNullable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202305240957459_update_ItemQueueTbl.cs" />
+    <Compile Include="Migrations\202305240957459_update_ItemQueueTbl.designer.cs">
+      <DependentUpon>202305240957459_update_ItemQueueTbl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Constants\ReportConstants.cs" />
@@ -204,14 +221,18 @@
     <Compile Include="Models\Country.cs" />
     <Compile Include="Models\DatabaseContext\ApplicationDbContext.cs" />
     <Compile Include="Models\Dto\CountryDto.cs" />
+    <Compile Include="Models\Dto\ReportDto.cs" />
     <Compile Include="Models\Dto\STRPRCDto.cs" />
     <Compile Include="Models\Dto\UserStoreDto.cs" />
     <Compile Include="Models\Interface\ICategoryRepository.cs" />
+    <Compile Include="Models\Interface\IQueueRepository.cs" />
     <Compile Include="Models\Interface\ISizeRepository.cs" />
     <Compile Include="Models\Interface\ISTRPRCRepository.cs" />
     <Compile Include="Models\Interface\ITypeRepository.cs" />
     <Compile Include="Models\Interface\IUserRepository.cs" />
+    <Compile Include="Models\ItemQueue.cs" />
     <Compile Include="Models\Repository\CategoryRepository.cs" />
+    <Compile Include="Models\Repository\QueueRepository.cs" />
     <Compile Include="Models\Repository\SizeRepository.cs" />
     <Compile Include="Models\Repository\STRPRCRepository.cs" />
     <Compile Include="Models\Repository\TypeRepository.cs" />
@@ -220,18 +241,16 @@
     <Compile Include="Models\STRPRC.cs" />
     <Compile Include="Models\Type.cs" />
     <Compile Include="Models\User.cs" />
-    <Compile Include="PriceSignageDbDataSet.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>PriceSignageDbDataSet.xsd</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SqlServerTypes\Loader.cs" />
-    <Compile Include="STRPRC.Designer.cs">
+    <Compile Include="QueueReport_STRPRCDS.cs">
+      <DependentUpon>QueueReport_STRPRCDS.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="QueueReport_STRPRCDS.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>STRPRC.xsd</DependentUpon>
+      <DependentUpon>QueueReport_STRPRCDS.xsd</DependentUpon>
     </Compile>
+    <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="STRPRCDS.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -254,9 +273,6 @@
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="PriceSignageDbDataSet.xsc">
-      <DependentUpon>PriceSignageDbDataSet.xsd</DependentUpon>
-    </Content>
     <Content Include="CountryImageDS.xsc">
       <DependentUpon>CountryImageDS.xsd</DependentUpon>
     </Content>
@@ -268,13 +284,16 @@
     <Content Include="CountryImageDS.xss">
       <DependentUpon>CountryImageDS.xsd</DependentUpon>
     </Content>
-    <None Include="PriceSignageDbDataSet.xsd">
+    <Content Include="QueueReport_STRPRCDS.xsc">
+      <DependentUpon>QueueReport_STRPRCDS.xsd</DependentUpon>
+    </Content>
+    <None Include="QueueReport_STRPRCDS.xsd">
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>PriceSignageDbDataSet.Designer.cs</LastGenOutput>
+      <LastGenOutput>QueueReport_STRPRCDS.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
-    <Content Include="PriceSignageDbDataSet.xss">
-      <DependentUpon>PriceSignageDbDataSet.xsd</DependentUpon>
+    <Content Include="QueueReport_STRPRCDS.xss">
+      <DependentUpon>QueueReport_STRPRCDS.xsd</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\buttons.html5.min.js" />
@@ -325,17 +344,6 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\STRPRC\_SearchResultPartialView.cshtml" />
     <Content Include="Views\STRPRC\Index.cshtml" />
-    <Content Include="STRPRC.xsc">
-      <DependentUpon>STRPRC.xsd</DependentUpon>
-    </Content>
-    <None Include="STRPRC.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>STRPRC.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
-    <Content Include="STRPRC.xss">
-      <DependentUpon>STRPRC.xsd</DependentUpon>
-    </Content>
     <Content Include="Views\STRPRC\SearchByDate.cshtml" />
     <Content Include="STRPRCDS.xsc">
       <DependentUpon>STRPRCDS.xsd</DependentUpon>
@@ -348,6 +356,9 @@
     <Content Include="STRPRCDS.xss">
       <DependentUpon>STRPRCDS.xsd</DependentUpon>
     </Content>
+    <Content Include="Views\Report\AutoPrintReport.cshtml" />
+    <Content Include="Views\Queue\PrintQueueList.cshtml" />
+    <Content Include="Views\Report\AutoPrintReportFromAdvancePrinting.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -375,11 +386,23 @@
     <EmbeddedResource Include="Migrations\202305230708075_add_CountryTbl.resx">
       <DependentUpon>202305230708075_add_CountryTbl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202305240857443_add_Queuetbl.resx">
+      <DependentUpon>202305240857443_add_Queuetbl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202305240914289_update_Queuetbl.resx">
+      <DependentUpon>202305240914289_update_Queuetbl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202305240951003_update_QueueUpdatedDateToNullable.resx">
+      <DependentUpon>202305240951003_update_QueueUpdatedDateToNullable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202305240957459_update_ItemQueueTbl.resx">
+      <DependentUpon>202305240957459_update_ItemQueueTbl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\DynamicQueueReport.rdlc" />
     <EmbeddedResource Include="Reports\ApplianceReport_Jewelry.rdlc" />
     <EmbeddedResource Include="Reports\ApplianceReport_Skinny.rdlc" />
     <EmbeddedResource Include="Reports\ApplianceReport.rdlc" />
     <EmbeddedResource Include="Reports\ApplianceReport_Half.rdlc" />
-    <EmbeddedResource Include="Reports\NonApplianceReport_Half.rdlc" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -14,6 +14,7 @@ namespace PriceSignageSystem.Models.DatabaseContext
         public DbSet<Size> Sizes { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Country> Countries { get; set; }
+        public DbSet<ItemQueue> ItemQueues { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

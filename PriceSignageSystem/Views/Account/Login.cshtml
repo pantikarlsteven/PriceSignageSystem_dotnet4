@@ -41,8 +41,14 @@
                         @Html.DropDownListFor(m => m.SelectedStore, Model.StoreList, "Select Store", new { @class = "form-control" })
                         @Html.ValidationMessageFor(m => m.SelectedStore, "", new { @class = "text-danger" })
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block mb-4">Login</button>
-                    @Html.ActionLink("Register", "Register", "Account", null, new { @class = "btn btn-secondary btn-block" })
+                    <div class="row">
+                        <div class="col">
+                            <button type="submit" class="btn btn-primary btn-block mb-4">Login</button>
+                        </div>
+                        <div class="col">
+                            @Html.ActionLink("Register", "Register", "Account", null, new { @class = "btn btn-secondary btn-block" })
+                        </div>
+                    </div>
 
                 </div>
             </div>

@@ -178,14 +178,14 @@
 
                         // Print button click event handler
                         $('#printButton').click(function () {
-                            debugger
+
                             response.SelectedSizeId = $('#sizeDropdown').val();
                             response.SelectedTypeId = $('#typeDropdown').val();
                             response.SelectedCategoryId = $('#categoryDropdown').val();
 
                             // Generate the URL for the DisplayReport action
-                            var url = '@Url.Action("DisplayReportFromAdvancePrinting", "Report")';
-
+                            @*var url = '@Url.Action("DisplayReportFromAdvancePrinting", "Report")';*@
+                            var url = '@Url.Action("AutoPrintReportFromAdvancePrinting", "Report")';
                             // Serialize the response object to JSON
                             var serializedResponse = JSON.stringify(response);
 

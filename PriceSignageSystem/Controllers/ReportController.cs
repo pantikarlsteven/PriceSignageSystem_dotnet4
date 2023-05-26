@@ -32,7 +32,7 @@ namespace PriceSignageSystem.Controllers
             return data;
         }
 
-        public List<CountryDto> GetCountryImg(string country)
+        public CountryDto GetCountryImg(string country)
         {
             var data = _sTRPRCRepository.GetCountryImg(country);
             return data;
@@ -42,19 +42,7 @@ namespace PriceSignageSystem.Controllers
         {
             var reportData = GetData(model.O3SKU);
             var country = "";
-            var countryImgData = new List<CountryDto>();
-
-            foreach (var item in reportData)
-            {
-                if (!String.IsNullOrEmpty(item.O3TRB3))
-                {
-                    country = reportData.FirstOrDefault().O3TRB3;
-                    countryImgData = GetCountryImg(country);
-                }
-
-                var convertedImage = ConvertBinaryToJpeg(countryImgData.FirstOrDefault().country_img);
-            }
-
+            var countryImgData = new CountryDto();
 
             var reportPath = "";
 
@@ -77,6 +65,7 @@ namespace PriceSignageSystem.Controllers
 
             var localReport = new LocalReport();
             localReport.ReportPath = reportPath;
+            localReport.EnableExternalImages = true;
 
             List<ReportParameter> parameters = new List<ReportParameter>();
             parameters.Add(new ReportParameter("TypeId", model.SelectedTypeId.ToString()));
@@ -86,16 +75,23 @@ namespace PriceSignageSystem.Controllers
             var dataSource = new ReportDataSource("STRPRCDS", reportData);
             localReport.DataSources.Add(dataSource);
 
+
+            // IF REPORT HAS NO FLAG
             foreach (var item2 in reportData)
             {
                 if (!String.IsNullOrEmpty(item2.O3TRB3))
                 {
-                    var dataSource2 = new ReportDataSource("CountryImageDS", countryImgData);
+                    country = reportData.FirstOrDefault().O3TRB3;
+                    countryImgData = GetCountryImg(country);
+
+                    DataTable countryDt = ConversionHelper.ConvertObjectToDataTable(countryImgData);
+
+                    var dataSource2 = new ReportDataSource("CountryImageDS", countryDt);
                     localReport.DataSources.Add(dataSource2);
                 }
                 else
                 {
-                    var dataSource2 = new ReportDataSource("CountryImageDS", new List<CountryDto>());
+                    var dataSource2 = new ReportDataSource("CountryImageDS", new DataTable());
                     localReport.DataSources.Add(dataSource2);
                 }
             }
@@ -127,7 +123,7 @@ namespace PriceSignageSystem.Controllers
         public ActionResult DisplayReportFromAdvancePrinting(string response)
         {
             var dto = JsonConvert.DeserializeObject<STRPRCDto>(response);
-
+            var countryImgData = new CountryDto();
             var reportPath = "";
 
             if (dto.SelectedSizeId == ReportConstants.Size.Whole)
@@ -149,17 +145,32 @@ namespace PriceSignageSystem.Controllers
 
             var localReport = new LocalReport();
             localReport.ReportPath = reportPath;
+            localReport.EnableExternalImages = true;
+
 
             List<ReportParameter> parameters = new List<ReportParameter>();
             parameters.Add(new ReportParameter("TypeId", dto.SelectedTypeId.ToString()));
             parameters.Add(new ReportParameter("CategoryId", dto.SelectedCategoryId.ToString()));
-
             localReport.SetParameters(parameters);
 
             DataTable dataTable = ConversionHelper.ConvertObjectToDataTable(dto);
 
             var dataSource = new ReportDataSource("STRPRCDS", dataTable);
             localReport.DataSources.Add(dataSource);
+
+            // IF REPORT HAS NO FLAG
+            if (!String.IsNullOrEmpty(dto.O3TRB3))
+            {
+                countryImgData = GetCountryImg(dto.O3TRB3);
+
+                var dataSource2 = new ReportDataSource("CountryImageDS", countryImgData);
+                localReport.DataSources.Add(dataSource2);
+            }
+            else
+            {
+                var dataSource2 = new ReportDataSource("CountryImageDS", new DataTable());
+                localReport.DataSources.Add(dataSource2);
+            }
 
             var reportType = "PDF";
             var mimeType = "";
@@ -184,24 +195,171 @@ namespace PriceSignageSystem.Controllers
 
             return File(renderedBytes, mimeType);
         }
-        public ActionResult ConvertBinaryToJpeg(byte[] binaryData)
+
+        public ActionResult AutoPrintReport(STRPRCDto model)
         {
-            // Create a MemoryStream from the binary data
-            using (MemoryStream memoryStream = new MemoryStream(binaryData))
+            var reportData = GetData(model.O3SKU);
+            var country = "";
+            var countryImgData = new CountryDto();
+
+            var reportPath = "";
+
+            if (model.SelectedSizeId == ReportConstants.Size.Whole)
             {
-                // Create an Image object from the MemoryStream
-                Image image = Image.FromStream(memoryStream);
+                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath);
+            }
+            else if (model.SelectedSizeId == ReportConstants.Size.Half)
+            {
+                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Half);
+            }
+            else if (model.SelectedSizeId == ReportConstants.Size.Jewelry)
+            {
+                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Jewelry);
+            }
+            else if (model.SelectedSizeId == ReportConstants.Size.Skinny)
+            {
+                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Skinny);
+            }
 
-                // Create a new MemoryStream to store the JPEG image
-                using (MemoryStream jpegStream = new MemoryStream())
+            var localReport = new LocalReport();
+            localReport.ReportPath = reportPath;
+            localReport.EnableExternalImages = true;
+
+            List<ReportParameter> parameters = new List<ReportParameter>();
+            parameters.Add(new ReportParameter("TypeId", model.SelectedTypeId.ToString()));
+            parameters.Add(new ReportParameter("CategoryId", model.SelectedCategoryId.ToString()));
+            localReport.SetParameters(parameters);
+
+            var dataSource = new ReportDataSource("STRPRCDS", reportData);
+            localReport.DataSources.Add(dataSource);
+
+            // IF REPORT HAS NO FLAG
+            foreach (var item2 in reportData)
+            {
+                if (!String.IsNullOrEmpty(item2.O3TRB3))
                 {
-                    // Save the Image as a JPEG to the MemoryStream
-                    image.Save(jpegStream, ImageFormat.Jpeg);
+                    country = reportData.FirstOrDefault().O3TRB3;
+                    countryImgData = GetCountryImg(country);
 
-                    // Set the content type and return the JPEG image
-                    return File(jpegStream.ToArray(), "image/jpeg");
+                    DataTable countryDt = ConversionHelper.ConvertObjectToDataTable(countryImgData);
+
+                    var dataSource2 = new ReportDataSource("CountryImageDS", countryDt);
+                    localReport.DataSources.Add(dataSource2);
+                }
+                else
+                {
+                    var dataSource2 = new ReportDataSource("CountryImageDS", new DataTable());
+                    localReport.DataSources.Add(dataSource2);
                 }
             }
+
+            var reportType = "PDF";
+            var mimeType = "";
+            var encoding = "";
+            var fileNameExtension = "";
+
+            var deviceInfo =
+                $"<DeviceInfo><OutputFormat>{reportType}</OutputFormat><EmbedFonts>None</EmbedFonts></DeviceInfo>";
+
+            Warning[] warnings;
+            string[] streams;
+            byte[] renderedBytes;
+
+            renderedBytes = localReport.Render(
+                reportType,
+                deviceInfo,
+                out mimeType,
+                out encoding,
+                out fileNameExtension,
+                out streams,
+                out warnings);
+
+            ViewBag.ReportData = Convert.ToBase64String(renderedBytes); // Pass rendered report bytes to the view
+            return View();
+        }
+
+        public ActionResult AutoPrintReportFromAdvancePrinting(string response)
+        {
+            var model = JsonConvert.DeserializeObject<STRPRCDto>(response);
+
+            var reportData = GetData(model.O3SKU);
+            var country = "";
+            var countryImgData = new CountryDto();
+
+            var reportPath = "";
+
+            if (model.SelectedSizeId == ReportConstants.Size.Whole)
+            {
+                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath);
+            }
+            else if (model.SelectedSizeId == ReportConstants.Size.Half)
+            {
+                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Half);
+            }
+            else if (model.SelectedSizeId == ReportConstants.Size.Jewelry)
+            {
+                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Jewelry);
+            }
+            else if (model.SelectedSizeId == ReportConstants.Size.Skinny)
+            {
+                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Skinny);
+            }
+
+            var localReport = new LocalReport();
+            localReport.ReportPath = reportPath;
+            localReport.EnableExternalImages = true;
+
+            List<ReportParameter> parameters = new List<ReportParameter>();
+            parameters.Add(new ReportParameter("TypeId", model.SelectedTypeId.ToString()));
+            parameters.Add(new ReportParameter("CategoryId", model.SelectedCategoryId.ToString()));
+            localReport.SetParameters(parameters);
+
+            var dataSource = new ReportDataSource("STRPRCDS", reportData);
+            localReport.DataSources.Add(dataSource);
+
+            // IF REPORT HAS NO FLAG
+            foreach (var item2 in reportData)
+            {
+                if (!String.IsNullOrEmpty(item2.O3TRB3))
+                {
+                    country = reportData.FirstOrDefault().O3TRB3;
+                    countryImgData = GetCountryImg(country);
+
+                    DataTable countryDt = ConversionHelper.ConvertObjectToDataTable(countryImgData);
+
+                    var dataSource2 = new ReportDataSource("CountryImageDS", countryDt);
+                    localReport.DataSources.Add(dataSource2);
+                }
+                else
+                {
+                    var dataSource2 = new ReportDataSource("CountryImageDS", new DataTable());
+                    localReport.DataSources.Add(dataSource2);
+                }
+            }
+
+            var reportType = "PDF";
+            var mimeType = "";
+            var encoding = "";
+            var fileNameExtension = "";
+
+            var deviceInfo =
+                $"<DeviceInfo><OutputFormat>{reportType}</OutputFormat><EmbedFonts>None</EmbedFonts></DeviceInfo>";
+
+            Warning[] warnings;
+            string[] streams;
+            byte[] renderedBytes;
+
+            renderedBytes = localReport.Render(
+                reportType,
+                deviceInfo,
+                out mimeType,
+                out encoding,
+                out fileNameExtension,
+                out streams,
+                out warnings);
+
+            ViewBag.ReportData = Convert.ToBase64String(renderedBytes); // Pass rendered report bytes to the view
+            return View();
         }
     }
 }

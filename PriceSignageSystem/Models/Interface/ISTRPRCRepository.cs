@@ -18,6 +18,6 @@ namespace PriceSignageSystem.Models.Interface
         STRPRCDto GetDataBySKU(decimal O3SKU);
         DateTime GetLatestUpdate();
         int UpdateSTRPRCTable(int storeId);
-        List<CountryDto> GetCountryImg(string country);
+        CountryDto GetCountryImg(string country);
     }
 }

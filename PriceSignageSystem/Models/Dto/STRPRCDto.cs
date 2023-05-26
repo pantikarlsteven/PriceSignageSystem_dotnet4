@@ -9,30 +9,37 @@ namespace PriceSignageSystem.Models.Dto
 {
     public class STRPRCDto
     {
+        [DisplayFormat(DataFormatString = "{0:0}")]
         public decimal O3LOC { get; set; }
-        [Display(Name = "ITEM NUMBER")]
+        [Display(Name = "SKU")]
+        [DisplayFormat(DataFormatString = "{0:0}")]
         public decimal O3SKU { get; set; }
         [Display(Name = "STATUS CODE")]
         public string O3SCCD { get; set; }
-        [Display(Name = "ITEM DESC")]
+        [Display(Name = "DESC")]
         public string O3IDSC { get; set; }
-        [Display(Name = "UPC CODE")]
+        [Display(Name = "UPC")]
+        [DisplayFormat(DataFormatString = "{0:0}")]
         public decimal O3UPC { get; set; }
         public decimal O3VNUM { get; set; }
         public string O3TYPE { get; set; }
-        [Display(Name = "DEPARTMENT")]
+        [Display(Name = "DEPT")]
+        [DisplayFormat(DataFormatString = "{0:0}")]
         public decimal O3DEPT { get; set; }
-        [Display(Name = "SUB-DEPARTMENT")]
+        [Display(Name = "SUB-DEPT")]
+        [DisplayFormat(DataFormatString = "{0:0}")]
         public decimal O3SDPT { get; set; }
         [Display(Name = "CLASS")]
+        [DisplayFormat(DataFormatString = "{0:0}")]
         public decimal O3CLAS { get; set; }
         [Display(Name = "SUB-CLASS")]
+        [DisplayFormat(DataFormatString = "{0:0}")]
         public decimal O3SCLS { get; set; }
-        [Display(Name = "CURRENT POS PRICE")]
+        [Display(Name = "POS PRICE")]
         public decimal O3POS { get; set; }
         public decimal O3POSU { get; set; }
         public decimal O3REG { get; set; }
-        [Display(Name = "CUR REG UNIT PRICE")]
+        [Display(Name = "REG PRICE")]
         public decimal O3REGU { get; set; }
         [Display(Name = "ORIGINAL PRICE")]
         public decimal O3ORIG { get; set; }
@@ -42,15 +49,15 @@ namespace PriceSignageSystem.Models.Dto
         public decimal O3PMTH { get; set; }
         public decimal O3PDQT { get; set; }
         public decimal O3PDPR { get; set; }
-        [Display(Name = "EVENT START DATE")]
+        [Display(Name = "START DATE")]
         public decimal O3SDT { get; set; }
-        [Display(Name = "EVENT END DATE")]
+        [Display(Name = "END DATE")]
         public decimal O3EDT { get; set; }
-        [Display(Name = "ATTRIBUTE 3")]
+        [Display(Name = "COUNTRY")]
         public string O3TRB3 { get; set; }
-        [Display(Name = "BRAND NAME")]
+        [Display(Name = "BRAND NO.")]
         public decimal O3FGR { get; set; }
-        [Display(Name = "MANUF. NAME")]
+        [Display(Name = "BRAND NAME")]
         public string O3FNAM { get; set; }
         [Display(Name="MODEL")]
         public string O3MODL { get; set; }

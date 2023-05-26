@@ -30,6 +30,7 @@ namespace PriceSignageSystem
             builder.RegisterType<TypeRepository>().As<ITypeRepository>();
             builder.RegisterType<SizeRepository>().As<ISizeRepository>();
             builder.RegisterType<CategoryRepository>().As<ICategoryRepository>();
+            builder.RegisterType<QueueRepository>().As<IQueueRepository>();
 
             // Register the MVC controllers
             builder.RegisterControllers(typeof(MvcApplication).Assembly);
@@ -43,6 +44,9 @@ namespace PriceSignageSystem
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            // Enable session state
+            HttpContext.Current.SetSessionStateBehavior(System.Web.SessionState.SessionStateBehavior.Required);
 
         }
     }

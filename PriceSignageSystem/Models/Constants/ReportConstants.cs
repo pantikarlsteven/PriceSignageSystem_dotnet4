@@ -26,5 +26,10 @@ namespace PriceSignageSystem.Models.Constants
             public const int NonAppliance = 2;
         }
 
+        public static class Status
+        {
+            public const string InQueue = "InQueue";
+            public const string Printed = "Printed";
+        }
     }
 }

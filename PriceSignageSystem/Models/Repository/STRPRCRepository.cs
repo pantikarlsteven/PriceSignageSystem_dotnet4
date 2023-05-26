@@ -399,14 +399,15 @@ namespace PriceSignageSystem.Models.Repository
             return count;
         }
 
-        public List<CountryDto> GetCountryImg(string country)
+        public CountryDto GetCountryImg(string country)
         {
             var data = (from a in _db.Countries
                        where a.iatrb3 == country
-                       select new CountryDto { 
-                       iatrb3 = a.iatrb3,
-                       country_img = a.country_img
-                       }).ToList();
+                       select new CountryDto 
+                       { 
+                            iatrb3 = a.iatrb3,
+                            country_img = a.country_img
+                       }).FirstOrDefault();
 
             return data;
         }

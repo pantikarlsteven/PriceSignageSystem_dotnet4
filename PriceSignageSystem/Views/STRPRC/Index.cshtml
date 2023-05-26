@@ -17,6 +17,7 @@
         <div class="alert alert-info">
             <center>
                 The current data is up to date. (Current Version: @ViewBag.DateVersion)
+                @Html.ActionLink("Update", "UpdateSTRPRCData", "STRPRC", new { storeId = Model.SelectedStore }, new { @class = "btn btn-secondary btn-block" })
             </center>
         </div>
     }
@@ -32,17 +33,15 @@
     }
     <div class="container">
         <div class="row align-items-center justify-content-center">
-            <div class="col text-center">
-                <label for="searchInput">Enter SKU/UPC:</label>
+            <div class="col-auto">
+                <label for="searchInput" class="form-label fw-bold">Enter SKU/UPC:</label>
             </div>
-            <div class="col">
+            <div class="col-auto">
                 <input type="text" id="searchInput" class="form-control" style="max-width: 200px;" placeholder="Search...">
             </div>
         </div>
     </div>
-
-    <hr />
-
+    <br />
     <div id="searchResults">
         @Html.Partial("_SearchResultPartialView", new STRPRCDto())
     </div>
