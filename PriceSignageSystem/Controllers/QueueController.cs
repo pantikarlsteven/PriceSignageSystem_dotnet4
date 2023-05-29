@@ -44,13 +44,24 @@ namespace PriceSignageSystem.Controllers
             DataTable dataTable = ConversionHelper.ConvertObjectToDataTable(reportData);
 
             var username = (string)System.Web.HttpContext.Current.Session["Username"];
-            var queueList = _queueRepository.GetQueueListPerUser(username).Where(a => a.SizeId == 1);
+
+            var queueList = _queueRepository.GetQueueListPerUser(username);
+            var queueListWhole = queueList.Where(a => a.SizeId == 1);
+            var queueListHalf = queueList.Where(a => a.SizeId == 2);
+            var queueListJewelry = queueList.Where(a => a.SizeId == 3);
+            var queueListSkinny = queueList.Where(a => a.SizeId == 4);
 
             var localReport = new LocalReport();
             localReport.ReportPath = Server.MapPath("~/Reports/DynamicQueueReport.rdlc");
 
-            var dataSource = new ReportDataSource("STRPRCDS", queueList);
+            var dataSource = new ReportDataSource("STRPRCDS_Whole", queueListWhole);
             localReport.DataSources.Add(dataSource);
+            var dataSource2 = new ReportDataSource("STRPRCDS_Half", queueListHalf);
+            localReport.DataSources.Add(dataSource2);
+            var dataSource3 = new ReportDataSource("STRPRCDS_Jewelry", queueListJewelry);
+            localReport.DataSources.Add(dataSource3);
+            var dataSource4 = new ReportDataSource("STRPRCDS_Skinny", queueListSkinny);
+            localReport.DataSources.Add(dataSource4);
 
             var reportType = "PDF";
             var mimeType = "";

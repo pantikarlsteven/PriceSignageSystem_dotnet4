@@ -217,6 +217,8 @@ namespace PriceSignageSystem.Models.Repository
                         O3TRB3 = reader["O3TRB3"].ToString(),
                         O3FGR = (decimal)reader["O3FGR"],
                         O3FNAM = reader["O3FNAM"].ToString(),
+                        O3MODL = reader["O3MODL"].ToString(),
+                        O3LONG = reader["O3LONG"].ToString(),
                         O3SLUM = reader["O3SLUM"].ToString(),
                         O3DIV = reader["O3DIV"].ToString(),
                         O3TUOM = reader["O3TUOM"].ToString(),

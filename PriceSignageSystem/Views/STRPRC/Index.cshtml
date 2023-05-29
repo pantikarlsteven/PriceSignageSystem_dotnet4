@@ -1,53 +1,58 @@
 ﻿@using PriceSignageSystem.Models.Dto;
-@model UserStoreDto
 @{
     ViewData["Title"] = "Product Page";
 }
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
-<body>
-    <br />
 
-    @if (ViewBag.IsDateLatest == true)
-    {
-        <div class="alert alert-info">
-            <center>
-                The current data is up to date. (Current Version: @ViewBag.DateVersion)
-                @Html.ActionLink("Update", "UpdateSTRPRCData", "STRPRC", new { storeId = Model.SelectedStore }, new { @class = "btn btn-secondary btn-block" })
-            </center>
+    <div class="content-wrapper bg-white px-3">
+        <br />
+        <div id="loadingContainer" style="display: none;">
+            <img src="~/Content/Images/loading.gif" alt="Loading" />
         </div>
-    }
-    else
-    {
-        <div class="alert alert-warning">
-            <center>
-                The current data is not yet updated. (Current Version: @ViewBag.DateVersion)
-                @Html.ActionLink("Update", "UpdateSTRPRCData", "STRPRC", new { storeId = Model.SelectedStore }, new { @class = "btn btn-secondary btn-block" })
-            </center>
+        @if (ViewBag.IsDateLatest == true)
+        {
+            <div class="card card-body bg-primarydark text-white text-bold">
+                <center>
+                    The current data is up to date. (Current Version: @ViewBag.DateVersion)
+                    @*@Html.ActionLink("Update", "UpdateSTRPRCData", "STRPRC", new { storeId = Model.SelectedStore }, new { @class = "btn btn-secondary btn-block" })*@
+                    <br />
+                    <a id="updateButton" href="#" class="mt-2 btn btn-secondary text-bold">
+                        Update
+                    </a>
+                </center>
+            </div>
+        }
+        else
+        {
+            <div class="alert bg-dangerdark  text-white text-bold">
+                <center>
+                    The current data is not yet updated. (Current Version: @ViewBag.DateVersion)
+                    @*@Html.ActionLink("Update", "UpdateSTRPRCData", "STRPRC", new { storeId = Model.SelectedStore }, new { @class = "btn btn-secondary btn-block" })*@
+                    <br />
+                    <a id="updateButton" href="#" class="mt-2 btn btn-secondary text-bold ">
+                        Update
+                    </a>
+                </center>
+            </div>
+
+        }
+        <div class="wrapper">
+            <div class="row align-items-center justify-content-center">
+                <div class="col-auto">
+                    <label for="searchInput" class="form-label fw-bold">Enter SKU/UPC:</label>
+                </div>
+                <div class="col-auto">
+                    <input type="text" id="searchInput" class="form-control" style="max-width: 200px;" placeholder="Search...">
+                </div>
+            </div>
+        </div>
+        <br />
+        <div id="searchResults">
+            @Html.Partial("_SearchResultPartialView", new STRPRCDto())
         </div>
 
-    }
-    <div class="container">
-        <div class="row align-items-center justify-content-center">
-            <div class="col-auto">
-                <label for="searchInput" class="form-label fw-bold">Enter SKU/UPC:</label>
-            </div>
-            <div class="col-auto">
-                <input type="text" id="searchInput" class="form-control" style="max-width: 200px;" placeholder="Search...">
-            </div>
-        </div>
+
     </div>
-    <br />
-    <div id="searchResults">
-        @Html.Partial("_SearchResultPartialView", new STRPRCDto())
-    </div>
-    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
-</body>
-</html>
+
 <script>
     $(document).ready(function () {
         $('#searchInput').on('input', function () {
@@ -63,6 +68,25 @@
                     $('#searchResults').html('<p>Error retrieving search results.</p>');
                 }
             });
+        });
+
+        $("#updateButton").click(function () {
+            $("#loadingContainer").show();
+
+            $.ajax({
+                url: "/STRPRC/UpdateSTRPRCData", 
+                type: "POST", 
+                success: function (response) {
+                    
+                    window.location.href = "/STRPRC/Index"; 
+                },
+                error: function (error) {
+        
+                    $("#loadingContainer").hide();
+                }
+            });
+
+            return false; // Prevent the default link behavior
         });
     });
 </script>

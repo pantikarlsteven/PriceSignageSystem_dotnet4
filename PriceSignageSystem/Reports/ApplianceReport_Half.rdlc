@@ -330,7 +330,7 @@
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.69792in</Height>
+                  <Height>1.64583in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -342,7 +342,7 @@
                               <TextRuns>
                                 <TextRun>
                                   <Label>LONG</Label>
-                                  <Value>=Fields!O3LONG.Value</Value>
+                                  <Value>=Code.InsertLineBreaks(Fields!O3LONG.Value, 80)</Value>
                                   <Style>
                                     <FontFamily>Calibri</FontFamily>
                                     <FontSize>12pt</FontSize>
@@ -396,7 +396,7 @@
             <DataSetName>STRPRCDS</DataSetName>
             <Top>0.13455in</Top>
             <Left>0.11504in</Left>
-            <Height>2.58334in</Height>
+            <Height>3.53125in</Height>
             <Width>5.65704in</Width>
             <Style>
               <Border>
@@ -777,6 +777,9 @@
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox19</rd:DefaultName>
+                          <Visibility>
+                            <Hidden>=IIF(Fields!O3UPC.Value = 0, True, False )</Hidden>
+                          </Visibility>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -788,6 +791,7 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -1188,6 +1192,16 @@
       </CellDefinitions>
     </GridLayoutDefinition>
   </ReportParametersLayout>
+  <Code>Public Function InsertLineBreaks(text As String, charCount As Integer) As String
+    Dim sb As New System.Text.StringBuilder(text)
+    Dim i As Integer = charCount
+    While i &lt; sb.Length
+        sb.Insert(i, Environment.NewLine)
+        i += charCount + Environment.NewLine.Length
+    End While
+    Return sb.ToString()
+End Function
+</Code>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
   <rd:ReportID>2f5f9f0d-707e-4c70-8c9e-97fb6d03c7d3</rd:ReportID>
 </Report>

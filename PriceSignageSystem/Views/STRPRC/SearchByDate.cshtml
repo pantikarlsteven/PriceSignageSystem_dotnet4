@@ -5,13 +5,6 @@
     <meta name="viewport" content="width=device-width" />
     <title>Advance Printing</title>
     <style>
-
-        .center-content {
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 20vh;
-        }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -47,9 +40,9 @@
                              scroller: true,
                              data: data,
                              columns: [
-                                { "data": "O3SKU", "name": "O3SKU", "autoWidth": true },
+                                 { "data": "O3SKU", "name": "O3SKU", "autoWidth": true },
                                 { "data": "O3SCCD", "name": "O3SCCD", "autoWidth": true },
-                                { "data": "O3IDSC", "name": "O3IDSC", "autoWidth": true },
+                                { "data": "O3IDSC", "name": "O3IDSC", "className": "text-nowrap"},
                                 { "data": "O3UPC", "name": "O3UPC", "autoWidth": true },
                                 { "data": "O3DEPT", "name": "O3DEPT", "autoWidth": true },
                                 { "data": "O3SDPT", "name": "O3SDPT", "autoWidth": true },
@@ -110,31 +103,24 @@
                             categoryOptions += '<option value="' + option.Id + '">' + option.Name + '</option>';
                         }
 
-                        //// Build the HTML to display the row data
-                        //var html = '';
-                        //for (var key in response) {
-                        //    if (response.hasOwnProperty(key)) {
-                        //        html += '<p><strong>' + key + ': </strong>' + response[key] + '</p>';
-                        //    }
-                        //}
-
                         // Build the HTML for the dropdowns
                         var dropdownHtml = '<div class="form-row">' +
-                            '<div class="form-group col-md-6">' +
-                            '<label for="sizeDropdown">Size:</label>' +
-                            '<select id="sizeDropdown" class="form-control">' +
+                            '<div class="form-group row col-12">' +
+                            '<label class="col-sm-2 col-form-label " for="sizeDropdown">Size:</label>' +
+                            '<select class="col-sm-9  ml-3 form-control" id="sizeDropdown" >' +
                             sizeOptions +
                             '</select>' +
                             '</div>' +
-                            '<div class="form-group col-md-6">' +
+                            '<div class="form-group col-md-12">' +
                             '<label for="typeDropdown">Type:</label>' +
-                            '<select id="typeDropdown" class="form-control">' +
+                            '<select id="typeDropdown" class="form-control" disabled>' +
+                            '<option value="2">Save</option>' +
                             typeOptions +
                             '</select>' +
                             '</div>' +
                             '</div>' +
                             '<div class="form-row">' +
-                            '<div class="form-group col-md-6">' +
+                            '<div class="form-group col-md-12">' +
                             '<label for="categoryDropdown">Category:</label>' +
                             '<select id="categoryDropdown" class="form-control">' +
                             categoryOptions +
@@ -146,7 +132,7 @@
                         var printButtonHtml = '<button id="printButton" class="btn btn-primary">Print</button>';
 
                         // Create the modal content
-                        var modalContent = '<div class="modal-dialog modal-dialog-centered">' +
+                        var modalContent = '<div class="  modal-dialog modal-sm modal-dialog-centered">' +
                             '<div class="modal-content">' +
                             '<div class="modal-header">' +
                             '<h5 class="modal-title">Print Report</h5>' +
@@ -228,56 +214,64 @@
 </head>
 
 <body>
-    <div class="center-content">
-        <div class="container">
-            <center><h2 class="mt-4">Advance Printing</h2></center>
-            <hr />
-            <div class="row mt-4">
-                <div class="col-md-4 offset-md-2">
-                    <div class="form-group">
-                        <label for="startDate">Start Date:</label>
-                        <input type="text" id="startDate" name="startDate" class="form-control" />
+
+
+    <div class="content-wrapper bg-white px-3">
+        <br />
+        <div class="row ">
+            <div class="card elevation-3 px-0 ">
+                <div class="card-header bg-primary1 text-white">
+                    <h3 class="card-title">Advance Printing</h3>
+                </div>
+                <div class="card-body row mx-auto">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="startDate">Start Date:</label>
+                            <input type="text" id="startDate" name="startDate" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="endDate">End Date:</label>
+                            <input type="text" id="endDate" name="endDate" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="text-white">Search</label>
+                        <button id="searchBtn" class="btn btn-primary btn-block">Search</button>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="endDate">End Date:</label>
-                        <input type="text" id="endDate" name="endDate" class="form-control" />
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <button id="searchBtn" class="btn btn-primary btn-block">Search</button>
+                <hr />
+                <div class="card-body table-responsive">
+                    <table id="dataTable" class="table table-striped table-hover " style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>SKU</th>
+                                <th>Status Code</th>
+                                <th class="text-nowrap">Item Desc.</th>
+                                <th>UPC</th>
+                                <th>Dept</th>
+                                <th>Sub-Dept.</th>
+                                <th>Class</th>
+                                <th>Sub-Class</th>
+                                <th>Pos Price</th>
+                                <th>Reg Price</th>
+                                <th>Orig Price</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Country</th>
+                                <th>Brand Name</th>
+                                <th>Manuf. Name</th>
+                                <th>From U/M</th>
+                                <th>Divisor</th>
+                                <th>TO UOM</th>
+                                <th> - </th>
+                            </tr>
+                        </thead>
+                    </table>
                 </div>
             </div>
         </div>
-    </div>
-    <br />
-    <table id="dataTable" class="display" style="width:100%">
-        <thead>
-            <tr>
-                <th>Item No.</th>
-                <th>Status Code</th>
-                <th>Item Desc.</th>
-                <th>UPC Code</th>
-                <th>Department</th>
-                <th>Sub-Dept.</th>
-                <th>Class</th>
-                <th>Sub-Class</th>
-                <th>Cur Pos Price</th>
-                <th>Cur Reg Unit Price</th>
-                <th>Original Price</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Attribute 3</th>
-                <th>Brand Name</th>
-                <th>Manuf. Name</th>
-                <th>From U/M</th>
-                <th>Divisor</th>
-                <th>TO UOM</th>
-                <th> - </th>
-            </tr>
-        </thead>
-    </table>
 </body>
 </html>
 

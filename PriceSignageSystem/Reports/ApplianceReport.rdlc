@@ -339,7 +339,7 @@
                               <TextRuns>
                                 <TextRun>
                                   <Label>LONG</Label>
-                                  <Value>=Fields!O3LONG.Value</Value>
+                                  <Value>=Code.InsertLineBreaks(Fields!O3LONG.Value, 80)</Value>
                                   <Style>
                                     <FontFamily>Calibri</FontFamily>
                                     <FontSize>16pt</FontSize>
@@ -351,7 +351,7 @@
                           </Paragraphs>
                           <rd:DefaultName>Textbox14</rd:DefaultName>
                           <Visibility>
-                            <Hidden>=IIf(Parameters!CategoryId.Value = 1, True, False)</Hidden>
+                            <Hidden>=IIf(Parameters!CategoryId.Value = 2, True, False)</Hidden>
                           </Visibility>
                           <Style>
                             <Border>
@@ -362,7 +362,6 @@
                             <PaddingRight>2pt</PaddingRight>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
@@ -435,7 +434,8 @@
                                   <Style>
                                     <FontFamily>Impact</FontFamily>
                                     <FontSize>60pt</FontSize>
-                                    <Format>0.00;(0.00)</Format>
+                                    <Format>'Php'#,0.00;('Php'#,0.00)</Format>
+                                    <rd:FormatSymbolCulture>en-PH</rd:FormatSymbolCulture>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -528,7 +528,8 @@
                                   <Style>
                                     <FontFamily>Impact</FontFamily>
                                     <FontSize>100pt</FontSize>
-                                    <Format>0.00;(0.00)</Format>
+                                    <Format>'Php'#,0.00;('Php'#,0.00)</Format>
+                                    <rd:FormatSymbolCulture>en-PH</rd:FormatSymbolCulture>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -589,10 +590,10 @@
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>1.44703in</Width>
+                  <Width>1.75604in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.72657in</Width>
+                  <Width>1.8724in</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>2.3863in</Width>
@@ -716,7 +717,7 @@
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Center</TextAlign>
+                                <TextAlign>Right</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
@@ -763,11 +764,14 @@
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Center</TextAlign>
+                                <TextAlign>Right</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox19</rd:DefaultName>
+                          <Visibility>
+                            <Hidden>=IIF(Fields!O3UPC.Value = 0, True, False )</Hidden>
+                          </Visibility>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -777,6 +781,7 @@
                             <PaddingRight>2pt</PaddingRight>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -811,7 +816,7 @@
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Center</TextAlign>
+                                <TextAlign>Right</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
@@ -879,11 +884,12 @@
                                   <Style>
                                     <FontFamily>Calibri</FontFamily>
                                     <FontSize>16pt</FontSize>
+                                    <Format>d</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Center</TextAlign>
+                                <TextAlign>Right</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
@@ -989,6 +995,7 @@
                                   <Value>=Now</Value>
                                   <Style>
                                     <FontFamily>Calibri</FontFamily>
+                                    <Format>d</Format>
                                   </Style>
                                 </TextRun>
                                 <TextRun>
@@ -1058,9 +1065,9 @@
             <KeepTogether>true</KeepTogether>
             <DataSetName>STRPRCDS</DataSetName>
             <Top>6.4432in</Top>
-            <Left>1.21355in</Left>
+            <Left>0.7587in</Left>
             <Height>0.75in</Height>
-            <Width>9.46354in</Width>
+            <Width>9.91839in</Width>
             <ZIndex>2</ZIndex>
             <Style>
               <Border>
@@ -1160,6 +1167,15 @@
       </CellDefinitions>
     </GridLayoutDefinition>
   </ReportParametersLayout>
+  <Code>Public Function InsertLineBreaks(text As String, charCount As Integer) As String
+    Dim sb As New System.Text.StringBuilder(text)
+    Dim i As Integer = charCount
+    While i &lt; sb.Length
+        sb.Insert(i, Environment.NewLine)
+        i += charCount + Environment.NewLine.Length
+    End While
+    Return sb.ToString()
+End Function</Code>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
   <rd:ReportID>b64bcca8-b857-4820-b4e6-13d3c2fc61a4</rd:ReportID>
 </Report>

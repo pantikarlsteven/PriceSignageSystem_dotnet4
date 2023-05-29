@@ -19,7 +19,7 @@
             {
                 @Html.HiddenFor(m => m.O3SKU)
                 <div class="container">
-                    <h2 class="text-center bg-primary text-white p-2">Item Details</h2>
+                    <h2 class="text-center bg-primarydark text-white p-2">Item Details</h2>
 
                     <div class="row">
                         <div class="col-md-6">
@@ -89,23 +89,23 @@
                     <hr />
 
                     <div class="container">
-                        <div class="row mb-3">
-                            <div class="col">
+                        <div class="row mb-3 d-flex justify-content-center">
+                            <div class="col-3">
                                 <div class="form-group">
                                     @Html.LabelFor(m => m.SelectedTypeId, htmlAttributes: new { @class = "font-weight-bold" })
-                                    @Html.DropDownListFor(m => m.SelectedTypeId, Model.Types ?? new List<SelectListItem>(), "Select Type", new { @class = "form-control form-control-sm custom-select" , style = "max-width: 150px;" })
+                                    @Html.DropDownListFor(m => m.SelectedTypeId, Model.Types ?? new List<SelectListItem>(), "Select Type", new { @class = "form-control form-control-sm custom-select"  })
                                 </div>
                             </div>
-                            <div class="col">
+                            <div class="col-3">
                                 <div class="form-group">
                                     @Html.LabelFor(m => m.SelectedSizeId, htmlAttributes: new { @class = "font-weight-bold" })
-                                    @Html.DropDownListFor(m => m.SelectedSizeId, Model.Sizes ?? new List<SelectListItem>(), "Select Size", new { @class = "form-control form-control-sm custom-select" , style = "max-width: 150px;" })
+                                    @Html.DropDownListFor(m => m.SelectedSizeId, Model.Sizes ?? new List<SelectListItem>(), "Select Size", new { @class = "form-control form-control-sm custom-select" })
                                 </div>
                             </div>
-                            <div class="col">
+                            <div class="col-3">
                                 <div class="form-group">
                                     @Html.LabelFor(m => m.SelectedCategoryId, htmlAttributes: new { @class = "font-weight-bold" })
-                                    @Html.DropDownListFor(m => m.SelectedCategoryId, Model.Categories ?? new List<SelectListItem>(), "Select Category", new { @class = "form-control form-control-sm custom-select" , style = "max-width: 150px;" })
+                                    @Html.DropDownListFor(m => m.SelectedCategoryId, Model.Categories ?? new List<SelectListItem>(), "Select Category", new { @class = "form-control form-control-sm custom-select" })
                                 </div>
                             </div>
                         </div>

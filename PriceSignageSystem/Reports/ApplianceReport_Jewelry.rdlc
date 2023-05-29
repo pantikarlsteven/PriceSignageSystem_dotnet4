@@ -232,7 +232,8 @@
                                 <TextRun>
                                   <Value>=First(Fields!O3FNAM.Value, "STRPRCDS")</Value>
                                   <Style>
-                                    <FontSize>22pt</FontSize>
+                                    <FontFamily>Arial Black</FontFamily>
+                                    <FontSize>20pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -269,7 +270,7 @@
                                   <Value>=First(Fields!O3IDSC.Value, "STRPRCDS")</Value>
                                   <Style>
                                     <FontFamily>Impact</FontFamily>
-                                    <FontSize>16pt</FontSize>
+                                    <FontSize>20pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -305,6 +306,7 @@
                                   <Value>=First(Fields!O3MODL.Value, "STRPRCDS")</Value>
                                   <Style>
                                     <FontFamily>Impact</FontFamily>
+                                    <FontSize>12pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -340,10 +342,10 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=First(Fields!O3LONG.Value, "STRPRCDS")</Value>
+                                  <Value>=Code.InsertLineBreaks(Fields!O3LONG.Value, 80)</Value>
                                   <Style>
                                     <FontFamily>Calibri</FontFamily>
-                                    <FontSize>8pt</FontSize>
+                                    <FontSize>9pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -418,7 +420,7 @@
               </TablixColumns>
               <TablixRows>
                 <TablixRow>
-                  <Height>0.1819in</Height>
+                  <Height>0.25481in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -502,28 +504,28 @@
                                   <Value>PRICE PER </Value>
                                   <Style>
                                     <FontFamily>Impact</FontFamily>
-                                    <FontSize>6pt</FontSize>
+                                    <FontSize>12pt</FontSize>
                                   </Style>
                                 </TextRun>
                                 <TextRun>
                                   <Value>=First(Fields!O3TUOM.Value, "STRPRCDS")</Value>
                                   <Style>
                                     <FontFamily>Impact</FontFamily>
-                                    <FontSize>6pt</FontSize>
+                                    <FontSize>12pt</FontSize>
                                   </Style>
                                 </TextRun>
                                 <TextRun>
                                   <Value xml:space="preserve"> </Value>
                                   <Style>
                                     <FontFamily>Impact</FontFamily>
-                                    <FontSize>6pt</FontSize>
+                                    <FontSize>12pt</FontSize>
                                   </Style>
                                 </TextRun>
                                 <TextRun>
                                   <Value>=Fields!O3REG.Value / Fields!O3DIV.Value</Value>
                                   <Style>
                                     <FontFamily>Impact</FontFamily>
-                                    <FontSize>6pt</FontSize>
+                                    <FontSize>12pt</FontSize>
                                     <Format>0.00;(0.00)</Format>
                                   </Style>
                                 </TextRun>
@@ -551,7 +553,7 @@
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.33815in</Height>
+                  <Height>0.3021in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -565,7 +567,7 @@
                                   <Value>=First(Fields!O3UPC.Value, "STRPRCDS")</Value>
                                   <Style>
                                     <FontFamily>Calibri</FontFamily>
-                                    <FontSize>6pt</FontSize>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -576,6 +578,9 @@
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox11</rd:DefaultName>
+                          <Visibility>
+                            <Hidden>=IIF(Fields!O3UPC.Value = 0, True, False )</Hidden>
+                          </Visibility>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -586,6 +591,7 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -600,7 +606,7 @@
                                   <Value>=First(Fields!O3SKU.Value, "STRPRCDS")</Value>
                                   <Style>
                                     <FontFamily>Calibri</FontFamily>
-                                    <FontSize>6pt</FontSize>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -608,7 +614,7 @@
                                   <Value> - </Value>
                                   <Style>
                                     <FontFamily>Calibri</FontFamily>
-                                    <FontSize>6pt</FontSize>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -617,7 +623,7 @@
                                   <Value>=First(Fields!O3SCCD.Value, "STRPRCDS")</Value>
                                   <Style>
                                     <FontFamily>Calibri</FontFamily>
-                                    <FontSize>6pt</FontSize>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -657,7 +663,7 @@
 )</Value>
                                   <Style>
                                     <FontFamily>Calibri</FontFamily>
-                                    <FontSize>6pt</FontSize>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Format>d</Format>
                                   </Style>
@@ -666,7 +672,7 @@
                                   <Value> - </Value>
                                   <Style>
                                     <FontFamily>Calibri</FontFamily>
-                                    <FontSize>6pt</FontSize>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -693,7 +699,7 @@
 )</Value>
                                   <Style>
                                     <FontFamily>Calibri</FontFamily>
-                                    <FontSize>6pt</FontSize>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -731,7 +737,7 @@
                                   <Value>=First(Fields!O3DEPT.Value, "STRPRCDS")</Value>
                                   <Style>
                                     <FontFamily>Calibri</FontFamily>
-                                    <FontSize>6pt</FontSize>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -739,7 +745,7 @@
                                   <Value> - </Value>
                                   <Style>
                                     <FontFamily>Calibri</FontFamily>
-                                    <FontSize>6pt</FontSize>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -748,7 +754,7 @@
                                   <Value>=First(Fields!O3SDPT.Value, "STRPRCDS")</Value>
                                   <Style>
                                     <FontFamily>Calibri</FontFamily>
-                                    <FontSize>6pt</FontSize>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -756,7 +762,7 @@
                                   <Value> - </Value>
                                   <Style>
                                     <FontFamily>Calibri</FontFamily>
-                                    <FontSize>6pt</FontSize>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Format>d</Format>
                                   </Style>
@@ -766,7 +772,7 @@
                                   <Value>=First(Fields!O3CLAS.Value, "STRPRCDS")</Value>
                                   <Style>
                                     <FontFamily>Calibri</FontFamily>
-                                    <FontSize>6pt</FontSize>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -774,7 +780,7 @@
                                   <Value> - </Value>
                                   <Style>
                                     <FontFamily>Calibri</FontFamily>
-                                    <FontSize>6pt</FontSize>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                     <Format>d</Format>
                                   </Style>
@@ -784,7 +790,7 @@
                                   <Value>=First(Fields!O3SCLS.Value, "STRPRCDS")</Value>
                                   <Style>
                                     <FontFamily>Calibri</FontFamily>
-                                    <FontSize>6pt</FontSize>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -793,7 +799,7 @@
 </Value>
                                   <Style>
                                     <FontFamily>Calibri</FontFamily>
-                                    <FontSize>6pt</FontSize>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -802,7 +808,7 @@
                                   <Value>=Now</Value>
                                   <Style>
                                     <FontFamily>Calibri</FontFamily>
-                                    <FontSize>6pt</FontSize>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -810,7 +816,7 @@
                                   <Value xml:space="preserve">   </Value>
                                   <Style>
                                     <FontFamily>Calibri</FontFamily>
-                                    <FontSize>4pt</FontSize>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -819,7 +825,7 @@
                                   <Value>=User!UserID</Value>
                                   <Style>
                                     <FontFamily>Calibri</FontFamily>
-                                    <FontSize>6pt</FontSize>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
@@ -862,9 +868,9 @@
             </TablixRowHierarchy>
             <KeepTogether>true</KeepTogether>
             <DataSetName>STRPRCDS</DataSetName>
-            <Top>1.33768in</Top>
+            <Top>1.21268in</Top>
             <Left>2.4856in</Left>
-            <Height>0.52005in</Height>
+            <Height>0.55691in</Height>
             <Width>3.52278in</Width>
             <ZIndex>1</ZIndex>
             <Style>
@@ -1060,7 +1066,7 @@
             </Style>
           </Tablix>
           <Line Name="Line1">
-            <Top>1.92236in</Top>
+            <Top>2.42236in</Top>
             <Left>0.06054in</Left>
             <Height>0in</Height>
             <Width>7.60919in</Width>
@@ -1161,6 +1167,16 @@
       </CellDefinitions>
     </GridLayoutDefinition>
   </ReportParametersLayout>
+  <Code>Public Function InsertLineBreaks(text As String, charCount As Integer) As String
+    Dim sb As New System.Text.StringBuilder(text)
+    Dim i As Integer = charCount
+    While i &lt; sb.Length
+        sb.Insert(i, Environment.NewLine)
+        i += charCount + Environment.NewLine.Length
+    End While
+    Return sb.ToString()
+End Function
+</Code>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
   <rd:ReportID>2f5f9f0d-707e-4c70-8c9e-97fb6d03c7d3</rd:ReportID>
 </Report>

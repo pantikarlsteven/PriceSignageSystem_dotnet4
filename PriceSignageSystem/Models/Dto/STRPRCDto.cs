@@ -86,4 +86,6 @@ namespace PriceSignageSystem.Models.Dto
         public Type[] TypeArray { get; set; }
         public Category[] CategoryArray { get; set; }
     }
+
+    
 }
