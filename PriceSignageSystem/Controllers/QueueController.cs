@@ -1,5 +1,6 @@
 ﻿using Microsoft.Reporting.WebForms;
 using PriceSignageSystem.Helper;
+using PriceSignageSystem.Models.Constants;
 using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
 using System;
@@ -38,31 +39,36 @@ namespace PriceSignageSystem.Controllers
         }
 
     
-        public ActionResult PrintQueueList()
+        public ActionResult PrintQueueList(string size)
         {
-            var reportData = _sTRPRCRepository.GetDataBySKU(1002);
-            DataTable dataTable = ConversionHelper.ConvertObjectToDataTable(reportData);
-
+            
             var username = (string)System.Web.HttpContext.Current.Session["Username"];
+            var queueList = _queueRepository.GetQueueListPerUser(username).Where(a => a.SizeId.ToString() == size);
+            var reportPath = "";
 
-            var queueList = _queueRepository.GetQueueListPerUser(username);
-            var queueListWhole = queueList.Where(a => a.SizeId == 1);
-            var queueListHalf = queueList.Where(a => a.SizeId == 2);
-            var queueListJewelry = queueList.Where(a => a.SizeId == 3);
-            var queueListSkinny = queueList.Where(a => a.SizeId == 4);
+            if (Convert.ToInt32(size) == ReportConstants.Size.Whole)
+            {
+                reportPath = Server.MapPath(ReportConstants.DynamicQueueReportPath);
+            }
+            else if (Convert.ToInt32(size) == ReportConstants.Size.Half)
+            {
+                reportPath = Server.MapPath(ReportConstants.DynamicQueueReportPath_Half);
+            }
+            else if (Convert.ToInt32(size) == ReportConstants.Size.Jewelry)
+            {
+                reportPath = Server.MapPath(ReportConstants.DynamicQueueReportPath_Jewelry);
+            }
+            //else if (Convert.ToInt32(size) == ReportConstants.Size.Skinny)
+            //{
+            //    reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Skinny);
+            //}
 
             var localReport = new LocalReport();
-            localReport.ReportPath = Server.MapPath("~/Reports/DynamicQueueReport.rdlc");
+            localReport.ReportPath = reportPath;
 
-            var dataSource = new ReportDataSource("STRPRCDS_Whole", queueListWhole);
+            var dataSource = new ReportDataSource("STRPRCDS_Queue", queueList);
             localReport.DataSources.Add(dataSource);
-            var dataSource2 = new ReportDataSource("STRPRCDS_Half", queueListHalf);
-            localReport.DataSources.Add(dataSource2);
-            var dataSource3 = new ReportDataSource("STRPRCDS_Jewelry", queueListJewelry);
-            localReport.DataSources.Add(dataSource3);
-            var dataSource4 = new ReportDataSource("STRPRCDS_Skinny", queueListSkinny);
-            localReport.DataSources.Add(dataSource4);
-
+     
             var reportType = "PDF";
             var mimeType = "";
             var encoding = "";

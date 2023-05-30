@@ -2,6 +2,7 @@
 using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -42,7 +43,19 @@ namespace PriceSignageSystem.Controllers
             {
                 var dto = _sTRPRCRepository.SearchString(query);
 
-                if(dto != null)
+                DateTime startdateTimeValue = DateTime.ParseExact(dto.O3SDT.ToString(), "yyMMdd", CultureInfo.InvariantCulture);
+                dto.StartDateFormattedDate = startdateTimeValue.ToString("yy-MM-dd");
+                if (dto.O3EDT == 999999)
+                {
+                    dto.EndDateFormattedDate = "";
+                }
+                else
+                {
+                    DateTime enddateTimeValue = DateTime.ParseExact(dto.O3EDT.ToString(), "yyMMdd", CultureInfo.InvariantCulture);
+                    dto.EndDateFormattedDate = enddateTimeValue.ToString("yy-MM-dd");
+                }
+            
+                if (dto != null)
                 {
                     dto.Sizes = _sizeRepository.GetAllSizes().Select(a => new SelectListItem
                     {
@@ -110,6 +123,14 @@ namespace PriceSignageSystem.Controllers
                 DataCount = count
             };
             return RedirectToAction("Index", data);
+        }
+
+        [HttpPost]
+        public JsonResult GetAllSizes()
+        {
+            var sizes = _sizeRepository.GetAllSizes().ToArray(); 
+
+            return Json(sizes);
         }
     }
 }

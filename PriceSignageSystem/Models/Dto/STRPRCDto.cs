@@ -85,7 +85,10 @@ namespace PriceSignageSystem.Models.Dto
         public Size[] SizeArray {get;set;}
         public Type[] TypeArray { get; set; }
         public Category[] CategoryArray { get; set; }
+        public string StartDateFormattedDate { get;set; }
+        public string EndDateFormattedDate { get; set; }
+
     }
 
-    
+
 }

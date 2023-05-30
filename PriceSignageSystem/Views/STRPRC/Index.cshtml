@@ -3,55 +3,66 @@
     ViewData["Title"] = "Product Page";
 }
 
-    <div class="content-wrapper bg-white px-3">
-        <br />
-        <div id="loadingContainer" style="display: none;">
-            <img src="~/Content/Images/loading.gif" alt="Loading" />
-        </div>
-        @if (ViewBag.IsDateLatest == true)
-        {
-            <div class="card card-body bg-primarydark text-white text-bold">
-                <center>
-                    The current data is up to date. (Current Version: @ViewBag.DateVersion)
-                    @*@Html.ActionLink("Update", "UpdateSTRPRCData", "STRPRC", new { storeId = Model.SelectedStore }, new { @class = "btn btn-secondary btn-block" })*@
-                    <br />
-                    <a id="updateButton" href="#" class="mt-2 btn btn-secondary text-bold">
-                        Update
-                    </a>
-                </center>
-            </div>
-        }
-        else
-        {
-            <div class="alert bg-dangerdark  text-white text-bold">
-                <center>
-                    The current data is not yet updated. (Current Version: @ViewBag.DateVersion)
-                    @*@Html.ActionLink("Update", "UpdateSTRPRCData", "STRPRC", new { storeId = Model.SelectedStore }, new { @class = "btn btn-secondary btn-block" })*@
-                    <br />
-                    <a id="updateButton" href="#" class="mt-2 btn btn-secondary text-bold ">
-                        Update
-                    </a>
-                </center>
-            </div>
+<div class=" content-wrapper bg-white px-3">
+    <br />
 
-        }
-        <div class="wrapper">
-            <div class="row align-items-center justify-content-center">
-                <div class="col-auto">
-                    <label for="searchInput" class="form-label fw-bold">Enter SKU/UPC:</label>
-                </div>
-                <div class="col-auto">
-                    <input type="text" id="searchInput" class="form-control" style="max-width: 200px;" placeholder="Search...">
-                </div>
+    @*<div class=" col-12 mx-0  " id="loadingContainer" style=" /*display:none;*/ ">
+            <div class="position-absolute " style="background-color: black; z-index: 99; ">
+                <img class="mx-auto" src="~/Content/Images/loading.gif" alt="Loading" style="max-width:350px; " />
             </div>
+        </div>*@
+<div class="content">
+    <div class="  overlay-wrapper " id="loadingContainer" style=" display:none; ">
+        <div class=" overlay" style="background-color: rgba(0, 0, 0, 0.59); z-index: 99; ">
+            <img class="" src="~/Content/Images/loading.gif" alt="Loading" style="max-width:350px; " />
         </div>
-        <br />
-        <div id="searchResults">
-            @Html.Partial("_SearchResultPartialView", new STRPRCDto())
-        </div>
-
-
     </div>
+</div>
+ 
+    @if (ViewBag.IsDateLatest == true)
+    {
+        <div class="card card-body bg-primarydark text-white text-bold">
+            <center>
+                The current data is up to date. (Current Version: @ViewBag.DateVersion)
+                @*@Html.ActionLink("Update", "UpdateSTRPRCData", "STRPRC", new { storeId = Model.SelectedStore }, new { @class = "btn btn-secondary btn-block" })*@
+                <br />
+                <a id="updateButton" href="#" class="mt-2 btn btn-secondary text-bold">
+                    Update
+                </a>
+            </center>
+        </div>
+    }
+    else
+    {
+        <div class="alert bg-dangerdark  text-white text-bold">
+            <center>
+                The current data is not yet updated. (Current Version: @ViewBag.DateVersion)
+                @*@Html.ActionLink("Update", "UpdateSTRPRCData", "STRPRC", new { storeId = Model.SelectedStore }, new { @class = "btn btn-secondary btn-block" })*@
+                <br />
+                <a id="updateButton" href="#" class="mt-2 btn btn-secondary text-bold ">
+                    Update
+                </a>
+            </center>
+        </div>
+
+    }
+    <div class="wrapper">
+        <div class="row align-items-center justify-content-center">
+            <div class="col-auto">
+                <label for="searchInput" class="form-label fw-bold">Enter SKU/UPC:</label>
+            </div>
+            <div class="col-auto">
+                <input type="text" id="searchInput" class="form-control" style="max-width: 200px;" placeholder="Search...">
+            </div>
+        </div>
+    </div>
+    <br />
+    <div id="searchResults">
+        @Html.Partial("_SearchResultPartialView", new STRPRCDto())
+    </div>
+
+
+</div>
 
 <script>
     $(document).ready(function () {

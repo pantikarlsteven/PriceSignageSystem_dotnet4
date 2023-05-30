@@ -434,8 +434,7 @@
                                   <Style>
                                     <FontFamily>Impact</FontFamily>
                                     <FontSize>60pt</FontSize>
-                                    <Format>'Php'#,0.00;('Php'#,0.00)</Format>
-                                    <rd:FormatSymbolCulture>en-PH</rd:FormatSymbolCulture>
+                                    <Format>#,0.00;(#,0.00)</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -528,8 +527,7 @@
                                   <Style>
                                     <FontFamily>Impact</FontFamily>
                                     <FontSize>100pt</FontSize>
-                                    <Format>'Php'#,0.00;('Php'#,0.00)</Format>
-                                    <rd:FormatSymbolCulture>en-PH</rd:FormatSymbolCulture>
+                                    <Format>#,0.00;(#,0.00)</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -781,7 +779,6 @@
                             <PaddingRight>2pt</PaddingRight>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
