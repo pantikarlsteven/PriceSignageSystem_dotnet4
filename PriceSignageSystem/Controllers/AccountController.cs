@@ -55,7 +55,7 @@ namespace PriceSignageSystem.Controllers
                         return View(model);
                     }
                     System.Web.HttpContext.Current.Session["Username"] = model.UserName;
-                    return RedirectToAction("Index", "STRPRC", model);
+                    return RedirectToAction("SearchByDate", "STRPRC", model);
                 }
                 else
                 {

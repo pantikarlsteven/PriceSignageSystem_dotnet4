@@ -3,12 +3,30 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Advance Printing</title>
+    <title>PCA</title>
     <style>
+        .row-details {
+            /* Add your styling for row details content */
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .details-control::before {
+            content: '+';
+            /* Add your styling for the expand button */
+        }
+
+        .details-control.expanded::before {
+            content: '-';
+            /* Add your styling for the collapse button */
+        }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <script>
+        //var $j = jQuery.noConflict();
+
         $(document).ready(function () {
             $("#startDate").datepicker({
                 dateFormat: 'yy-mm-dd'
@@ -34,31 +52,22 @@
                         }
 
                        // Initialize the DataTable with the retrieved data and scrollable property
-                         $('#dataTable').DataTable({
+                        var table = $('#dataTable').DataTable({
                              scrollY: 500,
                              scrollX: true,
                              scroller: true,
                              data: data,
                              columns: [
                                  { "data": "O3SKU", "name": "O3SKU", "autoWidth": true },
-                                { "data": "O3SCCD", "name": "O3SCCD", "autoWidth": true },
-                                { "data": "O3IDSC", "name": "O3IDSC", "className": "text-nowrap"},
-                                { "data": "O3UPC", "name": "O3UPC", "autoWidth": true },
-                                { "data": "O3DEPT", "name": "O3DEPT", "autoWidth": true },
-                                { "data": "O3SDPT", "name": "O3SDPT", "autoWidth": true },
-                                { "data": "O3CLAS", "name": "O3CLAS", "autoWidth": true },
-                                { "data": "O3SCLS", "name": "O3SCLS", "autoWidth": true },
-                                { "data": "O3POS", "name": "O3POS", "autoWidth": true },
-                                { "data": "O3REGU", "name": "O3REGU", "autoWidth": true },
-                                { "data": "O3ORIG", "name": "O3ORIG", "autoWidth": true },
-                                { "data": "O3SDT", "name": "O3SDT", "autoWidth": true },
-                                { "data": "O3EDT", "name": "O3EDT", "autoWidth": true },
-                                { "data": "O3TRB3", "name": "O3TRB3", "autoWidth": true },
-                                { "data": "O3FGR", "name": "O3FGR", "autoWidth": true },
-                                { "data": "O3FNAM", "name": "O3FNAM", "autoWidth": true },
-                                { "data": "O3SLUM", "name": "O3SLUM", "autoWidth": true },
-                                { "data": "O3DIV", "name": "O3DIV", "autoWidth": true },
-                                { "data": "O3TUOM", "name": "O3TUOM", "autoWidth": true },
+                                 { "data": "O3UPC", "name": "O3UPC", "autoWidth": true },
+                                 { "data": "O3IDSC", "name": "O3IDSC", "className": "text-nowrap" },
+                                 { "data": "O3REGU", "name": "O3REGU", "autoWidth": true },
+                                 { "data": "O3POS", "name": "O3POS", "autoWidth": true },
+                                 { "data": "O3SDT", "name": "O3SDT", "autoWidth": true },
+                                 { "data": "O3EDT", "name": "O3EDT", "autoWidth": true },
+                                 { "data": "TypeName", "name": "TypeName", "autoWidth": true },
+                                 { "data": "SizeName", "name": "SizeName", "autoWidth": true },
+                                 { "data": "CategoryName", "name": "CategoryName", "autoWidth": true },
                                 {
                                     data: null,
                                     render: function (data, type, row) {
@@ -68,8 +77,10 @@
                             ],
                             "language": {
                                 "emptyTable": "No data available"
-                            }
+                            },
+
                         });
+
                     }
                 });
             });
@@ -113,8 +124,7 @@
                             '</div>' +
                             '<div class="form-group row col-md-12">' +
                             '<label class="col-sm-2 col-form-label" for="typeDropdown">Type:</label>' +
-                            '<select class="col-sm-9  ml-3 form-control" id="typeDropdown" disabled>' +
-                            '<option value="2">Save</option>' +
+                            '<select class="col-sm-9  ml-3 form-control" id="typeDropdown">' +
                             typeOptions +
                             '</select>' +
                             '</div>' +
@@ -170,7 +180,6 @@
                             response.SelectedCategoryId = $('#categoryDropdown').val();
 
                             // Generate the URL for the DisplayReport action
-                            @*var url = '@Url.Action("DisplayReportFromAdvancePrinting", "Report")';*@
                             var url = '@Url.Action("AutoPrintReportFromAdvancePrinting", "Report")';
                             // Serialize the response object to JSON
                             var serializedResponse = JSON.stringify(response);
@@ -219,7 +228,7 @@
         <div class="row ">
             <div class="card elevation-3 px-0 ">
                 <div class="card-header bg-primary1 text-white">
-                    <h3 class="card-title">Advance Printing</h3>
+                    <h3 class="card-title">PCA</h3>
                 </div>
                 <div class="card-body row mx-auto">
                     <div class="col-md-4">
@@ -245,30 +254,21 @@
                         <thead>
                             <tr>
                                 <th>SKU</th>
-                                <th>Status Code</th>
-                                <th class="text-nowrap">Item Desc.</th>
                                 <th>UPC</th>
-                                <th>Dept</th>
-                                <th>Sub-Dept.</th>
-                                <th>Class</th>
-                                <th>Sub-Class</th>
-                                <th>Pos Price</th>
+                                <th class="text-nowrap">Item Desc.</th>
                                 <th>Reg Price</th>
-                                <th>Orig Price</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>Country</th>
-                                <th>Brand Name</th>
-                                <th>Manuf. Name</th>
-                                <th>From U/M</th>
-                                <th>Divisor</th>
-                                <th>TO UOM</th>
+                                <th>Promo Price</th>
+                                <th>Date Start</th>
+                                <th>Date End</th>
+                                <th>Type</th>
+                                <th>Size</th>
+                                <th>Category</th>
                                 <th> - </th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td colspan="20" style="text-align: center;">Please enter dates</td>
+                                <td colspan="11" style="text-align: center;">Please enter dates</td>
                             </tr>
                         </tbody>
                     </table>

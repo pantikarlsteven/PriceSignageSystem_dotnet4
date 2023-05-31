@@ -244,11 +244,11 @@ namespace PriceSignageSystem.Models.Repository
             return _db.STRPRCs;
         }
 
-        public List<STRPRC> GetDataByDate(decimal startDate, decimal endDate)
+        public List<STRPRCDto> GetDataByDate(decimal startDate, decimal endDate)
         {
             // EDT must not be equal to 999999 OR 0 (ONLY ITEMS FOR PROMOTION)
          
-            var data = new List<STRPRC>();
+            var data = new List<STRPRCDto>();
 
             // Set up the connection and command
             using (var connection = new SqlConnection(connectionString))
@@ -267,7 +267,7 @@ namespace PriceSignageSystem.Models.Repository
                 // Process the result set
                 while (reader.Read())
                 {
-                    var record = new STRPRC
+                    var record = new STRPRCDto
                     {
                         O3LOC = (decimal)reader["O3LOC"],
                         O3CLAS = (decimal)reader["O3CLAS"],

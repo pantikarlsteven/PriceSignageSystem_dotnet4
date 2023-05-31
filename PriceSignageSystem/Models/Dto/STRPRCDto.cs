@@ -78,10 +78,13 @@ namespace PriceSignageSystem.Models.Dto
         [Display(Name = "Type")]
         public int SelectedTypeId { get; set; } = 1;
         [Display(Name = "Category")]
-        public int SelectedCategoryId { get; set; } = 1;
+        public int SelectedCategoryId { get; set; } = 2;
         public List<SelectListItem> Sizes { get; set; }
         public List<SelectListItem> Types { get; set; }
         public List<SelectListItem> Categories { get; set; }
+        public string SizeName { get; set; }
+        public string TypeName { get; set; }
+        public string CategoryName { get; set; }
         public Size[] SizeArray {get;set;}
         public Type[] TypeArray { get; set; }
         public Category[] CategoryArray { get; set; }

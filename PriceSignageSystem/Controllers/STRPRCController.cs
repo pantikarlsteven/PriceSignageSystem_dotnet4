@@ -99,6 +99,22 @@ namespace PriceSignageSystem.Controllers
             var endDateDecimal = ConversionHelper.ToDecimal(endDate);
 
             var data = _sTRPRCRepository.GetDataByDate(startDateDecimal, endDateDecimal).ToList();
+            var startDateFormatted = ConversionHelper.ToDecimal(startDate);
+            var endDateFormatted = ConversionHelper.ToDecimal(endDate);
+            foreach (var item in data) // TEMPORARY -- SOON TO BE DEFINED IN DB
+            {
+                item.TypeName = startDateFormatted == item.O3SDT ? "Save"
+                                : endDateFormatted == item.O3EDT ? "Regular"
+                                : "Save";
+                item.SizeName = item.SelectedSizeId == 1 ? "Whole"
+                                : item.SelectedSizeId == 2 ? "Half"
+                                : item.SelectedSizeId == 3 ? "Jewelry"
+                                : item.SelectedSizeId == 4 ? "Skinny"
+                                : "Whole";
+                item.CategoryName = item.SelectedCategoryId == 1 ? "Appliance"
+                                : item.SelectedCategoryId == 2 ? "Non-Appliance"
+                                : "Non-Appliance";
+            }
 
             return Json(data);
         }
