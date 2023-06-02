@@ -26,6 +26,12 @@
                             @TempData["SuccessMessage"]
                         </div>
                     }
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            @TempData["ErrorMessage"]
+                        </div>
+                    }
                     <div class="form-group">
                         @Html.LabelFor(m => m.UserName)
                         @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
@@ -37,10 +43,10 @@
                         @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
                     </div>
                     @*<div class="form-group">
-                        @Html.LabelFor(m => m.SelectedStore)
-                        @Html.DropDownListFor(m => m.SelectedStore, Model.StoreList, "Select Store", new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.SelectedStore, "", new { @class = "text-danger" })
-                    </div>*@
+            @Html.LabelFor(m => m.SelectedStore)
+            @Html.DropDownListFor(m => m.SelectedStore, Model.StoreList, "Select Store", new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.SelectedStore, "", new { @class = "text-danger" })
+        </div>*@
                     <div class="row">
                         <div class="col">
                             <button type="submit" class="btn btn-primary btn-block mb-4">Login</button>

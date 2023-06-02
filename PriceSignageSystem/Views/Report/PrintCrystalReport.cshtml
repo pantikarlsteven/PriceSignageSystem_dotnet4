@@ -1,0 +1,15 @@
+﻿<table>
+    <thead>
+        <!-- table headers -->
+    </thead>
+    <tbody>
+        @foreach (var image in ViewBag.ReportImages)
+        {
+            <tr>
+                <td>
+                    <img src="data:image/png;base64,@Convert.ToBase64String(image)" alt="Report Image" />
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -15,10 +15,6 @@ namespace PriceSignageSystem.Controllers
         private readonly IUserRepository _userRepository;
         private readonly ISTRPRCRepository _sTRPRCRepository;
 
-        public AccountController()
-        {
-        }
-
         public AccountController(IUserRepository userRepository, ISTRPRCRepository sTRPRCRepository)
         {
             _userRepository = userRepository;
@@ -54,7 +50,8 @@ namespace PriceSignageSystem.Controllers
                         //model.StoreList = GetStoreList();
                         return View(model);
                     }
-                    System.Web.HttpContext.Current.Session["Username"] = model.UserName;
+                    Session["UserId"] = user.UserId;
+                    Session["Username"] = user.UserName;
                     return RedirectToAction("SearchByDate", "STRPRC", model);
                 }
                 else
@@ -65,6 +62,14 @@ namespace PriceSignageSystem.Controllers
             
             //model.StoreList = GetStoreList();
             return View(model);
+        }
+
+        public ActionResult Logout()
+        {
+            Session.Clear();
+            Session.Abandon();
+
+            return RedirectToAction("Login", "Account");
         }
 
         public List<SelectListItem> GetStoreList()

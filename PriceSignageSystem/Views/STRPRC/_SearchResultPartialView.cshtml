@@ -11,111 +11,125 @@
 
 </head>
 <body>
-    @if (Model != null)
-    {
-        if (Model.O3SKU != 0)
+    @*@if (Model != null)
         {
-            using (Html.BeginForm("AutoPrintReport", "Report", FormMethod.Post, new { id = "reportForm" }))
+            if (Model.O3SKU != 0)
+            {*@
+    @using (Html.BeginForm("AutoPrintReport", "Report", FormMethod.Post, new { id = "reportForm" }))
+    {
+        @Html.HiddenFor(m => m.O3SKU)
+        <div class="container">
+            <h2 class="text-center bg-primarydark text-white p-2">Item Details</h2>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row">
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3UPC)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3UPC)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3SKU)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SKU)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3IDSC)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3IDSC)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3FNAM)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3FNAM)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3MODL)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3MODL)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3DEPT)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3DEPT)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3SDPT)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SDPT)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3CLAS)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3CLAS)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3SCLS)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SCLS)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3LONG)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3LONG)</dd>
+                    </dl>
+                </div>
+
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3SCCD)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SCCD)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3TRB3)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3TRB3)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3REGU)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3REGU)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3POS)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3POS)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3SDT)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.StartDateFormattedDate)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3EDT)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.EndDateFormattedDate)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3SLUM)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SLUM)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3TUOM)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3TUOM)</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <hr />
+            @if (Model.O3SKU != 0)
             {
-                @Html.HiddenFor(m => m.O3SKU)
                 <div class="container">
-                    <h2 class="text-center bg-primarydark text-white p-2">Item Details</h2>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <dl class="row">
-
-                                <dt class="col-sm-4">@Html.LabelFor(m => m.O3UPC)</dt>
-                                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3UPC)</dd>
-
-                                <dt class="col-sm-4">@Html.LabelFor(m => m.O3SKU)</dt>
-                                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SKU)</dd>
-
-                                <dt class="col-sm-4">@Html.LabelFor(m => m.O3IDSC)</dt>
-                                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3IDSC)</dd>
-
-                                <dt class="col-sm-4">@Html.LabelFor(m => m.O3FNAM)</dt>
-                                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3FNAM)</dd>
-
-                                <dt class="col-sm-4">@Html.LabelFor(m => m.O3MODL)</dt>
-                                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3MODL)</dd>
-
-                                <dt class="col-sm-4">@Html.LabelFor(m => m.O3DEPT)</dt>
-                                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3DEPT)</dd>
-
-                                <dt class="col-sm-4">@Html.LabelFor(m => m.O3SDPT)</dt>
-                                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SDPT)</dd>
-
-                                <dt class="col-sm-4">@Html.LabelFor(m => m.O3CLAS)</dt>
-                                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3CLAS)</dd>
-
-                                <dt class="col-sm-4">@Html.LabelFor(m => m.O3SCLS)</dt>
-                                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SCLS)</dd>
-
-                                <dt class="col-sm-4">@Html.LabelFor(m => m.O3LONG)</dt>
-                                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3LONG)</dd>
-                            </dl>
+                    <div class="row mb-3 d-flex justify-content-center">
+                        <div class="col-3">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.SelectedTypeId, htmlAttributes: new { @class = "font-weight-bold" })
+                                @Html.DropDownListFor(m => m.SelectedTypeId, Model.Types ?? new List<SelectListItem>(), "Select Type", new { @class = "form-control form-control-sm custom-select" })
+                            </div>
                         </div>
-
-                        <div class="col-md-6">
-                            <dl class="row">
-                                <dt class="col-sm-4">@Html.LabelFor(m => m.O3SCCD)</dt>
-                                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SCCD)</dd>
-
-                                <dt class="col-sm-4">@Html.LabelFor(m => m.O3TRB3)</dt>
-                                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3TRB3)</dd>
-
-                                <dt class="col-sm-4">@Html.LabelFor(m => m.O3REGU)</dt>
-                                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3REGU)</dd>
-
-                                <dt class="col-sm-4">@Html.LabelFor(m => m.O3POS)</dt>
-                                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3POS)</dd>
-
-                                <dt class="col-sm-4">@Html.LabelFor(m => m.O3SDT)</dt>
-                                <dd class="col-sm-8">@Html.DisplayFor(m => m.StartDateFormattedDate)</dd>
-
-                                <dt class="col-sm-4">@Html.LabelFor(m => m.O3EDT)</dt>
-                                <dd class="col-sm-8">@Html.DisplayFor(m => m.EndDateFormattedDate)</dd>
-
-                                <dt class="col-sm-4">@Html.LabelFor(m => m.O3SLUM)</dt>
-                                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SLUM)</dd>
-
-                                <dt class="col-sm-4">@Html.LabelFor(m => m.O3TUOM)</dt>
-                                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3TUOM)</dd>
-                            </dl>
+                        <div class="col-3">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.SelectedSizeId, htmlAttributes: new { @class = "font-weight-bold" })
+                                @Html.DropDownListFor(m => m.SelectedSizeId, Model.Sizes ?? new List<SelectListItem>(), "Select Size", new { @class = "form-control form-control-sm custom-select" })
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.SelectedCategoryId, htmlAttributes: new { @class = "font-weight-bold" })
+                                @Html.DropDownListFor(m => m.SelectedCategoryId, Model.Categories ?? new List<SelectListItem>(), "Select Category", new { @class = "form-control form-control-sm custom-select" })
+                            </div>
                         </div>
                     </div>
 
-                    <hr />
-
-                    <div class="container">
-                        <div class="row mb-3 d-flex justify-content-center">
-                            <div class="col-3">
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.SelectedTypeId, htmlAttributes: new { @class = "font-weight-bold" })
-                                    @Html.DropDownListFor(m => m.SelectedTypeId, Model.Types ?? new List<SelectListItem>(), "Select Type", new { @class = "form-control form-control-sm custom-select" })
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.SelectedSizeId, htmlAttributes: new { @class = "font-weight-bold" })
-                                    @Html.DropDownListFor(m => m.SelectedSizeId, Model.Sizes ?? new List<SelectListItem>(), "Select Size", new { @class = "form-control form-control-sm custom-select" })
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.SelectedCategoryId, htmlAttributes: new { @class = "font-weight-bold" })
-                                    @Html.DropDownListFor(m => m.SelectedCategoryId, Model.Categories ?? new List<SelectListItem>(), "Select Category", new { @class = "form-control form-control-sm custom-select" })
-                                </div>
-                            </div>
+                    <div class="row">
+                        <div class="col text-center">
+                            <button type="button" class="btn btn-primary" onclick="openReportInNewTab()">Print</button>
+                            <button type="button" class="queuebtn btn btn-secondary">Queue</button>
+                            <button type="button" class="qListbtn btn btn-success" @*onclick="openQueueReportInNewTab()"*@>Print Queue</button>
                         </div>
+                    </div>
+                </div>
+            }
 
-                        <div class="row">
-                            <div class="col text-center">
-                                <button type="button" class="btn btn-primary" onclick="openReportInNewTab()">Print</button>
-                                <button type="button" class="queuebtn btn btn-secondary">Queue</button>
-                                <button type="button" class="qListbtn btn btn-success" @*onclick="openQueueReportInNewTab()"*@>Print Queue</button>
-                            </div>
+        </div>
+    }
+    @*}
+            else
+            {
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-auto">
+                            <p class="text-center text-muted">No data available.</p>
                         </div>
                     </div>
                 </div>
@@ -130,18 +144,7 @@
                     </div>
                 </div>
             </div>
-        }
-    }
-    else
-    {
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-auto">
-                    <p class="text-center text-muted">No data available.</p>
-                </div>
-            </div>
-        </div>
-    }
+        }*@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
@@ -177,7 +180,28 @@
                     categoryId: categoryId
                 },
                 success: function (result) {
-                    console.log("Item queued successfully!");
+                    // Show success modal
+                    var modalHtml = '<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">';
+                    modalHtml += '<div class="modal-dialog" role="document">';
+                    modalHtml += '<div class="modal-content">';
+                    modalHtml += '<div class="modal-header">';
+                    modalHtml += '<h5 class="modal-title" id="successModalLabel">Success!</h5>';
+                    modalHtml += '<button type="button" class="close" data-dismiss="modal" aria-label="Close">';
+                    modalHtml += '<span aria-hidden="true">&times;</span>';
+                    modalHtml += '</button>';
+                    modalHtml += '</div>';
+                    modalHtml += '<div class="modal-body">';
+                    modalHtml += 'Item queued successfully!';
+                    modalHtml += '</div>';
+                    modalHtml += '<div class="modal-footer">';
+                    modalHtml += '<button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>';
+                    modalHtml += '</div>';
+                    modalHtml += '</div>';
+                    modalHtml += '</div>';
+                    modalHtml += '</div>';
+
+                    $('body').append(modalHtml);
+                    $('#successModal').modal('show');
                 },
                 error: function (xhr, status, error) {
                     console.error("Error queuing item: " + error);

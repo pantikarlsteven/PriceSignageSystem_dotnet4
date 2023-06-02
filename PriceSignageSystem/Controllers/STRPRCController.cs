@@ -1,7 +1,9 @@
-﻿using PriceSignageSystem.Helper;
+﻿using PriceSignageSystem.Code;
+using PriceSignageSystem.Helper;
 using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
@@ -9,6 +11,7 @@ using System.Web.Mvc;
 
 namespace PriceSignageSystem.Controllers
 {
+    [SessionExpiration]
     public class STRPRCController : Controller
     {
         private readonly ISTRPRCRepository _sTRPRCRepository;
@@ -43,20 +46,22 @@ namespace PriceSignageSystem.Controllers
             {
                 var dto = _sTRPRCRepository.SearchString(query);
 
-                DateTime startdateTimeValue = DateTime.ParseExact(dto.O3SDT.ToString(), "yyMMdd", CultureInfo.InvariantCulture);
-                dto.StartDateFormattedDate = startdateTimeValue.ToString("yy-MM-dd");
-                if (dto.O3EDT == 999999)
-                {
-                    dto.EndDateFormattedDate = "";
-                }
-                else
-                {
-                    DateTime enddateTimeValue = DateTime.ParseExact(dto.O3EDT.ToString(), "yyMMdd", CultureInfo.InvariantCulture);
-                    dto.EndDateFormattedDate = enddateTimeValue.ToString("yy-MM-dd");
-                }
-            
                 if (dto != null)
                 {
+                    DateTime startdateTimeValue = DateTime.ParseExact(dto.O3SDT.ToString(), "yyMMdd", CultureInfo.InvariantCulture);
+                    dto.StartDateFormattedDate = startdateTimeValue.ToString("yy-MM-dd");
+
+                    if (dto.O3EDT == 999999)
+                    {
+                        dto.EndDateFormattedDate = "-";
+                    }
+                   
+                    else
+                    {
+                        DateTime enddateTimeValue = DateTime.ParseExact(dto.O3EDT.ToString(), "yyMMdd", CultureInfo.InvariantCulture);
+                        dto.EndDateFormattedDate = enddateTimeValue.ToString("yy-MM-dd");
+                    }
+
                     dto.Sizes = _sizeRepository.GetAllSizes().Select(a => new SelectListItem
                     {
                         Value = a.Id.ToString(),
@@ -74,8 +79,13 @@ namespace PriceSignageSystem.Controllers
                         Value = a.Id.ToString(),
                         Text = a.Name
                     }).ToList();
+
+
                 }
-                
+                else
+                {
+                    dto = dto ?? new STRPRCDto();
+                }
                 return PartialView("~/Views/STRPRC/_SearchResultPartialView.cshtml", dto);
 
             }
@@ -103,17 +113,17 @@ namespace PriceSignageSystem.Controllers
             var endDateFormatted = ConversionHelper.ToDecimal(endDate);
             foreach (var item in data) // TEMPORARY -- SOON TO BE DEFINED IN DB
             {
-                item.TypeName = startDateFormatted == item.O3SDT ? "Save"
+                item.TypeName =   startDateFormatted == item.O3SDT ? "Save"
                                 : endDateFormatted == item.O3EDT ? "Regular"
                                 : "Save";
-                item.SizeName = item.SelectedSizeId == 1 ? "Whole"
+                item.SizeName =   item.SelectedSizeId == 1 ? "Whole"
                                 : item.SelectedSizeId == 2 ? "Half"
                                 : item.SelectedSizeId == 3 ? "Jewelry"
                                 : item.SelectedSizeId == 4 ? "Skinny"
                                 : "Whole";
-                item.CategoryName = item.SelectedCategoryId == 1 ? "Appliance"
-                                : item.SelectedCategoryId == 2 ? "Non-Appliance"
-                                : "Non-Appliance";
+                item.CategoryName =   item.SelectedCategoryId == 1 ? "Appliance"
+                                    : item.SelectedCategoryId == 2 ? "Non-Appliance"
+                                    : "Non-Appliance";
             }
 
             return Json(data);

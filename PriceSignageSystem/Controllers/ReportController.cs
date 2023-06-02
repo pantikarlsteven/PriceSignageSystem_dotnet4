@@ -1,18 +1,18 @@
-﻿using Microsoft.Reporting.WebForms;
+﻿using iTextSharp.text.pdf;
+using iTextSharp.text.pdf.parser;
+using Microsoft.Reporting.WebForms;
 using Newtonsoft.Json;
 using PriceSignageSystem.Helper;
-using PriceSignageSystem.Models;
 using PriceSignageSystem.Models.Constants;
 using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Reflection;
+using System.Text;
 using System.Web.Mvc;
 
 namespace PriceSignageSystem.Controllers
@@ -361,5 +361,79 @@ namespace PriceSignageSystem.Controllers
             ViewBag.ReportData = Convert.ToBase64String(renderedBytes); // Pass rendered report bytes to the view
             return View();
         }
+
+        public ActionResult PrintCrystalReport()
+        {
+            var reportViewer = new ReportViewer();
+            reportViewer.LocalReport.ReportPath = Server.MapPath("~/Reports/Report_Whole123.rdlc");
+
+            // Set any necessary parameters for the report
+            // reportViewer.LocalReport.SetParameters(...);
+
+            Warning[] warnings;
+            string[] streamIds;
+            string mimeType;
+            string encoding;
+            string fileNameExtension;
+
+            // Render the report as PDF
+            byte[] reportContent = reportViewer.LocalReport.Render("PDF", null, out mimeType, out encoding, out fileNameExtension, out streamIds, out warnings);
+
+            List<byte[]> reportImages = ExtractImagesFromPdf(reportContent);
+
+            ViewBag.ReportImages = reportImages;
+
+            return View();
+        }
+        private List<byte[]> ExtractImagesFromPdf(byte[] pdfContent)
+        {
+            using (var pdfStream = new MemoryStream(pdfContent))
+            {
+                var images = new List<byte[]>();
+
+                var pdfReader = new PdfReader(pdfStream);
+                var pdfParser = new PdfReaderContentParser(pdfReader);
+
+                for (int pageNumber = 1; pageNumber <= pdfReader.NumberOfPages; pageNumber++)
+                {
+                    var imageRenderListener = new ImageRenderListener();
+                    pdfParser.ProcessContent(pageNumber, imageRenderListener);
+
+                    var pageImages = imageRenderListener.GetImages();
+                    images.AddRange(pageImages);
+                }
+
+                return images;
+            }
+        }
+
+        private class ImageRenderListener : IRenderListener
+        {
+            private List<byte[]> images = new List<byte[]>();
+
+            public void BeginTextBlock() { }
+            public void EndTextBlock() { }
+            public void RenderImage(ImageRenderInfo renderInfo)
+            {
+                var image = renderInfo.GetImage();
+                if (image != null)
+                {
+                    using (var stream = new MemoryStream())
+                    {
+                        var systemDrawingImage = image.GetDrawingImage();
+                        systemDrawingImage.Save(stream, ImageFormat.Png);
+                        images.Add(stream.ToArray());
+                    }
+                }
+            }
+            public void RenderText(TextRenderInfo renderInfo) { }
+
+            public List<byte[]> GetImages()
+            {
+                return images;
+            }
+        }
+
+
     }
 }
