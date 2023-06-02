@@ -261,6 +261,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>QueueReport_STRPRCDS.xsd</DependentUpon>
     </Compile>
+    <Compile Include="Reports\CrystalReports\WholeReport\WholeReport_SLBrandAndSLDesc.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WholeReport_SLBrandAndSLDesc.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Reports\Report_Whole.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -422,6 +428,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202305240957459_update_ItemQueueTbl.resx">
       <DependentUpon>202305240957459_update_ItemQueueTbl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\CrystalReports\WholeReport\WholeReport_SLBrandAndSLDesc.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>WholeReport_SLBrandAndSLDesc.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\DynamicQueueReport_Jewelry.rdlc" />
     <EmbeddedResource Include="Reports\DynamicQueueReport_Whole.rdlc" />
