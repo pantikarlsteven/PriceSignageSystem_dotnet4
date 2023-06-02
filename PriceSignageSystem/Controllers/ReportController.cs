@@ -1,4 +1,6 @@
-﻿using iTextSharp.text.pdf;
+﻿using CrystalDecisions.CrystalReports.Engine;
+using CrystalDecisions.Shared;
+using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.parser;
 using Microsoft.Reporting.WebForms;
 using Newtonsoft.Json;
@@ -362,78 +364,65 @@ namespace PriceSignageSystem.Controllers
             return View();
         }
 
-        public ActionResult PrintCrystalReport()
+        public ActionResult PreviewReport()
         {
-            var reportViewer = new ReportViewer();
-            reportViewer.LocalReport.ReportPath = Server.MapPath("~/Reports/Report_Whole123.rdlc");
+            LocalReport localReport = new LocalReport();
+            localReport.ReportPath = Server.MapPath("~/Reports/Report_Whole123.rdlc");
 
-            // Set any necessary parameters for the report
-            // reportViewer.LocalReport.SetParameters(...);
+            var reportType = "PDF";
+            var mimeType = "";
+            var encoding = "";
+            var fileNameExtension = "";
+
+            var deviceInfo = $@"
+                <DeviceInfo>
+                    <OutputFormat>{reportType}</OutputFormat>
+                    <EmbedFonts>None</EmbedFonts>
+                </DeviceInfo>";
 
             Warning[] warnings;
-            string[] streamIds;
-            string mimeType;
-            string encoding;
-            string fileNameExtension;
+            string[] streams;
+            byte[] renderedBytes;
 
-            // Render the report as PDF
-            byte[] reportContent = reportViewer.LocalReport.Render("PDF", null, out mimeType, out encoding, out fileNameExtension, out streamIds, out warnings);
+            renderedBytes = localReport.Render(
+                reportType,
+                deviceInfo,
+                out mimeType,
+                out encoding,
+                out fileNameExtension,
+                out streams,
+                out warnings);
 
-            List<byte[]> reportImages = ExtractImagesFromPdf(reportContent);
-
-            ViewBag.ReportImages = reportImages;
-
-            return View();
+            return File(renderedBytes, "application/pdf");
         }
-        private List<byte[]> ExtractImagesFromPdf(byte[] pdfContent)
+
+        public ActionResult PreviewCrystalReport()
         {
-            using (var pdfStream = new MemoryStream(pdfContent))
-            {
-                var images = new List<byte[]>();
+            // Create a new instance of the report document
+            ReportDocument reportDoc = new ReportDocument();
 
-                var pdfReader = new PdfReader(pdfStream);
-                var pdfParser = new PdfReaderContentParser(pdfReader);
+            // Load the report file (.rpt)
+            reportDoc.Load(Server.MapPath("~/Reports/Report_Whole.rpt"));
 
-                for (int pageNumber = 1; pageNumber <= pdfReader.NumberOfPages; pageNumber++)
-                {
-                    var imageRenderListener = new ImageRenderListener();
-                    pdfParser.ProcessContent(pageNumber, imageRenderListener);
+            // Set the database login information if required
+            // reportDoc.SetDatabaseLogon("username", "password");
 
-                    var pageImages = imageRenderListener.GetImages();
-                    images.AddRange(pageImages);
-                }
+            // Set any required parameters
+            // reportDoc.SetParameterValue("parameterName", parameterValue);
 
-                return images;
-            }
+            // Export the report to PDF
+            Stream stream = reportDoc.ExportToStream(ExportFormatType.PortableDocFormat);
+
+            // Convert the PDF stream to a byte array
+            byte[] pdfBytes = new byte[stream.Length];
+            stream.Read(pdfBytes, 0, pdfBytes.Length);
+
+            // Set the Content-Disposition header to inline, which displays the PDF in the browser
+            Response.AppendHeader("Content-Disposition", "inline; filename=Report.pdf");
+
+            // Return the PDF byte array to the view
+            return File(pdfBytes, "application/pdf");
         }
-
-        private class ImageRenderListener : IRenderListener
-        {
-            private List<byte[]> images = new List<byte[]>();
-
-            public void BeginTextBlock() { }
-            public void EndTextBlock() { }
-            public void RenderImage(ImageRenderInfo renderInfo)
-            {
-                var image = renderInfo.GetImage();
-                if (image != null)
-                {
-                    using (var stream = new MemoryStream())
-                    {
-                        var systemDrawingImage = image.GetDrawingImage();
-                        systemDrawingImage.Save(stream, ImageFormat.Png);
-                        images.Add(stream.ToArray());
-                    }
-                }
-            }
-            public void RenderText(TextRenderInfo renderInfo) { }
-
-            public List<byte[]> GetImages()
-            {
-                return images;
-            }
-        }
-
 
     }
 }

@@ -10,7 +10,7 @@
 
 #pragma warning disable 1591
 
-namespace PriceSignageSystem {
+namespace PriceSignageSystem.Datasets {
     
     
     /// <summary>
@@ -20,9 +20,9 @@ namespace PriceSignageSystem {
     [global::System.ComponentModel.DesignerCategoryAttribute("code")]
     [global::System.ComponentModel.ToolboxItem(true)]
     [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedDataSetSchema")]
-    [global::System.Xml.Serialization.XmlRootAttribute("QueueReport_STRPRCDS")]
+    [global::System.Xml.Serialization.XmlRootAttribute("STRPRCDS")]
     [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.DataSet")]
-    public partial class QueueReport_STRPRCDS : global::System.Data.DataSet {
+    public partial class STRPRCDS : global::System.Data.DataSet {
         
         private STRPRCsDataTable tableSTRPRCs;
         
@@ -30,7 +30,7 @@ namespace PriceSignageSystem {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-        public QueueReport_STRPRCDS() {
+        public STRPRCDS() {
             this.BeginInit();
             this.InitClass();
             global::System.ComponentModel.CollectionChangeEventHandler schemaChangedHandler = new global::System.ComponentModel.CollectionChangeEventHandler(this.SchemaChanged);
@@ -41,7 +41,7 @@ namespace PriceSignageSystem {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-        protected QueueReport_STRPRCDS(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+        protected STRPRCDS(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                 base(info, context, false) {
             if ((this.IsBinarySerialized(info, context) == true)) {
                 this.InitVars(false);
@@ -127,7 +127,7 @@ namespace PriceSignageSystem {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         public override global::System.Data.DataSet Clone() {
-            QueueReport_STRPRCDS cln = ((QueueReport_STRPRCDS)(base.Clone()));
+            STRPRCDS cln = ((STRPRCDS)(base.Clone()));
             cln.InitVars();
             cln.SchemaSerializationMode = this.SchemaSerializationMode;
             return cln;
@@ -199,9 +199,9 @@ namespace PriceSignageSystem {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         private void InitClass() {
-            this.DataSetName = "QueueReport_STRPRCDS";
+            this.DataSetName = "STRPRCDS";
             this.Prefix = "";
-            this.Namespace = "http://tempuri.org/QueueReport_STRPRCDS.xsd";
+            this.Namespace = "http://tempuri.org/STRPRCDS.xsd";
             this.EnforceConstraints = true;
             this.SchemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
             this.tableSTRPRCs = new STRPRCsDataTable();
@@ -225,7 +225,7 @@ namespace PriceSignageSystem {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedDataSetSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
-            QueueReport_STRPRCDS ds = new QueueReport_STRPRCDS();
+            STRPRCDS ds = new STRPRCDS();
             global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
             global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
             global::System.Xml.Schema.XmlSchemaAny any = new global::System.Xml.Schema.XmlSchemaAny();
@@ -333,8 +333,6 @@ namespace PriceSignageSystem {
             
             private global::System.Data.DataColumn columnO3FNAM;
             
-            private global::System.Data.DataColumn columnO3MSRP;
-            
             private global::System.Data.DataColumn columnO3MODL;
             
             private global::System.Data.DataColumn columnO3LONG;
@@ -352,28 +350,6 @@ namespace PriceSignageSystem {
             private global::System.Data.DataColumn columnO3USER;
             
             private global::System.Data.DataColumn columnDateUpdated;
-            
-            private global::System.Data.DataColumn columnId;
-            
-            private global::System.Data.DataColumn columnTypeId;
-            
-            private global::System.Data.DataColumn columnSizeId;
-            
-            private global::System.Data.DataColumn columnCategoryId;
-            
-            private global::System.Data.DataColumn columnStatus;
-            
-            private global::System.Data.DataColumn columnUserName;
-            
-            private global::System.Data.DataColumn columnDateCreated;
-            
-            private global::System.Data.DataColumn columnExpr1;
-            
-            private global::System.Data.DataColumn columnExpr2;
-            
-            private global::System.Data.DataColumn columniatrb3;
-            
-            private global::System.Data.DataColumn columncountry_img;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
@@ -626,14 +602,6 @@ namespace PriceSignageSystem {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn O3MSRPColumn {
-                get {
-                    return this.columnO3MSRP;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public global::System.Data.DataColumn O3MODLColumn {
                 get {
                     return this.columnO3MODL;
@@ -706,94 +674,6 @@ namespace PriceSignageSystem {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn IdColumn {
-                get {
-                    return this.columnId;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn TypeIdColumn {
-                get {
-                    return this.columnTypeId;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn SizeIdColumn {
-                get {
-                    return this.columnSizeId;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn CategoryIdColumn {
-                get {
-                    return this.columnCategoryId;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn StatusColumn {
-                get {
-                    return this.columnStatus;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn UserNameColumn {
-                get {
-                    return this.columnUserName;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn DateCreatedColumn {
-                get {
-                    return this.columnDateCreated;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn Expr1Column {
-                get {
-                    return this.columnExpr1;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn Expr2Column {
-                get {
-                    return this.columnExpr2;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn iatrb3Column {
-                get {
-                    return this.columniatrb3;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn country_imgColumn {
-                get {
-                    return this.columncountry_img;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -857,7 +737,6 @@ namespace PriceSignageSystem {
                         string O3TRB3, 
                         decimal O3FGR, 
                         string O3FNAM, 
-                        decimal O3MSRP, 
                         string O3MODL, 
                         string O3LONG, 
                         string O3SLUM, 
@@ -866,17 +745,7 @@ namespace PriceSignageSystem {
                         decimal O3DATE, 
                         decimal O3CURD, 
                         string O3USER, 
-                        System.DateTime DateUpdated, 
-                        int TypeId, 
-                        int SizeId, 
-                        int CategoryId, 
-                        string Status, 
-                        string UserName, 
-                        System.DateTime DateCreated, 
-                        decimal Expr1, 
-                        System.DateTime Expr2, 
-                        string iatrb3, 
-                        byte[] country_img) {
+                        System.DateTime DateUpdated) {
                 STRPRCsRow rowSTRPRCsRow = ((STRPRCsRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         O3LOC,
@@ -906,7 +775,6 @@ namespace PriceSignageSystem {
                         O3TRB3,
                         O3FGR,
                         O3FNAM,
-                        O3MSRP,
                         O3MODL,
                         O3LONG,
                         O3SLUM,
@@ -915,28 +783,10 @@ namespace PriceSignageSystem {
                         O3DATE,
                         O3CURD,
                         O3USER,
-                        DateUpdated,
-                        null,
-                        TypeId,
-                        SizeId,
-                        CategoryId,
-                        Status,
-                        UserName,
-                        DateCreated,
-                        Expr1,
-                        Expr2,
-                        iatrb3,
-                        country_img};
+                        DateUpdated};
                 rowSTRPRCsRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowSTRPRCsRow);
                 return rowSTRPRCsRow;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public STRPRCsRow FindById(int Id) {
-                return ((STRPRCsRow)(this.Rows.Find(new object[] {
-                            Id})));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -983,7 +833,6 @@ namespace PriceSignageSystem {
                 this.columnO3TRB3 = base.Columns["O3TRB3"];
                 this.columnO3FGR = base.Columns["O3FGR"];
                 this.columnO3FNAM = base.Columns["O3FNAM"];
-                this.columnO3MSRP = base.Columns["O3MSRP"];
                 this.columnO3MODL = base.Columns["O3MODL"];
                 this.columnO3LONG = base.Columns["O3LONG"];
                 this.columnO3SLUM = base.Columns["O3SLUM"];
@@ -993,17 +842,6 @@ namespace PriceSignageSystem {
                 this.columnO3CURD = base.Columns["O3CURD"];
                 this.columnO3USER = base.Columns["O3USER"];
                 this.columnDateUpdated = base.Columns["DateUpdated"];
-                this.columnId = base.Columns["Id"];
-                this.columnTypeId = base.Columns["TypeId"];
-                this.columnSizeId = base.Columns["SizeId"];
-                this.columnCategoryId = base.Columns["CategoryId"];
-                this.columnStatus = base.Columns["Status"];
-                this.columnUserName = base.Columns["UserName"];
-                this.columnDateCreated = base.Columns["DateCreated"];
-                this.columnExpr1 = base.Columns["Expr1"];
-                this.columnExpr2 = base.Columns["Expr2"];
-                this.columniatrb3 = base.Columns["iatrb3"];
-                this.columncountry_img = base.Columns["country_img"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1063,8 +901,6 @@ namespace PriceSignageSystem {
                 base.Columns.Add(this.columnO3FGR);
                 this.columnO3FNAM = new global::System.Data.DataColumn("O3FNAM", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnO3FNAM);
-                this.columnO3MSRP = new global::System.Data.DataColumn("O3MSRP", typeof(decimal), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnO3MSRP);
                 this.columnO3MODL = new global::System.Data.DataColumn("O3MODL", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnO3MODL);
                 this.columnO3LONG = new global::System.Data.DataColumn("O3LONG", typeof(string), null, global::System.Data.MappingType.Element);
@@ -1083,30 +919,6 @@ namespace PriceSignageSystem {
                 base.Columns.Add(this.columnO3USER);
                 this.columnDateUpdated = new global::System.Data.DataColumn("DateUpdated", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnDateUpdated);
-                this.columnId = new global::System.Data.DataColumn("Id", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnId);
-                this.columnTypeId = new global::System.Data.DataColumn("TypeId", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnTypeId);
-                this.columnSizeId = new global::System.Data.DataColumn("SizeId", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnSizeId);
-                this.columnCategoryId = new global::System.Data.DataColumn("CategoryId", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnCategoryId);
-                this.columnStatus = new global::System.Data.DataColumn("Status", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnStatus);
-                this.columnUserName = new global::System.Data.DataColumn("UserName", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnUserName);
-                this.columnDateCreated = new global::System.Data.DataColumn("DateCreated", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnDateCreated);
-                this.columnExpr1 = new global::System.Data.DataColumn("Expr1", typeof(decimal), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnExpr1);
-                this.columnExpr2 = new global::System.Data.DataColumn("Expr2", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnExpr2);
-                this.columniatrb3 = new global::System.Data.DataColumn("iatrb3", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columniatrb3);
-                this.columncountry_img = new global::System.Data.DataColumn("country_img", typeof(byte[]), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columncountry_img);
-                this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
-                                this.columnId}, true));
                 this.columnO3LOC.AllowDBNull = false;
                 this.columnO3SKU.AllowDBNull = false;
                 this.columnO3SCCD.AllowDBNull = false;
@@ -1139,7 +951,6 @@ namespace PriceSignageSystem {
                 this.columnO3FGR.AllowDBNull = false;
                 this.columnO3FNAM.AllowDBNull = false;
                 this.columnO3FNAM.MaxLength = 30;
-                this.columnO3MSRP.AllowDBNull = false;
                 this.columnO3MODL.AllowDBNull = false;
                 this.columnO3MODL.MaxLength = 35;
                 this.columnO3LONG.AllowDBNull = false;
@@ -1154,20 +965,6 @@ namespace PriceSignageSystem {
                 this.columnO3CURD.AllowDBNull = false;
                 this.columnO3USER.AllowDBNull = false;
                 this.columnO3USER.MaxLength = 15;
-                this.columnId.AutoIncrement = true;
-                this.columnId.AutoIncrementSeed = -1;
-                this.columnId.AutoIncrementStep = -1;
-                this.columnId.AllowDBNull = false;
-                this.columnId.ReadOnly = true;
-                this.columnId.Unique = true;
-                this.columnTypeId.AllowDBNull = false;
-                this.columnSizeId.AllowDBNull = false;
-                this.columnCategoryId.AllowDBNull = false;
-                this.columnStatus.MaxLength = 2147483647;
-                this.columnUserName.MaxLength = 2147483647;
-                this.columnDateCreated.AllowDBNull = false;
-                this.columnExpr1.AllowDBNull = false;
-                this.columniatrb3.MaxLength = 2;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1235,7 +1032,7 @@ namespace PriceSignageSystem {
             public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
                 global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
                 global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
-                QueueReport_STRPRCDS ds = new QueueReport_STRPRCDS();
+                STRPRCDS ds = new STRPRCDS();
                 global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
                 any1.Namespace = "http://www.w3.org/2001/XMLSchema";
                 any1.MinOccurs = new decimal(0);
@@ -1607,17 +1404,6 @@ namespace PriceSignageSystem {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public decimal O3MSRP {
-                get {
-                    return ((decimal)(this[this.tableSTRPRCs.O3MSRPColumn]));
-                }
-                set {
-                    this[this.tableSTRPRCs.O3MSRPColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public string O3MODL {
                 get {
                     return ((string)(this[this.tableSTRPRCs.O3MODLColumn]));
@@ -1722,152 +1508,6 @@ namespace PriceSignageSystem {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public int Id {
-                get {
-                    return ((int)(this[this.tableSTRPRCs.IdColumn]));
-                }
-                set {
-                    this[this.tableSTRPRCs.IdColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public int TypeId {
-                get {
-                    return ((int)(this[this.tableSTRPRCs.TypeIdColumn]));
-                }
-                set {
-                    this[this.tableSTRPRCs.TypeIdColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public int SizeId {
-                get {
-                    return ((int)(this[this.tableSTRPRCs.SizeIdColumn]));
-                }
-                set {
-                    this[this.tableSTRPRCs.SizeIdColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public int CategoryId {
-                get {
-                    return ((int)(this[this.tableSTRPRCs.CategoryIdColumn]));
-                }
-                set {
-                    this[this.tableSTRPRCs.CategoryIdColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string Status {
-                get {
-                    try {
-                        return ((string)(this[this.tableSTRPRCs.StatusColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Status\' in table \'STRPRCs\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableSTRPRCs.StatusColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string UserName {
-                get {
-                    try {
-                        return ((string)(this[this.tableSTRPRCs.UserNameColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'UserName\' in table \'STRPRCs\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableSTRPRCs.UserNameColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public System.DateTime DateCreated {
-                get {
-                    return ((global::System.DateTime)(this[this.tableSTRPRCs.DateCreatedColumn]));
-                }
-                set {
-                    this[this.tableSTRPRCs.DateCreatedColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public decimal Expr1 {
-                get {
-                    return ((decimal)(this[this.tableSTRPRCs.Expr1Column]));
-                }
-                set {
-                    this[this.tableSTRPRCs.Expr1Column] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public System.DateTime Expr2 {
-                get {
-                    try {
-                        return ((global::System.DateTime)(this[this.tableSTRPRCs.Expr2Column]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Expr2\' in table \'STRPRCs\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableSTRPRCs.Expr2Column] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string iatrb3 {
-                get {
-                    try {
-                        return ((string)(this[this.tableSTRPRCs.iatrb3Column]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'iatrb3\' in table \'STRPRCs\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableSTRPRCs.iatrb3Column] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public byte[] country_img {
-                get {
-                    try {
-                        return ((byte[])(this[this.tableSTRPRCs.country_imgColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'country_img\' in table \'STRPRCs\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableSTRPRCs.country_imgColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool IsDateUpdatedNull() {
                 return this.IsNull(this.tableSTRPRCs.DateUpdatedColumn);
             }
@@ -1876,66 +1516,6 @@ namespace PriceSignageSystem {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetDateUpdatedNull() {
                 this[this.tableSTRPRCs.DateUpdatedColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsStatusNull() {
-                return this.IsNull(this.tableSTRPRCs.StatusColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetStatusNull() {
-                this[this.tableSTRPRCs.StatusColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsUserNameNull() {
-                return this.IsNull(this.tableSTRPRCs.UserNameColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetUserNameNull() {
-                this[this.tableSTRPRCs.UserNameColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsExpr2Null() {
-                return this.IsNull(this.tableSTRPRCs.Expr2Column);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetExpr2Null() {
-                this[this.tableSTRPRCs.Expr2Column] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool Isiatrb3Null() {
-                return this.IsNull(this.tableSTRPRCs.iatrb3Column);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void Setiatrb3Null() {
-                this[this.tableSTRPRCs.iatrb3Column] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool Iscountry_imgNull() {
-                return this.IsNull(this.tableSTRPRCs.country_imgColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void Setcountry_imgNull() {
-                this[this.tableSTRPRCs.country_imgColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -1974,7 +1554,7 @@ namespace PriceSignageSystem {
         }
     }
 }
-namespace PriceSignageSystem.QueueReport_STRPRCDSTableAdapters {
+namespace PriceSignageSystem.Datasets.STRPRCDSTableAdapters {
     
     
     /// <summary>
@@ -2125,7 +1705,6 @@ namespace PriceSignageSystem.QueueReport_STRPRCDSTableAdapters {
             tableMapping.ColumnMappings.Add("O3TRB3", "O3TRB3");
             tableMapping.ColumnMappings.Add("O3FGR", "O3FGR");
             tableMapping.ColumnMappings.Add("O3FNAM", "O3FNAM");
-            tableMapping.ColumnMappings.Add("O3MSRP", "O3MSRP");
             tableMapping.ColumnMappings.Add("O3MODL", "O3MODL");
             tableMapping.ColumnMappings.Add("O3LONG", "O3LONG");
             tableMapping.ColumnMappings.Add("O3SLUM", "O3SLUM");
@@ -2135,17 +1714,6 @@ namespace PriceSignageSystem.QueueReport_STRPRCDSTableAdapters {
             tableMapping.ColumnMappings.Add("O3CURD", "O3CURD");
             tableMapping.ColumnMappings.Add("O3USER", "O3USER");
             tableMapping.ColumnMappings.Add("DateUpdated", "DateUpdated");
-            tableMapping.ColumnMappings.Add("Id", "Id");
-            tableMapping.ColumnMappings.Add("TypeId", "TypeId");
-            tableMapping.ColumnMappings.Add("SizeId", "SizeId");
-            tableMapping.ColumnMappings.Add("CategoryId", "CategoryId");
-            tableMapping.ColumnMappings.Add("Status", "Status");
-            tableMapping.ColumnMappings.Add("UserName", "UserName");
-            tableMapping.ColumnMappings.Add("DateCreated", "DateCreated");
-            tableMapping.ColumnMappings.Add("Expr1", "Expr1");
-            tableMapping.ColumnMappings.Add("Expr2", "Expr2");
-            tableMapping.ColumnMappings.Add("iatrb3", "iatrb3");
-            tableMapping.ColumnMappings.Add("country_img", "country_img");
             this._adapter.TableMappings.Add(tableMapping);
         }
         
@@ -2162,12 +1730,9 @@ namespace PriceSignageSystem.QueueReport_STRPRCDSTableAdapters {
             this._commandCollection = new global::System.Data.SqlClient.SqlCommand[1];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = @"SELECT        a.Id, a.O3SKU, a.TypeId, a.SizeId, a.CategoryId, a.Status, a.UserName, a.DateCreated, a.DateUpdated, b.O3LOC, b.O3SKU AS Expr1, b.O3SCCD, b.O3IDSC, b.O3UPC, b.O3VNUM, b.O3TYPE, b.O3DEPT, b.O3SDPT, b.O3CLAS, 
-                         b.O3SCLS, b.O3POS, b.O3POSU, b.O3REG, b.O3REGU, b.O3ORIG, b.O3ORGU, b.O3EVT, b.O3PMMX, b.O3PMTH, b.O3PDQT, b.O3PDPR, b.O3SDT, b.O3EDT, b.O3TRB3, b.O3FGR, b.O3FNAM, b.O3MSRP, b.O3MODL, b.O3LONG, 
-                         b.O3SLUM, b.O3DIV, b.O3TUOM, b.O3DATE, b.O3CURD, b.O3USER, b.DateUpdated AS Expr2, c.iatrb3, c.country_img
-FROM            ItemQueues AS a INNER JOIN
-                         STRPRCs AS b ON a.O3SKU = b.O3SKU INNER JOIN
-                         Countries AS c ON b.O3TRB3 = c.iatrb3";
+            this._commandCollection[0].CommandText = @"SELECT        O3LOC, O3SKU, O3SCCD, O3IDSC, O3UPC, O3VNUM, O3TYPE, O3DEPT, O3SDPT, O3CLAS, O3SCLS, O3POS, O3POSU, O3REG, O3REGU, O3ORIG, O3ORGU, O3EVT, O3PMMX, O3PMTH, O3PDQT, O3PDPR, O3SDT, O3EDT, 
+                         O3TRB3, O3FGR, O3FNAM, O3MODL, O3LONG, O3SLUM, O3DIV, O3TUOM, O3DATE, O3CURD, O3USER, DateUpdated
+FROM            STRPRCs";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
         }
         
@@ -2175,7 +1740,7 @@ FROM            ItemQueues AS a INNER JOIN
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, true)]
-        public virtual int Fill(QueueReport_STRPRCDS.STRPRCsDataTable dataTable) {
+        public virtual int Fill(STRPRCDS.STRPRCsDataTable dataTable) {
             this.Adapter.SelectCommand = this.CommandCollection[0];
             if ((this.ClearBeforeFill == true)) {
                 dataTable.Clear();
@@ -2188,9 +1753,9 @@ FROM            ItemQueues AS a INNER JOIN
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
-        public virtual QueueReport_STRPRCDS.STRPRCsDataTable GetData() {
+        public virtual STRPRCDS.STRPRCsDataTable GetData() {
             this.Adapter.SelectCommand = this.CommandCollection[0];
-            QueueReport_STRPRCDS.STRPRCsDataTable dataTable = new QueueReport_STRPRCDS.STRPRCsDataTable();
+            STRPRCDS.STRPRCsDataTable dataTable = new STRPRCDS.STRPRCsDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
         }
@@ -2264,7 +1829,7 @@ FROM            ItemQueues AS a INNER JOIN
         ///</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-        private int UpdateUpdatedRows(QueueReport_STRPRCDS dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
+        private int UpdateUpdatedRows(STRPRCDS dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
             int result = 0;
             return result;
         }
@@ -2274,7 +1839,7 @@ FROM            ItemQueues AS a INNER JOIN
         ///</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-        private int UpdateInsertedRows(QueueReport_STRPRCDS dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
+        private int UpdateInsertedRows(STRPRCDS dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
             int result = 0;
             return result;
         }
@@ -2284,7 +1849,7 @@ FROM            ItemQueues AS a INNER JOIN
         ///</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-        private int UpdateDeletedRows(QueueReport_STRPRCDS dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows) {
+        private int UpdateDeletedRows(STRPRCDS dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows) {
             int result = 0;
             return result;
         }
@@ -2318,7 +1883,7 @@ FROM            ItemQueues AS a INNER JOIN
         ///</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-        public virtual int UpdateAll(QueueReport_STRPRCDS dataSet) {
+        public virtual int UpdateAll(STRPRCDS dataSet) {
             if ((dataSet == null)) {
                 throw new global::System.ArgumentNullException("dataSet");
             }

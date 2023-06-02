@@ -187,7 +187,7 @@
     <Compile Include="Controllers\QueueController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\STRPRCController.cs" />
-    <Compile Include="CountryImageDS.Designer.cs">
+    <Compile Include="Datasets\CountryImageDS.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>CountryImageDS.xsd</DependentUpon>
@@ -253,10 +253,10 @@
     <Compile Include="Models\Type.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QueueReport_STRPRCDS.cs">
+    <Compile Include="Datasets\QueueReport_STRPRCDS.cs">
       <DependentUpon>QueueReport_STRPRCDS.xsd</DependentUpon>
     </Compile>
-    <Compile Include="QueueReport_STRPRCDS.Designer.cs">
+    <Compile Include="Datasets\QueueReport_STRPRCDS.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>QueueReport_STRPRCDS.xsd</DependentUpon>
@@ -268,7 +268,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="SqlServerTypes\Loader.cs" />
-    <Compile Include="STRPRCDS.Designer.cs">
+    <Compile Include="Datasets\STRPRCDS.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>STRPRCDS.xsd</DependentUpon>
@@ -297,26 +297,26 @@
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="CountryImageDS.xsc">
+    <Content Include="Datasets\CountryImageDS.xsc">
       <DependentUpon>CountryImageDS.xsd</DependentUpon>
     </Content>
-    <None Include="CountryImageDS.xsd">
+    <None Include="Datasets\CountryImageDS.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>CountryImageDS.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
-    <Content Include="CountryImageDS.xss">
+    <Content Include="Datasets\CountryImageDS.xss">
       <DependentUpon>CountryImageDS.xsd</DependentUpon>
     </Content>
-    <Content Include="QueueReport_STRPRCDS.xsc">
+    <Content Include="Datasets\QueueReport_STRPRCDS.xsc">
       <DependentUpon>QueueReport_STRPRCDS.xsd</DependentUpon>
     </Content>
-    <None Include="QueueReport_STRPRCDS.xsd">
+    <None Include="Datasets\QueueReport_STRPRCDS.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>QueueReport_STRPRCDS.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
-    <Content Include="QueueReport_STRPRCDS.xss">
+    <Content Include="Datasets\QueueReport_STRPRCDS.xss">
       <DependentUpon>QueueReport_STRPRCDS.xsd</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
@@ -370,21 +370,20 @@
     <Content Include="Views\STRPRC\_SearchResultPartialView.cshtml" />
     <Content Include="Views\STRPRC\Index.cshtml" />
     <Content Include="Views\STRPRC\SearchByDate.cshtml" />
-    <Content Include="STRPRCDS.xsc">
+    <Content Include="Datasets\STRPRCDS.xsc">
       <DependentUpon>STRPRCDS.xsd</DependentUpon>
     </Content>
-    <None Include="STRPRCDS.xsd">
+    <None Include="Datasets\STRPRCDS.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>STRPRCDS.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
-    <Content Include="STRPRCDS.xss">
+    <Content Include="Datasets\STRPRCDS.xss">
       <DependentUpon>STRPRCDS.xsd</DependentUpon>
     </Content>
     <Content Include="Views\Report\AutoPrintReport.cshtml" />
     <Content Include="Views\Queue\PrintQueueList.cshtml" />
     <Content Include="Views\Report\AutoPrintReportFromAdvancePrinting.cshtml" />
-    <Content Include="Views\Report\PrintCrystalReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
