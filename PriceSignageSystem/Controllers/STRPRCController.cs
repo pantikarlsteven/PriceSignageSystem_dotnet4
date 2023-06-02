@@ -1,4 +1,5 @@
 ﻿using CrystalDecisions.CrystalReports.Engine;
+using CrystalDecisions.Shared;
 using PriceSignageSystem.Code;
 using PriceSignageSystem.Helper;
 using PriceSignageSystem.Models.Dto;
@@ -162,19 +163,23 @@ namespace PriceSignageSystem.Controllers
         }
 
         [HttpGet]
-        public ActionResult PrintPCASTRPRCTest(decimal id)
+        public ActionResult PrintPCASTRPRCTest(string id)
         {
             try
             {
                 ReportDocument rptH = new ReportDocument();
                 string strReportPath = System.Web.HttpContext.Current.Server.MapPath("~/Reports/CrystalReports/WholeReport/WholeReport_SLBrandAndSLDesc.rpt");
                 rptH.Load(strReportPath);
+                rptH.SetDatabaseLogon("sa", "@dm1n@8800");
+                rptH.SetParameterValue("sku", id);
+                rptH.SetParameterValue("user", Session["Username"].ToString());
 
                 Stream stream = rptH.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
-                stream.Flush();
-                rptH.Close();
-                rptH.Dispose();
-                return File(stream, System.Net.Mime.MediaTypeNames.Application.Pdf);
+                var pdfBytes = new byte[stream.Length];
+                stream.Read(pdfBytes, 0, pdfBytes.Length);
+
+                Response.AppendHeader("Content-Disposition", "inline; filename=test.pdf");
+                return File(pdfBytes, "application/pdf");
             }
             catch (Exception ex)
             {
