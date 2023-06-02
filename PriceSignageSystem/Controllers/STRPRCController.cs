@@ -1,10 +1,12 @@
-﻿using PriceSignageSystem.Code;
+﻿using CrystalDecisions.CrystalReports.Engine;
+using PriceSignageSystem.Code;
 using PriceSignageSystem.Helper;
 using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -157,6 +159,27 @@ namespace PriceSignageSystem.Controllers
             var sizes = _sizeRepository.GetAllSizes().ToArray(); 
 
             return Json(sizes);
+        }
+
+        [HttpGet]
+        public ActionResult PrintPCASTRPRCTest(decimal id)
+        {
+            try
+            {
+                ReportDocument rptH = new ReportDocument();
+                string strReportPath = System.Web.HttpContext.Current.Server.MapPath("~/Reports/CrystalReports/WholeReport/WholeReport_SLBrandAndSLDesc.rpt");
+                rptH.Load(strReportPath);
+
+                Stream stream = rptH.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                stream.Flush();
+                rptH.Close();
+                rptH.Dispose();
+                return File(stream, System.Net.Mime.MediaTypeNames.Application.Pdf);
+            }
+            catch (Exception ex)
+            {
+                return Content("<h2>Error: " + ex.Message + "</h2>", "text/html");
+            }
         }
     }
 }
