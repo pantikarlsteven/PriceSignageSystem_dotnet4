@@ -8,6 +8,8 @@ using PriceSignageSystem.Models.Interface;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -203,11 +205,12 @@ namespace PriceSignageSystem.Controllers
                             strReport = "WholeReport_SLBrandAndSLDesc.rpt";
                     }
 
-                    var strReportPath = System.Web.HttpContext.Current.Server.MapPath("~/Reports/CrystalReports/WholeReport/" + strReport);
+                    var test = "HalfReport_SLBrandAndSLDesc.rpt";
+                    var strReportPath = System.Web.HttpContext.Current.Server.MapPath("~/Reports/CrystalReports/HalfReport/" + test);
 
                     rptH.Load(strReportPath);
                     rptH.SetDatabaseLogon("sa", "@dm1n@8800");
-                    rptH.SetParameterValue("sku", id);
+                    rptH.SetParameterValue("sku", id.ToString());
                     rptH.SetParameterValue("user", Session["Username"].ToString());
 
                     Stream stream = rptH.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
@@ -215,7 +218,7 @@ namespace PriceSignageSystem.Controllers
                     stream.Read(pdfBytes, 0, pdfBytes.Length);
 
                     //rptH.PrintOptions.PrinterName = @"\\199.85.2.2\Canon LBP2900";
-                    //rptH.PrintToPrinter(1,true,0,0);
+                    //rptH.PrintToPrinter(1, true, 0, 0);
 
                     Response.AppendHeader("Content-Disposition", "inline; filename=test.pdf");
                     return File(pdfBytes, "application/pdf");

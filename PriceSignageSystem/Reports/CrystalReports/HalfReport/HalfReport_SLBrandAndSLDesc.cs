@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PriceSignageSystem.Reports.CrystalReports.WholeReport {
+namespace PriceSignageSystem.Reports.CrystalReports.HalfReport {
     using System;
     using System.ComponentModel;
     using CrystalDecisions.Shared;
@@ -16,14 +16,14 @@ namespace PriceSignageSystem.Reports.CrystalReports.WholeReport {
     using CrystalDecisions.CrystalReports.Engine;
     
     
-    public class WholeReport_DLBrandAndDLDesc : ReportClass {
+    public class HalfReport_SLBrandAndSLDesc : ReportClass {
         
-        public WholeReport_DLBrandAndDLDesc() {
+        public HalfReport_SLBrandAndSLDesc() {
         }
         
         public override string ResourceName {
             get {
-                return "WholeReport_DLBrandAndDLDesc.rpt";
+                return "HalfReport_SLBrandAndSLDesc.rpt";
             }
             set {
                 // Do nothing
@@ -41,8 +41,8 @@ namespace PriceSignageSystem.Reports.CrystalReports.WholeReport {
         
         public override string FullResourceName {
             get {
-                return "PriceSignageSystem.Reports.CrystalReports.WholeReport.WholeReport_DLBrandAndDLDes" +
-                    "c.rpt";
+                return "PriceSignageSystem.Reports.CrystalReports.HalfReport.HalfReport_SLBrandAndSLDesc." +
+                    "rpt";
             }
             set {
                 // Do nothing
@@ -96,12 +96,20 @@ namespace PriceSignageSystem.Reports.CrystalReports.WholeReport {
                 return this.DataDefinition.ParameterFields[0];
             }
         }
+        
+        [Browsable(false)]
+        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+        public CrystalDecisions.Shared.IParameterField Parameter_sku {
+            get {
+                return this.DataDefinition.ParameterFields[1];
+            }
+        }
     }
     
     [System.Drawing.ToolboxBitmapAttribute(typeof(CrystalDecisions.Shared.ExportOptions), "report.bmp")]
-    public class CachedWholeReport_DLBrandAndDLDesc : Component, ICachedReport {
+    public class CachedHalfReport_SLBrandAndSLDesc : Component, ICachedReport {
         
-        public CachedWholeReport_DLBrandAndDLDesc() {
+        public CachedHalfReport_SLBrandAndSLDesc() {
         }
         
         [Browsable(false)]
@@ -138,7 +146,7 @@ namespace PriceSignageSystem.Reports.CrystalReports.WholeReport {
         }
         
         public virtual CrystalDecisions.CrystalReports.Engine.ReportDocument CreateReport() {
-            WholeReport_DLBrandAndDLDesc rpt = new WholeReport_DLBrandAndDLDesc();
+            HalfReport_SLBrandAndSLDesc rpt = new HalfReport_SLBrandAndSLDesc();
             rpt.Site = this.Site;
             return rpt;
         }
