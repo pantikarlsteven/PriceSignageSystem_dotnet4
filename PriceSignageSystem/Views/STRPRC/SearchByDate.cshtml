@@ -7,7 +7,6 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/select/1.3.3/css/select.dataTables.min.css">
-
     <style>
         td.details-control {
             text-align: center;
@@ -18,6 +17,10 @@
         tr.shown td.details-control {
             text-align: center;
             color: #fd6363;
+        }
+
+        th.no-sort::after {
+            display: none !important;
         }
     </style>
 </head>
@@ -50,14 +53,14 @@
                 </div>
                 <hr />
                 <div class="card-body table-responsive">
-                    <table id="dataTable" class="table table-striped table-hover " style="width:100%">
+                    <table id="dataTable" class="table table-striped table-hover" style="width:100%">
                         <thead>
                             <tr>
-                                <th><input type="checkbox" id="select-all"></th>
+                                <th><input type="checkbox" id="selectAll" /></th>
                                 <th></th>
                                 <th>SKU</th>
                                 <th>UPC</th>
-                                <th class="text-nowrap">Item Desc.</th>
+                                <th style="width: 200px; "class="text-nowrap">Item Desc.</th>
                                 <th>Reg Price</th>
                                 <th>Promo Price</th>
                                 <th>Date Start</th>
@@ -65,7 +68,7 @@
                                 <th>Type</th>
                                 <th>Size</th>
                                 <th>Category</th>
-                                <th><button class="printAllBtn btn btn-primary btn-sm">Print All</button></th>
+                                <th><button class="printAllBtn btn btn-primary btn-sm">Print Selected</button></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -81,7 +84,6 @@
     <script src="~/Scripts/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
-
 </body>
 </html>
 
@@ -117,20 +119,14 @@
                              scrollX: true,
                              scroller: true,
                              data: data,
-                             select: "single",
                              columnDefs: [
                                  { targets: [0, 1, 12], orderable: false },
                              ],
                              columns: [
                                  {
-                                     "className": 'select-control',
-                                     "orderable": false,
-                                     "data": null,
-                                     "defaultContent": '',
-                                     "render": function () {
-                                         return '<input type="checkbox" class="select-row">';
-                                     },
-                                     width: "15px"
+                                     data: null, orderable: false, searchable: false, render: function (data) {
+                                         return '<input type="checkbox" class="rowCheckbox" data-id="' + data.O3SKU + '">';
+                                     }
                                  },
                                  {
                                      "className": 'details-control',
@@ -142,42 +138,54 @@
                                      },
                                      width: "15px"
                                  },
-                                 { "data": "O3SKU", "name": "O3SKU", "autoWidth": true },
-                                 { "data": "O3UPC", "name": "O3UPC", "autoWidth": true },
-                                 { "data": "O3IDSC", "name": "O3IDSC", "className": "text-nowrap" },
-                                 { "data": "O3REGU", "name": "O3REGU", "autoWidth": true },
-                                 { "data": "O3POS", "name": "O3POS", "autoWidth": true },
-                                 { "data": "O3SDT", "name": "O3SDT", "autoWidth": true },
-                                 { "data": "O3EDT", "name": "O3EDT", "autoWidth": true },
-                                 { "data": "TypeName", "name": "TypeName", "autoWidth": true },
-                                 { "data": "SizeName", "name": "SizeName", "autoWidth": true },
-                                 { "data": "CategoryName", "name": "CategoryName", "autoWidth": true },
-                                {
+                                 { data: 'O3SKU', name: 'O3SKU', width: '100px' },
+                                 { data: 'O3UPC', name: 'O3UPC', width: '100px' },
+                                 { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap', width: '200px' },
+                                 { data: 'O3REGU', name: 'O3REGU', width: '100px' },
+                                 { data: 'O3POS', name: 'O3POS', width: '100px' },
+                                 { data: 'O3SDT', name: 'O3SDT', width: '100px' },
+                                 { data: 'O3EDT', name: 'O3EDT', width: '100px' },
+                                 { data: 'TypeName', name: 'TypeName', width: '100px' },
+                                 { data: 'SizeName', name: 'SizeName', width: '100px' },
+                                 { data: 'CategoryName', name: 'CategoryName', width: '100px' },
+                                 {
                                     data: null,
                                     render: function (data, type, row) {
                                         return '<button class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '">Print</button>';
                                     }
-                                }
-                            ],
-                            "language": {
-                                "emptyTable": "No data available"
-                            }
+                                 }
+                             ],
                          });
 
-
-                        // Handle the "Select All" checkbox
-                        $('#select-all').on('change', function () {
-                            $('.select-row').prop('checked', this.checked);
-
+                        $('#selectAll').on('change', function () {
+                            var isChecked = $(this).is(':checked');
+                            $('.rowCheckbox').prop('checked', isChecked);
                         });
 
-                        // Handle individual row checkboxes
-                        $('#dataTable tbody').on('change', '.select-row', function () {
-                            if (!this.checked) {
-                                $('#select-all').prop('checked', false);
+                        $('.printAllBtn').on('click', function () {
+                            var selectedRows = [];
+                            $('.rowCheckbox:checked').each(function () {
+                                var rowId = $(this).data('id');
+                                selectedRows.push(rowId);
+                            });
+
+                            if (selectedRows.length > 0) {
+                                console.log('Selected Row IDs:', selectedRows);
+
+                                $.ajax({
+                                    url: '@Url.Action("AutoPrintMultipleReport", "Report")',
+                                    type: 'POST',
+                                    data: { selectedIds: selectedRows },
+                                    success: function (result) {
+                                        
+                                    },
+                                    error: function (xhr, status, error) {
+                                        console.error("Error queuing item: " + error);
+                                    }
+                                    
+                                });
                             } else {
-                                var allChecked = $('.select-row:checked').length === $('.select-row').length;
-                                $('#select-all').prop('checked', allChecked);
+                                alert('Please select items to print.');
                             }
                         });
 
@@ -207,6 +215,7 @@
                     }
                 });
             });
+
 
             //PRINT BUTTON
             $('#dataTable').on('click', '.printBtn', function () {

@@ -40,7 +40,7 @@ namespace PriceSignageSystem.Controllers
                 ViewBag.IsDateLatest = true;
             }
 
-            ViewBag.DateVersion = date.Date.ToShortDateString();
+            ViewBag.DateVersion = date.ToString("MMM dd yyyy HH:mm:ss tt"); ;
             return View();
         }
 

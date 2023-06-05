@@ -44,14 +44,9 @@ namespace PriceSignageSystem.Controllers
 
         public ActionResult PreviewCrystalReport(string id)
         {
-            // Create a new instance of the report document
             ReportDocument reportDoc = new ReportDocument();
 
-            // Load the report file (.rpt)
-            reportDoc.Load(Server.MapPath("~/Reports/CrystalReports/WholeReport/WholeReport_SLBrandAndSLDesc.rpt"));
-
-            // Set the database login information if required
-            // reportDoc.SetDatabaseLogon("username", "password");
+            reportDoc.Load(Server.MapPath(ReportConstants.WholeReport_SLBrandAndSLDescPath));
 
             reportDoc.SetDatabaseLogon("sa", "@dm1n@8800");
             reportDoc.SetParameterValue("sku", id);
@@ -74,6 +69,7 @@ namespace PriceSignageSystem.Controllers
         public void AutoPrintSingleReport(string response)
         {
             var model = JsonConvert.DeserializeObject<STRPRCDto>(response);
+            var printerName = ConfigurationManager.AppSettings["ReportPrinter"];
 
             ReportDocument report = new ReportDocument();
             report.Load(Server.MapPath(ReportConstants.WholeReport_SLBrandAndSLDescPath));
@@ -82,11 +78,8 @@ namespace PriceSignageSystem.Controllers
             report.SetParameterValue("sku", model.O3SKU.ToString());
             report.SetParameterValue("user", Session["Username"].ToString());
 
-            string printerName = ConfigurationManager.AppSettings["ReportPrinter"];
-
             PrinterSettings printerSettings = new PrinterSettings();
             printerSettings.PrinterName = printerName; 
-
             // Print the report directly to the printer without showing the printer settings or preview
             report.PrintOptions.PrinterName = printerSettings.PrinterName;
             report.PrintToPrinter(printerSettings, new PageSettings(), false);
@@ -95,6 +88,32 @@ namespace PriceSignageSystem.Controllers
             report.Close();
             report.Dispose();
 
+        }
+
+        [HttpPost]
+        public void AutoPrintMultipleReport(string[] selectedIds)
+        {
+            if (selectedIds != null && selectedIds.Length > 0)
+            {
+                foreach (var rowId in selectedIds)
+                {
+                    ReportDocument report = new ReportDocument();
+                    report.Load(Server.MapPath(ReportConstants.WholeReport_SLBrandAndSLDescPath));
+
+                    report.SetDatabaseLogon("sa", "@dm1n@8800");
+                    report.SetParameterValue("sku", rowId);
+                    report.SetParameterValue("user", Session["Username"].ToString());
+
+                    PrinterSettings printerSettings = new PrinterSettings();
+                    printerSettings.PrinterName = ConfigurationManager.AppSettings["ReportPrinter"];
+                    report.PrintOptions.PrinterName = printerSettings.PrinterName;
+                    report.PrintToPrinter(printerSettings, new PageSettings(), false);
+                }
+            }
+            else
+            {
+                // Handle the case when no row IDs are selected
+            }
         }
 
         #region FOR RDLC REPORT
