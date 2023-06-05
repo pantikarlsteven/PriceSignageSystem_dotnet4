@@ -2,11 +2,14 @@
 using CrystalDecisions.Shared;
 using PriceSignageSystem.Code;
 using PriceSignageSystem.Helper;
+using PriceSignageSystem.Models.DatabaseContext;
 using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -170,18 +173,56 @@ namespace PriceSignageSystem.Controllers
             try
             {
                 ReportDocument rptH = new ReportDocument();
-                string strReportPath = System.Web.HttpContext.Current.Server.MapPath("~/Reports/CrystalReports/WholeReport/WholeReport_SLBrandAndSLDesc.rpt");
-                rptH.Load(strReportPath);
-                rptH.SetDatabaseLogon("sa", "@dm1n@8800");
-                rptH.SetParameterValue("sku", id);
-                rptH.SetParameterValue("user", Session["Username"].ToString());
+                var strReport = string.Empty;
+                using (var _db = new ApplicationDbContext())
+                {
 
-                Stream stream = rptH.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
-                var pdfBytes = new byte[stream.Length];
-                stream.Read(pdfBytes, 0, pdfBytes.Length);
+                    var stprcs = (from a in _db.STRPRCs
+                                  where a.O3SKU.ToString().ToLower() == id.ToLower()
+                                  select new STRPRCDto
+                                  {
+                                      O3SKU = a.O3SKU,
+                                      O3FNAM = a.O3FNAM,
+                                      O3IDSC = a.O3IDSC
+                                  }).First();
 
-                Response.AppendHeader("Content-Disposition", "inline; filename=test.pdf");
-                return File(pdfBytes, "application/pdf");
+                    //If Brand Name's characters are greater than 14
+                    if (stprcs.O3FNAM.Length > 14)
+                    {
+                        //If Description's characters are greater than 44
+                        if (stprcs.O3IDSC.Length > 44)
+                            strReport = "WholeReport_DLBrandAndDLDesc.rpt";
+                        else
+                            strReport = "WholeReport_DLBrandAndSLDesc.rpt";
+                    }
+                    //Else, Brand Name's characters are less than 14
+                    else
+                    {
+                        //If Description's characters are greater than 44
+                        if (stprcs.O3IDSC.Length > 44)
+                            strReport = "WholeReport_SLBrandAndDLDesc.rpt";
+                        else
+                            strReport = "WholeReport_SLBrandAndSLDesc.rpt";
+                    }
+
+                    var test = "HalfReport_SLBrandAndSLDesc.rpt";
+                    var strReportPath = System.Web.HttpContext.Current.Server.MapPath("~/Reports/CrystalReports/HalfReport/" + test);
+
+                    rptH.Load(strReportPath);
+                    rptH.SetDatabaseLogon("sa", "@dm1n@8800");
+                    rptH.SetParameterValue("sku", id.ToString());
+                    rptH.SetParameterValue("user", Session["Username"].ToString());
+
+                    Stream stream = rptH.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                    var pdfBytes = new byte[stream.Length];
+                    stream.Read(pdfBytes, 0, pdfBytes.Length);
+
+                    //rptH.PrintOptions.PrinterName = @"\\199.85.2.2\Canon LBP2900";
+                    //rptH.PrintToPrinter(1, true, 0, 0);
+
+                    Response.AppendHeader("Content-Disposition", "inline; filename=test.pdf");
+                    return File(pdfBytes, "application/pdf");
+                }
             }
             catch (Exception ex)
             {
