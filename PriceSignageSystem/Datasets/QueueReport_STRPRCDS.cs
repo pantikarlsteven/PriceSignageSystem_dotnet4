@@ -1,4 +1,4 @@
-﻿namespace PriceSignageSystem
+﻿namespace PriceSignageSystem.Datasets
 {
 
 

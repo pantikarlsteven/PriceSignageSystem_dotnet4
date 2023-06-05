@@ -10,7 +10,7 @@
 
 #pragma warning disable 1591
 
-namespace PriceSignageSystem {
+namespace PriceSignageSystem.Datasets {
     
     
     /// <summary>
@@ -640,7 +640,7 @@ namespace PriceSignageSystem {
         }
     }
 }
-namespace PriceSignageSystem.CountryImageDSTableAdapters {
+namespace PriceSignageSystem.Datasets.CountryImageDSTableAdapters {
     
     
     /// <summary>

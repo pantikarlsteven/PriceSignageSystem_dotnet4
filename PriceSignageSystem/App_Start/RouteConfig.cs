@@ -14,9 +14,9 @@ namespace PriceSignageSystem
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
-                name: "PrintCrystalReport",
+                name: "PreviewCrystalReport",
                 url: "Report/Print",
-                defaults: new { controller = "Report", action = "PrintCrystalReport" }
+                defaults: new { controller = "Report", action = "PreviewCrystalReport" }
             );
 
             routes.MapRoute(

@@ -16,6 +16,7 @@ namespace PriceSignageSystem.Models.Constants
         public const string DynamicQueueReportPath_Half = "~/Reports/DynamicQueueReport_Half.rdlc";
         public const string DynamicQueueReportPath_Jewelry = "~/Reports/DynamicQueueReport_Jewelry.rdlc";
 
+        public const string WholeReport_SLBrandAndSLDescPath = "~/Reports/CrystalReports/WholeReport/WholeReport_SLBrandAndSLDesc.rpt";
 
         public static class Size
         {

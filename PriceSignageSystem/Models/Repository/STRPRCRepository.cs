@@ -304,7 +304,10 @@ namespace PriceSignageSystem.Models.Repository
                         O3DATE = (decimal)reader["O3DATE"],
                         O3CURD = (decimal)reader["O3CURD"],
                         O3USER = reader["O3USER"].ToString(),
-                        DateUpdated = (DateTime)reader["DateUpdated"]
+                        DateUpdated = (DateTime)reader["DateUpdated"],
+                        TypeId = (int)reader["TypeId"],
+                        SizeId = (int)reader["SizeId"],
+                        CategoryId = (int)reader["CategoryId"]
                     };
 
                     data.Add(record);
@@ -360,7 +363,10 @@ namespace PriceSignageSystem.Models.Repository
                            O3DATE = a.O3DATE,
                            O3CURD = a.O3CURD,
                            O3USER = a.O3USER,
-                           DateUpdated = a.DateUpdated
+                           DateUpdated = a.DateUpdated,
+                           TypeId = a.TypeId,
+                           SizeId = a.SizeId,
+                           CategoryId = a.CategoryId
                        }).FirstOrDefault();
 
             return data;

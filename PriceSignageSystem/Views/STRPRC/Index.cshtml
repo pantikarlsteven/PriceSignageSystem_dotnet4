@@ -18,7 +18,6 @@
         <div class="card card-body bg-primarydark text-white text-bold">
             <center>
                 The current data is up to date. (Current Version: @ViewBag.DateVersion)
-                @*@Html.ActionLink("Update", "UpdateSTRPRCData", "STRPRC", new { storeId = Model.SelectedStore }, new { @class = "btn btn-secondary btn-block" })*@
                 <br />
                 <a id="updateButton" href="#" class="mt-2 btn btn-secondary text-bold">
                     Update
@@ -69,7 +68,6 @@
                     $('#searchResults').html(result);
                 },
                 error: function () {
-                //    $('#searchResults').html('<p>Error retrieving search results.</p>');
                 }
             });
         });

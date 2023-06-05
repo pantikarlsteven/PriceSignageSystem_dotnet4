@@ -297,21 +297,23 @@
 
                         // Print button click event handler
                         $('#printButton').click(function () {
-
                             response.SelectedSizeId = $('#sizeDropdown').val();
                             response.SelectedTypeId = $('#typeDropdown').val();
                             response.SelectedCategoryId = $('#categoryDropdown').val();
 
-                            // Generate the URL for the DisplayReport action
-                            var url = '@Url.Action("AutoPrintReportFromAdvancePrinting", "Report")';
-                            // Serialize the response object to JSON
+                            var url = '@Url.Action("AutoPrintSingleReport", "Report")';
                             var serializedResponse = JSON.stringify(response);
 
-                            // Append the serialized response as a query parameter to the URL
-                            url += '?response=' + encodeURIComponent(serializedResponse);
-
-                            // Open the URL in a new tab or window
-                            window.open(url, '_blank');
+                            $.ajax({
+                                url: url,
+                                type: 'POST',
+                                data: { response: serializedResponse },
+                                success: function () {
+                                    $('#modalView').modal('hide');
+                                },
+                                error: function () {
+                                }
+                            });
                         });
                     }
                 });
@@ -328,8 +330,6 @@
             });
 
         });
-
-
 
         document.addEventListener("DOMContentLoaded", function () {
             var today = new Date();
@@ -394,7 +394,10 @@
                 '</div>' +
                 '</form>' +
                 '</div>' +
-                '<div class="col-6"></div>'
+                '<div class="col-6">' +
+                @*'<iframe src="@Url.Action("PreviewReport", "Report")#toolbar=0&navpanes=0&scrollbar=0&zoom=50" style="width: 100%; height: 300px;" frameborder="0"></iframe>' +*@
+                '<iframe src="@Url.Action("PreviewCrystalReport", "Report")?id=' + d.O3SKU + '#toolbar=0&navpanes=0&scrollbar=0&zoom=50" style="width: 100%; height: 300px;" frameborder="0"></iframe>' +
+                '</div>'
                 '</div>';
     }
 </script>

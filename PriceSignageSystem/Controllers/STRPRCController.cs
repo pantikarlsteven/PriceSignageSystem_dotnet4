@@ -7,6 +7,7 @@ using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -120,13 +121,13 @@ namespace PriceSignageSystem.Controllers
                 item.TypeName =   startDateFormatted == item.O3SDT ? "Save"
                                 : endDateFormatted == item.O3EDT ? "Regular"
                                 : "Save";
-                item.SizeName =   item.SelectedSizeId == 1 ? "Whole"
-                                : item.SelectedSizeId == 2 ? "Half"
-                                : item.SelectedSizeId == 3 ? "Jewelry"
-                                : item.SelectedSizeId == 4 ? "Skinny"
+                item.SizeName =   item.SizeId == 1 ? "Whole"
+                                : item.SizeId == 2 ? "Half"
+                                : item.SizeId == 3 ? "Jewelry"
+                                : item.SizeId == 4 ? "Skinny"
                                 : "Whole";
-                item.CategoryName =   item.SelectedCategoryId == 1 ? "Appliance"
-                                    : item.SelectedCategoryId == 2 ? "Non-Appliance"
+                item.CategoryName =   item.CategoryId == 1 ? "Appliance"
+                                    : item.CategoryId == 2 ? "Non-Appliance"
                                     : "Non-Appliance";
             }
 
@@ -137,6 +138,7 @@ namespace PriceSignageSystem.Controllers
         public JsonResult GetDataBySKU(decimal id)
         {
             var dto = _sTRPRCRepository.GetDataBySKU(id);
+
             dto.SizeArray = _sizeRepository.GetAllSizes().ToArray();
             dto.TypeArray = _typeRepository.GetAllTypes().ToArray();
             dto.CategoryArray = _categoryRepository.GetAllCategories().ToArray();
@@ -146,7 +148,7 @@ namespace PriceSignageSystem.Controllers
 
         public ActionResult UpdateSTRPRCData()
         {
-            var storeId = 201; // temporary
+            var storeId = int.Parse(ConfigurationManager.AppSettings["StoreID"]);
             var count = _sTRPRCRepository.UpdateSTRPRCTable(storeId);
             var data = new UserStoreDto()
             {

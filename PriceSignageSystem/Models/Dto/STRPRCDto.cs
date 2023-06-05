@@ -90,6 +90,9 @@ namespace PriceSignageSystem.Models.Dto
         public Category[] CategoryArray { get; set; }
         public string StartDateFormattedDate { get;set; }
         public string EndDateFormattedDate { get; set; }
+        public int TypeId { get; set; }
+        public int SizeId { get; set; }
+        public int CategoryId { get; set; }
 
     }
 
