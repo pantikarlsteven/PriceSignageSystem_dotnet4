@@ -11,10 +11,6 @@
 
 </head>
 <body>
-    @*@if (Model != null)
-        {
-            if (Model.O3SKU != 0)
-            {*@
     @using (Html.BeginForm("AutoPrintReport", "Report", FormMethod.Post, new { id = "reportForm" }))
     {
         @Html.HiddenFor(m => m.O3SKU)
@@ -123,28 +119,6 @@
 
         </div>
     }
-    @*}
-            else
-            {
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-auto">
-                            <p class="text-center text-muted">No data available.</p>
-                        </div>
-                    </div>
-                </div>
-            }
-        }
-        else
-        {
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-auto">
-                        <p class="text-center text-muted">No data available.</p>
-                    </div>
-                </div>
-            </div>
-        }*@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 

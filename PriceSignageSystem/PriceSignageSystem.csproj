@@ -225,6 +225,10 @@
     <Compile Include="Migrations\202305240957459_update_ItemQueueTbl.designer.cs">
       <DependentUpon>202305240957459_update_ItemQueueTbl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202306050123143_addFields_STRPRCs.cs" />
+    <Compile Include="Migrations\202306050123143_addFields_STRPRCs.designer.cs">
+      <DependentUpon>202306050123143_addFields_STRPRCs.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Constants\ReportConstants.cs" />
@@ -428,6 +432,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202305240957459_update_ItemQueueTbl.resx">
       <DependentUpon>202305240957459_update_ItemQueueTbl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202306050123143_addFields_STRPRCs.resx">
+      <DependentUpon>202306050123143_addFields_STRPRCs.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\CrystalReports\WholeReport\WholeReport_SLBrandAndSLDesc.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

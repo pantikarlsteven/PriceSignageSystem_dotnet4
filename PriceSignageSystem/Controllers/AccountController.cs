@@ -23,11 +23,8 @@ namespace PriceSignageSystem.Controllers
 
         public ActionResult Login()
         {
-            //var storelist = GetStoreList();
-
             var model = new UserStoreDto
             {
-                //StoreList = storelist,
                 User = new User()
             };
             return View(model);
@@ -46,8 +43,6 @@ namespace PriceSignageSystem.Controllers
                     if(user.IsActive == UserStatusConstants.Inactive)
                     {
                         ModelState.AddModelError("", "User is inactive.");
-
-                        //model.StoreList = GetStoreList();
                         return View(model);
                     }
                     Session["UserId"] = user.UserId;
@@ -60,7 +55,6 @@ namespace PriceSignageSystem.Controllers
                 }
             }
             
-            //model.StoreList = GetStoreList();
             return View(model);
         }
 
