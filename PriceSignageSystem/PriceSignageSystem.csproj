@@ -261,6 +261,24 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>QueueReport_STRPRCDS.xsd</DependentUpon>
     </Compile>
+    <Compile Include="Reports\CrystalReports\WholeReport\WholeReport_DLBrandAndDLDesc.cs">
+      <DependentUpon>WholeReport_DLBrandAndDLDesc.rpt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <SubType>Component</SubType>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Reports\CrystalReports\WholeReport\WholeReport_DLBrandAndSLDesc.cs">
+      <DependentUpon>WholeReport_DLBrandAndSLDesc.rpt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <SubType>Component</SubType>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Reports\CrystalReports\WholeReport\WholeReport_SLBrandAndDLDesc.cs">
+      <DependentUpon>WholeReport_SLBrandAndDLDesc.rpt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <SubType>Component</SubType>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Reports\CrystalReports\WholeReport\WholeReport_SLBrandAndSLDesc.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -429,6 +447,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202305240957459_update_ItemQueueTbl.resx">
       <DependentUpon>202305240957459_update_ItemQueueTbl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\CrystalReports\WholeReport\WholeReport_DLBrandAndDLDesc.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>WholeReport_DLBrandAndDLDesc.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\CrystalReports\WholeReport\WholeReport_DLBrandAndSLDesc.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>WholeReport_DLBrandAndSLDesc.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\CrystalReports\WholeReport\WholeReport_SLBrandAndDLDesc.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>WholeReport_SLBrandAndDLDesc.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\CrystalReports\WholeReport\WholeReport_SLBrandAndSLDesc.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
