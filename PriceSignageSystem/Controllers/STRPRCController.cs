@@ -5,6 +5,7 @@ using PriceSignageSystem.Helper;
 using PriceSignageSystem.Models.DatabaseContext;
 using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
+using PriceSignageSystem.Models.Repository;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -168,7 +169,7 @@ namespace PriceSignageSystem.Controllers
         }
 
         [HttpGet]
-        public ActionResult PrintPCASTRPRCTest(string id)
+        public ActionResult PrintPCASTRPRCTest(decimal id)
         {
             try
             {
@@ -176,42 +177,12 @@ namespace PriceSignageSystem.Controllers
                 var strReport = string.Empty;
                 using (var _db = new ApplicationDbContext())
                 {
-
-                    var stprcs = (from a in _db.STRPRCs
-                                  where a.O3SKU.ToString().ToLower() == id.ToLower()
-                                  select new STRPRCDto
-                                  {
-                                      O3SKU = a.O3SKU,
-                                      O3FNAM = a.O3FNAM,
-                                      O3IDSC = a.O3IDSC
-                                  }).First();
-
-                    //If Brand Name's characters are greater than 14
-                    if (stprcs.O3FNAM.Length > 14)
-                    {
-                        //If Description's characters are greater than 44
-                        if (stprcs.O3IDSC.Length > 44)
-                            strReport = "WholeReport_DLBrandAndDLDesc.rpt";
-                        else
-                            strReport = "WholeReport_DLBrandAndSLDesc.rpt";
-                    }
-                    //Else, Brand Name's characters are less than 14
-                    else
-                    {
-                        //If Description's characters are greater than 44
-                        if (stprcs.O3IDSC.Length > 44)
-                            strReport = "WholeReport_SLBrandAndDLDesc.rpt";
-                        else
-                            strReport = "WholeReport_SLBrandAndSLDesc.rpt";
-                    }
-
-                    var test = "HalfReport_SLBrandAndSLDesc.rpt";
-                    var strReportPath = System.Web.HttpContext.Current.Server.MapPath("~/Reports/CrystalReports/HalfReport/" + test);
+                    var test = "Dynamic_HalfReport.rpt";
+                    var strReportPath = System.Web.HttpContext.Current.Server.MapPath("~/Reports/CrystalReports/" + test);
 
                     rptH.Load(strReportPath);
-                    rptH.SetDatabaseLogon("sa", "@dm1n@8800");
-                    rptH.SetParameterValue("sku", id.ToString());
-                    rptH.SetParameterValue("user", Session["Username"].ToString());
+                    IQueueRepository qwe = new QueueRepository(new ApplicationDbContext());
+                    rptH.SetDataSource(ConversionHelper.ConvertObjectToDataTable(_sTRPRCRepository.GetDataBySKU(id)));
 
                     Stream stream = rptH.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
                     var pdfBytes = new byte[stream.Length];

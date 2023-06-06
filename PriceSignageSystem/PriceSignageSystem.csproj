@@ -239,6 +239,7 @@
     <Compile Include="Models\Dto\ReportDto.cs" />
     <Compile Include="Models\Dto\STRPRCDto.cs" />
     <Compile Include="Models\Dto\UserStoreDto.cs" />
+    <Compile Include="Models\Enum\Enums.cs" />
     <Compile Include="Models\Interface\ICategoryRepository.cs" />
     <Compile Include="Models\Interface\IQueueRepository.cs" />
     <Compile Include="Models\Interface\ISizeRepository.cs" />
@@ -265,10 +266,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>QueueReport_STRPRCDS.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Reports\CrystalReports\WholeReport\WholeReport_SLBrandAndSLDesc.cs">
+    <Compile Include="Reports\CrystalReports\Dynamic_HalfReport.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>WholeReport_SLBrandAndSLDesc.rpt</DependentUpon>
+      <DependentUpon>Dynamic_HalfReport.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\CrystalReports\Dynamic_WholeReport.cs">
@@ -444,9 +445,9 @@
     <EmbeddedResource Include="Migrations\202306050123143_addFields_STRPRCs.resx">
       <DependentUpon>202306050123143_addFields_STRPRCs.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\CrystalReports\WholeReport\WholeReport_SLBrandAndSLDesc.rpt">
+    <EmbeddedResource Include="Reports\CrystalReports\Dynamic_HalfReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>WholeReport_SLBrandAndSLDesc.cs</LastGenOutput>
+      <LastGenOutput>Dynamic_HalfReport.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\CrystalReports\Dynamic_WholeReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
