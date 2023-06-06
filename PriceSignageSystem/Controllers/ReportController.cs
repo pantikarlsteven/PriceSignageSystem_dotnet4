@@ -55,7 +55,7 @@ namespace PriceSignageSystem.Controllers
             var dataTable = ConversionHelper.ConvertObjectToDataTable(data);
 
             ReportDocument report = new ReportDocument();
-            report.Load(Server.MapPath(ReportConstants.WholeReport_SLBrandAndSLDescPath));
+            report.Load(Server.MapPath(ReportConstants.Dynamic_WholeReportPath));
             report.SetDatabaseLogon(_dbUsername, _dbPassword);
             report.SetDataSource(dataTable);
 
@@ -76,7 +76,7 @@ namespace PriceSignageSystem.Controllers
             var dataTable = ConversionHelper.ConvertObjectToDataTable(data);
 
             ReportDocument report = new ReportDocument();
-            report.Load(Server.MapPath(ReportConstants.WholeReport_SLBrandAndSLDescPath));
+            report.Load(Server.MapPath(ReportConstants.Dynamic_WholeReportPath));
 
             report.SetDatabaseLogon(_dbUsername, _dbPassword);
             report.SetDataSource(dataTable);
@@ -103,7 +103,7 @@ namespace PriceSignageSystem.Controllers
                     var dataTable = ConversionHelper.ConvertObjectToDataTable(data);
 
                     ReportDocument report = new ReportDocument();
-                    report.Load(Server.MapPath(ReportConstants.WholeReport_SLBrandAndSLDescPath));
+                    report.Load(Server.MapPath(ReportConstants.Dynamic_WholeReportPath));
                 
                     report.SetDatabaseLogon(_dbUsername, _dbPassword);
                     report.SetDataSource(dataTable);
@@ -132,21 +132,21 @@ namespace PriceSignageSystem.Controllers
             {
                 if (data.O3FNAM.Length <= 12 && data.O3IDSC.Length <= 44)
                 {
-                    reportPath = Server.MapPath(ReportConstants.WholeReport_SLBrandAndSLDescPath);
+                    reportPath = Server.MapPath(ReportConstants.Dynamic_WholeReportPath);
                 }
                 else if (data.O3FNAM.Length > 12 && data.O3IDSC.Length > 44)
                 {
-                    reportPath = Server.MapPath(ReportConstants.WholeReport_DLBrandAndDLDescPath);
+                    reportPath = Server.MapPath(ReportConstants.Dynamic_WholeReportPath);
 
                 }
                 else if (data.O3FNAM.Length <= 12 && data.O3IDSC.Length > 44)
                 {
-                    reportPath = Server.MapPath(ReportConstants.WholeReport_SLBrandAndDLDescPath);
+                    reportPath = Server.MapPath(ReportConstants.Dynamic_WholeReportPath);
 
                 }
                 else if (data.O3FNAM.Length > 12 && data.O3IDSC.Length <= 44)
                 {
-                    reportPath = Server.MapPath(ReportConstants.WholeReport_DLBrandAndSLDescPath);
+                    reportPath = Server.MapPath(ReportConstants.Dynamic_WholeReportPath);
 
                 }
             }

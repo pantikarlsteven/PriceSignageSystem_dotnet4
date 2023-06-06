@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PriceSignageSystem.Reports.CrystalReports.WholeReport {
+namespace PriceSignageSystem.Reports.CrystalReports {
     using System;
     using System.ComponentModel;
     using CrystalDecisions.Shared;
@@ -16,14 +16,14 @@ namespace PriceSignageSystem.Reports.CrystalReports.WholeReport {
     using CrystalDecisions.CrystalReports.Engine;
     
     
-    public class WholeReport_SLBrandAndDLDesc : ReportClass {
+    public class Dynamic_WholeReport : ReportClass {
         
-        public WholeReport_SLBrandAndDLDesc() {
+        public Dynamic_WholeReport() {
         }
         
         public override string ResourceName {
             get {
-                return "WholeReport_SLBrandAndDLDesc.rpt";
+                return "Dynamic_WholeReport.rpt";
             }
             set {
                 // Do nothing
@@ -41,8 +41,7 @@ namespace PriceSignageSystem.Reports.CrystalReports.WholeReport {
         
         public override string FullResourceName {
             get {
-                return "PriceSignageSystem.Reports.CrystalReports.WholeReport.WholeReport_SLBrandAndDLDes" +
-                    "c.rpt";
+                return "PriceSignageSystem.Reports.CrystalReports.Dynamic_WholeReport.rpt";
             }
             set {
                 // Do nothing
@@ -75,7 +74,7 @@ namespace PriceSignageSystem.Reports.CrystalReports.WholeReport {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section Section4 {
+        public CrystalDecisions.CrystalReports.Engine.Section DetailSection5 {
             get {
                 return this.ReportDefinition.Sections[3];
             }
@@ -83,7 +82,7 @@ namespace PriceSignageSystem.Reports.CrystalReports.WholeReport {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section Section5 {
+        public CrystalDecisions.CrystalReports.Engine.Section DetailSection4 {
             get {
                 return this.ReportDefinition.Sections[4];
             }
@@ -91,25 +90,33 @@ namespace PriceSignageSystem.Reports.CrystalReports.WholeReport {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_sku {
+        public CrystalDecisions.CrystalReports.Engine.Section DetailSection6 {
             get {
-                return this.DataDefinition.ParameterFields[0];
+                return this.ReportDefinition.Sections[5];
             }
         }
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_user {
+        public CrystalDecisions.CrystalReports.Engine.Section Section4 {
             get {
-                return this.DataDefinition.ParameterFields[1];
+                return this.ReportDefinition.Sections[6];
+            }
+        }
+        
+        [Browsable(false)]
+        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+        public CrystalDecisions.CrystalReports.Engine.Section Section5 {
+            get {
+                return this.ReportDefinition.Sections[7];
             }
         }
     }
     
     [System.Drawing.ToolboxBitmapAttribute(typeof(CrystalDecisions.Shared.ExportOptions), "report.bmp")]
-    public class CachedWholeReport_SLBrandAndDLDesc : Component, ICachedReport {
+    public class CachedDynamic_WholeReport : Component, ICachedReport {
         
-        public CachedWholeReport_SLBrandAndDLDesc() {
+        public CachedDynamic_WholeReport() {
         }
         
         [Browsable(false)]
@@ -146,7 +153,7 @@ namespace PriceSignageSystem.Reports.CrystalReports.WholeReport {
         }
         
         public virtual CrystalDecisions.CrystalReports.Engine.ReportDocument CreateReport() {
-            WholeReport_SLBrandAndDLDesc rpt = new WholeReport_SLBrandAndDLDesc();
+            Dynamic_WholeReport rpt = new Dynamic_WholeReport();
             rpt.Site = this.Site;
             return rpt;
         }

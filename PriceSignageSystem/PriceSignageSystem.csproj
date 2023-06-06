@@ -239,6 +239,7 @@
     <Compile Include="Models\Dto\ReportDto.cs" />
     <Compile Include="Models\Dto\STRPRCDto.cs" />
     <Compile Include="Models\Dto\UserStoreDto.cs" />
+    <Compile Include="Models\Enum\Enums.cs" />
     <Compile Include="Models\Interface\ICategoryRepository.cs" />
     <Compile Include="Models\Interface\IQueueRepository.cs" />
     <Compile Include="Models\Interface\ISizeRepository.cs" />
@@ -265,35 +266,17 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>QueueReport_STRPRCDS.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Reports\CrystalReports\HalfReport\HalfReport_SLBrandAndSLDesc.cs">
-      <DependentUpon>HalfReport_SLBrandAndSLDesc.rpt</DependentUpon>
+    <Compile Include="Reports\CrystalReports\Dynamic_HalfReport.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+      <DependentUpon>Dynamic_HalfReport.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Reports\CrystalReports\WholeReport\WholeReport_DLBrandAndDLDesc.cs">
+    <Compile Include="Reports\CrystalReports\Dynamic_WholeReport.cs">
+      <DependentUpon>Dynamic_WholeReport.rpt</DependentUpon>
       <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>WholeReport_DLBrandAndDLDesc.rpt</DependentUpon>
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\CrystalReports\WholeReport\WholeReport_DLBrandAndSLDesc.cs">
-      <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>WholeReport_DLBrandAndSLDesc.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\CrystalReports\WholeReport\WholeReport_SLBrandAndDLDesc.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>WholeReport_SLBrandAndDLDesc.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\CrystalReports\WholeReport\WholeReport_SLBrandAndSLDesc.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>WholeReport_SLBrandAndSLDesc.rpt</DependentUpon>
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\Report_Whole.cs">
       <AutoGen>True</AutoGen>
@@ -462,25 +445,13 @@
     <EmbeddedResource Include="Migrations\202306050123143_addFields_STRPRCs.resx">
       <DependentUpon>202306050123143_addFields_STRPRCs.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\CrystalReports\HalfReport\HalfReport_SLBrandAndSLDesc.rpt">
+    <EmbeddedResource Include="Reports\CrystalReports\Dynamic_HalfReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>HalfReport_SLBrandAndSLDesc.cs</LastGenOutput>
+      <LastGenOutput>Dynamic_HalfReport.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\CrystalReports\WholeReport\WholeReport_DLBrandAndDLDesc.rpt">
+    <EmbeddedResource Include="Reports\CrystalReports\Dynamic_WholeReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>WholeReport_DLBrandAndDLDesc.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\CrystalReports\WholeReport\WholeReport_DLBrandAndSLDesc.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>WholeReport_DLBrandAndSLDesc.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\CrystalReports\WholeReport\WholeReport_SLBrandAndDLDesc.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>WholeReport_SLBrandAndDLDesc.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\CrystalReports\WholeReport\WholeReport_SLBrandAndSLDesc.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>WholeReport_SLBrandAndSLDesc.cs</LastGenOutput>
+      <LastGenOutput>Dynamic_WholeReport.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\DynamicQueueReport_Jewelry.rdlc" />
     <EmbeddedResource Include="Reports\DynamicQueueReport_Whole.rdlc" />
