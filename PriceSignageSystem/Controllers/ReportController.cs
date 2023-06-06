@@ -24,10 +24,15 @@ namespace PriceSignageSystem.Controllers
     public class ReportController : Controller
     {
         private readonly ISTRPRCRepository _sTRPRCRepository;
-
+        private readonly string _dbUsername;
+        private readonly string _dbPassword;
+        private readonly string _printerName;
         public ReportController(ISTRPRCRepository sTRPRCRepository)
         {
             _sTRPRCRepository = sTRPRCRepository;
+            _dbUsername = ConfigurationManager.AppSettings["DbUserName"];
+            _dbPassword = ConfigurationManager.AppSettings["DbPassword"];
+            _printerName = ConfigurationManager.AppSettings["ReportPrinter"];
         }
 
         public List<STRPRCDto> GetData(decimal O3SKU)
@@ -44,50 +49,45 @@ namespace PriceSignageSystem.Controllers
 
         public ActionResult PreviewCrystalReport(string id)
         {
-            ReportDocument reportDoc = new ReportDocument();
+            var o3sku = decimal.Parse(id);
+            var data = _sTRPRCRepository.GetReportData(o3sku);
+            data.UserName = Session["Username"].ToString();
+            var dataTable = ConversionHelper.ConvertObjectToDataTable(data);
 
-            reportDoc.Load(Server.MapPath(ReportConstants.WholeReport_SLBrandAndSLDescPath));
+            ReportDocument report = new ReportDocument();
+            report.Load(Server.MapPath(ReportConstants.WholeReport_SLBrandAndSLDescPath));
+            report.SetDatabaseLogon(_dbUsername, _dbPassword);
+            report.SetDataSource(dataTable);
 
-            reportDoc.SetDatabaseLogon("sa", "@dm1n@8800");
-            reportDoc.SetParameterValue("sku", id);
-            reportDoc.SetParameterValue("user", Session["Username"].ToString());
-
-            // Export the report to PDF
-            Stream stream = reportDoc.ExportToStream(ExportFormatType.PortableDocFormat);
-
-            // Convert the PDF stream to a byte array
+            Stream stream = report.ExportToStream(ExportFormatType.PortableDocFormat);
             byte[] pdfBytes = new byte[stream.Length];
             stream.Read(pdfBytes, 0, pdfBytes.Length);
 
-            // Set the Content-Disposition header to inline, which displays the PDF in the browser
             Response.AppendHeader("Content-Disposition", "inline; filename=Report.pdf");
 
-            // Return the PDF byte array to the view
             return File(pdfBytes, "application/pdf");
         }
         [HttpPost]
         public void AutoPrintSingleReport(string response)
         {
             var model = JsonConvert.DeserializeObject<STRPRCDto>(response);
-            var printerName = ConfigurationManager.AppSettings["ReportPrinter"];
+            var data = _sTRPRCRepository.GetReportData(model.O3SKU);
+            data.UserName = Session["Username"].ToString();
+            var dataTable = ConversionHelper.ConvertObjectToDataTable(data);
 
             ReportDocument report = new ReportDocument();
             report.Load(Server.MapPath(ReportConstants.WholeReport_SLBrandAndSLDescPath));
 
-            report.SetDatabaseLogon("sa", "@dm1n@8800");
-            report.SetParameterValue("sku", model.O3SKU.ToString());
-            report.SetParameterValue("user", Session["Username"].ToString());
+            report.SetDatabaseLogon(_dbUsername, _dbPassword);
+            report.SetDataSource(dataTable);
 
             PrinterSettings printerSettings = new PrinterSettings();
-            printerSettings.PrinterName = printerName; 
-            // Print the report directly to the printer without showing the printer settings or preview
+            printerSettings.PrinterName = _printerName; 
             report.PrintOptions.PrinterName = printerSettings.PrinterName;
             report.PrintToPrinter(printerSettings, new PageSettings(), false);
 
-            // Dispose the report object after printing
             report.Close();
             report.Dispose();
-
         }
 
         [HttpPost]
@@ -97,15 +97,19 @@ namespace PriceSignageSystem.Controllers
             {
                 foreach (var rowId in selectedIds)
                 {
+                    var o3sku = decimal.Parse(rowId);
+                    var data = _sTRPRCRepository.GetReportData(o3sku);
+                    data.UserName = Session["Username"].ToString();
+                    var dataTable = ConversionHelper.ConvertObjectToDataTable(data);
+
                     ReportDocument report = new ReportDocument();
                     report.Load(Server.MapPath(ReportConstants.WholeReport_SLBrandAndSLDescPath));
-
-                    report.SetDatabaseLogon("sa", "@dm1n@8800");
-                    report.SetParameterValue("sku", rowId);
-                    report.SetParameterValue("user", Session["Username"].ToString());
+                
+                    report.SetDatabaseLogon(_dbUsername, _dbPassword);
+                    report.SetDataSource(dataTable);
 
                     PrinterSettings printerSettings = new PrinterSettings();
-                    printerSettings.PrinterName = ConfigurationManager.AppSettings["ReportPrinter"];
+                    printerSettings.PrinterName = _printerName;
                     report.PrintOptions.PrinterName = printerSettings.PrinterName;
                     report.PrintToPrinter(printerSettings, new PageSettings(), false);
                 }
@@ -114,6 +118,53 @@ namespace PriceSignageSystem.Controllers
             {
                 // Handle the case when no row IDs are selected
             }
+        }
+
+        [HttpPost]
+        public ActionResult AutoPrintOnDemandReport(STRPRCDto model)
+        {
+            var data = _sTRPRCRepository.GetReportData(model.O3SKU);
+            data.UserName = Session["Username"].ToString();
+            var dataTable = ConversionHelper.ConvertObjectToDataTable(data);
+            var reportPath = "";
+
+            if (model.SelectedSizeId == ReportConstants.Size.Whole)
+            {
+                if (data.O3FNAM.Length <= 12 && data.O3IDSC.Length <= 44)
+                {
+                    reportPath = Server.MapPath(ReportConstants.WholeReport_SLBrandAndSLDescPath);
+                }
+                else if (data.O3FNAM.Length > 12 && data.O3IDSC.Length > 44)
+                {
+                    reportPath = Server.MapPath(ReportConstants.WholeReport_DLBrandAndDLDescPath);
+
+                }
+                else if (data.O3FNAM.Length <= 12 && data.O3IDSC.Length > 44)
+                {
+                    reportPath = Server.MapPath(ReportConstants.WholeReport_SLBrandAndDLDescPath);
+
+                }
+                else if (data.O3FNAM.Length > 12 && data.O3IDSC.Length <= 44)
+                {
+                    reportPath = Server.MapPath(ReportConstants.WholeReport_DLBrandAndSLDescPath);
+
+                }
+            }
+
+            ReportDocument report = new ReportDocument();
+            report.Load(reportPath);
+            report.SetDatabaseLogon(_dbUsername, _dbPassword);
+            report.SetDataSource(dataTable);
+
+            PrinterSettings printerSettings = new PrinterSettings();
+            printerSettings.PrinterName = _printerName;
+            report.PrintOptions.PrinterName = printerSettings.PrinterName;
+            report.PrintToPrinter(printerSettings, new PageSettings(), false);
+
+            report.Close();
+            report.Dispose();
+
+            return RedirectToAction("Index", "STRPRC");
         }
 
         #region FOR RDLC REPORT

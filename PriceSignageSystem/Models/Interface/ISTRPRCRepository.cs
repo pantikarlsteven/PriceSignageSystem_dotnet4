@@ -19,5 +19,6 @@ namespace PriceSignageSystem.Models.Interface
         DateTime GetLatestUpdate();
         int UpdateSTRPRCTable(int storeId);
         CountryDto GetCountryImg(string country);
+        ReportDto GetReportData(decimal O3SKU);
     }
 }

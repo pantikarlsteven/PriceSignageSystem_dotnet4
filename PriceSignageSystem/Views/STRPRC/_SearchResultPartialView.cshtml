@@ -11,7 +11,7 @@
 
 </head>
 <body>
-    @using (Html.BeginForm("AutoPrintReport", "Report", FormMethod.Post, new { id = "reportForm" }))
+    @using (Html.BeginForm("AutoPrintOnDemandReport", "Report", FormMethod.Post))
     {
         @Html.HiddenFor(m => m.O3SKU)
         <div class="container">
@@ -109,7 +109,8 @@
 
                     <div class="row">
                         <div class="col text-center">
-                            <button type="button" class="btn btn-primary" onclick="openReportInNewTab()">Print</button>
+                            <input type="submit" class="btn btn-primary" value="Print">
+                            @*<button type="button" class="btn btn-primary" value="submit">Print</button>*@
                             <button type="button" class="queuebtn btn btn-secondary">Queue</button>
                             <button type="button" class="qListbtn btn btn-success" @*onclick="openQueueReportInNewTab()"*@>Print Queue</button>
                         </div>
@@ -125,11 +126,11 @@
 </body>
 </html>
 <script>
-    function openReportInNewTab() {
-        var form = document.getElementById('reportForm');
-        form.target = '_blank';
-        form.submit();
-    }
+    //function openReportInNewTab() {
+    //    var form = document.getElementById('reportForm');
+    //    form.target = '_blank';
+    //    form.submit();
+    //}
 
     function openQueueReportInNewTab() {
         var url = '/Queue/PrintQueueList';

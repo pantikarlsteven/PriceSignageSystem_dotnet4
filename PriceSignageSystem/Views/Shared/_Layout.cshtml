@@ -78,6 +78,10 @@
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     @*<a href="@Url.Action("SearchByDate","STRPRC")" class="text-bold nav-link">PCA</a>*@
+                    <a href="@Url.Action("Logout","Account")" class="nav-link text-red">
+                        <i class="bi bi-box-arrow-left mr-2"></i>
+                        Logout
+                    </a>
                 </li>
             </ul>
 
@@ -98,10 +102,6 @@
                     <div class="">
                         <p class="text-bold text-white d-block mb-0">@username</p>
                     </div>
-                    <a href="@Url.Action("Logout","Account")" class="nav-link">
-                        <i class="bi bi-box-arrow-left mr-2"></i>
-                        Logout
-                    </a>
                 </div>
                 <hr class="bg-white">
 

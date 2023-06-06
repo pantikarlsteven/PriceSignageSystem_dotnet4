@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 
@@ -17,6 +18,9 @@ namespace PriceSignageSystem.Models.Constants
         public const string DynamicQueueReportPath_Jewelry = "~/Reports/DynamicQueueReport_Jewelry.rdlc";
 
         public const string WholeReport_SLBrandAndSLDescPath = "~/Reports/CrystalReports/WholeReport/WholeReport_SLBrandAndSLDesc.rpt";
+        public const string WholeReport_DLBrandAndDLDescPath = "~/Reports/CrystalReports/WholeReport/WholeReport_DLBrandAndDLDesc.rpt";
+        public const string WholeReport_SLBrandAndDLDescPath = "~/Reports/CrystalReports/WholeReport/WholeReport_SLBrandAndDLDesc.rpt";
+        public const string WholeReport_DLBrandAndSLDescPath = "~/Reports/CrystalReports/WholeReport/WholeReport_DLBrandAndSLDesc.rpt";
 
         public static class Size
         {
