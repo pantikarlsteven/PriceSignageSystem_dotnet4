@@ -72,7 +72,10 @@ namespace PriceSignageSystem.Controllers
         {
             var model = JsonConvert.DeserializeObject<STRPRCDto>(response);
             var data = _sTRPRCRepository.GetReportData(model.O3SKU);
-            data.UserName = Session["Username"].ToString();
+                data.UserName = Session["Username"].ToString();
+                data.TypeId = model.SelectedTypeId;
+                data.SizeId = model.SelectedSizeId;
+                data.CategoryId = model.SelectedCategoryId;
             var dataTable = ConversionHelper.ConvertObjectToDataTable(data);
 
             ReportDocument report = new ReportDocument();

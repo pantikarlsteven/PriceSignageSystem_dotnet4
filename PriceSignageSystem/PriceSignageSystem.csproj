@@ -295,12 +295,6 @@
       <DependentUpon>WholeReport_SLBrandAndSLDesc.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Reports\Report_Whole.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Report_Whole.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="Datasets\STRPRCDS.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -489,13 +483,6 @@
     <EmbeddedResource Include="Reports\ApplianceReport_Skinny.rdlc" />
     <EmbeddedResource Include="Reports\ApplianceReport.rdlc" />
     <EmbeddedResource Include="Reports\ApplianceReport_Half.rdlc" />
-    <Content Include="Reports\Report_Whole123.rdlc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <EmbeddedResource Include="Reports\Report_Whole.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>Report_Whole.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
