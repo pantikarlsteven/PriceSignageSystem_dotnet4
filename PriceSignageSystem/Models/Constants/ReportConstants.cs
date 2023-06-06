@@ -8,15 +8,6 @@ namespace PriceSignageSystem.Models.Constants
 {
     public static class ReportConstants
     {
-        public const string ApplianceReportPath = "~/Reports/ApplianceReport.rdlc";
-        public const string ApplianceReportPath_Half = "~/Reports/ApplianceReport_Half.rdlc";
-        public const string ApplianceReportPath_Jewelry = "~/Reports/ApplianceReport_Jewelry.rdlc";
-        public const string ApplianceReportPath_Skinny = "~/Reports/ApplianceReport_Skinny.rdlc";
-
-        public const string DynamicQueueReportPath = "~/Reports/DynamicQueueReport_Whole.rdlc";
-        public const string DynamicQueueReportPath_Half = "~/Reports/DynamicQueueReport_Half.rdlc";
-        public const string DynamicQueueReportPath_Jewelry = "~/Reports/DynamicQueueReport_Jewelry.rdlc";
-
         public const string Dynamic_WholeReportPath = "~/Reports/CrystalReports/Dynamic_WholeReport.rpt";
         public const string Dynamic_HalfReportPath = "~/Reports/CrystalReports/Dynamic_HalfReport.rpt";
         public const string Dynamic_JewelryReportPath = "~/Reports/CrystalReports/Dynamic_JewelryReport.rpt";

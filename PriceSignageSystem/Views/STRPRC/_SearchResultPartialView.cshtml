@@ -190,7 +190,6 @@
                     url: '@Url.Action("GetAllSizes", "STRPRC")' ,
                     type: 'POST',
                     success: function (response) {
-                        debugger
                         // Create the dropdown options
                         var sizeOptions = '';
 
@@ -248,11 +247,22 @@
                            var selectedSize = $('#sizeDropdown').val();
                            var url = '@Url.Action("PrintQueueList", "Queue")';
 
-                           // Append the selected size as a query parameter
-                           url += '?size=' + encodeURIComponent(selectedSize);
+                            $.ajax({
+                                url: url,
+                                type: 'POST',
+                                data: { sizeId: selectedSize },
+                                success: function (response) {
+                                    if (response.success) {
+                                        $('#modalView').modal('hide');
+                                    } else {
+                                        $('#modalView').modal('hide');
+                                        alert("Please queue a product first.");
+                                    }
+                                },
+                                error: function (xhr, status, error) {
+                                }
+                            });
 
-
-                            window.open(url, '_blank');
                         });
                     }
                 });

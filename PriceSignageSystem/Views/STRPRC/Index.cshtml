@@ -5,21 +5,27 @@
 
 <div class=" content-wrapper bg-white px-3">
     <br />
-<div class="content">
-    <div class="  overlay-wrapper " id="loadingContainer" style=" display:none; ">
-        <div class=" overlay" style="background-color: rgba(0, 0, 0, 0.59); z-index: 99; ">
-            <img class="" src="~/Content/Images/loading.gif" alt="Loading" style="max-width:350px; " />
+    <div class="content">
+        <div class="  overlay-wrapper " id="loadingContainer" style=" display:none; ">
+            <div class=" overlay" style="background-color: rgba(0, 0, 0, 0.59); z-index: 99; ">
+                <img class="" src="~/Content/Images/loading.gif" alt="Loading" style="max-width:350px; " />
+            </div>
         </div>
     </div>
-</div>
- 
+    @if (!String.IsNullOrEmpty(ViewBag.ErrorMessage))
+    {
+        <div class="alert text-white text-bold" style="background-color: #8d0303;">
+            <center>
+                <h3>@ViewBag.ErrorMessage</h3>
+            </center>
+        </div>
+    }
     @if (ViewBag.IsDateLatest == true)
     {
         <div class="card card-body bg-primarydark text-white text-bold">
             <center>
                 The current data is as of <u>@ViewBag.DateVersion</u>
-                <br />
-                <a id="updateButton" href="#" class="mt-2 btn btn-secondary text-bold">
+                <a id="updateButton" href="#" class="ml-2 mt-2 btn btn-secondary text-bold">
                     Update
                 </a>
             </center>
@@ -30,8 +36,7 @@
         <div class="alert text-white text-bold" style="background-color: #8d0303;">
             <center>
                 The current data is as of <u>@ViewBag.DateVersion</u>
-                <br />
-                <a id="updateButton" href="#" class="mt-2 btn btn-secondary text-bold ">
+                <a id="updateButton" href="#" class="ml-2 mt-2 btn btn-secondary text-bold ">
                     Update
                 </a>
             </center>
@@ -76,19 +81,19 @@
             $("#loadingContainer").show();
 
             $.ajax({
-                url: "/STRPRC/UpdateSTRPRCData", 
-                type: "POST", 
+                url: "/STRPRC/UpdateSTRPRCData",
+                type: "POST",
                 success: function (response) {
-                    
-                    window.location.href = "/STRPRC/Index"; 
+
+                    window.location.href = "/STRPRC/Index";
                 },
                 error: function (error) {
-        
+
                     $("#loadingContainer").hide();
                 }
             });
 
-            return false; // Prevent the default link behavior
+            return false;
         });
     });
 </script>

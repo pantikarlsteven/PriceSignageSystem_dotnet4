@@ -239,7 +239,6 @@
     <Compile Include="Models\Dto\ReportDto.cs" />
     <Compile Include="Models\Dto\STRPRCDto.cs" />
     <Compile Include="Models\Dto\UserStoreDto.cs" />
-    <Compile Include="Models\Enum\Enums.cs" />
     <Compile Include="Models\Interface\ICategoryRepository.cs" />
     <Compile Include="Models\Interface\IQueueRepository.cs" />
     <Compile Include="Models\Interface\ISizeRepository.cs" />

@@ -50,5 +50,6 @@ namespace PriceSignageSystem.Models.Dto
         public string Status { get; set; }
         public string iatrb3 { get; set; }
         public byte[] country_img { get; set; }
+        public int ItemQueueId { get; set; }
     }
 }

@@ -27,7 +27,7 @@ namespace PriceSignageSystem.Models.Repository
             record.CategoryId = model.SelectedCategoryId;
             record.UserName = (string)HttpContext.Current.Session["Username"];
             record.Status = ReportConstants.Status.InQueue;
-            record.DateCreated = DateTime.Today;
+            record.DateCreated = DateTime.Now;
 
             var data =  _db.ItemQueues.Add(record);
             _db.SaveChanges();
@@ -85,7 +85,8 @@ namespace PriceSignageSystem.Models.Repository
                             CategoryId = a.CategoryId,
                             Status = a.Status,
                             iatrb3 = c.iatrb3,
-                            country_img = c.country_img
+                            country_img = c.country_img,
+                            ItemQueueId = a.Id
                         }).ToList();
                        
                 
@@ -93,6 +94,17 @@ namespace PriceSignageSystem.Models.Repository
                 //_db.ItemQueues.Where(a => a.UserName == username && a.Status == ReportConstants.Status.InQueue).ToList();
 
             return data;
+        }
+
+        public void UpdateStatus(IEnumerable<ReportDto> data)
+        {
+            foreach(var item in data)
+            {
+                var model = _db.ItemQueues.Where(a => a.Id == item.ItemQueueId).FirstOrDefault();
+                model.Status = ReportConstants.Status.Printed;
+                model.DateUpdated = DateTime.Now;
+            }
+            _db.SaveChanges();
         }
     }
 }

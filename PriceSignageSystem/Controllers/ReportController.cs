@@ -133,25 +133,11 @@ namespace PriceSignageSystem.Controllers
 
             if (model.SelectedSizeId == ReportConstants.Size.Whole)
             {
-                if (data.O3FNAM.Length <= 12 && data.O3IDSC.Length <= 44)
-                {
-                    reportPath = Server.MapPath(ReportConstants.Dynamic_WholeReportPath);
-                }
-                else if (data.O3FNAM.Length > 12 && data.O3IDSC.Length > 44)
-                {
-                    reportPath = Server.MapPath(ReportConstants.Dynamic_WholeReportPath);
-
-                }
-                else if (data.O3FNAM.Length <= 12 && data.O3IDSC.Length > 44)
-                {
-                    reportPath = Server.MapPath(ReportConstants.Dynamic_WholeReportPath);
-
-                }
-                else if (data.O3FNAM.Length > 12 && data.O3IDSC.Length <= 44)
-                {
-                    reportPath = Server.MapPath(ReportConstants.Dynamic_WholeReportPath);
-
-                }
+                reportPath = Server.MapPath(ReportConstants.Dynamic_WholeReportPath);
+            }
+            else if (model.SelectedSizeId == ReportConstants.Size.Half)
+            {
+                reportPath = Server.MapPath(ReportConstants.Dynamic_HalfReportPath);
             }
 
             ReportDocument report = new ReportDocument();
@@ -179,22 +165,22 @@ namespace PriceSignageSystem.Controllers
 
             var reportPath = "";
 
-            if (model.SelectedSizeId == ReportConstants.Size.Whole)
-            {
-                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath);
-            }
-            else if (model.SelectedSizeId == ReportConstants.Size.Half)
-            {
-                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Half);
-            }
-            else if (model.SelectedSizeId == ReportConstants.Size.Jewelry)
-            {
-                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Jewelry);
-            }
-            else if (model.SelectedSizeId == ReportConstants.Size.Skinny)
-            {
-                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Skinny);
-            }
+            //if (model.SelectedSizeId == ReportConstants.Size.Whole)
+            //{
+            //    reportPath = Server.MapPath(ReportConstants.ApplianceReportPath);
+            //}
+            //else if (model.SelectedSizeId == ReportConstants.Size.Half)
+            //{
+            //    reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Half);
+            //}
+            //else if (model.SelectedSizeId == ReportConstants.Size.Jewelry)
+            //{
+            //    reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Jewelry);
+            //}
+            //else if (model.SelectedSizeId == ReportConstants.Size.Skinny)
+            //{
+            //    reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Skinny);
+            //}
 
             var localReport = new LocalReport();
             localReport.ReportPath = reportPath;
@@ -263,22 +249,22 @@ namespace PriceSignageSystem.Controllers
 
             var reportPath = "";
 
-            if (model.SelectedSizeId == ReportConstants.Size.Whole)
-            {
-                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath);
-            }
-            else if (model.SelectedSizeId == ReportConstants.Size.Half)
-            {
-                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Half);
-            }
-            else if (model.SelectedSizeId == ReportConstants.Size.Jewelry)
-            {
-                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Jewelry);
-            }
-            else if (model.SelectedSizeId == ReportConstants.Size.Skinny)
-            {
-                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Skinny);
-            }
+            //if (model.SelectedSizeId == ReportConstants.Size.Whole)
+            //{
+            //    reportPath = Server.MapPath(ReportConstants.ApplianceReportPath);
+            //}
+            //else if (model.SelectedSizeId == ReportConstants.Size.Half)
+            //{
+            //    reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Half);
+            //}
+            //else if (model.SelectedSizeId == ReportConstants.Size.Jewelry)
+            //{
+            //    reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Jewelry);
+            //}
+            //else if (model.SelectedSizeId == ReportConstants.Size.Skinny)
+            //{
+            //    reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Skinny);
+            //}
 
             var localReport = new LocalReport();
             localReport.ReportPath = reportPath;
@@ -377,22 +363,22 @@ namespace PriceSignageSystem.Controllers
 
             var reportPath = "";
 
-            if (model.SelectedSizeId == ReportConstants.Size.Whole)
-            {
-                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath);
-            }
-            else if (model.SelectedSizeId == ReportConstants.Size.Half)
-            {
-                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Half);
-            }
-            else if (model.SelectedSizeId == ReportConstants.Size.Jewelry)
-            {
-                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Jewelry);
-            }
-            else if (model.SelectedSizeId == ReportConstants.Size.Skinny)
-            {
-                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Skinny);
-            }
+            //if (model.SelectedSizeId == ReportConstants.Size.Whole)
+            //{
+            //    reportPath = Server.MapPath(ReportConstants.ApplianceReportPath);
+            //}
+            //else if (model.SelectedSizeId == ReportConstants.Size.Half)
+            //{
+            //    reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Half);
+            //}
+            //else if (model.SelectedSizeId == ReportConstants.Size.Jewelry)
+            //{
+            //    reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Jewelry);
+            //}
+            //else if (model.SelectedSizeId == ReportConstants.Size.Skinny)
+            //{
+            //    reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Skinny);
+            //}
 
             var localReport = new LocalReport();
             localReport.ReportPath = reportPath;
@@ -457,22 +443,22 @@ namespace PriceSignageSystem.Controllers
             var countryImgData = new CountryDto();
             var reportPath = "";
 
-            if (dto.SelectedSizeId == ReportConstants.Size.Whole)
-            {
-                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath);
-            }
-            else if (dto.SelectedSizeId == ReportConstants.Size.Half)
-            {
-                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Half);
-            }
-            else if (dto.SelectedSizeId == ReportConstants.Size.Jewelry)
-            {
-                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Jewelry);
-            }
-            else if (dto.SelectedSizeId == ReportConstants.Size.Skinny)
-            {
-                reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Skinny);
-            }
+            //if (dto.SelectedSizeId == ReportConstants.Size.Whole)
+            //{
+            //    reportPath = Server.MapPath(ReportConstants.ApplianceReportPath);
+            //}
+            //else if (dto.SelectedSizeId == ReportConstants.Size.Half)
+            //{
+            //    reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Half);
+            //}
+            //else if (dto.SelectedSizeId == ReportConstants.Size.Jewelry)
+            //{
+            //    reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Jewelry);
+            //}
+            //else if (dto.SelectedSizeId == ReportConstants.Size.Skinny)
+            //{
+            //    reportPath = Server.MapPath(ReportConstants.ApplianceReportPath_Skinny);
+            //}
 
             var localReport = new LocalReport();
             localReport.ReportPath = reportPath;
