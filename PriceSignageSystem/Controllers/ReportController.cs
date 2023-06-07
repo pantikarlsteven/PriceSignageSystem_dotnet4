@@ -4,6 +4,7 @@ using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.parser;
 using Microsoft.Reporting.WebForms;
 using Newtonsoft.Json;
+using PriceSignageSystem.Code;
 using PriceSignageSystem.Helper;
 using PriceSignageSystem.Models.Constants;
 using PriceSignageSystem.Models.Dto;
@@ -91,6 +92,10 @@ namespace PriceSignageSystem.Controllers
             {
                 reportPath = Server.MapPath(ReportConstants.Dynamic_SkinnyReportPath);
             }
+            else if (model.SelectedSizeId == ReportConstants.Size.Jewelry)
+            {
+                reportPath = Server.MapPath(ReportConstants.Dynamic_JewelryReportPath);
+            }
 
             ReportDocument report = new ReportDocument();
             report.Load(reportPath);
@@ -100,7 +105,7 @@ namespace PriceSignageSystem.Controllers
 
             PrinterSettings printerSettings = new PrinterSettings();
             printerSettings.PrinterName = _printerName; 
-            report.PrintOptions.PrinterName = printerSettings.PrinterName;
+            report.PrintOptions.PrinterName = _printerName;
             report.PrintToPrinter(1, true, 0, 0);
 
             report.Close();
@@ -158,37 +163,55 @@ namespace PriceSignageSystem.Controllers
         [HttpPost]
         public ActionResult AutoPrintOnDemandReport(STRPRCDto model)
         {
-            var data = _sTRPRCRepository.GetReportData(model.O3SKU);
-            data.UserName = Session["Username"].ToString();
-            var dataTable = ConversionHelper.ConvertObjectToDataTable(data);
-            var reportPath = "";
-
-            if (model.SelectedSizeId == ReportConstants.Size.Whole)
+            try
             {
-                reportPath = Server.MapPath(ReportConstants.Dynamic_WholeReportPath);
+                Logs.WriteToFile("test1");
+                var data = _sTRPRCRepository.GetReportData(model.O3SKU);
+                data.UserName = Session["Username"].ToString();
+                var dataTable = ConversionHelper.ConvertObjectToDataTable(data);
+                var reportPath = "";
+
+                Logs.WriteToFile("test2");
+                if (model.SelectedSizeId == ReportConstants.Size.Whole)
+                {
+                    reportPath = Server.MapPath(ReportConstants.Dynamic_WholeReportPath);
+                }
+                else if (model.SelectedSizeId == ReportConstants.Size.Half)
+                {
+                    reportPath = Server.MapPath(ReportConstants.Dynamic_HalfReportPath);
+                }
+                else if (model.SelectedSizeId == ReportConstants.Size.Skinny)
+                {
+                    reportPath = Server.MapPath(ReportConstants.Dynamic_SkinnyReportPath);
+                }
+                else if (model.SelectedSizeId == ReportConstants.Size.Jewelry)
+                {
+                    reportPath = Server.MapPath(ReportConstants.Dynamic_JewelryReportPath);
+                }
+
+                Logs.WriteToFile("test3");
+                ReportDocument report = new ReportDocument();
+                report.Load(reportPath);
+                //report.SetDatabaseLogon(_dbUsername, _dbPassword);
+                report.SetDataSource(dataTable);
+
+                Logs.WriteToFile("test4");
+                PrinterSettings printerSettings = new PrinterSettings();
+                //printerSettings.PrinterName = _printerName;
+                report.PrintOptions.PrinterName = _printerName;
+                report.PrintToPrinter(1, true, 0, 0);
+
+                Logs.WriteToFile("test5");
+                report.Close();
+                report.Dispose();
+                Logs.WriteToFile("test6");
+
             }
-            else if (model.SelectedSizeId == ReportConstants.Size.Half)
+            catch (Exception ex)
             {
-                reportPath = Server.MapPath(ReportConstants.Dynamic_HalfReportPath);
+                Logs.WriteToFile(ex.InnerException.Message);
+                Logs.WriteToFile(ex.Message);
             }
-            else if (model.SelectedSizeId == ReportConstants.Size.Skinny)
-            {
-                reportPath = Server.MapPath(ReportConstants.Dynamic_SkinnyReportPath);
-            }
-
-            ReportDocument report = new ReportDocument();
-            report.Load(reportPath);
-            report.SetDatabaseLogon(_dbUsername, _dbPassword);
-            report.SetDataSource(dataTable);
-
-            PrinterSettings printerSettings = new PrinterSettings();
-            printerSettings.PrinterName = _printerName;
-            report.PrintOptions.PrinterName = printerSettings.PrinterName;
-            report.PrintToPrinter(printerSettings, new PageSettings(), false);
-
-            report.Close();
-            report.Dispose();
-
             return RedirectToAction("Index", "STRPRC");
         }
 
