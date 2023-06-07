@@ -77,9 +77,23 @@ namespace PriceSignageSystem.Controllers
                 data.SizeId = model.SelectedSizeId;
                 data.CategoryId = model.SelectedCategoryId;
             var dataTable = ConversionHelper.ConvertObjectToDataTable(data);
+            var reportPath = "";
+
+            if (model.SelectedSizeId == ReportConstants.Size.Whole)
+            {
+                reportPath = Server.MapPath(ReportConstants.Dynamic_WholeReportPath);
+            }
+            else if (model.SelectedSizeId == ReportConstants.Size.Half)
+            {
+                reportPath = Server.MapPath(ReportConstants.Dynamic_HalfReportPath);
+            }
+            else if (model.SelectedSizeId == ReportConstants.Size.Skinny)
+            {
+                reportPath = Server.MapPath(ReportConstants.Dynamic_SkinnyReportPath);
+            }
 
             ReportDocument report = new ReportDocument();
-            report.Load(Server.MapPath(ReportConstants.Dynamic_WholeReportPath));
+            report.Load(reportPath);
 
             report.SetDatabaseLogon(_dbUsername, _dbPassword);
             report.SetDataSource(dataTable);
@@ -87,7 +101,8 @@ namespace PriceSignageSystem.Controllers
             PrinterSettings printerSettings = new PrinterSettings();
             printerSettings.PrinterName = _printerName; 
             report.PrintOptions.PrinterName = printerSettings.PrinterName;
-            report.PrintToPrinter(printerSettings, new PageSettings(), false);
+
+            report.PrintToPrinter(1, true, 0, 0);
 
             report.Close();
             report.Dispose();
@@ -106,6 +121,7 @@ namespace PriceSignageSystem.Controllers
                     var dataTable = ConversionHelper.ConvertObjectToDataTable(data);
 
                     ReportDocument report = new ReportDocument();
+
                     report.Load(Server.MapPath(ReportConstants.Dynamic_WholeReportPath));
                 
                     report.SetDatabaseLogon(_dbUsername, _dbPassword);
@@ -138,6 +154,10 @@ namespace PriceSignageSystem.Controllers
             else if (model.SelectedSizeId == ReportConstants.Size.Half)
             {
                 reportPath = Server.MapPath(ReportConstants.Dynamic_HalfReportPath);
+            }
+            else if (model.SelectedSizeId == ReportConstants.Size.Skinny)
+            {
+                reportPath = Server.MapPath(ReportConstants.Dynamic_SkinnyReportPath);
             }
 
             ReportDocument report = new ReportDocument();
