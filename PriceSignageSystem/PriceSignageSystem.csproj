@@ -271,6 +271,12 @@
       <DependentUpon>Dynamic_HalfReport.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Reports\CrystalReports\Dynamic_JewelryReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Dynamic_JewelryReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Reports\CrystalReports\Dynamic_SkinnyReport.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -447,6 +453,10 @@
     <EmbeddedResource Include="Reports\CrystalReports\Dynamic_HalfReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Dynamic_HalfReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\CrystalReports\Dynamic_JewelryReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Dynamic_JewelryReport.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\CrystalReports\Dynamic_SkinnyReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
