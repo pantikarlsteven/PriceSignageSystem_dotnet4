@@ -117,42 +117,46 @@ namespace PriceSignageSystem.Controllers
         {
             if (selectedIds != null && selectedIds.Length > 0)
             {
+                var reportDto = new ReportDto();
+                var printList = new List<ReportDto>();
+
                 foreach (var rowId in selectedIds)
                 {
                     var o3sku = decimal.Parse(rowId);
-                    var data = _sTRPRCRepository.GetReportData(o3sku);
-                    data.UserName = Session["Username"].ToString();
-                    var dataTable = ConversionHelper.ConvertObjectToDataTable(data);
-                    var reportPath = string.Empty;
+                    reportDto = _sTRPRCRepository.GetReportData(o3sku);
+                    reportDto.UserName = Session["Username"].ToString();
 
-                    if (sizeId == ReportConstants.Size.Whole)
-                    {
-                        reportPath = Server.MapPath(ReportConstants.Dynamic_WholeReportPath);
-                    }
-                    else if (sizeId == ReportConstants.Size.Half)
-                    {
-                        reportPath = Server.MapPath(ReportConstants.Dynamic_HalfReportPath);
-                    }
-                    else if (sizeId == ReportConstants.Size.Skinny)
-                    {
-                        reportPath = Server.MapPath(ReportConstants.Dynamic_SkinnyReportPath);
-                    }
-                    else if (sizeId == ReportConstants.Size.Jewelry)
-                    {
-                        reportPath = Server.MapPath(ReportConstants.Dynamic_JewelryReportPath);
-                    }
-
-                    ReportDocument report = new ReportDocument();
-                    report.Load(reportPath);
-                
-                    report.SetDatabaseLogon(_dbUsername, _dbPassword);
-                    report.SetDataSource(dataTable);
-
-                    PrinterSettings printerSettings = new PrinterSettings();
-                    printerSettings.PrinterName = _printerName;
-                    report.PrintOptions.PrinterName = printerSettings.PrinterName;
-                    report.PrintToPrinter(1, true, 0, 0);
+                    printList.Add(reportDto);
                 }
+
+                var dataTable = ConversionHelper.ConvertListToDataTable(printList);
+                var reportPath = string.Empty;
+
+                if (sizeId == ReportConstants.Size.Whole)
+                {
+                    reportPath = Server.MapPath(ReportConstants.Dynamic_WholeReportPath);
+                }
+                else if (sizeId == ReportConstants.Size.Half)
+                {
+                    reportPath = Server.MapPath(ReportConstants.Dynamic_HalfReportPath);
+                }
+                else if (sizeId == ReportConstants.Size.Skinny)
+                {
+                    reportPath = Server.MapPath(ReportConstants.Dynamic_SkinnyReportPath);
+                }
+                else if (sizeId == ReportConstants.Size.Jewelry)
+                {
+                    reportPath = Server.MapPath(ReportConstants.Dynamic_JewelryReportPath);
+                }
+
+                ReportDocument report = new ReportDocument();
+                report.Load(reportPath);
+                report.SetDataSource(dataTable);
+
+                PrinterSettings printerSettings = new PrinterSettings();
+                printerSettings.PrinterName = _printerName;
+                report.PrintOptions.PrinterName = printerSettings.PrinterName;
+                report.PrintToPrinter(1, true, 0, 0);
             }
             else
             {
