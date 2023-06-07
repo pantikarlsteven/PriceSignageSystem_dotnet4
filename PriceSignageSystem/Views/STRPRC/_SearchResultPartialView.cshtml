@@ -256,7 +256,28 @@
                                         $('#modalView').modal('hide');
                                     } else {
                                         $('#modalView').modal('hide');
-                                        alert("Please queue a product first.");
+                                        // Show success modal
+                                        var modalHtml = '<div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">';
+                                        modalHtml += '<div class="modal-dialog" role="document">';
+                                        modalHtml += '<div class="modal-content">';
+                                        modalHtml += '<div class="modal-header">';
+                                        modalHtml += '<h5 class="modal-title" id="errorModalLabel">Error!</h5>';
+                                        modalHtml += '<button type="button" class="close" data-dismiss="modal" aria-label="Close">';
+                                        modalHtml += '<span aria-hidden="true">&times;</span>';
+                                        modalHtml += '</button>';
+                                        modalHtml += '</div>';
+                                        modalHtml += '<div class="modal-body">';
+                                        modalHtml += 'PLEASE QUEUE A PRODUCT FIRST.';
+                                        modalHtml += '</div>';
+                                        modalHtml += '<div class="modal-footer">';
+                                        modalHtml += '<button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>';
+                                        modalHtml += '</div>';
+                                        modalHtml += '</div>';
+                                        modalHtml += '</div>';
+                                        modalHtml += '</div>';
+
+                                        $('body').append(modalHtml);
+                                        $('#errorModal').modal('show');
                                     }
                                 },
                                 error: function (xhr, status, error) {

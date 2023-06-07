@@ -47,7 +47,7 @@ namespace PriceSignageSystem.Controllers
                     }
                     Session["UserId"] = user.UserId;
                     Session["Username"] = user.UserName;
-                    return RedirectToAction("SearchByDate", "STRPRC", model);
+                    return RedirectToAction("SearchByDate", "STRPRC");
                 }
                 else
                 {
