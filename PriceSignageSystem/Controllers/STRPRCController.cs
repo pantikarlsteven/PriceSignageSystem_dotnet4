@@ -148,6 +148,29 @@ namespace PriceSignageSystem.Controllers
 
             return Json(dto);
         }
+        //[HttpPost]
+        //public JsonResult GetDataBySelectedSKU(string[] selectedRowIds)
+        //{
+        //    STRPRCDto[] dataArray = new STRPRCDto[selectedRowIds.Length];
+
+        //    if (selectedRowIds != null && selectedRowIds.Length > 0)
+        //    {
+        //        for (var a = 0; a < selectedRowIds.Length; a++)
+        //        {
+        //            var o3sku = decimal.Parse(selectedRowIds[a]);
+        //            dataArray[a] = _sTRPRCRepository.GetDataBySKU(o3sku);
+        //            dataArray[a].SizeArray = _sizeRepository.GetAllSizes().ToArray();
+        //            dataArray[a].TypeArray = _typeRepository.GetAllTypes().ToArray();
+        //            dataArray[a].CategoryArray = _categoryRepository.GetAllCategories().ToArray();
+        //        }
+        //    }
+        //    else
+        //    {
+        //        // Handle the case when no row IDs are selected
+        //    }
+        //    return Json(dataArray);
+        //}
+
 
         public ActionResult UpdateSTRPRCData()
         {

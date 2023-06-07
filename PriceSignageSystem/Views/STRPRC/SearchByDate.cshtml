@@ -28,7 +28,7 @@
 <body>
     <div class="content-wrapper bg-white px-3">
         <br />
-        <div class="row ">
+        <div class="row">
             <div class="card elevation-3 px-0 ">
                 <div class="card-header bg-primary1 text-white">
                     <h3 class="card-title">PCA</h3>
@@ -112,8 +112,7 @@
                         if (table !== null) {
                             table.destroy();
                         }
-
-                       // Initialize the DataTable with the retrieved data and scrollable property
+                         // DATATABLE
                          table = $('#dataTable').DataTable({
                              scrollY: 500,
                              scrollX: true,
@@ -172,17 +171,84 @@
                             if (selectedRows.length > 0) {
                                 console.log('Selected Row IDs:', selectedRows);
 
-                                $.ajax({
-                                    url: '@Url.Action("AutoPrintMultipleReport", "Report")',
-                                    type: 'POST',
-                                    data: { selectedIds: selectedRows },
-                                    success: function (result) {
-                                        
-                                    },
-                                    error: function (xhr, status, error) {
-                                        console.error("Error queuing item: " + error);
-                                    }
-                                    
+                                // Build the HTML for the dropdowns
+                                var dropdownHtml = '<div class="form-row">' +
+                                    '<div class="form-group row col-12">' +
+                                    '<label class="col-sm-2 col-form-label" for="sizeDropdown">Size:</label>' +
+                                    '<select class="col-sm-9  ml-3 form-control" id="sizeDropdown">' +
+                                    '<option value="1">Whole</option>' +
+                                    '<option value="2">Half</option>' +
+                                    '</select>' +
+                                    '</div>' +
+                                    '<div class="form-group row col-md-12">' +
+                                    '<label class="col-sm-2 col-form-label" for="typeDropdown">Type:</label>' +
+                                    '<select class="col-sm-9  ml-3 form-control" id="typeDropdown">' +
+                                    '<option value="1">Regular</option>' +
+                                    '<option value="2">Save</option>' +
+                                    '</select>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '<div class="form-row">' +
+                                    '<div class="form-group row col-md-12">' +
+                                    '<label class="col-sm-2 col-form-label" for="categoryDropdown">Category:</label>' +
+                                    '<select class="col-sm-9  ml-3 form-control" id="categoryDropdown">' +
+                                    '<option value="1">Appliance</option>' +
+                                    '<option value="2">Non-Appliance</option>' +
+                                    '</select>' +
+                                    '</div>' +
+                                    '</div>';
+                                // Build the HTML for the print button
+                                var printButtonHtml = '<button id="printSelectedButton" class="btn btn-primary">Print</button>';
+
+                                // Create the modal content
+                                var modalContent = '<div class="modal-dialog modal-sm modal-dialog-centered">' +
+                                    '<div class="modal-content">' +
+                                    '<div class="modal-header">' +
+                                    '<h5 class="modal-title">Print Report</h5>' +
+                                    '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
+                                    '<span aria-hidden="true">&times;</span>' +
+                                    '</button>' +
+                                    '</div>' +
+                                    '<div class="modal-body">' +
+                                    dropdownHtml +
+                                    '</div>' +
+                                    '<div class="modal-footer">' +
+                                    printButtonHtml +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>';
+                                // Remove any existing modals
+                                $('#modalView').remove();
+
+                                // Append the modal to the body
+                                $('body').append('<div id="modalView" class="modal">' + modalContent + '</div>');
+
+                                // Show the modal with fade-in effect from top
+                                $('#modalView').modal({
+                                    show: true,
+                                    backdrop: false,
+                                    keyboard: false
+                                });
+
+                                // PRINT MULTIPLE
+                                $('#printSelectedButton').click(function () {
+                                    var sizeId = $('#sizeDropdown').val();
+                                    var typeId = $('#typeDropdown').val();
+                                    var categoryId = $('#categoryDropdown').val();
+
+                                    $.ajax({
+                                        url: '@Url.Action("AutoPrintMultipleReport", "Report")',
+                                        type: 'POST',
+                                        data: { selectedIds: selectedRows, sizeId : sizeId, typeId: typeId, categoryId: categoryId },
+                                        success: function (result) {
+                                            $('#modalView').modal('hide');
+
+                                        },
+                                        error: function (xhr, status, error) {
+                                            console.error("Error queuing item: " + error);
+                                        }
+
+                                    });
                                 });
                             } else {
                                 alert('Please select items to print.');
@@ -226,7 +292,7 @@
                     type: 'POST',
                     data: { id: rowId },
                     success: function (response) {
-                        
+
                         // Create the dropdown options
                         var sizeOptions = '';
                         var typeOptions = '';
