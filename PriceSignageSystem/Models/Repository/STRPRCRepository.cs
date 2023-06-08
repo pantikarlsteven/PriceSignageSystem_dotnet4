@@ -19,7 +19,7 @@ namespace PriceSignageSystem.Models.Repository
         public STRPRCRepository(ApplicationDbContext db)
         {
             _db = db;
-            connectionString = ConfigurationManager.ConnectionStrings["PriceSignageDbConnectionString"].ConnectionString;
+            connectionString = ConfigurationManager.ConnectionStrings["MyConnectionString"].ConnectionString;
             commandTimeoutInSeconds = 180;
 
         }

@@ -1,7 +1,5 @@
 ﻿using CrystalDecisions.CrystalReports.Engine;
 using CrystalDecisions.Shared;
-using iTextSharp.text.pdf;
-using iTextSharp.text.pdf.parser;
 using Microsoft.Reporting.WebForms;
 using Newtonsoft.Json;
 using PriceSignageSystem.Code;
@@ -13,11 +11,9 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using System.Drawing.Imaging;
 using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Web.Mvc;
 
 namespace PriceSignageSystem.Controllers
@@ -57,7 +53,6 @@ namespace PriceSignageSystem.Controllers
 
             ReportDocument report = new ReportDocument();
             report.Load(Server.MapPath(ReportConstants.Dynamic_WholeReportPath));
-            report.SetDatabaseLogon(_dbUsername, _dbPassword);
             report.SetDataSource(dataTable);
 
             Stream stream = report.ExportToStream(ExportFormatType.PortableDocFormat);
@@ -100,7 +95,6 @@ namespace PriceSignageSystem.Controllers
             ReportDocument report = new ReportDocument();
             report.Load(reportPath);
 
-            report.SetDatabaseLogon(_dbUsername, _dbPassword);
             report.SetDataSource(dataTable);
 
             PrinterSettings printerSettings = new PrinterSettings();
@@ -196,7 +190,6 @@ namespace PriceSignageSystem.Controllers
                 Logs.WriteToFile("test3");
                 ReportDocument report = new ReportDocument();
                 report.Load(reportPath);
-                //report.SetDatabaseLogon(_dbUsername, _dbPassword);
                 report.SetDataSource(dataTable);
 
                 Logs.WriteToFile("test4");
