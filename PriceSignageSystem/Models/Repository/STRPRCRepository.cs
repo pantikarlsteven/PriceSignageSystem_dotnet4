@@ -472,5 +472,58 @@ namespace PriceSignageSystem.Models.Repository
 
             return data;
         }
+
+        public List<ReportDto> GetReportDataList(List<decimal> O3SKUs)
+        {
+            var data = (from a in _db.STRPRCs
+                        join b in _db.Countries on a.O3TRB3 equals b.iatrb3 into ab
+                        from c in ab.DefaultIfEmpty()
+                        where O3SKUs.Contains(a.O3SKU)
+                        select new ReportDto
+                        {
+                            O3LOC = a.O3LOC,
+                            O3CLAS = a.O3CLAS,
+                            O3IDSC = a.O3IDSC,
+                            O3SKU = a.O3SKU,
+                            O3SCCD = a.O3SCCD,
+                            O3UPC = a.O3UPC,
+                            O3VNUM = a.O3VNUM,
+                            O3TYPE = a.O3TYPE,
+                            O3DEPT = a.O3DEPT,
+                            O3SDPT = a.O3SDPT,
+                            O3SCLS = a.O3SCLS,
+                            O3POS = a.O3POS,
+                            O3POSU = a.O3POSU,
+                            O3REG = a.O3REG,
+                            O3REGU = a.O3REGU,
+                            O3ORIG = a.O3ORIG,
+                            O3ORGU = a.O3ORGU,
+                            O3EVT = a.O3EVT,
+                            O3PMMX = a.O3PMMX,
+                            O3PMTH = a.O3PMTH,
+                            O3PDQT = a.O3PDQT,
+                            O3PDPR = a.O3PDPR,
+                            O3SDT = a.O3SDT,
+                            O3EDT = a.O3EDT,
+                            O3TRB3 = a.O3TRB3,
+                            O3FGR = a.O3FGR,
+                            O3FNAM = a.O3FNAM,
+                            O3MODL = a.O3MODL,
+                            O3LONG = a.O3LONG,
+                            O3SLUM = a.O3SLUM,
+                            O3DIV = a.O3DIV,
+                            O3TUOM = a.O3TUOM,
+                            O3DATE = a.O3DATE,
+                            O3CURD = a.O3CURD,
+                            O3USER = a.O3USER,
+                            DateUpdated = a.DateUpdated,
+                            TypeId = a.TypeId,
+                            SizeId = a.SizeId,
+                            CategoryId = a.CategoryId,
+                            country_img = c.country_img
+                        }).ToList();
+
+            return data;
+        }
     }
 }

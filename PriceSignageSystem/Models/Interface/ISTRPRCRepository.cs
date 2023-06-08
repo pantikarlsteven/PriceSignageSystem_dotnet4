@@ -20,5 +20,6 @@ namespace PriceSignageSystem.Models.Interface
         int UpdateSTRPRCTable(int storeId);
         CountryDto GetCountryImg(string country);
         ReportDto GetReportData(decimal O3SKU);
+        List<ReportDto> GetReportDataList(List<decimal> O3SKU);
     }
 }
