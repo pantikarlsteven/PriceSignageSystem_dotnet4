@@ -63,18 +63,27 @@
 
 <script>
     $(document).ready(function () {
+        var timeoutId;
         $('#searchInput').on('input', function () {
             var searchQuery = $(this).val();
-            $.ajax({
-                url: '@Url.Action("Search", "STRPRC")',
-                type: 'POST',
-                data: { query: searchQuery },
-                success: function (result) {
-                    $('#searchResults').html(result);
-                },
-                error: function () {
-                }
-            });
+
+            // Clear any previously scheduled request
+            clearTimeout(timeoutId);
+
+            // Schedule a new request after 300 milliseconds (adjust as needed)
+            timeoutId = setTimeout(function() {
+                $.ajax({
+                    url: '@Url.Action("Search", "STRPRC")',
+                    type: 'POST',
+                    data: { query: searchQuery },
+                    success: function (result) {
+                        $('#searchResults').html(result);
+                    },
+                    error: function () {
+                        // Handle error if necessary
+                    }
+                });
+            }, 300); // Adjust the delay as needed
         });
 
         $("#updateButton").click(function () {

@@ -188,11 +188,6 @@
     <Compile Include="Controllers\QueueController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\STRPRCController.cs" />
-    <Compile Include="Datasets\CountryImageDS.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CountryImageDS.xsd</DependentUpon>
-    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -258,14 +253,6 @@
     <Compile Include="Models\Type.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Datasets\QueueReport_STRPRCDS.cs">
-      <DependentUpon>QueueReport_STRPRCDS.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Datasets\QueueReport_STRPRCDS.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>QueueReport_STRPRCDS.xsd</DependentUpon>
-    </Compile>
     <Compile Include="Reports\CrystalReports\Dynamic_JewelryReport.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -278,18 +265,7 @@
       <DependentUpon>Dynamic_SkinnyReport.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Reports\CrystalReports\Dynamic_WholeReport.cs">
-      <DependentUpon>Dynamic_WholeReport.rpt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <SubType>Component</SubType>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <Compile Include="SqlServerTypes\Loader.cs" />
-    <Compile Include="Datasets\STRPRCDS.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>STRPRCDS.xsd</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\adminlte.min.css" />
@@ -315,28 +291,6 @@
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Datasets\CountryImageDS.xsc">
-      <DependentUpon>CountryImageDS.xsd</DependentUpon>
-    </Content>
-    <None Include="Datasets\CountryImageDS.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>CountryImageDS.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
-    <Content Include="Datasets\CountryImageDS.xss">
-      <DependentUpon>CountryImageDS.xsd</DependentUpon>
-    </Content>
-    <Content Include="Datasets\QueueReport_STRPRCDS.xsc">
-      <DependentUpon>QueueReport_STRPRCDS.xsd</DependentUpon>
-    </Content>
-    <None Include="Datasets\QueueReport_STRPRCDS.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>QueueReport_STRPRCDS.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
-    <Content Include="Datasets\QueueReport_STRPRCDS.xss">
-      <DependentUpon>QueueReport_STRPRCDS.xsd</DependentUpon>
-    </Content>
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\buttons.html5.min.js" />
     <Content Include="Scripts\buttons.print.min.js" />
@@ -389,17 +343,6 @@
     <Content Include="Views\STRPRC\_SearchResultPartialView.cshtml" />
     <Content Include="Views\STRPRC\Index.cshtml" />
     <Content Include="Views\STRPRC\SearchByDate.cshtml" />
-    <Content Include="Datasets\STRPRCDS.xsc">
-      <DependentUpon>STRPRCDS.xsd</DependentUpon>
-    </Content>
-    <None Include="Datasets\STRPRCDS.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>STRPRCDS.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
-    <Content Include="Datasets\STRPRCDS.xss">
-      <DependentUpon>STRPRCDS.xsd</DependentUpon>
-    </Content>
     <Content Include="Views\Report\AutoPrintReport.cshtml" />
     <Content Include="Views\Queue\PrintQueueList.cshtml" />
     <Content Include="Views\Report\AutoPrintReportFromAdvancePrinting.cshtml" />
@@ -454,17 +397,7 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Dynamic_SkinnyReport.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\CrystalReports\Dynamic_WholeReport.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>Dynamic_WholeReport.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\DynamicQueueReport_Jewelry.rdlc" />
-    <EmbeddedResource Include="Reports\DynamicQueueReport_Whole.rdlc" />
-    <EmbeddedResource Include="Reports\DynamicQueueReport_Half.rdlc" />
-    <EmbeddedResource Include="Reports\ApplianceReport_Jewelry.rdlc" />
-    <EmbeddedResource Include="Reports\ApplianceReport_Skinny.rdlc" />
-    <EmbeddedResource Include="Reports\ApplianceReport.rdlc" />
-    <EmbeddedResource Include="Reports\ApplianceReport_Half.rdlc" />
+    <Content Include="Reports\CrystalReports\Dynamic_WholeReport.rpt" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />

@@ -2,6 +2,7 @@
 using CrystalDecisions.Shared;
 using PriceSignageSystem.Code;
 using PriceSignageSystem.Helper;
+using PriceSignageSystem.Models.Constants;
 using PriceSignageSystem.Models.DatabaseContext;
 using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
@@ -11,6 +12,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Drawing.Printing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -63,7 +65,7 @@ namespace PriceSignageSystem.Controllers
                     {
                         dto.EndDateFormattedDate = "-";
                     }
-                   
+
                     else
                     {
                         DateTime enddateTimeValue = DateTime.ParseExact(dto.O3EDT.ToString(), "yyMMdd", CultureInfo.InvariantCulture);
@@ -121,15 +123,15 @@ namespace PriceSignageSystem.Controllers
             var endDateFormatted = ConversionHelper.ToDecimal(endDate);
             foreach (var item in data) // TEMPORARY -- SOON TO BE DEFINED IN DB
             {
-                item.TypeName =   startDateFormatted == item.O3SDT ? "Save"
+                item.TypeName = startDateFormatted == item.O3SDT ? "Save"
                                 : endDateFormatted == item.O3EDT ? "Regular"
                                 : "Save";
-                item.SizeName =   item.SizeId == 1 ? "Whole"
+                item.SizeName = item.SizeId == 1 ? "Whole"
                                 : item.SizeId == 2 ? "Half"
                                 : item.SizeId == 3 ? "Jewelry"
                                 : item.SizeId == 4 ? "Skinny"
                                 : "Whole";
-                item.CategoryName =   item.CategoryId == 1 ? "Appliance"
+                item.CategoryName = item.CategoryId == 1 ? "Appliance"
                                     : item.CategoryId == 2 ? "Non-Appliance"
                                     : "Non-Appliance";
             }
@@ -148,30 +150,7 @@ namespace PriceSignageSystem.Controllers
 
             return Json(dto);
         }
-        //[HttpPost]
-        //public JsonResult GetDataBySelectedSKU(string[] selectedRowIds)
-        //{
-        //    STRPRCDto[] dataArray = new STRPRCDto[selectedRowIds.Length];
-
-        //    if (selectedRowIds != null && selectedRowIds.Length > 0)
-        //    {
-        //        for (var a = 0; a < selectedRowIds.Length; a++)
-        //        {
-        //            var o3sku = decimal.Parse(selectedRowIds[a]);
-        //            dataArray[a] = _sTRPRCRepository.GetDataBySKU(o3sku);
-        //            dataArray[a].SizeArray = _sizeRepository.GetAllSizes().ToArray();
-        //            dataArray[a].TypeArray = _typeRepository.GetAllTypes().ToArray();
-        //            dataArray[a].CategoryArray = _categoryRepository.GetAllCategories().ToArray();
-        //        }
-        //    }
-        //    else
-        //    {
-        //        // Handle the case when no row IDs are selected
-        //    }
-        //    return Json(dataArray);
-        //}
-
-
+   
         public ActionResult UpdateSTRPRCData()
         {
             var storeId = int.Parse(ConfigurationManager.AppSettings["StoreID"]);
@@ -186,41 +165,49 @@ namespace PriceSignageSystem.Controllers
         [HttpPost]
         public JsonResult GetAllSizes()
         {
-            var sizes = _sizeRepository.GetAllSizes().ToArray(); 
+            var sizes = _sizeRepository.GetAllSizes().ToArray();
 
             return Json(sizes);
         }
 
         [HttpGet]
-        public ActionResult PrintPCASTRPRCTest(decimal id)
+        public void PrintPCASTRPRCTest(decimal id)
         {
+            Logs.WriteToFile("test 0");
+
             try
             {
                 ReportDocument rptH = new ReportDocument();
                 var strReport = string.Empty;
-                using (var _db = new ApplicationDbContext())
-                {
-                    var test = "Dynamic_HalfReport.rpt";
-                    var strReportPath = System.Web.HttpContext.Current.Server.MapPath("~/Reports/CrystalReports/" + test);
 
-                    rptH.Load(strReportPath);
-                    IQueueRepository qwe = new QueueRepository(new ApplicationDbContext());
-                    rptH.SetDataSource(ConversionHelper.ConvertObjectToDataTable(_sTRPRCRepository.GetDataBySKU(id)));
+                Logs.WriteToFile("test 00");
 
-                    Stream stream = rptH.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
-                    var pdfBytes = new byte[stream.Length];
-                    stream.Read(pdfBytes, 0, pdfBytes.Length);
+                var strReportPath = Server.MapPath(ReportConstants.Dynamic_HalfReportPath);
+                Logs.WriteToFile(strReportPath);
+                rptH.Load(strReportPath);
+                Logs.WriteToFile("test 01");
 
-                    //rptH.PrintOptions.PrinterName = @"\\199.85.2.2\Canon LBP2900";
-                    //rptH.PrintToPrinter(1, true, 0, 0);
+                rptH.SetDataSource(ConversionHelper.ConvertObjectToDataTable(_sTRPRCRepository.GetDataBySKU(id)));
+                Logs.WriteToFile("test 1");
+                //rptH.PrintOptions.PrinterName = "Canon LBP2900 (redirected 3)";
 
-                    Response.AppendHeader("Content-Disposition", "inline; filename=test.pdf");
-                    return File(pdfBytes, "application/pdf");
-                }
+                rptH.PrintToPrinter(1, true, 0, 0);
+                Logs.WriteToFile("test 2");
+
+                //Response.AppendHeader("Content-Disposition", "inline; filename=test.pdf");
+                //return File(pdfBytes, "application/pdf");
+
             }
             catch (Exception ex)
             {
-                return Content("<h2>Error: " + ex.Message + "</h2>", "text/html");
+                Logs.WriteToFile(ex.Message);
+                Logs.WriteToFile(ex.InnerException.Message);
+                Logs.WriteToFile(ex.InnerException.StackTrace);
+                Logs.WriteToFile(ex.InnerException.Source);
+
+
+
+                //return Content("<h2>Error: " + ex.Message + "</h2>", "text/html");
             }
         }
     }
