@@ -22,10 +22,13 @@
         th.no-sort::after {
             display: none !important;
         }
+
     </style>
 </head>
 
 <body>
+    <iframe id="reportIframe" src="" style="display: none;"></iframe> @*For printing preview*@
+
     <div class="content-wrapper bg-white px-3">
         <br />
         <div class="row">
@@ -60,7 +63,7 @@
                                 <th></th>
                                 <th>SKU</th>
                                 <th>UPC</th>
-                                <th style="width: 200px; "class="text-nowrap">Item Desc.</th>
+                                <th style="width: 200px; " class="text-nowrap">Item Desc.</th>
                                 <th>Reg Price</th>
                                 <th>Promo Price</th>
                                 <th>Date Start</th>
@@ -90,7 +93,7 @@
 <script>
         //var $j = jQuery.noConflict();
 
-        $(document).ready(function () {
+    $(document).ready(function () {
             $("#startDate").datepicker({
                 dateFormat: 'yy-mm-dd'
             });
@@ -237,6 +240,7 @@
                                 $('#typeDropdown').val(2);
                                 $('#categoryDropdown').val(2);
 
+                                @*//Start for auto printing multiple report
                                 // PRINT MULTIPLE
                                 $('#printSelectedButton').click(function () {
                                     var sizeId = $('#sizeDropdown').val();
@@ -257,6 +261,28 @@
 
                                     });
                                 });
+                                //End for auto printing multiple report*@
+
+                                //Start for print preview multiple report
+                                // PRINT MULTIPLE
+                                $('#printSelectedButton').click(function () {
+                                    var sizeId = $('#sizeDropdown').val();
+                                    var typeId = $('#typeDropdown').val();
+                                    var categoryId = $('#categoryDropdown').val();
+
+                                    $("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "&typeId=" + typeId + "&categoryId=" + categoryId +"");
+
+                                    var reportIframe = document.getElementById("reportIframe");
+                                    if (reportIframe) {
+                                        reportIframe.onload = function () {
+                                            reportIframe.contentWindow.print();
+                                        };
+                                        reportIframe.src = $("#reportIframe").attr("src");
+                                    }
+                                });
+                                //End for print preview multiple report
+
+
                             } else {
                                 alert('Please select items to print.');
                             }
@@ -383,6 +409,7 @@
                         $('#categoryDropdown').val(response.CategoryId);
 
 
+                        @*//Start for auto printing single report
                         // Print button click event handler
                         $('#printButton').click(function () {
                             response.SelectedSizeId = $('#sizeDropdown').val();
@@ -403,6 +430,26 @@
                                 }
                             });
                         });
+                        //End for auto printing single report*@
+
+
+                        //Start for print preview single report
+                        // Print button click event handler
+                        $('#printButton').click(function () {
+                            response.SelectedSizeId = $('#sizeDropdown').val();
+                            response.SelectedTypeId = $('#typeDropdown').val();
+                            response.SelectedCategoryId = $('#categoryDropdown').val();
+                            $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(response));
+
+                            var reportIframe = document.getElementById("reportIframe");
+                            if (reportIframe) {
+                                reportIframe.onload = function () {
+                                    reportIframe.contentWindow.print();
+                                };
+                                reportIframe.src = $("#reportIframe").attr("src");
+                            }
+                        });
+                        //End for print preview single report
                     }
                 });
             });

@@ -112,6 +112,97 @@ namespace PriceSignageSystem.Controllers
             report.Dispose();
         }
 
+        [HttpGet]
+        public ActionResult PrintPreviewSingleReport(string response)
+        {
+            try
+            {
+                var model = JsonConvert.DeserializeObject<STRPRCDto>(response);
+                ReportDocument report = new ReportDocument();
+                var path = string.Empty;
+
+                switch (model.SelectedSizeId)
+                {
+                    case ReportConstants.Size.Whole:
+                        path = Server.MapPath(ReportConstants.Dynamic_WholeReportPath);
+                        break;
+                    case ReportConstants.Size.Half:
+                        path = Server.MapPath(ReportConstants.Dynamic_HalfReportPath);
+                        break;
+                    case ReportConstants.Size.Jewelry:
+                        path = Server.MapPath(ReportConstants.Dynamic_JewelryReportPath);
+                        break;
+                    case ReportConstants.Size.Skinny:
+                        path = Server.MapPath(ReportConstants.Dynamic_SkinnyReportPath);
+                        break;
+                }
+
+                report.Load(path);
+                report.SetDataSource(ConversionHelper.ConvertObjectToDataTable(_sTRPRCRepository.GetDataBySKU(model.O3SKU)));
+
+                Stream stream = report.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                var pdfBytes = new byte[stream.Length];
+                stream.Read(pdfBytes, 0, pdfBytes.Length);
+
+                Response.AppendHeader("Content-Disposition", "inline; filename=" + model.O3SKU.ToString() + ".pdf");
+                return File(pdfBytes, "application/pdf");
+            }
+            catch (Exception ex)
+            {
+                Logs.WriteToFile(ex.Message);
+                return Content("<h2>Error: " + ex.Message + "</h2>", "text/html");
+            }
+        }
+
+        [HttpGet]
+        public ActionResult PrintPreviewMultipleReport(string[] selectedIds, int sizeId, int typeId, int categoryId)
+        {
+            if (selectedIds != null && selectedIds.Length > 0)
+            {
+                List<decimal> o3skus = selectedIds[0].Split(',').Select(decimal.Parse).ToList();
+                var data = _sTRPRCRepository.GetReportDataList(o3skus);
+                foreach (var item in data)
+                {
+                    item.UserName = Session["Username"].ToString();
+                }
+                var dataTable = ConversionHelper.ConvertListToDataTable(data);
+                var reportPath = string.Empty;
+
+                if (sizeId == ReportConstants.Size.Whole)
+                {
+                    reportPath = Server.MapPath(ReportConstants.Dynamic_WholeReportPath);
+                }
+                else if (sizeId == ReportConstants.Size.Half)
+                {
+                    reportPath = Server.MapPath(ReportConstants.Dynamic_HalfReportPath);
+                }
+                else if (sizeId == ReportConstants.Size.Skinny)
+                {
+                    reportPath = Server.MapPath(ReportConstants.Dynamic_SkinnyReportPath);
+                }
+                else if (sizeId == ReportConstants.Size.Jewelry)
+                {
+                    reportPath = Server.MapPath(ReportConstants.Dynamic_JewelryReportPath);
+                }
+
+                ReportDocument report = new ReportDocument();
+                report.Load(reportPath);
+                report.SetDataSource(dataTable);
+
+                Stream stream = report.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                var pdfBytes = new byte[stream.Length];
+                stream.Read(pdfBytes, 0, pdfBytes.Length);
+
+                Response.AppendHeader("Content-Disposition", "inline; filename=MultipleSKUs.pdf");
+                return File(pdfBytes, "application/pdf");
+            }
+            else
+            {
+                // Handle the case when no row IDs are selected
+                return Content("<h2>Error: No rows have found.</h2>", "text/html");
+            }
+        }
+
         [HttpPost]
         public void AutoPrintMultipleReport(string[] selectedIds, int sizeId, int typeId, int categoryId)
         {
