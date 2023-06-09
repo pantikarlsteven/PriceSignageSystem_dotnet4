@@ -88,6 +88,8 @@
             {
                 <div class="container">
                     <div class="row mb-3 d-flex justify-content-center">
+                        <div class="col-2">
+                        </div>
                         <div class="col-8">
                             <div class="row">
                                 <div class="col-4">
@@ -102,24 +104,21 @@
                                         @Html.DropDownListFor(m => m.SelectedSizeId, Model.Sizes ?? new List<SelectListItem>(), "Select Size", new { @class = "form-control form-control-sm custom-select" })
                                     </div>
                                 </div>
-                               <div class="col-4">
-                                   <div class="form-group ">
-                                       @Html.LabelFor(m => m.SelectedCategoryId, htmlAttributes: new { @class = "font-weight-bold" })
-                                       @Html.DropDownListFor(m => m.SelectedCategoryId, Model.Categories ?? new List<SelectListItem>(), "Select Category", new { @class = "form-control form-control-sm custom-select" })
-                                   </div>
-                               </div>
-                                
+                                <div class="col-4">
+                                    <div class="form-group ">
+                                        @Html.LabelFor(m => m.SelectedCategoryId, htmlAttributes: new { @class = "font-weight-bold" })
+                                        @Html.DropDownListFor(m => m.SelectedCategoryId, Model.Categories ?? new List<SelectListItem>(), "Select Category", new { @class = "form-control form-control-sm custom-select" })
+                                    </div>
+                                </div>
+
                             </div>
                             <div class="d-flex justify-content-center">
-                                <button type="button" class="newPrint btn btn-primary ">Print</button>
+                                <button type="button" class="newPrint btn btn-primary mr-1">Print</button>
+                                <button type="button" class="queuebtn btn btn-secondary mr-1">Queue</button>
+                                <button type="button" class="qListbtn btn btn-success mr-1">Print Queue</button>
                             </div>
-                            
                         </div>
-                        <div class="col-4 text-center ">
-                           <label class="font-weight-bold text-white">Select</label>
-                            <br>
-                            <button type="button" class="queuebtn btn btn-secondary">Queue</button>
-                            <button type="button" class="qListbtn btn btn-success">Print Queue</button>
+                        <div class="col-2">
                         </div>
                     </div>
 
