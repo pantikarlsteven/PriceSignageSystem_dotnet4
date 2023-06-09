@@ -7,6 +7,7 @@ using PriceSignageSystem.Models.Interface;
 using System;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -78,6 +79,57 @@ namespace PriceSignageSystem.Controllers
             report.Dispose();
 
             return Json(new { success = true });
+        }
+
+        [HttpGet]
+        public ActionResult PrintPreviewQueueReport(int sizeId, int typeId, int categoryId)
+        {
+            try
+            {
+                var username = (string)Session["Username"];
+                var data = _queueRepository.GetQueueListPerUser(username).Where(a => a.SizeId == sizeId && a.Status == ReportConstants.Status.InQueue);
+                foreach (var item in data)
+                {
+                    item.UserName = Session["Username"].ToString();
+                    item.TypeId = typeId;
+                    item.CategoryId = categoryId;
+                }
+                var dataTable = ConversionHelper.ConvertListToDataTable(data);
+                var reportPath = string.Empty;
+
+                if (sizeId == ReportConstants.Size.Whole)
+                {
+                    reportPath = Server.MapPath(ReportConstants.Dynamic_WholeReportPath);
+                }
+                else if (sizeId == ReportConstants.Size.Half)
+                {
+                    reportPath = Server.MapPath(ReportConstants.Dynamic_HalfReportPath);
+                }
+                else if (sizeId == ReportConstants.Size.Skinny)
+                {
+                    reportPath = Server.MapPath(ReportConstants.Dynamic_SkinnyReportPath);
+                }
+                else if (sizeId == ReportConstants.Size.Jewelry)
+                {
+                    reportPath = Server.MapPath(ReportConstants.Dynamic_JewelryReportPath);
+                }
+
+                ReportDocument report = new ReportDocument();
+                report.Load(reportPath);
+                report.SetDataSource(dataTable);
+
+                Stream stream = report.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                var pdfBytes = new byte[stream.Length];
+                stream.Read(pdfBytes, 0, pdfBytes.Length);
+
+                Response.AppendHeader("Content-Disposition", "inline; filename=QueueReport.pdf");
+                return File(pdfBytes, "application/pdf");
+            }
+            catch (Exception ex)
+            {
+                // Handle the case when no row IDs are selected
+                return Content("<h2>Error:" + ex.Message + "</h2>", "text/html");
+            }
         }
     }
 }
