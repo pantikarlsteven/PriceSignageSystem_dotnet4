@@ -1,20 +1,13 @@
 ﻿using CrystalDecisions.CrystalReports.Engine;
-using CrystalDecisions.Shared;
 using PriceSignageSystem.Code;
 using PriceSignageSystem.Helper;
 using PriceSignageSystem.Models.Constants;
-using PriceSignageSystem.Models.DatabaseContext;
 using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
-using PriceSignageSystem.Models.Repository;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using System.Data.SqlClient;
-using System.Drawing.Printing;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -122,8 +115,8 @@ namespace PriceSignageSystem.Controllers
           
             foreach (var item in data) // TEMPORARY -- SOON TO BE DEFINED IN DB
             {
-                item.TypeName = startDateFormatted == item.O3SDT ? "Save"
-                                : endDateFormatted == item.O3EDT ? "Regular"
+                item.TypeName = startDateFormatted == item.O3SDT && item.O3EDT != 999999 ? "Save"
+                                : startDateFormatted == item.O3SDT && item.O3EDT == 999999 ? "Regular"
                                 : "Save";
                 item.SizeName = item.SizeId == 1 ? "Whole"
                                 : item.SizeId == 2 ? "Half"

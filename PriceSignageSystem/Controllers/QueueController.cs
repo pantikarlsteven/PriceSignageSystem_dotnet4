@@ -1,5 +1,4 @@
 ﻿using CrystalDecisions.CrystalReports.Engine;
-using Microsoft.Reporting.WebForms;
 using PriceSignageSystem.Helper;
 using PriceSignageSystem.Models.Constants;
 using PriceSignageSystem.Models.Dto;
@@ -82,7 +81,7 @@ namespace PriceSignageSystem.Controllers
         }
 
         [HttpGet]
-        public ActionResult PrintPreviewQueueReport(int sizeId, int typeId, int categoryId)
+        public ActionResult PrintPreviewQueueReport(int sizeId)
         {
             try
             {
@@ -91,8 +90,6 @@ namespace PriceSignageSystem.Controllers
                 foreach (var item in data)
                 {
                     item.UserName = Session["Username"].ToString();
-                    item.TypeId = typeId;
-                    item.CategoryId = categoryId;
                 }
                 var dataTable = ConversionHelper.ConvertListToDataTable(data);
                 var reportPath = string.Empty;
@@ -130,6 +127,20 @@ namespace PriceSignageSystem.Controllers
                 // Handle the case when no row IDs are selected
                 return Content("<h2>Error:" + ex.Message + "</h2>", "text/html");
             }
+        }
+
+        [HttpPost]
+        public ActionResult CheckItemQueuesPerUser(int sizeId)
+        {
+            var username = (string)Session["Username"];
+            var data = _queueRepository.GetQueueListPerUser(username).Where(a => a.SizeId == sizeId && a.Status == ReportConstants.Status.InQueue);
+            if (!data.Any())
+            {
+                //Return an error message
+                return Json(new { success = false });
+            }
+            return Json(new { success = true });
+
         }
     }
 }
