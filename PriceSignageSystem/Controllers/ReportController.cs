@@ -132,7 +132,12 @@ namespace PriceSignageSystem.Controllers
                 }
 
                 report.Load(path);
-                report.SetDataSource(ConversionHelper.ConvertObjectToDataTable(_sTRPRCRepository.GetDataBySKU(model.O3SKU)));
+                var skuModel = _sTRPRCRepository.GetDataBySKU(model.O3SKU);
+                skuModel.TypeId = model.SelectedTypeId;
+                skuModel.CategoryId = model.SelectedTypeId;
+
+                report.SetDataSource(ConversionHelper.ConvertObjectToDataTable(skuModel));
+
 
                 Stream stream = report.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
                 var pdfBytes = new byte[stream.Length];

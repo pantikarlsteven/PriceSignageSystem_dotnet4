@@ -11,6 +11,7 @@
 
 </head>
 <body>
+    <iframe id="reportIframe" src="" style="display: none;"></iframe> @*For printing preview*@
     @using (Html.BeginForm("AutoPrintOnDemandReport", "Report", FormMethod.Post))
     {
         @Html.HiddenFor(m => m.O3SKU)
@@ -109,10 +110,10 @@
 
                     <div class="row">
                         <div class="col text-center">
-                            <input type="submit" class="btn btn-primary" value="Print">
                             @*<button type="button" class="btn btn-primary" value="submit">Print</button>*@
+                            <button type="button" class="newPrint btn btn-primary">Print</button>
                             <button type="button" class="queuebtn btn btn-secondary">Queue</button>
-                            <button type="button" class="qListbtn btn btn-success" @*onclick="openQueueReportInNewTab()"*@>Print Queue</button>
+                            <button type="button" class="newQListbtn btn btn-success" @*onclick="openQueueReportInNewTab()"*@>Print Queue</button>
                         </div>
                     </div>
                 </div>
@@ -138,6 +139,46 @@
     }
 
     $(document).ready(function () {
+
+        $(".newPrint").click(function () {
+            var strprcDto = {
+                O3SKU: @Model.O3SKU,
+                SelectedSizeId: 0,
+                SelectedTypeId: 0,
+                SelectedCategoryId: 0
+            };
+
+            strprcDto.SelectedTypeId = $('#SelectedTypeId').val();
+            strprcDto.SelectedCategoryId = $('#SelectedCategoryId').val();
+            strprcDto.SelectedSizeId= $('#SelectedSizeId').val();
+            $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(strprcDto));
+
+            var reportIframe = document.getElementById("reportIframe");
+            if (reportIframe) {
+                reportIframe.onload = function () {
+                    reportIframe.contentWindow.print();
+                };
+                reportIframe.src = $("#reportIframe").attr("src");
+            }
+        });
+
+        $('.newQListbtn').click(function () {
+            var sizeId = $('#SelectedSizeId').val();
+            var typeId = $('#SelectedTypeId').val();
+            var categoryId = $('#SelectedCategoryId').val();
+
+            $("#reportIframe").attr("src", "/Queue/PrintPreviewQueueReport?sizeId=" + sizeId + "&typeId=" + typeId + "&categoryId=" + categoryId + "");
+
+            var reportIframe = document.getElementById("reportIframe");
+            if (reportIframe) {
+                reportIframe.onload = function () {
+                    reportIframe.contentWindow.print();
+                };
+                reportIframe.src = $("#reportIframe").attr("src");
+            }
+        });
+
+
         $(".queuebtn").click(function () {
             var sizeId = $('#SelectedSizeId').val();
             var typeId = $('#SelectedTypeId').val();
