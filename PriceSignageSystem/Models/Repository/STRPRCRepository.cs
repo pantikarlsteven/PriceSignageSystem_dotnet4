@@ -525,5 +525,23 @@ namespace PriceSignageSystem.Models.Repository
 
             return data;
         }
+
+        public void UpdateSelection(decimal startDate, decimal endDate)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                string storedProcedureName = "sp_UpdateSTRPRCSelection";
+                using (SqlCommand command = new SqlCommand(storedProcedureName, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@O3SDT", startDate);
+                    command.Parameters.AddWithValue("@O3EDT", endDate);
+
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }

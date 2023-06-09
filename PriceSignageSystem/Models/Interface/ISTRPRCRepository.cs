@@ -21,5 +21,6 @@ namespace PriceSignageSystem.Models.Interface
         CountryDto GetCountryImg(string country);
         ReportDto GetReportData(decimal O3SKU);
         List<ReportDto> GetReportDataList(List<decimal> O3SKU);
+        void UpdateSelection(decimal startDate, decimal endDate);
     }
 }

@@ -115,12 +115,11 @@ namespace PriceSignageSystem.Controllers
         [HttpPost]
         public ActionResult GetDataByDate(DateTime startDate, DateTime endDate)
         {
-            var startDateDecimal = ConversionHelper.ToDecimal(startDate);
-            var endDateDecimal = ConversionHelper.ToDecimal(endDate);
-
-            var data = _sTRPRCRepository.GetDataByDate(startDateDecimal, endDateDecimal).ToList();
             var startDateFormatted = ConversionHelper.ToDecimal(startDate);
             var endDateFormatted = ConversionHelper.ToDecimal(endDate);
+
+            var data = _sTRPRCRepository.GetDataByDate(startDateFormatted, endDateFormatted).ToList();
+          
             foreach (var item in data) // TEMPORARY -- SOON TO BE DEFINED IN DB
             {
                 item.TypeName = startDateFormatted == item.O3SDT ? "Save"
@@ -136,6 +135,8 @@ namespace PriceSignageSystem.Controllers
                                     : "Non-Appliance";
             }
 
+            //UPDATE SIZE, TYPE AND CATEGORY
+            _sTRPRCRepository.UpdateSelection(startDateFormatted, endDateFormatted);
             return Json(data);
         }
 

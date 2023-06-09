@@ -120,6 +120,11 @@
                              scrollY: 500,
                              scrollX: true,
                              scroller: true,
+                             lengthMenu: [
+                                 [10, 25, 50, -1],
+                                 [10, 25, 50, 'All']
+                             ],
+                             pageLength: -1,
                              data: data,
                              columnDefs: [
                                  { targets: [0, 1, 12], orderable: false },
@@ -185,22 +190,6 @@
                                     '<option value="4">Skinny</option>' +
                                     '</select>' +
                                     '</div>' +
-                                    '<div class="form-group row col-md-12">' +
-                                    '<label class="col-sm-2 col-form-label" for="typeDropdown">Type:</label>' +
-                                    '<select class="col-sm-9  ml-3 form-control" id="typeDropdown">' +
-                                    '<option value="1">Regular</option>' +
-                                    '<option value="2">Save</option>' +
-                                    '</select>' +
-                                    '</div>' +
-                                    '</div>' +
-                                    '<div class="form-row">' +
-                                    '<div class="form-group row col-md-12">' +
-                                    '<label class="col-sm-2 col-form-label" for="categoryDropdown">Category:</label>' +
-                                    '<select class="col-sm-9  ml-3 form-control" id="categoryDropdown">' +
-                                    '<option value="1">Appliance</option>' +
-                                    '<option value="2">Non-Appliance</option>' +
-                                    '</select>' +
-                                    '</div>' +
                                     '</div>';
                                 // Build the HTML for the print button
                                 var printButtonHtml = '<button id="printSelectedButton" class="btn btn-primary">Print</button>';
@@ -237,8 +226,6 @@
 
                                 // Set default values for the dropdowns
                                 $('#sizeDropdown').val(1);
-                                $('#typeDropdown').val(2);
-                                $('#categoryDropdown').val(2);
 
                                 @*//Start for auto printing multiple report
                                 // PRINT MULTIPLE
@@ -267,10 +254,8 @@
                                 // PRINT MULTIPLE
                                 $('#printSelectedButton').click(function () {
                                     var sizeId = $('#sizeDropdown').val();
-                                    var typeId = $('#typeDropdown').val();
-                                    var categoryId = $('#categoryDropdown').val();
 
-                                    $("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "&typeId=" + typeId + "&categoryId=" + categoryId +"");
+                                    $("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId +"");
 
                                     var reportIframe = document.getElementById("reportIframe");
                                     if (reportIframe) {

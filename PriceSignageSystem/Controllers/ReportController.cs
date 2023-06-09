@@ -149,7 +149,7 @@ namespace PriceSignageSystem.Controllers
         }
 
         [HttpGet]
-        public ActionResult PrintPreviewMultipleReport(string[] selectedIds, int sizeId, int typeId, int categoryId)
+        public ActionResult PrintPreviewMultipleReport(string[] selectedIds, int sizeId)
         {
             if (selectedIds != null && selectedIds.Length > 0)
             {
