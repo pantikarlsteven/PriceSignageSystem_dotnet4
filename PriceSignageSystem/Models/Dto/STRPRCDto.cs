@@ -35,7 +35,7 @@ namespace PriceSignageSystem.Models.Dto
         [Display(Name = "SUB-CLASS")]
         [DisplayFormat(DataFormatString = "{0:0}")]
         public decimal O3SCLS { get; set; }
-        [Display(Name = "POS PRICE")]
+        [Display(Name = "CURRENT PRICE")]
         public decimal O3POS { get; set; }
         public decimal O3POSU { get; set; }
         public decimal O3REG { get; set; }
