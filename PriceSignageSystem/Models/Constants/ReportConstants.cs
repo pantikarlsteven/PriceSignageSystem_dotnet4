@@ -16,9 +16,9 @@ namespace PriceSignageSystem.Models.Constants
         public static class Size
         {
             public const int Whole = 1;
-            public const int OneEight = 2;
-            public const int Jewelry = 3;
-            public const int Skinny = 4;
+            public const int Skinny = 2;
+            public const int OneEight = 3;
+            public const int Jewelry = 4;
         }
 
         public static class Category
