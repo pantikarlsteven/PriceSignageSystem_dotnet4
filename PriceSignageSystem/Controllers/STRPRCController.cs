@@ -32,14 +32,6 @@ namespace PriceSignageSystem.Controllers
 
         public ActionResult Index()
         {
-            var date = _sTRPRCRepository.GetLatestUpdate();
-
-            if (date.Date == DateTime.Now.Date)
-            {
-                ViewBag.IsDateLatest = true;
-            }
-
-            ViewBag.DateVersion = date.ToString("MMM dd yyyy HH:mm:ss tt"); ;
             return View();
         }
 
@@ -102,6 +94,14 @@ namespace PriceSignageSystem.Controllers
 
         public ActionResult SearchByDate()
         {
+            var date = _sTRPRCRepository.GetLatestUpdate();
+
+            if (date.Date == DateTime.Now.Date)
+            {
+                ViewBag.IsDateLatest = true;
+            }
+
+            ViewBag.DateVersion = date.ToString("MMM dd yyyy HH:mm:ss tt"); ;
             return View();
         }
 

@@ -150,17 +150,17 @@
     $(document).ready(function () {
 
         $(".newPrint").click(function () {
-            var strprcDto = {
+            var reportDto = {
                 O3SKU: @Model.O3SKU,
-                SelectedSizeId: 0,
-                SelectedTypeId: 0,
-                SelectedCategoryId: 0
+                SizeId: 0,
+                TypeId: 0,
+                CategoryId: 0
             };
 
-            strprcDto.SelectedTypeId = $('#SelectedTypeId').val();
-            strprcDto.SelectedCategoryId = $('#SelectedCategoryId').val();
-            strprcDto.SelectedSizeId= $('#SelectedSizeId').val();
-            $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(strprcDto));
+            reportDto.TypeId = $('#SelectedTypeId').val();
+            reportDto.CategoryId = $('#SelectedCategoryId').val();
+            reportDto.SizeId= $('#SelectedSizeId').val();
+            $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(reportDto));
 
             var reportIframe = document.getElementById("reportIframe");
             if (reportIframe) {

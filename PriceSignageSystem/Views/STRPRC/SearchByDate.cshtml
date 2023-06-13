@@ -30,6 +30,35 @@
 
     <div class="content-wrapper bg-white px-3">
         <br />
+        <div class="content">
+            <div class="overlay-wrapper" id="loadingContainer" style="display:none;">
+                <div class="overlay" style="background-color: rgba(0, 0, 0, 0.59); z-index: 99;">
+                    <img class="" src="~/Content/Images/loading.gif" alt="Loading" style="max-width:350px;" />
+                </div>
+            </div>
+        </div>
+        <center>
+            @if (ViewBag.IsDateLatest == true)
+            {
+                <div class="alert alert-success">
+                    <i class="fa fa-check-circle"></i>  The current data is as of <u>@ViewBag.DateVersion</u>
+                    <a id="updateButton" href="#" class="ml-2 mt-2 btn btn-secondary text-bold btn-sm">
+                        Update
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning">
+                    <i class="fa fa-exclamation-triangle"></i> The current data is as of <u>@ViewBag.DateVersion</u>
+                    <a id="updateButton" href="#" class="ml-2 mt-2 btn btn-secondary text-bold btn-sm">
+                        Update
+                    </a>
+                </div>
+            }
+
+        </center>
+        <br />
         <div class="row">
             <div class="card elevation-3 px-0 ">
                 <div class="card-header bg-primary1 text-white">
@@ -93,6 +122,25 @@
         //var $j = jQuery.noConflict();
 
     $(document).ready(function () {
+        $("#updateButton").click(function () {
+            $("#loadingContainer").show();
+
+            $.ajax({
+                url: "/STRPRC/UpdateSTRPRCData",
+                type: "POST",
+                success: function (response) {
+
+                    window.location.href = "/STRPRC/SearchByDate";
+                },
+                error: function (error) {
+
+                    $("#loadingContainer").hide();
+                }
+            });
+
+            return false;
+        });
+
             $("#startDate").datepicker({
                 dateFormat: 'yy-mm-dd'
             });
@@ -357,7 +405,7 @@
                         var printButtonHtml = '<button id="printButton" class="btn btn-primary">Print</button>';
 
                         // Create the modal content
-                        var modalContent = '<div class="modal-dialog modal-sm modal-dialog-centered">' +
+                        var modalContent = '<div class="modal-dialog modal-dialog-centered">' +
                             '<div class="modal-content">' +
                             '<div class="modal-header">' +
                             '<h5 class="modal-title">Print Report</h5>' +
@@ -420,9 +468,9 @@
                         //Start for print preview single report
                         // Print button click event handler
                         $('#printButton').click(function () {
-                            response.SelectedSizeId = $('#sizeDropdown').val();
-                            response.SelectedTypeId = $('#typeDropdown').val();
-                            response.SelectedCategoryId = $('#categoryDropdown').val();
+                            response.SizeId = $('#sizeDropdown').val();
+                            response.TypeId = $('#typeDropdown').val();
+                            response.CategoryId = $('#categoryDropdown').val();
                             $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(response));
 
                             var reportIframe = document.getElementById("reportIframe");
