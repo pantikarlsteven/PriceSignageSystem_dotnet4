@@ -55,8 +55,8 @@ namespace PriceSignageSystem.Controllers
                 case ReportConstants.Size.Whole:
                     reportPath = Server.MapPath(ReportConstants.Dynamic_WholeReportPath);
                     break;
-                case ReportConstants.Size.Half:
-                    reportPath = Server.MapPath(ReportConstants.Dynamic_HalfReportPath);
+                case ReportConstants.Size.OneEight:
+                    reportPath = Server.MapPath(ReportConstants.Dynamic_OneEightReportPath);
                     break;
                 case ReportConstants.Size.Jewelry:
                     reportPath = Server.MapPath(ReportConstants.Dynamic_JewelryReportPath);
@@ -98,9 +98,9 @@ namespace PriceSignageSystem.Controllers
                 {
                     reportPath = Server.MapPath(ReportConstants.Dynamic_WholeReportPath);
                 }
-                else if (sizeId == ReportConstants.Size.Half)
+                else if (sizeId == ReportConstants.Size.OneEight)
                 {
-                    reportPath = Server.MapPath(ReportConstants.Dynamic_HalfReportPath);
+                    reportPath = Server.MapPath(ReportConstants.Dynamic_OneEightReportPath);
                 }
                 else if (sizeId == ReportConstants.Size.Skinny)
                 {

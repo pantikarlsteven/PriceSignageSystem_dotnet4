@@ -259,6 +259,12 @@
       <DependentUpon>Dynamic_JewelryReport.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Reports\CrystalReports\Dynamic_OneEightReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Dynamic_OneEightReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Reports\CrystalReports\Dynamic_SkinnyReport.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -393,6 +399,10 @@
     <EmbeddedResource Include="Reports\CrystalReports\Dynamic_JewelryReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Dynamic_JewelryReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\CrystalReports\Dynamic_OneEightReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Dynamic_OneEightReport.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\CrystalReports\Dynamic_SkinnyReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

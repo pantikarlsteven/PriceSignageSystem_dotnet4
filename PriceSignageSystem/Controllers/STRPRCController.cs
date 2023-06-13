@@ -176,7 +176,7 @@ namespace PriceSignageSystem.Controllers
 
                 Logs.WriteToFile("test 00");
 
-                var strReportPath = Server.MapPath(ReportConstants.Dynamic_HalfReportPath);
+                var strReportPath = Server.MapPath(ReportConstants.Dynamic_OneEightReportPath);
                 Logs.WriteToFile(strReportPath);
                 rptH.Load(strReportPath);
                 Logs.WriteToFile("test 01");
