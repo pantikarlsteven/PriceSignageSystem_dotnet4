@@ -1,20 +1,13 @@
 ﻿using CrystalDecisions.CrystalReports.Engine;
-using CrystalDecisions.Shared;
 using PriceSignageSystem.Code;
 using PriceSignageSystem.Helper;
 using PriceSignageSystem.Models.Constants;
-using PriceSignageSystem.Models.DatabaseContext;
 using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
-using PriceSignageSystem.Models.Repository;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using System.Data.SqlClient;
-using System.Drawing.Printing;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -39,14 +32,6 @@ namespace PriceSignageSystem.Controllers
 
         public ActionResult Index()
         {
-            var date = _sTRPRCRepository.GetLatestUpdate();
-
-            if (date.Date == DateTime.Now.Date)
-            {
-                ViewBag.IsDateLatest = true;
-            }
-
-            ViewBag.DateVersion = date.ToString("MMM dd yyyy HH:mm:ss tt"); ;
             return View();
         }
 
@@ -109,6 +94,14 @@ namespace PriceSignageSystem.Controllers
 
         public ActionResult SearchByDate()
         {
+            var date = _sTRPRCRepository.GetLatestUpdate();
+
+            if (date.Date == DateTime.Now.Date)
+            {
+                ViewBag.IsDateLatest = true;
+            }
+
+            ViewBag.DateVersion = date.ToString("MMM dd yyyy HH:mm:ss tt"); ;
             return View();
         }
 
@@ -122,8 +115,8 @@ namespace PriceSignageSystem.Controllers
           
             foreach (var item in data) // TEMPORARY -- SOON TO BE DEFINED IN DB
             {
-                item.TypeName = startDateFormatted == item.O3SDT ? "Save"
-                                : endDateFormatted == item.O3EDT ? "Regular"
+                item.TypeName = startDateFormatted == item.O3SDT && item.O3EDT != 999999 ? "Save"
+                                : startDateFormatted == item.O3SDT && item.O3EDT == 999999 ? "Regular"
                                 : "Save";
                 item.SizeName = item.SizeId == 1 ? "Whole"
                                 : item.SizeId == 2 ? "Half"

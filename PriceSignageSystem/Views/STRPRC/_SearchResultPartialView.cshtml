@@ -88,33 +88,42 @@
             {
                 <div class="container">
                     <div class="row mb-3 d-flex justify-content-center">
-                        <div class="col-3">
-                            <div class="form-group">
-                                @Html.LabelFor(m => m.SelectedTypeId, htmlAttributes: new { @class = "font-weight-bold" })
-                                @Html.DropDownListFor(m => m.SelectedTypeId, Model.Types ?? new List<SelectListItem>(), "Select Type", new { @class = "form-control form-control-sm custom-select" })
+                        <div class="col-2">
+                        </div>
+                        <div class="col-8">
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="form-group ">
+                                        @Html.LabelFor(m => m.SelectedTypeId, htmlAttributes: new { @class = "font-weight-bold" })
+                                        @Html.DropDownListFor(m => m.SelectedTypeId, Model.Types ?? new List<SelectListItem>(), "Select Type", new { @class = "form-control form-control-sm custom-select" })
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group ">
+                                        @Html.LabelFor(m => m.SelectedSizeId, htmlAttributes: new { @class = "font-weight-bold" })
+                                        @Html.DropDownListFor(m => m.SelectedSizeId, Model.Sizes ?? new List<SelectListItem>(), "Select Size", new { @class = "form-control form-control-sm custom-select" })
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group ">
+                                        @Html.LabelFor(m => m.SelectedCategoryId, htmlAttributes: new { @class = "font-weight-bold" })
+                                        @Html.DropDownListFor(m => m.SelectedCategoryId, Model.Categories ?? new List<SelectListItem>(), "Select Category", new { @class = "form-control form-control-sm custom-select" })
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="d-flex justify-content-center">
+                                <button type="button" class="newPrint btn btn-primary mr-1">Print</button>
+                                <button type="button" class="queuebtn btn btn-secondary mr-1">Queue</button>
+                                <button type="button" class="qListbtn btn btn-success mr-1">Print Queue</button>
                             </div>
                         </div>
-                        <div class="col-3">
-                            <div class="form-group">
-                                @Html.LabelFor(m => m.SelectedSizeId, htmlAttributes: new { @class = "font-weight-bold" })
-                                @Html.DropDownListFor(m => m.SelectedSizeId, Model.Sizes ?? new List<SelectListItem>(), "Select Size", new { @class = "form-control form-control-sm custom-select" })
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-group">
-                                @Html.LabelFor(m => m.SelectedCategoryId, htmlAttributes: new { @class = "font-weight-bold" })
-                                @Html.DropDownListFor(m => m.SelectedCategoryId, Model.Categories ?? new List<SelectListItem>(), "Select Category", new { @class = "form-control form-control-sm custom-select" })
-                            </div>
+                        <div class="col-2">
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col text-center">
-                            @*<button type="button" class="btn btn-primary" value="submit">Print</button>*@
-                            <button type="button" class="newPrint btn btn-primary">Print</button>
-                            <button type="button" class="queuebtn btn btn-secondary">Queue</button>
-                            <button type="button" class="newQListbtn btn btn-success" @*onclick="openQueueReportInNewTab()"*@>Print Queue</button>
-                        </div>
+                        
                     </div>
                 </div>
             }
@@ -141,17 +150,17 @@
     $(document).ready(function () {
 
         $(".newPrint").click(function () {
-            var strprcDto = {
+            var reportDto = {
                 O3SKU: @Model.O3SKU,
-                SelectedSizeId: 0,
-                SelectedTypeId: 0,
-                SelectedCategoryId: 0
+                SizeId: 0,
+                TypeId: 0,
+                CategoryId: 0
             };
 
-            strprcDto.SelectedTypeId = $('#SelectedTypeId').val();
-            strprcDto.SelectedCategoryId = $('#SelectedCategoryId').val();
-            strprcDto.SelectedSizeId= $('#SelectedSizeId').val();
-            $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(strprcDto));
+            reportDto.TypeId = $('#SelectedTypeId').val();
+            reportDto.CategoryId = $('#SelectedCategoryId').val();
+            reportDto.SizeId= $('#SelectedSizeId').val();
+            $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(reportDto));
 
             var reportIframe = document.getElementById("reportIframe");
             if (reportIframe) {
@@ -161,23 +170,6 @@
                 reportIframe.src = $("#reportIframe").attr("src");
             }
         });
-
-        $('.newQListbtn').click(function () {
-            var sizeId = $('#SelectedSizeId').val();
-            var typeId = $('#SelectedTypeId').val();
-            var categoryId = $('#SelectedCategoryId').val();
-
-            $("#reportIframe").attr("src", "/Queue/PrintPreviewQueueReport?sizeId=" + sizeId + "&typeId=" + typeId + "&categoryId=" + categoryId + "");
-
-            var reportIframe = document.getElementById("reportIframe");
-            if (reportIframe) {
-                reportIframe.onload = function () {
-                    reportIframe.contentWindow.print();
-                };
-                reportIframe.src = $("#reportIframe").attr("src");
-            }
-        });
-
 
         $(".queuebtn").click(function () {
             var sizeId = $('#SelectedSizeId').val();
@@ -284,10 +276,8 @@
                         });
 
                         $('#printQueueButton').click(function () {
-
-                           var selectedSize = $('#sizeDropdown').val();
-                           var url = '@Url.Action("PrintQueueList", "Queue")';
-
+                            var selectedSize = $('#sizeDropdown').val();
+                            var url = '@Url.Action("CheckItemQueuesPerUser", "Queue")';
                             $.ajax({
                                 url: url,
                                 type: 'POST',
@@ -295,6 +285,14 @@
                                 success: function (response) {
                                     if (response.success) {
                                         $('#modalView').modal('hide');
+                                        $("#reportIframe").attr("src", "/Queue/PrintPreviewQueueReport?sizeId=" + selectedSize + "");
+                                        var reportIframe = document.getElementById("reportIframe");
+                                        if (reportIframe) {
+                                            reportIframe.onload = function () {
+                                                reportIframe.contentWindow.print();
+                                            };
+                                            reportIframe.src = $("#reportIframe").attr("src");
+                                        }
                                     } else {
                                         $('#modalView').modal('hide');
                                         // Show success modal

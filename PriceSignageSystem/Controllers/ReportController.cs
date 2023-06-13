@@ -111,11 +111,11 @@ namespace PriceSignageSystem.Controllers
         {
             try
             {
-                var model = JsonConvert.DeserializeObject<STRPRCDto>(response);
+                var model = JsonConvert.DeserializeObject<ReportDto>(response);
                 ReportDocument report = new ReportDocument();
                 var path = string.Empty;
 
-                switch (model.SelectedSizeId)
+                switch (model.SizeId)
                 {
                     case ReportConstants.Size.Whole:
                         path = Server.MapPath(ReportConstants.Dynamic_WholeReportPath);
@@ -132,12 +132,11 @@ namespace PriceSignageSystem.Controllers
                 }
 
                 report.Load(path);
-                var skuModel = _sTRPRCRepository.GetDataBySKU(model.O3SKU);
-                skuModel.TypeId = model.SelectedTypeId;
-                skuModel.CategoryId = model.SelectedTypeId;
+                var skuModel = _sTRPRCRepository.GetReportData(model.O3SKU);
+                skuModel.TypeId = model.TypeId;
+                skuModel.CategoryId = model.CategoryId;
 
                 report.SetDataSource(ConversionHelper.ConvertObjectToDataTable(skuModel));
-
 
                 Stream stream = report.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
                 var pdfBytes = new byte[stream.Length];
@@ -259,13 +258,11 @@ namespace PriceSignageSystem.Controllers
         {
             try
             {
-                Logs.WriteToFile("test1");
                 var data = _sTRPRCRepository.GetReportData(model.O3SKU);
                 data.UserName = Session["Username"].ToString();
                 var dataTable = ConversionHelper.ConvertObjectToDataTable(data);
                 var reportPath = "";
 
-                Logs.WriteToFile("test2");
                 if (model.SelectedSizeId == ReportConstants.Size.Whole)
                 {
                     reportPath = Server.MapPath(ReportConstants.Dynamic_WholeReportPath);
@@ -283,21 +280,17 @@ namespace PriceSignageSystem.Controllers
                     reportPath = Server.MapPath(ReportConstants.Dynamic_JewelryReportPath);
                 }
 
-                Logs.WriteToFile("test3");
                 ReportDocument report = new ReportDocument();
                 report.Load(reportPath);
                 report.SetDataSource(dataTable);
 
-                Logs.WriteToFile("test4");
                 PrinterSettings printerSettings = new PrinterSettings();
                 //printerSettings.PrinterName = _printerName;
                 report.PrintOptions.PrinterName = _printerName;
                 report.PrintToPrinter(1, true, 0, 0);
 
-                Logs.WriteToFile("test5");
                 report.Close();
                 report.Dispose();
-                Logs.WriteToFile("test6");
 
             }
             catch (Exception ex)
