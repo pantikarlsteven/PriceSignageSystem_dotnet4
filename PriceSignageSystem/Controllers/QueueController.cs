@@ -121,6 +121,8 @@ namespace PriceSignageSystem.Controllers
 
                 _queueRepository.UpdateStatus(data);
                 Response.AppendHeader("Content-Disposition", "inline; filename=QueueReport.pdf");
+                report.Close();
+                report.Dispose();
                 return File(pdfBytes, "application/pdf");
             }
             catch (Exception ex)

@@ -187,7 +187,8 @@ namespace PriceSignageSystem.Controllers
 
                 rptH.PrintToPrinter(1, true, 0, 0);
                 Logs.WriteToFile("test 2");
-
+                rptH.Close();
+                rptH.Dispose();
                 //Response.AppendHeader("Content-Disposition", "inline; filename=test.pdf");
                 //return File(pdfBytes, "application/pdf");
 

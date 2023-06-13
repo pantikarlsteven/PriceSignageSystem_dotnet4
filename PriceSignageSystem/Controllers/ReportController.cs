@@ -60,7 +60,8 @@ namespace PriceSignageSystem.Controllers
             stream.Read(pdfBytes, 0, pdfBytes.Length);
 
             Response.AppendHeader("Content-Disposition", "inline; filename=Report.pdf");
-
+            report.Close();
+            report.Dispose();
             return File(pdfBytes, "application/pdf");
         }
         [HttpPost]
@@ -144,6 +145,8 @@ namespace PriceSignageSystem.Controllers
                 stream.Read(pdfBytes, 0, pdfBytes.Length);
 
                 Response.AppendHeader("Content-Disposition", "inline; filename=" + model.O3SKU.ToString() + ".pdf");
+                report.Close();
+                report.Dispose();
                 return File(pdfBytes, "application/pdf");
             }
             catch (Exception ex)
@@ -193,6 +196,8 @@ namespace PriceSignageSystem.Controllers
                 stream.Read(pdfBytes, 0, pdfBytes.Length);
 
                 Response.AppendHeader("Content-Disposition", "inline; filename=MultipleSKUs.pdf");
+                report.Close();
+                report.Dispose();
                 return File(pdfBytes, "application/pdf");
             }
             else
