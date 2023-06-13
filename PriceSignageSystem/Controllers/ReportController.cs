@@ -247,6 +247,9 @@ namespace PriceSignageSystem.Controllers
                 printerSettings.PrinterName = _printerName;
                 report.PrintOptions.PrinterName = printerSettings.PrinterName;
                 report.PrintToPrinter(1, true, 0, 0);
+
+                report.Close();
+                report.Dispose();
             }
             else
             {

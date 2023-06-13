@@ -119,9 +119,9 @@ namespace PriceSignageSystem.Controllers
                                 : startDateFormatted == item.O3SDT && item.O3EDT == 999999 ? "Regular"
                                 : "Save";
                 item.SizeName = item.SizeId == 1 ? "Whole"
-                                : item.SizeId == 2 ? "Half"
-                                : item.SizeId == 3 ? "Jewelry"
-                                : item.SizeId == 4 ? "Skinny"
+                                : item.SizeId == 2 ? "Skinny"
+                                : item.SizeId == 3 ? "1/8"
+                                : item.SizeId == 4 ? "Jewelry"
                                 : "Whole";
                 item.CategoryName = item.CategoryId == 1 ? "Appliance"
                                     : item.CategoryId == 2 ? "Non-Appliance"
