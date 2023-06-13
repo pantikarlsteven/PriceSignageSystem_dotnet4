@@ -119,6 +119,7 @@ namespace PriceSignageSystem.Controllers
                 var pdfBytes = new byte[stream.Length];
                 stream.Read(pdfBytes, 0, pdfBytes.Length);
 
+                _queueRepository.UpdateStatus(data);
                 Response.AppendHeader("Content-Disposition", "inline; filename=QueueReport.pdf");
                 return File(pdfBytes, "application/pdf");
             }
