@@ -272,7 +272,7 @@
                                 });
 
                                 // Set default values for the dropdowns
-                                $('#sizeDropdown').val(1);
+                                $('#sizeDropdown').val(2);
 
                                 @*//Start for auto printing multiple report
                                 // PRINT MULTIPLE
@@ -311,9 +311,10 @@
                                         };
                                         reportIframe.src = $("#reportIframe").attr("src");
                                     }
+                                    $('#modalView').modal('hide');
+
                                 });
                                 //End for print preview multiple report
-
 
                             } else {
                                 alert('Please select items to print.');
