@@ -50,6 +50,7 @@ namespace PriceSignageSystem.Controllers
                 }
                 else
                 {
+                    TempData["ErrorMessage"] = "Invalid Username or Password!";
                     ModelState.AddModelError("", "Invalid username or password.");
                 }
             }

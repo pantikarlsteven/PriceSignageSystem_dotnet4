@@ -39,7 +39,8 @@ namespace PriceSignageSystem.Models.Repository
         {
             var data = (from a in _db.ItemQueues
                         join b in _db.STRPRCs on a.O3SKU equals b.O3SKU
-                        join c in _db.Countries on b.O3TRB3 equals c.iatrb3
+                        join c in _db.Countries on b.O3TRB3 equals c.iatrb3 into bc
+                        from d in bc.DefaultIfEmpty()
                         where a.UserName == username && a.Status == ReportConstants.Status.InQueue
                         select new ReportDto
                         {
@@ -84,15 +85,10 @@ namespace PriceSignageSystem.Models.Repository
                             TypeId = a.TypeId,
                             CategoryId = a.CategoryId,
                             Status = a.Status,
-                            iatrb3 = c.iatrb3,
-                            country_img = c.country_img,
+                            iatrb3 = d.iatrb3,
+                            country_img = d.country_img,
                             ItemQueueId = a.Id
                         }).ToList();
-                       
-                
-                
-                //_db.ItemQueues.Where(a => a.UserName == username && a.Status == ReportConstants.Status.InQueue).ToList();
-
             return data;
         }
 
