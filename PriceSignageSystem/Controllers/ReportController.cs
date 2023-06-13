@@ -79,9 +79,9 @@ namespace PriceSignageSystem.Controllers
             {
                 reportPath = Server.MapPath(ReportConstants.Dynamic_WholeReportPath);
             }
-            else if (model.SelectedSizeId == ReportConstants.Size.Half)
+            else if (model.SelectedSizeId == ReportConstants.Size.OneEight)
             {
-                reportPath = Server.MapPath(ReportConstants.Dynamic_HalfReportPath);
+                reportPath = Server.MapPath(ReportConstants.Dynamic_OneEightReportPath);
             }
             else if (model.SelectedSizeId == ReportConstants.Size.Skinny)
             {
@@ -120,8 +120,8 @@ namespace PriceSignageSystem.Controllers
                     case ReportConstants.Size.Whole:
                         path = Server.MapPath(ReportConstants.Dynamic_WholeReportPath);
                         break;
-                    case ReportConstants.Size.Half:
-                        path = Server.MapPath(ReportConstants.Dynamic_HalfReportPath);
+                    case ReportConstants.Size.OneEight:
+                        path = Server.MapPath(ReportConstants.Dynamic_OneEightReportPath);
                         break;
                     case ReportConstants.Size.Jewelry:
                         path = Server.MapPath(ReportConstants.Dynamic_JewelryReportPath);
@@ -135,6 +135,7 @@ namespace PriceSignageSystem.Controllers
                 var skuModel = _sTRPRCRepository.GetReportData(model.O3SKU);
                 skuModel.TypeId = model.TypeId;
                 skuModel.CategoryId = model.CategoryId;
+                skuModel.UserName = Session["Username"].ToString();
 
                 report.SetDataSource(ConversionHelper.ConvertObjectToDataTable(skuModel));
 
@@ -170,9 +171,9 @@ namespace PriceSignageSystem.Controllers
                 {
                     reportPath = Server.MapPath(ReportConstants.Dynamic_WholeReportPath);
                 }
-                else if (sizeId == ReportConstants.Size.Half)
+                else if (sizeId == ReportConstants.Size.OneEight)
                 {
-                    reportPath = Server.MapPath(ReportConstants.Dynamic_HalfReportPath);
+                    reportPath = Server.MapPath(ReportConstants.Dynamic_OneEightReportPath);
                 }
                 else if (sizeId == ReportConstants.Size.Skinny)
                 {
@@ -225,9 +226,9 @@ namespace PriceSignageSystem.Controllers
                 {
                     reportPath = Server.MapPath(ReportConstants.Dynamic_WholeReportPath);
                 }
-                else if (sizeId == ReportConstants.Size.Half)
+                else if (sizeId == ReportConstants.Size.OneEight)
                 {
-                    reportPath = Server.MapPath(ReportConstants.Dynamic_HalfReportPath);
+                    reportPath = Server.MapPath(ReportConstants.Dynamic_OneEightReportPath);
                 }
                 else if (sizeId == ReportConstants.Size.Skinny)
                 {
@@ -267,9 +268,9 @@ namespace PriceSignageSystem.Controllers
                 {
                     reportPath = Server.MapPath(ReportConstants.Dynamic_WholeReportPath);
                 }
-                else if (model.SelectedSizeId == ReportConstants.Size.Half)
+                else if (model.SelectedSizeId == ReportConstants.Size.OneEight)
                 {
-                    reportPath = Server.MapPath(ReportConstants.Dynamic_HalfReportPath);
+                    reportPath = Server.MapPath(ReportConstants.Dynamic_OneEightReportPath);
                 }
                 else if (model.SelectedSizeId == ReportConstants.Size.Skinny)
                 {
