@@ -225,6 +225,14 @@
     <Compile Include="Migrations\202306050123143_addFields_STRPRCs.designer.cs">
       <DependentUpon>202306050123143_addFields_STRPRCs.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202306140804469_add_Roletbl.cs" />
+    <Compile Include="Migrations\202306140804469_add_Roletbl.designer.cs">
+      <DependentUpon>202306140804469_add_Roletbl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202306140806117_add_Roletbl2.cs" />
+    <Compile Include="Migrations\202306140806117_add_Roletbl2.designer.cs">
+      <DependentUpon>202306140806117_add_Roletbl2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Constants\ReportConstants.cs" />
@@ -248,6 +256,7 @@
     <Compile Include="Models\Repository\STRPRCRepository.cs" />
     <Compile Include="Models\Repository\TypeRepository.cs" />
     <Compile Include="Models\Repository\UserRepository.cs" />
+    <Compile Include="Models\Role.cs" />
     <Compile Include="Models\Size.cs" />
     <Compile Include="Models\STRPRC.cs" />
     <Compile Include="Models\Type.cs" />
@@ -396,6 +405,12 @@
       <DependentUpon>202306050123143_addFields_STRPRCs.cs</DependentUpon>
     </EmbeddedResource>
     <Content Include="Reports\CrystalReports\Dynamic_HalfReport.rpt" />
+    <EmbeddedResource Include="Migrations\202306140804469_add_Roletbl.resx">
+      <DependentUpon>202306140804469_add_Roletbl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202306140806117_add_Roletbl2.resx">
+      <DependentUpon>202306140806117_add_Roletbl2.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\CrystalReports\Dynamic_JewelryReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Dynamic_JewelryReport.cs</LastGenOutput>

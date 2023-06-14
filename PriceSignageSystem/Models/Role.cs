@@ -7,16 +7,11 @@ using System.Web;
 
 namespace PriceSignageSystem.Models
 {
-    public class User
+    public class Role
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int UserId { get; set; }
-        public int RoleId { get; set; }
-        [Display(Name = "Username")]
-        public string UserName { get; set; }
-        [Display(Name = "Password")]
-        public string Password { get; set; }
-        public int IsActive { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }
