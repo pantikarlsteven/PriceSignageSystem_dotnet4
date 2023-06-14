@@ -90,6 +90,7 @@ namespace PriceSignageSystem.Controllers
                 var encryptedPassword = EncryptionHelper.Encrypt(user.Password);
                 user.Password = encryptedPassword;
                 user.IsActive = 1;
+                user.RoleId = 2;
                 var data = _userRepository.AddUser(user);
 
                 TempData["SuccessMessage"] = "Registration successful!";
