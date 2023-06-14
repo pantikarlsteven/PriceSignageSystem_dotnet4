@@ -18,6 +18,7 @@ using System.Web.Mvc;
 
 namespace PriceSignageSystem.Controllers
 {
+    [SessionExpiration]
     public class ReportController : Controller
     {
         private readonly ISTRPRCRepository _sTRPRCRepository;

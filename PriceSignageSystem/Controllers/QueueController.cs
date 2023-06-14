@@ -1,4 +1,5 @@
 ﻿using CrystalDecisions.CrystalReports.Engine;
+using PriceSignageSystem.Code;
 using PriceSignageSystem.Helper;
 using PriceSignageSystem.Models.Constants;
 using PriceSignageSystem.Models.Dto;
@@ -12,6 +13,7 @@ using System.Web.Mvc;
 
 namespace PriceSignageSystem.Controllers
 {
+    [SessionExpiration]
     public class QueueController : Controller
     {
         private readonly IQueueRepository _queueRepository;

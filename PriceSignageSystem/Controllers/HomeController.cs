@@ -16,7 +16,7 @@ namespace PriceSignageSystem.Controllers
         }
         public ActionResult SessionExpired()
         {
-            TempData["ErrorMessage"] = "Your session has expired. Please login again.";
+            TempData["TimeoutErrorMessage"] = "Your session has expired. Please login again.";
             return RedirectToAction("Login", "Account");
         }
     }
