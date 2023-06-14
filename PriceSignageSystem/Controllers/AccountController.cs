@@ -88,25 +88,36 @@ namespace PriceSignageSystem.Controllers
         {
             if (ModelState.IsValid)
             {
-                var users = _userRepository.GetUsers().Where(a => a.UserName.Contains(user.UserName));
-                if (!users.Any())
-                {
-                    var encryptedPassword = EncryptionHelper.Encrypt(user.Password);
-                    user.Password = encryptedPassword;
-                    user.IsActive = 1;
-                    user.RoleId = 2;
-                    var data = _userRepository.AddUser(user);
+                var existingUser = _userRepository.GetAll().FirstOrDefault(a => a.UserName == user.UserName);
+                //var users = _userRepository.GetUsers().Where(a => a.UserName.Contains(user.UserName));
+                //if (!users.Any())
+                //{
+                //    var encryptedPassword = EncryptionHelper.Encrypt(user.Password);
+                //    user.Password = encryptedPassword;
+                //    user.IsActive = 1;
+                //    user.RoleId = 2;
+                //    var data = _userRepository.AddUser(user);
 
-                    TempData["RegistrationSuccessMessage"] = "Registration successful!";
-                    return RedirectToAction("SearchByDate","STRPRC");
-                }
-                else
+                //    TempData["RegistrationSuccessMessage"] = "Registration successful!";
+                //    return RedirectToAction("SearchByDate","STRPRC");
+                //}
+
+                if (existingUser != null)
                 {
-                    TempData["ErrorMessage"] = "Username already exists! Enter a unique one. ";
-                    return View();
+                    ModelState.AddModelError("UserName", "Username must be unique.");
+                    return View(user); // Return to the view with the validation error
                 }
+
+                var encryptedPassword = EncryptionHelper.Encrypt(user.Password);
+                user.Password = encryptedPassword;
+                user.IsActive = 1;
+                user.RoleId = 2;
+                var data = _userRepository.AddUser(user);
+
+                TempData["RegistrationSuccessMessage"] = "Registration successful!";
+                return RedirectToAction("SearchByDate", "STRPRC");
             }
-            return View();
+            return View(user);
         }
     }
 }

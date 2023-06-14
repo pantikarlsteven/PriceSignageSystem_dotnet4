@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PriceSignageSystem.Code.CustomValidations;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -14,6 +15,8 @@ namespace PriceSignageSystem.Models
         public int UserId { get; set; }
         public int RoleId { get; set; }
         [Display(Name = "Username")]
+        [Required(ErrorMessage = "Username is required.")]
+        [UniqueUsername(ErrorMessage = "Username must be unique.")]
         public string UserName { get; set; }
         [Display(Name = "Password")]
         public string Password { get; set; }
