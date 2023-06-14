@@ -31,7 +31,7 @@ namespace PriceSignageSystem.Controllers
         [HttpPost]
         public ActionResult Login(UserStoreDto model)
         {
-
+            
             if (ModelState.IsValid)
             {
                 var encryptedPassword = EncryptionHelper.Encrypt(model.Password);
@@ -46,6 +46,7 @@ namespace PriceSignageSystem.Controllers
                     }
                     Session["UserId"] = user.UserId;
                     Session["Username"] = user.UserName;
+                    Session["RoleId"] = user.RoleId;
                     return RedirectToAction("SearchByDate", "STRPRC");
                 }
                 else
@@ -87,14 +88,23 @@ namespace PriceSignageSystem.Controllers
         {
             if (ModelState.IsValid)
             {
-                var encryptedPassword = EncryptionHelper.Encrypt(user.Password);
-                user.Password = encryptedPassword;
-                user.IsActive = 1;
-                user.RoleId = 2;
-                var data = _userRepository.AddUser(user);
+                var users = _userRepository.GetUsers().Where(a => a.UserName.Contains(user.UserName));
+                if (!users.Any())
+                {
+                    var encryptedPassword = EncryptionHelper.Encrypt(user.Password);
+                    user.Password = encryptedPassword;
+                    user.IsActive = 1;
+                    user.RoleId = 2;
+                    var data = _userRepository.AddUser(user);
 
-                TempData["SuccessMessage"] = "Registration successful!";
-                return RedirectToAction("Login");
+                    TempData["RegistrationSuccessMessage"] = "Registration successful!";
+                    return RedirectToAction("SearchByDate","STRPRC");
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Username already exists! Enter a unique one. ";
+                    return View();
+                }
             }
             return View();
         }
