@@ -184,6 +184,7 @@
     <Compile Include="Code\CustomValidations\UniqueUsernameAttribute.cs" />
     <Compile Include="Code\Logs.cs" />
     <Compile Include="Code\SessionExpirationAttribute.cs" />
+    <Compile Include="Code\TextToImage.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\QueueController.cs" />
