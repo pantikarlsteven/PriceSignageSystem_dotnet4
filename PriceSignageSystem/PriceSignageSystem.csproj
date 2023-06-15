@@ -184,6 +184,7 @@
     <Compile Include="Code\CustomValidations\UniqueUsernameAttribute.cs" />
     <Compile Include="Code\Logs.cs" />
     <Compile Include="Code\SessionExpirationAttribute.cs" />
+    <Compile Include="Code\TextToImage.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\QueueController.cs" />
@@ -439,7 +440,6 @@
       <LastGenOutput>Dynamic_SkinnyReport.cs</LastGenOutput>
     </EmbeddedResource>
     <Content Include="Reports\CrystalReports\Dynamic_WholeReport.rpt" />
-    <Content Include="Reports\CrystalReports\Dynamic_WholeReportTesting.rpt" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />

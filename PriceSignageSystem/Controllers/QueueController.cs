@@ -92,6 +92,10 @@ namespace PriceSignageSystem.Controllers
                 foreach (var item in data)
                 {
                     item.UserName = Session["Username"].ToString();
+                    var textToImage = new TextToImage();
+                    textToImage.GetImageWidth(item.O3FNAM, item.O3IDSC, sizeId);
+                    item.IsSLBrand = textToImage.IsSLBrand;
+                    item.IsSLDescription = textToImage.IsSLDescription;
                 }
                 var dataTable = ConversionHelper.ConvertListToDataTable(data);
                 var reportPath = string.Empty;
