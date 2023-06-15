@@ -119,12 +119,13 @@
                                 <th>Type</th>
                                 <th>Size</th>
                                 <th>Category</th>
+                                <th>Dept Name</th>
                                 <th><button class="printAllBtn btn btn-secondary px-3">Print Selected</button></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td colspan="13" style="text-align: center;">Please enter dates</td>
+                                <td colspan="14" style="text-align: center;">Please enter dates</td>
                             </tr>
                         </tbody>
                     </table>
@@ -205,7 +206,7 @@
                              pageLength: -1,
                              data: data,
                              columnDefs: [
-                                 { targets: [0, 1, 12], orderable: false },
+                                 { targets: [0, 1, 13], orderable: false },
                              ],
                              columns: [
                                  {
@@ -233,6 +234,7 @@
                                  { data: 'TypeName', name: 'TypeName', width: '100px' },
                                  { data: 'SizeName', name: 'SizeName', width: '100px' },
                                  { data: 'CategoryName', name: 'CategoryName', width: '100px' },
+                                 { data: 'DepartmentName', name: 'DepartmentName', width: '100px' },
                                  {
                                     data: null,
                                     render: function (data, type, row) {
@@ -306,28 +308,6 @@
                                 // Set default values for the dropdowns
                                 $('#sizeDropdown').val(2);
 
-                                @*//Start for auto printing multiple report
-                                // PRINT MULTIPLE
-                                $('#printSelectedButton').click(function () {
-                                    var sizeId = $('#sizeDropdown').val();
-                                    var typeId = $('#typeDropdown').val();
-                                    var categoryId = $('#categoryDropdown').val();
-
-                                    $.ajax({
-                                        url: '@Url.Action("AutoPrintMultipleReport", "Report")',
-                                        type: 'POST',
-                                        data: { selectedIds: selectedRows, sizeId : sizeId, typeId: typeId, categoryId: categoryId },
-                                        success: function (result) {
-                                            $('#modalView').modal('hide');
-
-                                        },
-                                        error: function (xhr, status, error) {
-                                            console.error("Error queuing item: " + error);
-                                        }
-
-                                    });
-                                });
-                                //End for auto printing multiple report*@
 
                                 //Start for print preview multiple report
                                 // PRINT MULTIPLE
@@ -473,31 +453,6 @@
                         $('#sizeDropdown').val(response.SizeId);
                         $('#typeDropdown').val(response.TypeId);
                         $('#categoryDropdown').val(response.CategoryId);
-
-
-                        @*//Start for auto printing single report
-                        // Print button click event handler
-                        $('#printButton').click(function () {
-                            response.SelectedSizeId = $('#sizeDropdown').val();
-                            response.SelectedTypeId = $('#typeDropdown').val();
-                            response.SelectedCategoryId = $('#categoryDropdown').val();
-
-                            var url = '@Url.Action("AutoPrintSingleReport", "Report")';
-                            var serializedResponse = JSON.stringify(response);
-
-                            $.ajax({
-                                url: url,
-                                type: 'POST',
-                                data: { response: serializedResponse },
-                                success: function () {
-                                    $('#modalView').modal('hide');
-                                },
-                                error: function () {
-                                }
-                            });
-                        });
-                        //End for auto printing single report*@
-
 
                         //Start for print preview single report
                         // Print button click event handler

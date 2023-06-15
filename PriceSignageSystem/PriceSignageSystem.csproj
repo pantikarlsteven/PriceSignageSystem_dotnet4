@@ -238,6 +238,10 @@
     <Compile Include="Migrations\202306140946114_Add_usernameRequired.designer.cs">
       <DependentUpon>202306140946114_Add_usernameRequired.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202306150002086_add_passRequired.cs" />
+    <Compile Include="Migrations\202306150002086_add_passRequired.designer.cs">
+      <DependentUpon>202306150002086_add_passRequired.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Constants\ReportConstants.cs" />
@@ -418,6 +422,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202306140946114_Add_usernameRequired.resx">
       <DependentUpon>202306140946114_Add_usernameRequired.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202306150002086_add_passRequired.resx">
+      <DependentUpon>202306150002086_add_passRequired.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\CrystalReports\Dynamic_JewelryReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

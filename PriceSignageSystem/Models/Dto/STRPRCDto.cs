@@ -93,6 +93,7 @@ namespace PriceSignageSystem.Models.Dto
         public int TypeId { get; set; }
         public int SizeId { get; set; }
         public int CategoryId { get; set; }
+        public string DepartmentName { get; set; }
 
     }
 

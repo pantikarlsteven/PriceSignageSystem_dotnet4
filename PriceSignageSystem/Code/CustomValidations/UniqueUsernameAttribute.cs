@@ -18,10 +18,9 @@ namespace PriceSignageSystem.Code.CustomValidations
         {
             if (value == null || string.IsNullOrWhiteSpace(value.ToString()))
             {
-                return ValidationResult.Success; // Return success if username is null or blank
+                return ValidationResult.Success;
             }
 
-            // Access the database to check if the username is unique
             var existingUser = _db.Users.FirstOrDefault(u => u.UserName == (string)value);
 
             if (existingUser != null)

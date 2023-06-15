@@ -309,7 +309,8 @@ namespace PriceSignageSystem.Models.Repository
                         DateUpdated = (DateTime)reader["DateUpdated"],
                         TypeId = (int)reader["TypeId"],
                         SizeId = (int)reader["SizeId"],
-                        CategoryId = (int)reader["CategoryId"]
+                        CategoryId = (int)reader["CategoryId"],
+                        DepartmentName = reader["DPTNAM"].ToString()
                     };
 
                     data.Add(record);

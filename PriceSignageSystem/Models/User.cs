@@ -19,6 +19,7 @@ namespace PriceSignageSystem.Models
         [UniqueUsername(ErrorMessage = "Username must be unique.")]
         public string UserName { get; set; }
         [Display(Name = "Password")]
+        [Required(ErrorMessage = "Password is required.")]
         public string Password { get; set; }
         public int IsActive { get; set; }
     }
