@@ -89,19 +89,7 @@ namespace PriceSignageSystem.Controllers
             if (ModelState.IsValid)
             {
                 var existingUser = _userRepository.GetAll().FirstOrDefault(a => a.UserName == user.UserName);
-                //var users = _userRepository.GetUsers().Where(a => a.UserName.Contains(user.UserName));
-                //if (!users.Any())
-                //{
-                //    var encryptedPassword = EncryptionHelper.Encrypt(user.Password);
-                //    user.Password = encryptedPassword;
-                //    user.IsActive = 1;
-                //    user.RoleId = 2;
-                //    var data = _userRepository.AddUser(user);
-
-                //    TempData["RegistrationSuccessMessage"] = "Registration successful!";
-                //    return RedirectToAction("SearchByDate","STRPRC");
-                //}
-
+               
                 if (existingUser != null)
                 {
                     ModelState.AddModelError("UserName", "Username must be unique.");

@@ -439,7 +439,6 @@
       <LastGenOutput>Dynamic_SkinnyReport.cs</LastGenOutput>
     </EmbeddedResource>
     <Content Include="Reports\CrystalReports\Dynamic_WholeReport.rpt" />
-    <Content Include="Reports\CrystalReports\Dynamic_WholeReportTesting.rpt" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
