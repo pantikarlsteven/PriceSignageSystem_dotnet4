@@ -46,7 +46,7 @@ namespace PriceSignageSystem
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             // Enable session state
-            HttpContext.Current.SetSessionStateBehavior(System.Web.SessionState.SessionStateBehavior.Required);
+            //HttpContext.Current.SetSessionStateBehavior(System.Web.SessionState.SessionStateBehavior.Required);
 
             BundleTable.EnableOptimizations = true;
 

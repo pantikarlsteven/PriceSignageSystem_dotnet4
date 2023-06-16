@@ -3,6 +3,7 @@ using CrystalDecisions.Shared;
 using Microsoft.Reporting.WebForms;
 using Newtonsoft.Json;
 using PriceSignageSystem.Code;
+using PriceSignageSystem.Code.CustomValidations;
 using PriceSignageSystem.Helper;
 using PriceSignageSystem.Models.Constants;
 using PriceSignageSystem.Models.Dto;
@@ -18,7 +19,7 @@ using System.Web.Mvc;
 
 namespace PriceSignageSystem.Controllers
 {
-    [SessionExpiration]
+    [CustomAuthorize]
     public class ReportController : Controller
     {
         private readonly ISTRPRCRepository _sTRPRCRepository;
@@ -49,7 +50,7 @@ namespace PriceSignageSystem.Controllers
         {
             var o3sku = decimal.Parse(id);
             var data = _sTRPRCRepository.GetReportData(o3sku);
-            data.UserName = Session["Username"].ToString();
+            data.UserName = User.Identity.Name;
             var dataTable = ConversionHelper.ConvertObjectToDataTable(data);
 
             ReportDocument report = new ReportDocument();
@@ -70,7 +71,7 @@ namespace PriceSignageSystem.Controllers
         {
             var model = JsonConvert.DeserializeObject<STRPRCDto>(response);
             var data = _sTRPRCRepository.GetReportData(model.O3SKU);
-                data.UserName = Session["Username"].ToString();
+                data.UserName = User.Identity.Name;
                 data.TypeId = model.SelectedTypeId;
                 data.SizeId = model.SelectedSizeId;
                 data.CategoryId = model.SelectedCategoryId;
@@ -137,7 +138,7 @@ namespace PriceSignageSystem.Controllers
                 var skuModel = _sTRPRCRepository.GetReportData(model.O3SKU);
                 skuModel.TypeId = model.TypeId;
                 skuModel.CategoryId = model.CategoryId;
-                skuModel.UserName = Session["Username"].ToString();
+                skuModel.UserName = User.Identity.Name;
 
                 var textToImage = new TextToImage();
                 textToImage.GetImageWidth(skuModel.O3FNAM, skuModel.O3IDSC, model.SizeId);
@@ -171,7 +172,7 @@ namespace PriceSignageSystem.Controllers
                 var data = _sTRPRCRepository.GetReportDataList(o3skus);
                 foreach (var item in data)
                 {
-                    item.UserName = Session["Username"].ToString();
+                    item.UserName = User.Identity.Name;
                     var textToImage = new TextToImage();
                     textToImage.GetImageWidth(item.O3FNAM, item.O3IDSC, sizeId);
                     item.IsSLBrand = textToImage.IsSLBrand;
@@ -229,7 +230,7 @@ namespace PriceSignageSystem.Controllers
                 {
                     var o3sku = decimal.Parse(rowId);
                     reportDto = _sTRPRCRepository.GetReportData(o3sku);
-                    reportDto.UserName = Session["Username"].ToString();
+                    reportDto.UserName = User.Identity.Name;
 
                     printList.Add(reportDto);
                 }
@@ -278,7 +279,7 @@ namespace PriceSignageSystem.Controllers
             try
             {
                 var data = _sTRPRCRepository.GetReportData(model.O3SKU);
-                data.UserName = Session["Username"].ToString();
+                data.UserName = User.Identity.Name;
                 var dataTable = ConversionHelper.ConvertObjectToDataTable(data);
                 var reportPath = "";
 

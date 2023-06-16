@@ -1,5 +1,6 @@
 ﻿using CrystalDecisions.CrystalReports.Engine;
 using PriceSignageSystem.Code;
+using PriceSignageSystem.Code.CustomValidations;
 using PriceSignageSystem.Helper;
 using PriceSignageSystem.Models.Constants;
 using PriceSignageSystem.Models.Dto;
@@ -14,7 +15,7 @@ using System.Web.Mvc;
 
 namespace PriceSignageSystem.Controllers
 {
-    [SessionExpiration]
+    [CustomAuthorize]
     public class STRPRCController : Controller
     {
         private readonly ISTRPRCRepository _sTRPRCRepository;

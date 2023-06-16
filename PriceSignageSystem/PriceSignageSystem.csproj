@@ -181,6 +181,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Code\CustomValidations\CustomAuthorizeAttribute.cs" />
     <Compile Include="Code\CustomValidations\UniqueUsernameAttribute.cs" />
     <Compile Include="Code\Logs.cs" />
     <Compile Include="Code\SessionExpirationAttribute.cs" />
@@ -272,6 +273,7 @@
     <Compile Include="Models\Type.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Provider\UserRoleProvider.cs" />
     <Compile Include="Reports\CrystalReports\Dynamic_JewelryReport.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
