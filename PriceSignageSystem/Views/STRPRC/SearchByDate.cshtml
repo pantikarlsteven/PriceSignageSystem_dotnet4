@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/select/1.3.3/css/select.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 
+
     <style>
         td.details-control {
             text-align: center;
@@ -24,6 +25,7 @@
         th.no-sort::after {
             display: none !important;
         }
+     
     </style>
 </head>
 
@@ -92,12 +94,6 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="endDate">End Date:</label>
-                            <input type="text" id="endDate" name="endDate" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="col-md-4">
                         <label class="text-white">Search</label>
                         <button id="searchBtn" class="btn btn-primary btn-block">Search</button>
                     </div>
@@ -111,7 +107,7 @@
                                 <th></th>
                                 <th>SKU</th>
                                 <th>UPC</th>
-                                <th style="width: 200px; " class="text-nowrap">Item Desc.</th>
+                                <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
                                 <th>Reg Price</th>
                                 <th>Current Price</th>
                                 <th>Date Start</th>
@@ -119,7 +115,7 @@
                                 <th>Type</th>
                                 <th>Size</th>
                                 <th>Category</th>
-                                <th>Dept Name</th>
+                                <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
                                 <th><button class="printAllBtn btn btn-secondary px-3">Print Selected</button></th>
                             </tr>
                         </thead>
@@ -136,6 +132,8 @@
     <script src="~/Scripts/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
 
 </body>
 </html>
@@ -176,19 +174,14 @@
             $("#startDate").datepicker({
                 dateFormat: 'yy-mm-dd'
             });
-            $("#endDate").datepicker({
-                dateFormat: 'yy-mm-dd'
-            });
-
             var table = null;
             $("#searchBtn").click(function () {
                 var startDate = $("#startDate").val();
-                var endDate = $("#endDate").val();
-
+       
                 $.ajax({
                     url: '@Url.Action("GetDataByDate", "STRPRC")',
                     type: 'POST',
-                    data: { startDate: startDate, endDate: endDate },
+                    data: { startDate: startDate },
                     success: function (data) {
 
                         if (table !== null) {
@@ -206,7 +199,7 @@
                              pageLength: -1,
                              data: data,
                              columnDefs: [
-                                 { targets: [0, 1, 13], orderable: false },
+                                 { targets: [0, 1, 12 ,13], orderable: false },
                              ],
                              columns: [
                                  {
@@ -243,6 +236,74 @@
                                  }
                              ],
                          });
+
+                        //filter
+                        // Create dialog element for the filter input
+                        var dialog = $('<div>').dialog({
+                            autoOpen: false,
+                            modal: true,
+                            resizable: false,
+                            width: 200,
+                            position: { my: 'left top', at: 'left bottom', of: '.filter-icon' },
+                            open: function (event, ui) {
+                                $('.ui-widget-overlay').bind('click', function () {
+                                    dialog.dialog('close');
+                                });
+                            },
+                            close: function (event, ui) {
+                                $('.ui-widget-overlay').unbind('click');
+                            }
+                        });
+
+                        // Handle filter icon click
+                        $('thead').on('click', '.filter-icon', function (event) {
+                            event.stopPropagation(); // Prevent event propagation
+
+                            var columnIndex = $(this).closest('th').index();
+                            var column = table.column(columnIndex);
+
+                            // Clear existing filter input
+                            dialog.dialog('option', 'title', 'Filter').html('');
+
+                            // Get distinct values of the column
+                            var distinctValues = column.data().unique().sort().toArray();
+
+                            // Retrieve previously selected values (if any)
+                            var selectedValues = column.search().split('|').map(function (value) {
+                                return value.trim();
+                            });
+
+                            // Create checkboxes for each distinct value
+                            for (var i = 0; i < distinctValues.length; i++) {
+                                var checkbox = $('<input type="checkbox">').addClass('filter-checkbox').val(distinctValues[i]);
+                                if (selectedValues.includes(distinctValues[i])) {
+                                    checkbox.prop('checked', true);
+                                }
+                                var label = $('<label>').text(distinctValues[i]).prepend(checkbox);
+                                dialog.append(label);
+                            }
+
+                            // Apply filter when checkbox state changes
+                            $('.filter-checkbox').on('change', function () {
+                                var selectedValues = $('.filter-checkbox:checked').map(function () {
+                                    return $(this).val();
+                                }).get();
+
+                                if (selectedValues.length === 0) {
+                                    column.search('').draw();
+                                } else {
+                                    column.search(selectedValues.join('|'), true, false).draw();
+                                }
+                            });
+
+                            // Open the filter dialog
+                            dialog.dialog('open');
+
+                            // Adjust dialog position on resize
+                            $(window).on('resize', function () {
+                                dialog.dialog('option', 'position', { my: 'left top', at: 'left bottom', of: '.filter-icon' });
+                            });
+                        });
 
                         $('#selectAll').on('change', function () {
                             var isChecked = $(this).is(':checked');
@@ -488,14 +549,13 @@
             });
 
     });
-
+        // Start Date default value
         document.addEventListener("DOMContentLoaded", function () {
             var today = new Date();
             var tomorrow = new Date(today);
             tomorrow.setDate(tomorrow.getDate() + 1);
             var formattedDate = tomorrow.toISOString().split('T')[0];
             document.getElementById('startDate').value = formattedDate;
-            document.getElementById('endDate').value = formattedDate;
 
         });
 

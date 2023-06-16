@@ -106,10 +106,10 @@ namespace PriceSignageSystem.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetDataByDate(DateTime startDate, DateTime endDate)
+        public ActionResult GetDataByDate(DateTime startDate)
         {
             var startDateFormatted = ConversionHelper.ToDecimal(startDate);
-            var endDateFormatted = ConversionHelper.ToDecimal(endDate);
+            var endDateFormatted = startDateFormatted + 1;
 
             var data = _sTRPRCRepository.GetDataByDate(startDateFormatted, endDateFormatted).ToList();
           
