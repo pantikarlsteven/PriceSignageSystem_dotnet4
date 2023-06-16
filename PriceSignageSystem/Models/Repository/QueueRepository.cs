@@ -25,7 +25,7 @@ namespace PriceSignageSystem.Models.Repository
             record.SizeId = model.SelectedSizeId;
             record.TypeId = model.SelectedTypeId;
             record.CategoryId = model.SelectedCategoryId;
-            record.UserName = (string)HttpContext.Current.Session["Username"];
+            record.UserName = HttpContext.Current.User.Identity.Name;
             record.Status = ReportConstants.Status.InQueue;
             record.DateCreated = DateTime.Now;
 

@@ -1,4 +1,5 @@
-﻿using PriceSignageSystem.Helper;
+﻿using PriceSignageSystem.Code.CustomValidations;
+using PriceSignageSystem.Helper;
 using PriceSignageSystem.Models;
 using PriceSignageSystem.Models.Constants;
 using PriceSignageSystem.Models.Dto;
@@ -6,9 +7,11 @@ using PriceSignageSystem.Models.Interface;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace PriceSignageSystem.Controllers
 {
+    [CustomAuthorize]
     public class AccountController : Controller
     {
         private readonly IUserRepository _userRepository;
@@ -20,18 +23,21 @@ namespace PriceSignageSystem.Controllers
             _sTRPRCRepository = sTRPRCRepository;
         }
 
-        public ActionResult Login()
+        [AllowAnonymous]
+        public ActionResult Login(string returnUrl)
         {
+            ViewBag.returnUrl = returnUrl;
             var model = new UserStoreDto
             {
                 User = new User()
             };
             return View(model);
         }
+
+        [AllowAnonymous]
         [HttpPost]
-        public ActionResult Login(UserStoreDto model)
+        public ActionResult Login(UserStoreDto model, string returnUrl)
         {
-            
             if (ModelState.IsValid)
             {
                 var encryptedPassword = EncryptionHelper.Encrypt(model.Password);
@@ -44,10 +50,12 @@ namespace PriceSignageSystem.Controllers
                         ModelState.AddModelError("", "User is inactive.");
                         return View(model);
                     }
-                    Session["UserId"] = user.UserId;
-                    Session["Username"] = user.UserName;
-                    Session["RoleId"] = user.RoleId;
-                    return RedirectToAction("SearchByDate", "STRPRC");
+                    FormsAuthentication.SetAuthCookie(user.UserName, false);
+                    //Session["UserId"] = user.UserId;
+                    //Session["Username"] = user.UserName;
+                    //Session["RoleId"] = user.RoleId;
+                    //return RedirectToAction("SearchByDate", "STRPRC");
+                    return (returnUrl != null ? Redirect(returnUrl) : Redirect("/STRPRC/SearchByDate"));
                 }
                 else
                 {
@@ -61,9 +69,9 @@ namespace PriceSignageSystem.Controllers
 
         public ActionResult Logout()
         {
-            Session.Clear();
-            Session.Abandon();
-
+            //Session.Clear();
+            //Session.Abandon();
+            FormsAuthentication.SignOut();
             return RedirectToAction("Login", "Account");
         }
 

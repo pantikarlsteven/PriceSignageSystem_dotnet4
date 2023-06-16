@@ -1,5 +1,6 @@
 ﻿using CrystalDecisions.CrystalReports.Engine;
 using PriceSignageSystem.Code;
+using PriceSignageSystem.Code.CustomValidations;
 using PriceSignageSystem.Helper;
 using PriceSignageSystem.Models.Constants;
 using PriceSignageSystem.Models.Dto;
@@ -13,7 +14,7 @@ using System.Web.Mvc;
 
 namespace PriceSignageSystem.Controllers
 {
-    [SessionExpiration]
+    [CustomAuthorize]
     public class QueueController : Controller
     {
         private readonly IQueueRepository _queueRepository;
@@ -42,7 +43,7 @@ namespace PriceSignageSystem.Controllers
 
         public ActionResult PrintQueueList(int sizeId)
         {
-            var username = (string)Session["Username"];
+            var username = User.Identity.Name;
             var data = _queueRepository.GetQueueListPerUser(username).Where(a => a.SizeId == sizeId && a.Status == ReportConstants.Status.InQueue);
             if (!data.Any())
             {
@@ -87,11 +88,11 @@ namespace PriceSignageSystem.Controllers
         {
             try
             {
-                var username = (string)Session["Username"];
+                var username = User.Identity.Name;
                 var data = _queueRepository.GetQueueListPerUser(username).Where(a => a.SizeId == sizeId && a.Status == ReportConstants.Status.InQueue);
                 foreach (var item in data)
                 {
-                    item.UserName = Session["Username"].ToString();
+                    item.UserName = User.Identity.Name;
                     var textToImage = new TextToImage();
                     textToImage.GetImageWidth(item.O3FNAM, item.O3IDSC, sizeId);
                     item.IsSLBrand = textToImage.IsSLBrand;
@@ -141,7 +142,7 @@ namespace PriceSignageSystem.Controllers
         [HttpPost]
         public ActionResult CheckItemQueuesPerUser(int sizeId)
         {
-            var username = (string)Session["Username"];
+            var username = User.Identity.Name;
             var data = _queueRepository.GetQueueListPerUser(username).Where(a => a.SizeId == sizeId && a.Status == ReportConstants.Status.InQueue);
             if (!data.Any())
             {
