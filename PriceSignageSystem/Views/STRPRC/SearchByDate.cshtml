@@ -25,7 +25,6 @@
         th.no-sort::after {
             display: none !important;
         }
-     
     </style>
 </head>
 
@@ -142,7 +141,7 @@
         //var $j = jQuery.noConflict();
 
     $(document).ready(function () {
-        // 
+        //
         $('#registrationSuccessModal').modal('show');
         setTimeout(function () {
             $('#registrationSuccessModal').modal('hide');
@@ -171,13 +170,121 @@
             return false;
         });
 
-            $("#startDate").datepicker({
-                dateFormat: 'yy-mm-dd'
+        $("#startDate").datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+
+        var table = null;
+
+        // Create dialog element for the filter input
+        var dialog = $('<div>').dialog({
+            autoOpen: false,
+            modal: true,
+            resizable: false,
+            width: 300, // Increased width size
+            position: { my: 'left top', at: 'left bottom', of: '.filter-icon' },
+            open: function (event, ui) {
+                $('.ui-widget-overlay').bind('click', function () {
+                    dialog.dialog('close');
+                });
+            },
+            close: function (event, ui) {
+                $('.ui-widget-overlay').unbind('click');
+            }
+        });
+
+        // Handle filter icon click
+        $('thead').on('click', '.filter-icon', function (event) {
+            event.stopPropagation(); // Prevent event propagation
+
+            var columnIndex = $(this).closest('th').index();
+            var column = table.column(columnIndex);
+
+            // Clear existing filter input
+            dialog.dialog('option', 'title', 'Filter').html('');
+
+            // Get distinct values of the column
+            var distinctValues = column.data().unique().sort().toArray();
+
+            // Retrieve previously selected values (if any)
+            var selectedValues = column.search().split('|').map(function (value) {
+                return value.trim();
             });
-            var table = null;
+
+            // Create checkboxes for each distinct value
+            var scrollableDiv = $('<div>').css({
+                'max-height': '200px', // Set a maximum height for scrolling
+                'overflow-y': 'scroll' // Enable vertical scrolling
+            });
+
+            var checkboxContainer = $('<div>').css({
+                'display': 'flex',
+                'flex-direction': 'column', // Align checkboxes vertically
+                'gap': '5px' // Add spacing between checkboxes
+            });
+
+            for (var i = 0; i < distinctValues.length; i++) {
+                var checkbox = $('<input type="checkbox">').addClass('filter-checkbox').val(distinctValues[i]);
+                if (selectedValues.includes(distinctValues[i])) {
+                    checkbox.prop('checked', true);
+                }
+                var label = $('<label>').text(distinctValues[i]).prepend(checkbox);
+                checkboxContainer.append(label);
+            }
+
+            scrollableDiv.append(checkboxContainer);
+            dialog.append(scrollableDiv);
+
+            // Create button container for the "OK" and "Clear All Checkboxes" buttons
+            var buttonContainer = $('<div>').css('display', 'flex');
+            dialog.append(buttonContainer);
+
+            // Create "Clear All Checkboxes" button
+            var clearButton = $('<button>').text('Clear All').addClass('small-button').click(function () {
+                $('.filter-checkbox').prop('checked', false);
+                applyFilter();
+            });
+            buttonContainer.append(clearButton);
+
+            // Create "OK" button
+            var okButton = $('<button>').text('OK').addClass('small-button').click(function () {
+                applyFilter();
+                dialog.dialog('close');
+            });
+            buttonContainer.append(okButton);
+
+            // Apply filter when checkbox state changes
+            $('.filter-checkbox').on('change', applyFilter);
+
+            // Open the filter dialog
+            dialog.dialog('open');
+
+            // Adjust dialog position on resize
+            $(window).on('resize', function () {
+                dialog.dialog('option', 'position', { my: 'left top', at: 'left bottom', of: '.filter-icon' });
+            });
+
+            function applyFilter() {
+                var selectedValues = $('.filter-checkbox:checked').map(function () {
+                    return $(this).val();
+                }).get();
+
+                if (selectedValues.length === 0) {
+                    column.search('').draw();
+                } else {
+                    // Use a regular expression to match exact values
+                    var regex = '^(' + selectedValues.map(function (value) {
+                        return $.fn.dataTable.util.escapeRegex(value);
+                    }).join('|') + ')$';
+
+                    column.search(regex, true, false).draw();
+                }
+            }
+        });
+
             $("#searchBtn").click(function () {
                 var startDate = $("#startDate").val();
-       
+
                 $.ajax({
                     url: '@Url.Action("GetDataByDate", "STRPRC")',
                     type: 'POST',
@@ -239,73 +346,6 @@
                                 ],
                             });
 
-                            //filter
-                            // Create dialog element for the filter input
-                            var dialog = $('<div>').dialog({
-                                autoOpen: false,
-                                modal: true,
-                                resizable: false,
-                                width: 200,
-                                position: { my: 'left top', at: 'left bottom', of: '.filter-icon' },
-                                open: function (event, ui) {
-                                    $('.ui-widget-overlay').bind('click', function () {
-                                        dialog.dialog('close');
-                                    });
-                                },
-                                close: function (event, ui) {
-                                    $('.ui-widget-overlay').unbind('click');
-                                }
-                            });
-
-                            // Handle filter icon click
-                            $('thead').on('click', '.filter-icon', function (event) {
-                                event.stopPropagation(); // Prevent event propagation
-
-                                var columnIndex = $(this).closest('th').index();
-                                var column = table.column(columnIndex);
-
-                                // Clear existing filter input
-                                dialog.dialog('option', 'title', 'Filter').html('');
-
-                                // Get distinct values of the column
-                                var distinctValues = column.data().unique().sort().toArray();
-
-                                // Retrieve previously selected values (if any)
-                                var selectedValues = column.search().split('|').map(function (value) {
-                                    return value.trim();
-                                });
-
-                                // Create checkboxes for each distinct value
-                                for (var i = 0; i < distinctValues.length; i++) {
-                                    var checkbox = $('<input type="checkbox">').addClass('filter-checkbox').val(distinctValues[i]);
-                                    if (selectedValues.includes(distinctValues[i])) {
-                                        checkbox.prop('checked', true);
-                                    }
-                                    var label = $('<label>').text(distinctValues[i]).prepend(checkbox);
-                                    dialog.append(label);
-                                }
-
-                                // Apply filter when checkbox state changes
-                                $('.filter-checkbox').on('change', function () {
-                                    var selectedValues = $('.filter-checkbox:checked').map(function () {
-                                        return $(this).val();
-                                    }).get();
-
-                                    if (selectedValues.length === 0) {
-                                        column.search('').draw();
-                                    } else {
-                                        column.search(selectedValues.join('|'), true, false).draw();
-                                    }
-                                });
-
-                                // Open the filter dialog
-                                dialog.dialog('open');
-
-                                // Adjust dialog position on resize
-                                $(window).on('resize', function () {
-                                    dialog.dialog('option', 'position', { my: 'left top', at: 'left bottom', of: '.filter-icon' });
-                                });
-                            });
 
                             $('#selectAll').on('change', function () {
                                 var isChecked = $(this).is(':checked');
