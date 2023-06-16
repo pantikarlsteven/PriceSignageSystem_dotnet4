@@ -211,6 +211,8 @@
                 return value.trim();
             });
 
+            console.log(selectedValues);
+
             // Create checkboxes for each distinct value
             var scrollableDiv = $('<div>').css({
                 'max-height': '200px', // Set a maximum height for scrolling
@@ -273,12 +275,14 @@
                     column.search('').draw();
                 } else {
                     // Use a regular expression to match exact values
-                    var regex = '^(' + selectedValues.map(function (value) {
+                    var regex =  selectedValues.map(function (value) {
                         return $.fn.dataTable.util.escapeRegex(value);
-                    }).join('|') + ')$';
+                    }).join('|');
 
                     column.search(regex, true, false).draw();
                 }
+
+                console.log(regex);
             }
         });
 
