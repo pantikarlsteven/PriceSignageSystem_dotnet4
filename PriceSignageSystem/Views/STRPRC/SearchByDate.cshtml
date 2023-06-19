@@ -175,7 +175,6 @@
         });
 
         var table = null;
-
         // Create dialog element for the filter input
         var dialog = $('<div>').dialog({
             autoOpen: false,
@@ -207,9 +206,19 @@
             var distinctValues = column.data().unique().sort().toArray();
 
             // Retrieve previously selected values (if any)
+            //var selectedValues = column.search().split('|').map(function (value) {
+            //    return value.trim();
+            //});
             var selectedValues = column.search().split('|').map(function (value) {
                 return value.trim();
             });
+
+            if (selectedValues.length > 0) {
+                selectedValues[0] = selectedValues[0].replace(/^\^\(/, '');
+                var lastIndex = selectedValues.length - 1;
+                selectedValues[lastIndex] = selectedValues[lastIndex].replace(/\)\$$/, '');
+            }
+
 
             // Create checkboxes for each distinct value
             var scrollableDiv = $('<div>').css({
@@ -273,9 +282,9 @@
                     column.search('').draw();
                 } else {
                     // Use a regular expression to match exact values
-                    var regex =  selectedValues.map(function (value) {
+                    var regex = '^(' + selectedValues.map(function (value) {
                         return $.fn.dataTable.util.escapeRegex(value);
-                    }).join('|');
+                    }).join('|') + ')$';
 
                     column.search(regex, true, false).draw();
                 }
