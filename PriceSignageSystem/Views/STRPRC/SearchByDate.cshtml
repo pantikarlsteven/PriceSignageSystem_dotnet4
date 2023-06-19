@@ -89,7 +89,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="startDate">Start Date:</label>
-                            <input type="text" id="startDate" name="startDate" class="form-control" />
+                            <input type="text" id="startDate" name="startDate" class="form-control"/>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -201,7 +201,7 @@
             var column = table.column(columnIndex);
 
             // Clear existing filter input
-            dialog.dialog('option', 'title', 'Filter').html('');
+            dialog.dialog('option', 'title', 'Filter Dept').html('');
 
             // Get distinct values of the column
             var distinctValues = column.data().unique().sort().toArray();
@@ -210,8 +210,6 @@
             var selectedValues = column.search().split('|').map(function (value) {
                 return value.trim();
             });
-
-            console.log(selectedValues);
 
             // Create checkboxes for each distinct value
             var scrollableDiv = $('<div>').css({
@@ -281,8 +279,6 @@
 
                     column.search(regex, true, false).draw();
                 }
-
-                console.log(regex);
             }
         });
 
