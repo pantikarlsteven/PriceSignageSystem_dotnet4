@@ -1,4 +1,7 @@
-﻿
+﻿@{ 
+    bool withInventory = ViewBag.WithInventory;
+}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,7 +28,6 @@
         th.no-sort::after {
             display: none !important;
         }
-     
     </style>
 </head>
 
@@ -84,13 +86,20 @@
         <div class="row">
             <div class="card elevation-3 px-0 ">
                 <div class="card-header bg-primary1 text-white">
-                    <h3 class="card-title">PCA</h3>
+                    @if (withInventory)
+                    {
+                        <h3 class="card-title">PCA</h3>
+                    }
+                    else
+                    {
+                        <h3 class="card-title">PCA Without Inventory</h3>
+                    }
                 </div>
                 <div class="card-body row mx-auto">
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="startDate">Start Date:</label>
-                            <input type="text" id="startDate" name="startDate" class="form-control" />
+                            <input type="text" id="startDate" name="startDate" class="form-control"/>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -100,7 +109,7 @@
                 </div>
                 <hr />
                 <div class="card-body table-responsive">
-                    <table id="dataTable" class="table table-sm table-hover" style="width:100%">
+                    <table id="dataTable" class="table table-sm table-hover" style="width: 100%">
                         <thead style="background-color: #1C3766;" class="text-white">
                             <tr>
                                 <th><input type="checkbox" id="selectAll" /></th>
@@ -116,12 +125,13 @@
                                 <th>Size</th>
                                 <th>Category</th>
                                 <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
+                                <th>IsReverted</th>
                                 <th><button class="printAllBtn btn btn-secondary px-3">Print Selected</button></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td colspan="14" style="text-align: center;">Please enter dates</td>
+                                <td colspan="15" style="text-align: center;">Please enter start date</td>
                             </tr>
                         </tbody>
                     </table>
@@ -142,7 +152,7 @@
         //var $j = jQuery.noConflict();
 
     $(document).ready(function () {
-        // 
+        //
         $('#registrationSuccessModal').modal('show');
         setTimeout(function () {
             $('#registrationSuccessModal').modal('hide');
@@ -171,17 +181,132 @@
             return false;
         });
 
-            $("#startDate").datepicker({
-                dateFormat: 'yy-mm-dd'
+        $("#startDate").datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+
+        var table = null;
+        // Create dialog element for the filter input
+        var dialog = $('<div>').dialog({
+            autoOpen: false,
+            modal: true,
+            resizable: false,
+            width: 300, // Increased width size
+            position: { my: 'left top', at: 'left bottom', of: '.filter-icon' },
+            open: function (event, ui) {
+                $('.ui-widget-overlay').bind('click', function () {
+                    dialog.dialog('close');
+                });
+            },
+            close: function (event, ui) {
+                $('.ui-widget-overlay').unbind('click');
+            }
+        });
+
+        // Handle filter icon click
+        $('thead').on('click', '.filter-icon', function (event) {
+            event.stopPropagation(); // Prevent event propagation
+
+            var columnIndex = $(this).closest('th').index();
+            var column = table.column(columnIndex);
+
+            // Clear existing filter input
+            dialog.dialog('option', 'title', 'Filter Dept').html('');
+
+            // Get distinct values of the column
+            var distinctValues = column.data().unique().sort().toArray();
+
+            // Retrieve previously selected values (if any)
+     
+            var selectedValues = column.search().split('|').map(function (value) {
+                return value.trim();
             });
-            var table = null;
+
+            if (selectedValues.length > 0) {
+                selectedValues[0] = selectedValues[0].replace(/^\^\(/, '');
+                var lastIndex = selectedValues.length - 1;
+                selectedValues[lastIndex] = selectedValues[lastIndex].replace(/\)\$$/, '');
+            }
+
+
+            // Create checkboxes for each distinct value
+            var scrollableDiv = $('<div>').css({
+                'max-height': '200px', // Set a maximum height for scrolling
+                'overflow-y': 'scroll' // Enable vertical scrolling
+            });
+
+            var checkboxContainer = $('<div>').css({
+                'display': 'flex',
+                'flex-direction': 'column', // Align checkboxes vertically
+                'gap': '5px' // Add spacing between checkboxes
+            });
+
+            for (var i = 0; i < distinctValues.length; i++) {
+                var checkbox = $('<input type="checkbox">').addClass('filter-checkbox').val(distinctValues[i]);
+                if (selectedValues.includes(distinctValues[i])) {
+                    checkbox.prop('checked', true);
+                }
+                var label = $('<label>').text(distinctValues[i]).prepend(checkbox);
+                checkboxContainer.append(label);
+            }
+
+            scrollableDiv.append(checkboxContainer);
+            dialog.append(scrollableDiv);
+
+            // Create button container for the "OK" and "Clear All Checkboxes" buttons
+            var buttonContainer = $('<div>').css('display', 'flex');
+            dialog.append(buttonContainer);
+
+            // Create "Clear All Checkboxes" button
+            var clearButton = $('<button>').text('Clear All').addClass('small-button').click(function () {
+                $('.filter-checkbox').prop('checked', false);
+                applyFilter();
+            });
+            buttonContainer.append(clearButton);
+
+            // Create "OK" button
+            var okButton = $('<button>').text('OK').addClass('small-button').click(function () {
+                applyFilter();
+                dialog.dialog('close');
+            });
+            buttonContainer.append(okButton);
+
+            // Apply filter when checkbox state changes
+            $('.filter-checkbox').on('change', applyFilter);
+
+            // Open the filter dialog
+            dialog.dialog('open');
+
+            // Adjust dialog position on resize
+            $(window).on('resize', function () {
+                dialog.dialog('option', 'position', { my: 'left top', at: 'left bottom', of: '.filter-icon' });
+            });
+
+            function applyFilter() {
+                var selectedValues = $('.filter-checkbox:checked').map(function () {
+                    return $(this).val();
+                }).get();
+
+                if (selectedValues.length === 0) {
+                    column.search('').draw();
+                } else {
+                    // Use a regular expression to match exact values
+                    var regex = '^(' + selectedValues.map(function (value) {
+                        return $.fn.dataTable.util.escapeRegex(value);
+                    }).join('|') + ')$';
+
+                    column.search(regex, true, false).draw();
+                }
+            }
+        });
+
             $("#searchBtn").click(function () {
                 var startDate = $("#startDate").val();
-       
+
                 $.ajax({
                     url: '@Url.Action("GetDataByDate", "STRPRC")',
                     type: 'POST',
-                    data: { startDate: startDate },
+                    data: { startDate: startDate, withInventory: "@withInventory"},
                     success: function (data) {
                         if (data.IsAuthenticated == false)
                             window.location.href = data.RedirectUrl;
@@ -191,9 +316,9 @@
                             }
                             // DATATABLE
                             table = $('#dataTable').DataTable({
-                                scrollY: 500,
-                                scrollX: true,
-                                scroller: true,
+                                //scrollY: 500,
+                                //scrollX: true,
+                                //scroller: true,
                                 lengthMenu: [
                                     [10, 25, 50, -1],
                                     [10, 25, 50, 'All']
@@ -201,7 +326,7 @@
                                 pageLength: -1,
                                 data: data,
                                 columnDefs: [
-                                    { targets: [0, 1, 12, 13], orderable: false },
+                                    { targets: [0, 1, 12, 13, 14], orderable: false },
                                 ],
                                 columns: [
                                     {
@@ -219,17 +344,18 @@
                                         },
                                         width: "15px"
                                     },
-                                    { data: 'O3SKU', name: 'O3SKU', width: '100px' },
-                                    { data: 'O3UPC', name: 'O3UPC', width: '100px' },
-                                    { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap', width: '200px' },
-                                    { data: 'O3REGU', name: 'O3REGU', width: '100px' },
-                                    { data: 'O3POS', name: 'O3POS', width: '100px' },
-                                    { data: 'O3SDT', name: 'O3SDT', width: '100px' },
-                                    { data: 'O3EDT', name: 'O3EDT', width: '100px' },
-                                    { data: 'TypeName', name: 'TypeName', width: '100px' },
-                                    { data: 'SizeName', name: 'SizeName', width: '100px' },
-                                    { data: 'CategoryName', name: 'CategoryName', width: '100px' },
-                                    { data: 'DepartmentName', name: 'DepartmentName', width: '100px' },
+                                    { data: 'O3SKU', name: 'O3SKU'},
+                                    { data: 'O3UPC', name: 'O3UPC' },
+                                    { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap'},
+                                    { data: 'O3REGU', name: 'O3REGU'},
+                                    { data: 'O3POS', name: 'O3POS'},
+                                    { data: 'O3SDT', name: 'O3SDT' },
+                                    { data: 'O3EDT', name: 'O3EDT' },
+                                    { data: 'TypeName', name: 'TypeName' },
+                                    { data: 'SizeName', name: 'SizeName'},
+                                    { data: 'CategoryName', name: 'CategoryName' },
+                                    { data: 'DepartmentName', name: 'DepartmentName' },
+                                    { data: 'IsReverted', name: 'IsReverted' },
                                     {
                                         data: null,
                                         render: function (data, type, row) {
@@ -239,73 +365,6 @@
                                 ],
                             });
 
-                            //filter
-                            // Create dialog element for the filter input
-                            var dialog = $('<div>').dialog({
-                                autoOpen: false,
-                                modal: true,
-                                resizable: false,
-                                width: 200,
-                                position: { my: 'left top', at: 'left bottom', of: '.filter-icon' },
-                                open: function (event, ui) {
-                                    $('.ui-widget-overlay').bind('click', function () {
-                                        dialog.dialog('close');
-                                    });
-                                },
-                                close: function (event, ui) {
-                                    $('.ui-widget-overlay').unbind('click');
-                                }
-                            });
-
-                            // Handle filter icon click
-                            $('thead').on('click', '.filter-icon', function (event) {
-                                event.stopPropagation(); // Prevent event propagation
-
-                                var columnIndex = $(this).closest('th').index();
-                                var column = table.column(columnIndex);
-
-                                // Clear existing filter input
-                                dialog.dialog('option', 'title', 'Filter').html('');
-
-                                // Get distinct values of the column
-                                var distinctValues = column.data().unique().sort().toArray();
-
-                                // Retrieve previously selected values (if any)
-                                var selectedValues = column.search().split('|').map(function (value) {
-                                    return value.trim();
-                                });
-
-                                // Create checkboxes for each distinct value
-                                for (var i = 0; i < distinctValues.length; i++) {
-                                    var checkbox = $('<input type="checkbox">').addClass('filter-checkbox').val(distinctValues[i]);
-                                    if (selectedValues.includes(distinctValues[i])) {
-                                        checkbox.prop('checked', true);
-                                    }
-                                    var label = $('<label>').text(distinctValues[i]).prepend(checkbox);
-                                    dialog.append(label);
-                                }
-
-                                // Apply filter when checkbox state changes
-                                $('.filter-checkbox').on('change', function () {
-                                    var selectedValues = $('.filter-checkbox:checked').map(function () {
-                                        return $(this).val();
-                                    }).get();
-
-                                    if (selectedValues.length === 0) {
-                                        column.search('').draw();
-                                    } else {
-                                        column.search(selectedValues.join('|'), true, false).draw();
-                                    }
-                                });
-
-                                // Open the filter dialog
-                                dialog.dialog('open');
-
-                                // Adjust dialog position on resize
-                                $(window).on('resize', function () {
-                                    dialog.dialog('option', 'position', { my: 'left top', at: 'left bottom', of: '.filter-icon' });
-                                });
-                            });
 
                             $('#selectAll').on('change', function () {
                                 var isChecked = $(this).is(':checked');
@@ -369,7 +428,7 @@
                                     });
 
                                     // Set default values for the dropdowns
-                                    $('#sizeDropdown').val(2);
+                                    $('#sizeDropdown').val(2); // Skinny
 
 
                                     //Start for print preview multiple report

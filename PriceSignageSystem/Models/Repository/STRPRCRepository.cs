@@ -246,15 +246,14 @@ namespace PriceSignageSystem.Models.Repository
             return _db.STRPRCs;
         }
 
-        public List<STRPRCDto> GetDataByDate(decimal startDate, decimal endDate)
+        public List<STRPRCDto> GetDataByDate(decimal startDate, decimal endDate, bool withInventory)
         {
-            // EDT must not be equal to 999999 OR 0 (ONLY ITEMS FOR PROMOTION)
-         
+            var sp = withInventory ? "sp_GetDataByDates" : "sp_GetDataByDatesWithoutInventory";
             var data = new List<STRPRCDto>();
 
             // Set up the connection and command
             using (var connection = new SqlConnection(connectionString))
-            using (var command = new SqlCommand("sp_GetDataByDates", connection))
+            using (var command = new SqlCommand(sp, connection))
             {
                 command.CommandType = CommandType.StoredProcedure;
 
@@ -310,7 +309,8 @@ namespace PriceSignageSystem.Models.Repository
                         TypeId = (int)reader["TypeId"],
                         SizeId = (int)reader["SizeId"],
                         CategoryId = (int)reader["CategoryId"],
-                        DepartmentName = reader["DPTNAM"].ToString()
+                        DepartmentName = reader["DPTNAM"].ToString(),
+                        IsReverted = reader["O3FLAG1"].ToString()
                     };
 
                     data.Add(record);

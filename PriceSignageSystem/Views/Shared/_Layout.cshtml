@@ -111,7 +111,7 @@
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <li class="nav-item">
-                            <a href="@Url.Action("SearchByDate","STRPRC")" id="pcaLink" class="nav-link text-white">
+                            <a href="@Url.Action("SearchByDate","STRPRC", new { withInventory =  true})" id="pcaLink" class="nav-link text-white">
                                 <i class="bi bi-printer mr-2"></i>
                                 <p>
                                     PCA
@@ -123,6 +123,14 @@
                                 <i class="bi bi-printer-fill mr-2"></i>
                                 <p>
                                     On Demand Printing
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="@Url.Action("SearchByDate","STRPRC", new { withInventory = false })" id="PCANoInventoryLink" class="nav-link text-white">
+                                <i class="bi bi-printer-fill mr-2"></i>
+                                <p>
+                                    PCA W/o Inventory
                                 </p>
                             </a>
                         </li>
