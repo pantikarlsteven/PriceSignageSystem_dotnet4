@@ -6,6 +6,7 @@ using PriceSignageSystem.Models.Constants;
 using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Globalization;
@@ -93,7 +94,21 @@ namespace PriceSignageSystem.Controllers
             }
         }
 
-        public ActionResult SearchByDate()
+        public ActionResult SearchByDate(bool withInventory)
+        {
+            var date = _sTRPRCRepository.GetLatestUpdate();
+
+            if (date.Date == DateTime.Now.Date)
+            {
+                ViewBag.IsDateLatest = true;
+            }
+
+            ViewBag.DateVersion = date.ToString("MMM dd yyyy HH:mm:ss tt");
+            ViewBag.WithInventory = withInventory;
+
+            return View();
+        }
+        public ActionResult PCANoInventory()
         {
             var date = _sTRPRCRepository.GetLatestUpdate();
 
@@ -107,14 +122,13 @@ namespace PriceSignageSystem.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetDataByDate(DateTime startDate)
+        public ActionResult GetDataByDate(DateTime startDate, bool withInventory)
         {
             var startDateFormatted = ConversionHelper.ToDecimal(startDate);
             var endDateFormatted = startDateFormatted + 1;
+            var data = _sTRPRCRepository.GetDataByDate(startDateFormatted, endDateFormatted, withInventory).ToList();
 
-            var data = _sTRPRCRepository.GetDataByDate(startDateFormatted, endDateFormatted).ToList();
-          
-            foreach (var item in data) // TEMPORARY -- SOON TO BE DEFINED IN DB
+            foreach (var item in data)
             {
                 item.TypeName = startDateFormatted == item.O3SDT && item.O3EDT != 999999 ? "Save"
                                 : startDateFormatted == item.O3SDT && item.O3EDT == 999999 ? "Regular"
@@ -145,7 +159,7 @@ namespace PriceSignageSystem.Controllers
 
             return Json(dto);
         }
-   
+
         public ActionResult UpdateSTRPRCData()
         {
             var storeId = int.Parse(ConfigurationManager.AppSettings["StoreID"]);

@@ -55,7 +55,7 @@ namespace PriceSignageSystem.Controllers
                     //Session["Username"] = user.UserName;
                     //Session["RoleId"] = user.RoleId;
                     //return RedirectToAction("SearchByDate", "STRPRC");
-                    return (returnUrl != null ? Redirect(returnUrl) : Redirect("/STRPRC/SearchByDate"));
+                    return (returnUrl != null ? Redirect(returnUrl) : Redirect("/STRPRC/SearchByDate?withInventory=true"));
                 }
                 else
                 {

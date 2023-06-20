@@ -16,6 +16,7 @@ namespace PriceSignageSystem.Models.DatabaseContext
         public DbSet<Country> Countries { get; set; }
         public DbSet<ItemQueue> ItemQueues { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<STRPRCLog> STRPRCLogs { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
