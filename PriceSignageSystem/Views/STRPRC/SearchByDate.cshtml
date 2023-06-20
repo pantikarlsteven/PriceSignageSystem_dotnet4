@@ -88,7 +88,7 @@
                 <div class="card-header bg-primary1 text-white">
                     @if (withInventory)
                     {
-                        <h3 class="card-title">PCA</h3>
+                        <h3 class="card-title">PCA With Inventory</h3>
                     }
                     else
                     {
@@ -109,7 +109,7 @@
                 </div>
                 <hr />
                 <div class="card-body table-responsive">
-                    <table id="dataTable" class="table table-sm table-hover" style="width: 100%">
+                    <table id="dataTable" class="table table-sm table-hover" style="width: 100%; text-align: center;">
                         <thead style="background-color: #1C3766;" class="text-white">
                             <tr>
                                 <th><input type="checkbox" id="selectAll" /></th>
@@ -170,7 +170,7 @@
                 type: "POST",
                 success: function (response) {
 
-                    window.location.href = "/STRPRC/SearchByDate";
+                    window.location.href = "/STRPRC/SearchByDate?withInventory=" + "@withInventory";
                 },
                 error: function (error) {
 
@@ -316,8 +316,8 @@
                             }
                             // DATATABLE
                             table = $('#dataTable').DataTable({
-                                //scrollY: 500,
-                                //scrollX: true,
+                                scrollY: 500,
+                                scrollX: true,
                                 //scroller: true,
                                 lengthMenu: [
                                     [10, 25, 50, -1],
@@ -455,29 +455,6 @@
                                     alert('Please select items to print.');
                                 }
                             });
-
-                            // Add event listener for opening and closing details
-                            $('#dataTable tbody').on('click', 'td.details-control', function () {
-
-                                var tr = $(this).closest('tr');
-                                var tdi = tr.find("i.fa-solid");
-                                var row = table.row(tr);
-
-                                if (row.child.isShown()) {
-                                    // This row is already open - close it
-                                    row.child.hide();
-                                    tr.removeClass('shown');
-                                    tdi.first().removeClass('fa-solid fa-square-caret-up');
-                                    tdi.first().addClass('fa-solid fa-square-caret-down');
-                                }
-                                else {
-                                    // Open this row
-                                    row.child(format(row.data())).show();
-                                    tr.addClass('shown');
-                                    tdi.first().removeClass('fa-solid fa-square-caret-down');
-                                    tdi.first().addClass('fa-solid fa-square-caret-up');
-                                }
-                            });
                         }
                     }
                 });
@@ -609,6 +586,28 @@
                 $(this).remove();
             });
 
+            // Add event listener for opening and closing details
+            $('#dataTable tbody').on('click', 'td.details-control', function () {
+
+                var tr = $(this).closest('tr');
+                var tdi = tr.find("i.fa-solid");
+                var row = table.row(tr);
+
+                if (row.child.isShown()) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                    tdi.first().removeClass('fa-solid fa-square-caret-up');
+                    tdi.first().addClass('fa-solid fa-square-caret-down');
+                }
+                else {
+                    // Open this row
+                    row.child(format(row.data())).show();
+                    tr.addClass('shown');
+                    tdi.first().removeClass('fa-solid fa-square-caret-down');
+                    tdi.first().addClass('fa-solid fa-square-caret-up');
+                }
+            });
     });
         // Start Date default value
         document.addEventListener("DOMContentLoaded", function () {

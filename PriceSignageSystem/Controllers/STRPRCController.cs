@@ -108,19 +108,7 @@ namespace PriceSignageSystem.Controllers
 
             return View();
         }
-        public ActionResult PCANoInventory()
-        {
-            var date = _sTRPRCRepository.GetLatestUpdate();
-
-            if (date.Date == DateTime.Now.Date)
-            {
-                ViewBag.IsDateLatest = true;
-            }
-
-            ViewBag.DateVersion = date.ToString("MMM dd yyyy HH:mm:ss tt"); ;
-            return View();
-        }
-
+       
         [HttpPost]
         public ActionResult GetDataByDate(DateTime startDate, bool withInventory)
         {
