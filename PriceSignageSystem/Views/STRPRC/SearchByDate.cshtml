@@ -302,12 +302,15 @@
 
             $("#searchBtn").click(function () {
                 var startDate = $("#startDate").val();
+                $("#loadingContainer").show();
 
                 $.ajax({
                     url: '@Url.Action("GetDataByDate", "STRPRC")',
                     type: 'POST',
                     data: { startDate: startDate, withInventory: "@withInventory"},
                     success: function (data) {
+                        $("#loadingContainer").hide();
+
                         if (data.IsAuthenticated == false)
                             window.location.href = data.RedirectUrl;
                         else {

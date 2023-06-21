@@ -246,11 +246,12 @@ namespace PriceSignageSystem.Models.Repository
             return _db.STRPRCs;
         }
 
-        public List<STRPRCDto> GetDataByDate(decimal startDate, decimal endDate, bool withInventory)
+        public List<STRPRCDto> GetDataByStartDate(decimal startDate, bool withInventory)
         {
-            var sp = withInventory ? "sp_GetDataByDates" : "sp_GetDataByDatesWithoutInventory";
+            var sp = "sp_GettmpData";
+            var HasInv = withInventory == true ? 'Y' : 'N'; 
             var data = new List<STRPRCDto>();
-
+            var store = int.Parse(ConfigurationManager.AppSettings["StoreID"]);
             // Set up the connection and command
             using (var connection = new SqlConnection(connectionString))
             using (var command = new SqlCommand(sp, connection))
@@ -259,7 +260,8 @@ namespace PriceSignageSystem.Models.Repository
 
                 // Add parameters if required
                 command.Parameters.AddWithValue("@O3SDT", startDate);
-                command.Parameters.AddWithValue("@O3EDT", endDate);
+                command.Parameters.AddWithValue("@O3LOC", store);
+                command.Parameters.AddWithValue("@HasInv", HasInv);
 
                 // Open the connection and execute the command
                 connection.Open();

@@ -113,8 +113,7 @@ namespace PriceSignageSystem.Controllers
         public ActionResult GetDataByDate(DateTime startDate, bool withInventory)
         {
             var startDateFormatted = ConversionHelper.ToDecimal(startDate);
-            var endDateFormatted = startDateFormatted + 1;
-            var data = _sTRPRCRepository.GetDataByDate(startDateFormatted, endDateFormatted, withInventory).ToList();
+            var data = _sTRPRCRepository.GetDataByStartDate(startDateFormatted, withInventory).ToList();
 
             foreach (var item in data)
             {
@@ -132,7 +131,7 @@ namespace PriceSignageSystem.Controllers
             }
 
             //UPDATE SIZE, TYPE AND CATEGORY
-            _sTRPRCRepository.UpdateSelection(startDateFormatted, endDateFormatted);
+            //_sTRPRCRepository.UpdateSelection(startDateFormatted, endDateFormatted);
             return Json(data);
         }
 
