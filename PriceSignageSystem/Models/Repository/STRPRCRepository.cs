@@ -327,6 +327,82 @@ namespace PriceSignageSystem.Models.Repository
 
         }
 
+        public List<STRPRCLogDto> GetUpdatedData()
+        {
+            var data = (from a in _db.STRPRCLogs
+                        join b in _db.STRPRCs on a.O3SKU equals b.O3SKU into ab
+                        from c in ab.DefaultIfEmpty()
+                        select new STRPRCLogDto
+                        {
+                            Id = a.Id,
+                            O3SKU = a.O3SKU,
+                            ColumnName = a.ColumnName,
+                            FromValue = a.FromValue,
+                            ToValue = a.ToValue,
+                            DateUpdated = a.DateUpdated,
+
+                            O3LOC = c.O3LOC,
+                            O3CLAS = c.O3CLAS,
+                            O3IDSC = c.O3IDSC,
+                            O3SCCD = c.O3SCCD,
+                            O3UPC = c.O3UPC,
+                            O3VNUM = c.O3VNUM,
+                            O3TYPE = c.O3TYPE,
+                            O3DEPT = c.O3DEPT,
+                            O3SDPT = c.O3SDPT,
+                            O3SCLS = c.O3SCLS,
+                            O3POS = c.O3POS,
+                            O3POSU = c.O3POSU,
+                            O3REG = c.O3REG,
+                            O3REGU = c.O3REGU,
+                            O3ORIG = c.O3ORIG,
+                            O3ORGU = c.O3ORGU,
+                            O3EVT = c.O3EVT,
+                            O3PMMX = c.O3PMMX,
+                            O3PMTH = c.O3PMTH,
+                            O3PDQT = c.O3PDQT,
+                            O3PDPR = c.O3PDPR,
+                            O3SDT = c.O3SDT,
+                            O3EDT = c.O3EDT,
+                            O3TRB3 = c.O3TRB3,
+                            O3FGR = c.O3FGR,
+                            O3FNAM = c.O3FNAM,
+                            O3MODL = c.O3MODL,
+                            O3LONG = c.O3LONG,
+                            O3SLUM = c.O3SLUM,
+                            O3DIV = c.O3DIV,
+                            O3TUOM = c.O3TUOM,
+                            O3DATE = c.O3DATE,
+                            O3CURD = c.O3CURD,
+                            O3USER = c.O3USER,
+                            TypeId = c.TypeId,
+                            SizeId = c.SizeId,
+                            CategoryId = c.CategoryId
+                        }).ToList();
+
+            return data;
+        }
+
+        public List<STRPRCLogDto> GetUpdatedDataBySKU(decimal sku)
+        {
+            var data = (from a in _db.STRPRCLogs
+                        join b in _db.STRPRCs on a.O3SKU equals b.O3SKU into ab
+                        from c in ab.DefaultIfEmpty()
+                        where a.O3SKU == sku
+                        select new STRPRCLogDto
+                        {
+                            Id = a.Id,
+                            O3SKU = a.O3SKU,
+                            ColumnName = a.ColumnName,
+                            FromValue = a.FromValue,
+                            ToValue = a.ToValue,
+                            DateUpdated = a.DateUpdated,
+
+                        }).ToList();
+
+            return data;
+        }
+
         public STRPRCDto GetDataBySKU(decimal O3SKU)
         {
             var data = (from a in _db.STRPRCs
