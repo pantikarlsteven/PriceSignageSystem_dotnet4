@@ -108,40 +108,12 @@ namespace PriceSignageSystem.Controllers
 
             return View();
         }
-
-        public ActionResult UpdatedSTRPRC()
-        {
-            var date = _sTRPRCRepository.GetLatestUpdate();
-
-            if (date.Date == DateTime.Now.Date)
-            {
-                ViewBag.IsDateLatest = true;
-            }
-
-            ViewBag.DateVersion = date.ToString("MMM dd yyyy HH:mm:ss tt");
-
-            return View();
-        }
-
-        public ActionResult PCANoInventory()
-        {
-            var date = _sTRPRCRepository.GetLatestUpdate();
-
-            if (date.Date == DateTime.Now.Date)
-            {
-                ViewBag.IsDateLatest = true;
-            }
-
-            ViewBag.DateVersion = date.ToString("MMM dd yyyy HH:mm:ss tt"); ;
-            return View();
-        }
-
+       
         [HttpPost]
         public ActionResult GetDataByDate(DateTime startDate, bool withInventory)
         {
             var startDateFormatted = ConversionHelper.ToDecimal(startDate);
-            var endDateFormatted = startDateFormatted + 1;
-            var data = _sTRPRCRepository.GetDataByDate(startDateFormatted, endDateFormatted, withInventory).ToList();
+            var data = _sTRPRCRepository.GetDataByStartDate(startDateFormatted, withInventory).ToList();
 
             foreach (var item in data)
             {
@@ -159,34 +131,8 @@ namespace PriceSignageSystem.Controllers
             }
 
             //UPDATE SIZE, TYPE AND CATEGORY
-            _sTRPRCRepository.UpdateSelection(startDateFormatted, endDateFormatted);
+            //_sTRPRCRepository.UpdateSelection(startDateFormatted, endDateFormatted);
             return Json(data);
-        }
-
-        [HttpGet]
-        public ActionResult GetUpdatedData()
-        {
-            var data = _sTRPRCRepository.GetUpdatedData().GroupBy(g => g.O3SKU).Select(s => s.FirstOrDefault()).ToList();
-
-            foreach (var item in data)
-            {
-                var skus = _sTRPRCRepository.GetUpdatedDataBySKU(item.O3SKU);
-                if (skus.Count > 1)
-                    item.ColumnName = string.Join(",", skus.Select(s => s.ColumnName).ToList()); 
-
-                item.TypeName = item.O3EDT != 999999 ? "Save"
-                                : item.O3EDT == 999999 ? "Regular"
-                                : "Save";
-                item.SizeName = item.SizeId == 1 ? "Whole"
-                                : item.SizeId == 2 ? "Skinny"
-                                : item.SizeId == 3 ? "1/8"
-                                : item.SizeId == 4 ? "Jewelry"
-                                : "Whole";
-                item.CategoryName = item.CategoryId == 1 ? "Appliance"
-                                    : item.CategoryId == 2 ? "Non-Appliance"
-                                    : "Non-Appliance";
-            }
-            return Json(data, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -260,6 +206,47 @@ namespace PriceSignageSystem.Controllers
 
                 //return Content("<h2>Error: " + ex.Message + "</h2>", "text/html");
             }
+        }
+
+        public ActionResult UpdatedSTRPRC()
+        {
+            var date = _sTRPRCRepository.GetLatestUpdate();
+
+            if (date.Date == DateTime.Now.Date)
+            {
+                ViewBag.IsDateLatest = true;
+            }
+
+            ViewBag.DateVersion = date.ToString("MMM dd yyyy HH:mm:ss tt");
+
+            return View();
+        }
+
+
+        [HttpGet]
+        public ActionResult GetUpdatedData()
+        {
+            var data = _sTRPRCRepository.GetUpdatedData().GroupBy(g => g.O3SKU).Select(s => s.FirstOrDefault()).ToList();
+
+            foreach (var item in data)
+            {
+                var skus = _sTRPRCRepository.GetUpdatedDataBySKU(item.O3SKU);
+                if (skus.Count > 1)
+                    item.ColumnName = string.Join(",", skus.Select(s => s.ColumnName).ToList());
+
+                item.TypeName = item.O3EDT != 999999 ? "Save"
+                                : item.O3EDT == 999999 ? "Regular"
+                                : "Save";
+                item.SizeName = item.SizeId == 1 ? "Whole"
+                                : item.SizeId == 2 ? "Skinny"
+                                : item.SizeId == 3 ? "1/8"
+                                : item.SizeId == 4 ? "Jewelry"
+                                : "Whole";
+                item.CategoryName = item.CategoryId == 1 ? "Appliance"
+                                    : item.CategoryId == 2 ? "Non-Appliance"
+                                    : "Non-Appliance";
+            }
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
     }
 }
