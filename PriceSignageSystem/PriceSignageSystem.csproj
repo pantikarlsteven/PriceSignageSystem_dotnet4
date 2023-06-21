@@ -257,6 +257,7 @@
     <Compile Include="Models\Dto\CountryDto.cs" />
     <Compile Include="Models\Dto\ReportDto.cs" />
     <Compile Include="Models\Dto\STRPRCDto.cs" />
+    <Compile Include="Models\Dto\STRPRCLogDto.cs" />
     <Compile Include="Models\Dto\UserStoreDto.cs" />
     <Compile Include="Models\Interface\ICategoryRepository.cs" />
     <Compile Include="Models\Interface\IQueueRepository.cs" />
@@ -379,6 +380,7 @@
     <Content Include="Views\Report\AutoPrintReport.cshtml" />
     <Content Include="Views\Queue\PrintQueueList.cshtml" />
     <Content Include="Views\Report\AutoPrintReportFromAdvancePrinting.cshtml" />
+    <Content Include="Views\STRPRC\UpdatedSTRPRC.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

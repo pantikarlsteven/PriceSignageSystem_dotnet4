@@ -1,8 +1,4 @@
-﻿@{ 
-    bool withInventory = ViewBag.WithInventory;
-}
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
@@ -86,26 +82,7 @@
         <div class="row">
             <div class="card elevation-3 px-0 ">
                 <div class="card-header bg-primary1 text-white">
-                    @if (withInventory)
-                    {
-                        <h3 class="card-title">PCA</h3>
-                    }
-                    else
-                    {
-                        <h3 class="card-title">PCA Without Inventory</h3>
-                    }
-                </div>
-                <div class="card-body row mx-auto">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="startDate">Start Date:</label>
-                            <input type="text" id="startDate" name="startDate" class="form-control"/>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="text-white">Search</label>
-                        <button id="searchBtn" class="btn btn-primary btn-block">Search</button>
-                    </div>
+                    <h3 class="card-title">List Of Updated SKUs</h3>
                 </div>
                 <hr />
                 <div class="card-body table-responsive">
@@ -115,23 +92,15 @@
                                 <th><input type="checkbox" id="selectAll" /></th>
                                 <th></th>
                                 <th>SKU</th>
-                                <th>UPC</th>
-                                <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
-                                <th>Reg Price</th>
-                                <th>Current Price</th>
-                                <th>Date Start</th>
-                                <th>Date End</th>
-                                <th>Type</th>
-                                <th>Size</th>
-                                <th>Category</th>
-                                <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
-                                <th>IsReverted</th>
-                                <th><button class="printAllBtn btn btn-secondary px-3">Print Selected</button></th>
+                                <th style="width: 200px;" class="text-nowrap">Description</th>
+                                <th>Changed On</th>
+                                <th>Last Updated</th>
+                                <th><button class="printAllBtn btn btn-secondary px-3" style="float: right;">Print Selected</button></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td colspan="15" style="text-align: center;">Please enter start date</td>
+                                <td colspan="15" style="text-align: center;">No Current Data</td>
                             </tr>
                         </tbody>
                     </table>
@@ -153,6 +122,7 @@
 
     $(document).ready(function () {
         //
+        InitLoad();
         $('#registrationSuccessModal').modal('show');
         setTimeout(function () {
             $('#registrationSuccessModal').modal('hide');
@@ -217,7 +187,7 @@
             var distinctValues = column.data().unique().sort().toArray();
 
             // Retrieve previously selected values (if any)
-     
+
             var selectedValues = column.search().split('|').map(function (value) {
                 return value.trim();
             });
@@ -300,14 +270,23 @@
             }
         });
 
-            $("#searchBtn").click(function () {
-                var startDate = $("#startDate").val();
+            function InitLoad() {
+                //var startDate = $("#startDate").val();
 
                 $.ajax({
-                    url: '@Url.Action("GetDataByDate", "STRPRC")',
-                    type: 'POST',
-                    data: { startDate: startDate, withInventory: "@withInventory"},
+                    url: '@Url.Action("GetUpdatedData", "STRPRC")',
+                    type: 'GET',
                     success: function (data) {
+
+                        for (var i = 0; i < data.length; i++) {
+                            var dateString = data[i].DateUpdated;
+                            var timestamp = parseInt(dateString.match(/\d+/)[0]);
+                            var date = new Date(timestamp);
+
+                            var options = { month: 'long', day: 'numeric', year: 'numeric' };
+                            data[i].DateUpdated = date.toLocaleDateString(undefined, options);
+                        }
+
                         if (data.IsAuthenticated == false)
                             window.location.href = data.RedirectUrl;
                         else {
@@ -316,18 +295,12 @@
                             }
                             // DATATABLE
                             table = $('#dataTable').DataTable({
-                                //scrollY: 500,
-                                //scrollX: true,
-                                //scroller: true,
                                 lengthMenu: [
                                     [10, 25, 50, -1],
                                     [10, 25, 50, 'All']
                                 ],
                                 pageLength: -1,
                                 data: data,
-                                columnDefs: [
-                                    { targets: [0, 1, 12, 13, 14], orderable: false },
-                                ],
                                 columns: [
                                     {
                                         data: null, orderable: false, searchable: false, render: function (data) {
@@ -345,21 +318,13 @@
                                         width: "15px"
                                     },
                                     { data: 'O3SKU', name: 'O3SKU'},
-                                    { data: 'O3UPC', name: 'O3UPC' },
-                                    { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap'},
-                                    { data: 'O3REGU', name: 'O3REGU'},
-                                    { data: 'O3POS', name: 'O3POS'},
-                                    { data: 'O3SDT', name: 'O3SDT' },
-                                    { data: 'O3EDT', name: 'O3EDT' },
-                                    { data: 'TypeName', name: 'TypeName' },
-                                    { data: 'SizeName', name: 'SizeName'},
-                                    { data: 'CategoryName', name: 'CategoryName' },
-                                    { data: 'DepartmentName', name: 'DepartmentName' },
-                                    { data: 'IsReverted', name: 'IsReverted' },
+                                    { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap' },
+                                    { data: 'ColumnName', name: 'ColumnName'},
+                                    { data: 'DateUpdated', name: 'DateUpdated' },
                                     {
                                         data: null,
                                         render: function (data, type, row) {
-                                            return '<button class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '">Print</button>';
+                                            return '<button style="float:right;" class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '">Print</button>';
                                         }
                                     }
                                 ],
@@ -481,7 +446,7 @@
                         }
                     }
                 });
-            });
+            }
 
 
             //PRINT BUTTON
@@ -582,7 +547,6 @@
                             response.SizeId = $('#sizeDropdown').val();
                             response.TypeId = $('#typeDropdown').val();
                             response.CategoryId = $('#categoryDropdown').val();
-                            response.O3FNAM = "";
                             response.O3LONG = "";
                             response.O3MODL = "";
                             $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(response));
