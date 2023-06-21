@@ -575,15 +575,6 @@
             });
 
     });
-        // Start Date default value
-        document.addEventListener("DOMContentLoaded", function () {
-            var today = new Date();
-            var tomorrow = new Date(today);
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            var formattedDate = tomorrow.toISOString().split('T')[0];
-            document.getElementById('startDate').value = formattedDate;
-
-        });
 
     function format(d) {
             // `d` is the original data object for the row
