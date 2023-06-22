@@ -5,7 +5,6 @@ namespace PriceSignageSystem.Models
 {
     public class STRPRC
     {
-        //public int Id { get; set; }
         public decimal O3LOC { get; set; }
         [Key]
         public decimal O3SKU { get; set; }

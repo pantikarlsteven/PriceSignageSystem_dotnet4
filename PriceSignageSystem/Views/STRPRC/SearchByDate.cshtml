@@ -349,7 +349,15 @@
                                         },
                                         width: "15px"
                                     },
-                                    { data: 'IsPrinted', name: 'IsPrinted' },
+                                    {
+                                        data: 'IsPrinted', name: 'IsPrinted', render: function (data) {
+                                            if (data === 'Yes') {
+                                                return '<span style="color: green;">' + data + '</span>';
+                                            } else {
+                                                return '<span style="color: red;">' + data + '</span>';
+                                            }
+                                        }
+                                    },
                                     { data: 'O3SKU', name: 'O3SKU'},
                                     { data: 'O3UPC', name: 'O3UPC' },
                                     { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap'},

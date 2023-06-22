@@ -317,6 +317,7 @@ namespace PriceSignageSystem.Controllers
                 report.Close();
                 report.Dispose();
 
+                _sTRPRCRepository.UpdateSingleStatus(model.O3SKU);
             }
             catch (Exception ex)
             {

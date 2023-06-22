@@ -114,7 +114,6 @@ namespace PriceSignageSystem.Controllers
         {
             var startDateFormatted = ConversionHelper.ToDecimal(startDate);
             var data = _sTRPRCRepository.GetDataByStartDate(startDateFormatted, withInventory).ToList();
-
             foreach (var item in data)
             {
                 item.TypeName = startDateFormatted == item.O3SDT && item.O3EDT != 999999 ? "Save"
@@ -128,6 +127,8 @@ namespace PriceSignageSystem.Controllers
                 item.CategoryName = item.CategoryId == 1 ? "Appliance"
                                     : item.CategoryId == 2 ? "Non-Appliance"
                                     : "Non-Appliance";
+                item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
+                item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
             }
 
             //UPDATE SIZE, TYPE AND CATEGORY

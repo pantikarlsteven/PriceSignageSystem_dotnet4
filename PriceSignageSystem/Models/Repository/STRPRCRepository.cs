@@ -257,6 +257,7 @@ namespace PriceSignageSystem.Models.Repository
             using (var command = new SqlCommand(sp, connection))
             {
                 command.CommandType = CommandType.StoredProcedure;
+                command.CommandTimeout = commandTimeoutInSeconds;
 
                 // Add parameters if required
                 command.Parameters.AddWithValue("@O3SDT", startDate);
@@ -313,7 +314,7 @@ namespace PriceSignageSystem.Models.Repository
                         CategoryId = (int)reader["CategoryId"],
                         DepartmentName = reader["DPTNAM"].ToString(),
                         IsReverted = reader["O3FLAG1"].ToString(),
-                        IsPrinted = (bool)reader["IsPrinted"]
+                        IsPrinted = reader["IsPrinted"].ToString()
                     };
 
                     data.Add(record);
