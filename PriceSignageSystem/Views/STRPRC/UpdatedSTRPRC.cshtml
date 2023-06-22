@@ -91,7 +91,7 @@
                             <tr>
                                 <th><input type="checkbox" id="selectAll" /></th>
                                 <th></th>
-                                <th>Status</th>
+                                <th>Is Printed</th>
                                 <th>SKU</th>
                                 <th style="width: 200px;" class="text-nowrap">Description</th>
                                 <th>Changed On</th>
@@ -298,6 +298,8 @@
                             }
                             // DATATABLE
                             table = $('#dataTable').DataTable({
+                                scrollY: 500,
+                                scrollX: true,
                                 lengthMenu: [
                                     [10, 25, 50, -1],
                                     [10, 25, 50, 'All']
@@ -320,7 +322,15 @@
                                         },
                                         width: "15px"
                                     },
-                                    { data: 'IsPrinted', name: 'IsPrinted' },
+                                    {
+                                        data: 'IsPrinted', name: 'IsPrinted', render: function (data) {
+                                            if (data === 'Yes') {
+                                                return '<span style="color: green;">' + data + '</span>';
+                                            } else {
+                                                return '<span style="color: red;">' + data + '</span>';
+                                            }
+                                        }
+                                    },
                                     { data: 'O3SKU', name: 'O3SKU'},
                                     { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap' },
                                     { data: 'ColumnName', name: 'ColumnName'},
@@ -410,7 +420,8 @@
                                             var table = row.closest('table');
                                             var rowIndex = table.DataTable().row(row).index();
                                             var specificRow = $('#dataTable tbody tr:eq(' + rowIndex + ')');
-                                            specificRow.find('td:eq(2)').text("Printed");
+                                            specificRow.find('td:eq(2)').text("Yes");
+                                            specificRow.find('td:eq(2)').css('color', 'green');
 
                                         });
 
@@ -564,7 +575,9 @@
                         // Print button click event handler
                         $('#printButton').click(function () {
                             var specificRow = $('#dataTable tbody tr:eq(' + rowIndex + ')');
-                            specificRow.find('td:eq(2)').text("Printed");
+                            specificRow.find('td:eq(2)').text("Yes");
+                            specificRow.find('td:eq(2)').css('color', 'green');
+
 
                             response.SizeId = $('#sizeDropdown').val();
                             response.TypeId = $('#typeDropdown').val();
