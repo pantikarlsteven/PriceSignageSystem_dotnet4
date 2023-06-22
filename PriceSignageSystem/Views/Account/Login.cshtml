@@ -27,7 +27,7 @@
 <body class="hold-transition login-page">
 
 
-    @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+    @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
         <div class="login-box">
