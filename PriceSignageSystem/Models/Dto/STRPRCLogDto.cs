@@ -16,6 +16,10 @@ namespace PriceSignageSystem.Models.Dto
         public decimal O3SKU { get; set; }
         [Display(Name = "STATUS CODE")]
         public string O3SCCD { get; set; }
+
+        [Display(Name = "Is Printed")]
+        public string IsPrinted { get; set; }
+
         [Display(Name = "DESC")]
         public string O3IDSC { get; set; }
         [Display(Name = "UPC")]
@@ -97,7 +101,43 @@ namespace PriceSignageSystem.Models.Dto
         public string IsReverted { get; set; }
 
         public int Id { get; set; }
-        public string ColumnName { get; set; }
+        private string _text;
+        public string ColumnName { get { return _text; }
+            set {
+                // Perform filtering logic here
+                _text = value;
+                switch (_text)
+                {
+                    case "O3IDSC":
+                        _text = "Description";
+                        break;
+                    case "O3FNAM":
+                        _text = "Brand";
+                        break;
+                    case "O3MODL":
+                        _text = "Model";
+                        break;
+                    case "O3TUOM":
+                        _text = "To UOM";
+                        break;
+                    case "O3SCCD":
+                        _text = "Item Status";
+                        break;
+                    case "O3UPC":
+                        _text = "UPC";
+                        break;
+                    case "O3TRB3":
+                        _text = "FLAG";
+                        break;
+                    case "O3LONG":
+                        _text = "Long Description";
+                        break;
+                    case "O3DEPT":
+                        _text = "Hierarchy";
+                        break;
+                }
+            } 
+        }
         public string FromValue { get; set; }
         public string ToValue { get; set; }
     }

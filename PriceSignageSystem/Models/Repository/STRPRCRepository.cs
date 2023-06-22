@@ -328,78 +328,95 @@ namespace PriceSignageSystem.Models.Repository
 
         }
 
-        public List<STRPRCLogDto> GetUpdatedData()
+        public List<STRPRCLogDto> GetUpdatedData(decimal o3sku = 0)
         {
+
+            var records = new List<STRPRCLogDto>();
+            // Set up the connection and command
+            using (var connection = new SqlConnection(connectionString))
+            using (var command = new SqlCommand("sp_GetUpdatedData", connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+
+                if (o3sku > 0)
+                    command.Parameters.Add("@o3sku", SqlDbType.Decimal).Value = o3sku;
+
+                // Open the connection and execute the command
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                // Process the result set
+                while (reader.Read())
+                {
+                    var record = new STRPRCLogDto
+                    {
+                        O3SKU = (decimal)reader["O3SKU"],
+                        IsPrinted = (bool)reader["IsPrinted"] ? "Printed" : "",
+                        O3IDSC = reader["O3IDSC"].ToString(),
+                        ColumnName = reader["ColumnName"].ToString(),
+                        DateUpdated = (DateTime)reader["DateUpdated"],
+                        O3FNAM = reader["O3FNAM"].ToString(),
+                        O3DEPT = (decimal)reader["O3DEPT"],
+                        O3CLAS = (decimal)reader["O3CLAS"],
+                        O3SCCD = reader["O3SCCD"].ToString(),
+                        O3LONG = reader["O3LONG"].ToString(),
+                        O3MODL = reader["O3MODL"].ToString(),
+                        O3SDPT = (decimal)reader["O3SDPT"],
+                        O3SCLS = (decimal)reader["O3SCLS"],
+                        O3TRB3 = reader["O3TRB3"].ToString(),
+
+                        //O3LOC = (decimal)reader["O3LOC"],
+                        //O3UPC = (decimal)reader["O3UPC"],
+                        //O3VNUM = (decimal)reader["O3VNUM"],
+                        //O3TYPE = reader["O3TYPE"].ToString(),
+                        //O3POS = (decimal)reader["O3POS"],
+                        //O3POSU = (decimal)reader["O3POSU"],
+                        //O3REG = (decimal)reader["O3REG"],
+                        //O3REGU = (decimal)reader["O3REGU"],
+                        //O3ORIG = (decimal)reader["O3ORIG"],
+                        //O3ORGU = (decimal)reader["O3ORGU"],
+                        //O3EVT = (decimal)reader["O3EVT"],
+                        //O3PMMX = (decimal)reader["O3PMMX"],
+                        //O3PMTH = (decimal)reader["O3PMTH"],
+                        //O3PDQT = (decimal)reader["O3PDQT"],
+                        //O3PDPR = (decimal)reader["O3PDPR"],
+                        //O3SDT = (decimal)reader["O3SDT"],
+                        //O3EDT = (decimal)reader["O3EDT"],
+                        //O3TRB3 = reader["O3TRB3"].ToString(),
+                        //O3FGR = (decimal)reader["O3FGR"],
+                        //O3SLUM = reader["O3SLUM"].ToString(),
+                        //O3DIV = reader["O3DIV"].ToString(),
+                        //O3TUOM = reader["O3TUOM"].ToString(),
+                        //O3DATE = (decimal)reader["O3DATE"],
+                        //O3CURD = (decimal)reader["O3CURD"],
+                        //O3USER = reader["O3USER"].ToString(),
+
+                        TypeName = reader["TypeName"].ToString(),
+                        SizeName = reader["SizeName"].ToString(),
+                        CategoryName = reader["CategoryName"].ToString()
+
+                        //Id = (int)reader["Id"],
+                        //FromValue = reader["FromValue"].ToString(),
+                        //ToValue = reader["IdToValue"].ToString()
+                    };
+
+                    records.Add(record);
+                }
+
+                // Close the reader and connection
+                reader.Close();
+                connection.Close();
+            }
+
+            return records;
+
             var data = (from a in _db.STRPRCLogs
                         join b in _db.STRPRCs on a.O3SKU equals b.O3SKU into ab
                         from c in ab.DefaultIfEmpty()
                         select new STRPRCLogDto
                         {
-                            Id = a.Id,
-                            O3SKU = a.O3SKU,
-                            ColumnName = a.ColumnName,
-                            FromValue = a.FromValue,
-                            ToValue = a.ToValue,
-                            DateUpdated = a.DateUpdated,
-
-                            O3LOC = c.O3LOC,
-                            O3CLAS = c.O3CLAS,
-                            O3IDSC = c.O3IDSC,
-                            O3SCCD = c.O3SCCD,
-                            O3UPC = c.O3UPC,
-                            O3VNUM = c.O3VNUM,
-                            O3TYPE = c.O3TYPE,
-                            O3DEPT = c.O3DEPT,
-                            O3SDPT = c.O3SDPT,
-                            O3SCLS = c.O3SCLS,
-                            O3POS = c.O3POS,
-                            O3POSU = c.O3POSU,
-                            O3REG = c.O3REG,
-                            O3REGU = c.O3REGU,
-                            O3ORIG = c.O3ORIG,
-                            O3ORGU = c.O3ORGU,
-                            O3EVT = c.O3EVT,
-                            O3PMMX = c.O3PMMX,
-                            O3PMTH = c.O3PMTH,
-                            O3PDQT = c.O3PDQT,
-                            O3PDPR = c.O3PDPR,
-                            O3SDT = c.O3SDT,
-                            O3EDT = c.O3EDT,
-                            O3TRB3 = c.O3TRB3,
-                            O3FGR = c.O3FGR,
-                            O3FNAM = c.O3FNAM,
-                            O3MODL = c.O3MODL,
-                            O3LONG = c.O3LONG,
-                            O3SLUM = c.O3SLUM,
-                            O3DIV = c.O3DIV,
-                            O3TUOM = c.O3TUOM,
-                            O3DATE = c.O3DATE,
-                            O3CURD = c.O3CURD,
-                            O3USER = c.O3USER,
-                            TypeId = c.TypeId,
-                            SizeId = c.SizeId,
-                            CategoryId = c.CategoryId
-                        }).ToList();
-
-            return data;
-        }
-
-        public List<STRPRCLogDto> GetUpdatedDataBySKU(decimal sku)
-        {
-            var data = (from a in _db.STRPRCLogs
-                        join b in _db.STRPRCs on a.O3SKU equals b.O3SKU into ab
-                        from c in ab.DefaultIfEmpty()
-                        where a.O3SKU == sku
-                        select new STRPRCLogDto
-                        {
-                            Id = a.Id,
-                            O3SKU = a.O3SKU,
-                            ColumnName = a.ColumnName,
-                            FromValue = a.FromValue,
-                            ToValue = a.ToValue,
-                            DateUpdated = a.DateUpdated,
-
-                        }).ToList();
+                            
+                        }).Take(10).ToList();
 
             return data;
         }
@@ -632,6 +649,13 @@ namespace PriceSignageSystem.Models.Repository
             {
                 var data = _db.STRPRCs.Where(a => a.O3SKU == item).FirstOrDefault();
                 data.IsPrinted = true;
+
+                var logs = _db.STRPRCLogs.Where(a => a.O3SKU == item).ToList();
+
+                foreach (var log in logs)
+                {
+                    log.IsPrinted = true;
+                }
             }
 
             _db.SaveChanges();
@@ -642,6 +666,13 @@ namespace PriceSignageSystem.Models.Repository
         {
             var data = _db.STRPRCs.Where(a => a.O3SKU == O3SKU).FirstOrDefault();
             data.IsPrinted = true;
+
+            var logs = _db.STRPRCLogs.Where(a => a.O3SKU == O3SKU).ToList();
+
+            foreach (var log in logs)
+            {
+                log.IsPrinted = true;
+            }
 
             _db.SaveChanges();
         }

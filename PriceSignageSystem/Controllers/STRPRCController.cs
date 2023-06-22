@@ -12,7 +12,7 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
-
+using System.Web.Script.Serialization;
 
 namespace PriceSignageSystem.Controllers
 {
@@ -226,27 +226,10 @@ namespace PriceSignageSystem.Controllers
         [HttpGet]
         public ActionResult GetUpdatedData()
         {
-            var data = _sTRPRCRepository.GetUpdatedData().GroupBy(g => g.O3SKU).Select(s => s.FirstOrDefault()).ToList();
-
-            foreach (var item in data)
-            {
-                var skus = _sTRPRCRepository.GetUpdatedDataBySKU(item.O3SKU);
-                if (skus.Count > 1)
-                    item.ColumnName = string.Join(",", skus.Select(s => s.ColumnName).ToList());
-
-                item.TypeName = item.O3EDT != 999999 ? "Save"
-                                : item.O3EDT == 999999 ? "Regular"
-                                : "Save";
-                item.SizeName = item.SizeId == 1 ? "Whole"
-                                : item.SizeId == 2 ? "Skinny"
-                                : item.SizeId == 3 ? "1/8"
-                                : item.SizeId == 4 ? "Jewelry"
-                                : "Whole";
-                item.CategoryName = item.CategoryId == 1 ? "Appliance"
-                                    : item.CategoryId == 2 ? "Non-Appliance"
-                                    : "Non-Appliance";
-            }
-            return Json(data, JsonRequestBehavior.AllowGet);
+            var data = _sTRPRCRepository.GetUpdatedData();
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
         }
     }
 }
