@@ -114,6 +114,7 @@
                             <tr>
                                 <th><input type="checkbox" id="selectAll" /></th>
                                 <th></th>
+                                <th>IsPrinted</th>
                                 <th>SKU</th>
                                 <th>UPC</th>
                                 <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
@@ -131,7 +132,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td colspan="15" style="text-align: center;">Please enter start date</td>
+                                <td colspan="16" style="text-align: center;">Please enter start date</td>
                             </tr>
                         </tbody>
                     </table>
@@ -309,6 +310,7 @@
                     type: 'POST',
                     data: { startDate: startDate, withInventory: "@withInventory"},
                     success: function (data) {
+                        debugger
                         $("#loadingContainer").hide();
 
                         if (data.IsAuthenticated == false)
@@ -329,7 +331,7 @@
                                 pageLength: -1,
                                 data: data,
                                 columnDefs: [
-                                    { targets: [0, 1, 12, 13, 14], orderable: false },
+                                    { targets: [0, 1, 13, 14, 15], orderable: false },
                                 ],
                                 columns: [
                                     {
@@ -347,6 +349,7 @@
                                         },
                                         width: "15px"
                                     },
+                                    { data: 'IsPrinted', name: 'IsPrinted' },
                                     { data: 'O3SKU', name: 'O3SKU'},
                                     { data: 'O3UPC', name: 'O3UPC' },
                                     { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap'},

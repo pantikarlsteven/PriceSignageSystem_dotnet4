@@ -154,6 +154,9 @@ namespace PriceSignageSystem.Controllers
                 Response.AppendHeader("Content-Disposition", "inline; filename=" + model.O3SKU.ToString() + ".pdf");
                 report.Close();
                 report.Dispose();
+
+                _sTRPRCRepository.UpdateSingleStatus(model.O3SKU);
+
                 return File(pdfBytes, "application/pdf");
             }
             catch (Exception ex)
@@ -209,6 +212,8 @@ namespace PriceSignageSystem.Controllers
                 Response.AppendHeader("Content-Disposition", "inline; filename=MultipleSKUs.pdf");
                 report.Close();
                 report.Dispose();
+
+                _sTRPRCRepository.UpdateMultipleStatus(o3skus);
                 return File(pdfBytes, "application/pdf");
             }
             else

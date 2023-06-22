@@ -123,7 +123,7 @@ namespace PriceSignageSystem.Models.Repository
 
         public STRPRCDto SearchString(string query)
         {
-            
+
             var data = (from a in _db.STRPRCs
                         where a.O3SKU.ToString() == query || a.O3UPC.ToString() == query
                         select new STRPRCDto
@@ -249,7 +249,7 @@ namespace PriceSignageSystem.Models.Repository
         public List<STRPRCDto> GetDataByStartDate(decimal startDate, bool withInventory)
         {
             var sp = "sp_GettmpData";
-            var HasInv = withInventory == true ? 'Y' : 'N'; 
+            var HasInv = withInventory == true ? 'Y' : 'N';
             var data = new List<STRPRCDto>();
             var store = int.Parse(ConfigurationManager.AppSettings["StoreID"]);
             // Set up the connection and command
@@ -312,7 +312,8 @@ namespace PriceSignageSystem.Models.Repository
                         SizeId = (int)reader["SizeId"],
                         CategoryId = (int)reader["CategoryId"],
                         DepartmentName = reader["DPTNAM"].ToString(),
-                        IsReverted = reader["O3FLAG1"].ToString()
+                        IsReverted = reader["O3FLAG1"].ToString(),
+                        IsPrinted = (bool)reader["IsPrinted"]
                     };
 
                     data.Add(record);
@@ -407,48 +408,48 @@ namespace PriceSignageSystem.Models.Repository
         {
             var data = (from a in _db.STRPRCs
                         where a.O3SKU == O3SKU
-                       select new STRPRCDto
-                       {
-                           O3LOC =  a.O3LOC,
-                           O3CLAS = a.O3CLAS,
-                           O3IDSC = a.O3IDSC,
-                           O3SKU =  a.O3SKU,
-                           O3SCCD = a.O3SCCD,
-                           O3UPC =  a.O3UPC,
-                           O3VNUM = a.O3VNUM,
-                           O3TYPE = a.O3TYPE,
-                           O3DEPT = a.O3DEPT,
-                           O3SDPT = a.O3SDPT,
-                           O3SCLS = a.O3SCLS,
-                           O3POS =  a.O3POS,
-                           O3POSU = a.O3POSU,
-                           O3REG =  a.O3REG,
-                           O3REGU = a.O3REGU,
-                           O3ORIG = a.O3ORIG,
-                           O3ORGU = a.O3ORGU,
-                           O3EVT =  a.O3EVT,
-                           O3PMMX = a.O3PMMX,
-                           O3PMTH = a.O3PMTH,
-                           O3PDQT = a.O3PDQT,
-                           O3PDPR = a.O3PDPR,
-                           O3SDT =  a.O3SDT,
-                           O3EDT =  a.O3EDT,
-                           O3TRB3 = a.O3TRB3,
-                           O3FGR =  a.O3FGR,
-                           O3FNAM = a.O3FNAM,
-                           O3MODL = a.O3MODL,
-                           O3LONG = a.O3LONG,
-                           O3SLUM = a.O3SLUM,
-                           O3DIV =  a.O3DIV,
-                           O3TUOM = a.O3TUOM,
-                           O3DATE = a.O3DATE,
-                           O3CURD = a.O3CURD,
-                           O3USER = a.O3USER,
-                           DateUpdated = a.DateUpdated,
-                           TypeId = a.TypeId,
-                           SizeId = a.SizeId,
-                           CategoryId = a.CategoryId
-                       }).FirstOrDefault();
+                        select new STRPRCDto
+                        {
+                            O3LOC = a.O3LOC,
+                            O3CLAS = a.O3CLAS,
+                            O3IDSC = a.O3IDSC,
+                            O3SKU = a.O3SKU,
+                            O3SCCD = a.O3SCCD,
+                            O3UPC = a.O3UPC,
+                            O3VNUM = a.O3VNUM,
+                            O3TYPE = a.O3TYPE,
+                            O3DEPT = a.O3DEPT,
+                            O3SDPT = a.O3SDPT,
+                            O3SCLS = a.O3SCLS,
+                            O3POS = a.O3POS,
+                            O3POSU = a.O3POSU,
+                            O3REG = a.O3REG,
+                            O3REGU = a.O3REGU,
+                            O3ORIG = a.O3ORIG,
+                            O3ORGU = a.O3ORGU,
+                            O3EVT = a.O3EVT,
+                            O3PMMX = a.O3PMMX,
+                            O3PMTH = a.O3PMTH,
+                            O3PDQT = a.O3PDQT,
+                            O3PDPR = a.O3PDPR,
+                            O3SDT = a.O3SDT,
+                            O3EDT = a.O3EDT,
+                            O3TRB3 = a.O3TRB3,
+                            O3FGR = a.O3FGR,
+                            O3FNAM = a.O3FNAM,
+                            O3MODL = a.O3MODL,
+                            O3LONG = a.O3LONG,
+                            O3SLUM = a.O3SLUM,
+                            O3DIV = a.O3DIV,
+                            O3TUOM = a.O3TUOM,
+                            O3DATE = a.O3DATE,
+                            O3CURD = a.O3CURD,
+                            O3USER = a.O3USER,
+                            DateUpdated = a.DateUpdated,
+                            TypeId = a.TypeId,
+                            SizeId = a.SizeId,
+                            CategoryId = a.CategoryId
+                        }).FirstOrDefault();
 
             return data;
         }
@@ -456,8 +457,8 @@ namespace PriceSignageSystem.Models.Repository
         public DateTime GetLatestUpdate()
         {
             var date = (from a in _db.STRPRCs
-                       orderby a.DateUpdated descending
-                       select a.DateUpdated).FirstOrDefault();
+                        orderby a.DateUpdated descending
+                        select a.DateUpdated).FirstOrDefault();
 
             return date;
         }
@@ -491,12 +492,12 @@ namespace PriceSignageSystem.Models.Repository
         public CountryDto GetCountryImg(string country)
         {
             var data = (from a in _db.Countries
-                       where a.iatrb3 == country
-                       select new CountryDto 
-                       { 
+                        where a.iatrb3 == country
+                        select new CountryDto
+                        {
                             iatrb3 = a.iatrb3,
                             country_img = a.country_img
-                       }).FirstOrDefault();
+                        }).FirstOrDefault();
 
             return data;
         }
@@ -623,6 +624,26 @@ namespace PriceSignageSystem.Models.Repository
                     command.ExecuteNonQuery();
                 }
             }
+        }
+
+        public void UpdateMultipleStatus(List<decimal> o3skus)
+        {
+            foreach (var item in o3skus)
+            {
+                var data = _db.STRPRCs.Where(a => a.O3SKU == item).FirstOrDefault();
+                data.IsPrinted = true;
+            }
+
+            _db.SaveChanges();
+
+        }
+
+        public void UpdateSingleStatus(decimal O3SKU)
+        {
+            var data = _db.STRPRCs.Where(a => a.O3SKU == O3SKU).FirstOrDefault();
+            data.IsPrinted = true;
+
+            _db.SaveChanges();
         }
     }
 }

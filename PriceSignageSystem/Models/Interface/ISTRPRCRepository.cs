@@ -24,5 +24,7 @@ namespace PriceSignageSystem.Models.Interface
         ReportDto GetReportData(decimal O3SKU);
         List<ReportDto> GetReportDataList(List<decimal> O3SKU);
         void UpdateSelection(decimal startDate, decimal endDate);
+        void UpdateMultipleStatus(List<decimal> o3skus);
+        void UpdateSingleStatus(decimal O3SKU);
     }
 }

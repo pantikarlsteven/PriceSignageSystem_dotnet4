@@ -5,9 +5,9 @@ namespace PriceSignageSystem.Models
 {
     public class STRPRC
     {
-        [Key]
-        public int Id { get; set; }
+        //public int Id { get; set; }
         public decimal O3LOC { get; set; }
+        [Key]
         public decimal O3SKU { get; set; }
         public string O3SCCD { get; set; }
         public string O3IDSC { get; set; }
@@ -46,5 +46,6 @@ namespace PriceSignageSystem.Models
         public int TypeId { get; set; }
         public int SizeId { get; set; }
         public int CategoryId { get; set; }
+        public bool IsPrinted { get; set; }
     }
 }

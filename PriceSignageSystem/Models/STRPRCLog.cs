@@ -17,5 +17,6 @@ namespace PriceSignageSystem.Models
         public string FromValue { get; set; }
         public string ToValue { get; set;}
         public DateTime DateUpdated { get; set; }
+        public bool IsPrinted { get; set; }
     }
 }

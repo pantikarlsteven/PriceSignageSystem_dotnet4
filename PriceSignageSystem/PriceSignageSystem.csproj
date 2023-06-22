@@ -248,6 +248,22 @@
     <Compile Include="Migrations\202306190840381_add_STRPRCLog.designer.cs">
       <DependentUpon>202306190840381_add_STRPRCLog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202306220038408_add_STRPRCStatus.cs" />
+    <Compile Include="Migrations\202306220038408_add_STRPRCStatus.designer.cs">
+      <DependentUpon>202306220038408_add_STRPRCStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202306220045301_add_IsprintedLogs.cs" />
+    <Compile Include="Migrations\202306220045301_add_IsprintedLogs.designer.cs">
+      <DependentUpon>202306220045301_add_IsprintedLogs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202306220047149_add_IsPrintedSTRPRC.cs" />
+    <Compile Include="Migrations\202306220047149_add_IsPrintedSTRPRC.designer.cs">
+      <DependentUpon>202306220047149_add_IsPrintedSTRPRC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202306220132277_remove_idSTRPRC.cs" />
+    <Compile Include="Migrations\202306220132277_remove_idSTRPRC.designer.cs">
+      <DependentUpon>202306220132277_remove_idSTRPRC.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Constants\ReportConstants.cs" />
@@ -438,6 +454,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202306190840381_add_STRPRCLog.resx">
       <DependentUpon>202306190840381_add_STRPRCLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202306220038408_add_STRPRCStatus.resx">
+      <DependentUpon>202306220038408_add_STRPRCStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202306220045301_add_IsprintedLogs.resx">
+      <DependentUpon>202306220045301_add_IsprintedLogs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202306220047149_add_IsPrintedSTRPRC.resx">
+      <DependentUpon>202306220047149_add_IsPrintedSTRPRC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202306220132277_remove_idSTRPRC.resx">
+      <DependentUpon>202306220132277_remove_idSTRPRC.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\CrystalReports\Dynamic_JewelryReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

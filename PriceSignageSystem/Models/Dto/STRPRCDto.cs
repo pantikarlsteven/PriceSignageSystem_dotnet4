@@ -95,6 +95,7 @@ namespace PriceSignageSystem.Models.Dto
         public int CategoryId { get; set; }
         public string DepartmentName { get; set; }
         public string IsReverted { get; set; }
+        public bool IsPrinted { get; set; }
     }
 
 
