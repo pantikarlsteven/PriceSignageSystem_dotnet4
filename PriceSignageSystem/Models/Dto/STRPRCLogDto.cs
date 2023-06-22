@@ -16,6 +16,10 @@ namespace PriceSignageSystem.Models.Dto
         public decimal O3SKU { get; set; }
         [Display(Name = "STATUS CODE")]
         public string O3SCCD { get; set; }
+
+        [Display(Name = "Is Printed")]
+        public string IsPrinted { get; set; }
+
         [Display(Name = "DESC")]
         public string O3IDSC { get; set; }
         [Display(Name = "UPC")]

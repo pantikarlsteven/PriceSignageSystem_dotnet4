@@ -91,9 +91,11 @@
                             <tr>
                                 <th><input type="checkbox" id="selectAll" /></th>
                                 <th></th>
+                                <th>Status</th>
                                 <th>SKU</th>
                                 <th style="width: 200px;" class="text-nowrap">Description</th>
                                 <th>Changed On</th>
+                                <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
                                 <th>Last Updated</th>
                                 <th><button class="printAllBtn btn btn-secondary px-3" style="float: right;">Print Selected</button></th>
                             </tr>
@@ -318,9 +320,11 @@
                                         },
                                         width: "15px"
                                     },
+                                    { data: 'IsPrinted', name: 'IsPrinted' },
                                     { data: 'O3SKU', name: 'O3SKU'},
                                     { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap' },
                                     { data: 'ColumnName', name: 'ColumnName'},
+                                    { data: 'O3DEPT', name: 'O3DEPT' },
                                     { data: 'DateUpdated', name: 'DateUpdated' },
                                     {
                                         data: null,
@@ -400,6 +404,16 @@
                                     //Start for print preview multiple report
                                     // PRINT MULTIPLE
                                     $('#printSelectedButton').click(function () {
+
+                                        $('.rowCheckbox:checked').each(function () {
+                                            var row  = $(this).closest('tr');
+                                            var table = row.closest('table');
+                                            var rowIndex = table.DataTable().row(row).index();
+                                            var specificRow = $('#dataTable tbody tr:eq(' + rowIndex + ')');
+                                            specificRow.find('td:eq(2)').text("Printed");
+
+                                        });
+
                                         var sizeId = $('#sizeDropdown').val();
 
                                         $("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "");
@@ -451,8 +465,12 @@
 
 
             //PRINT BUTTON
-            $('#dataTable').on('click', '.printBtn', function () {
+        $('#dataTable').on('click', '.printBtn', function () {
                 var rowId = $(this).data('id');
+
+                var row = $(this).closest('tr');
+                var table = row.closest('table');
+                var rowIndex = table.DataTable().row(row).index();
 
                 $.ajax({
                     url: '@Url.Action("GetDataBySKU", "STRPRC")' ,
@@ -545,10 +563,15 @@
                         //Start for print preview single report
                         // Print button click event handler
                         $('#printButton').click(function () {
+                            var specificRow = $('#dataTable tbody tr:eq(' + rowIndex + ')');
+                            specificRow.find('td:eq(2)').text("Printed");
+
                             response.SizeId = $('#sizeDropdown').val();
                             response.TypeId = $('#typeDropdown').val();
                             response.CategoryId = $('#categoryDropdown').val();
-                            response.O3LONG = "";
+                            response.O3IDSC = "";
+                            response.O3IDSC = "";
+                            response.O3FNAM = "";
                             response.O3MODL = "";
                             $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(response));
 
