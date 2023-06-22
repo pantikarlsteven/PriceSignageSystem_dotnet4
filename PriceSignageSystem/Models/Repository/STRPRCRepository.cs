@@ -379,7 +379,7 @@ namespace PriceSignageSystem.Models.Repository
                             TypeId = c.TypeId,
                             SizeId = c.SizeId,
                             CategoryId = c.CategoryId
-                        }).ToList();
+                        }).Take(10).ToList();
 
             return data;
         }

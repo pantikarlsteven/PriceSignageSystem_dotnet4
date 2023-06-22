@@ -272,11 +272,12 @@
 
             function InitLoad() {
                 //var startDate = $("#startDate").val();
-
+                $("#loadingContainer").show();
                 $.ajax({
                     url: '@Url.Action("GetUpdatedData", "STRPRC")',
                     type: 'GET',
                     success: function (data) {
+                        $("#loadingContainer").hide();
 
                         for (var i = 0; i < data.length; i++) {
                             var dateString = data[i].DateUpdated;
