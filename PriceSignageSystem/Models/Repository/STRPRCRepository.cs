@@ -481,9 +481,9 @@ namespace PriceSignageSystem.Models.Repository
             return date;
         }
 
-        public int UpdateSTRPRCTable(int storeId)
+        public decimal UpdateSTRPRCTable(int storeId)
         {
-            var count = 0;
+            decimal date = 0;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 using (SqlCommand command = new SqlCommand("sp_GetLatestSTRPRCTable", connection))
@@ -496,7 +496,7 @@ namespace PriceSignageSystem.Models.Repository
                     connection.Open();
 
                     // Execute the command and retrieve the result count
-                    count = (int)command.ExecuteScalar();
+                    date = (decimal)command.ExecuteScalar();
 
                     connection.Close();
 
@@ -504,7 +504,7 @@ namespace PriceSignageSystem.Models.Repository
                     //Console.WriteLine("Result Count: " + resultCount);
                 }
             }
-            return count;
+            return date;
         }
 
         public CountryDto GetCountryImg(string country)

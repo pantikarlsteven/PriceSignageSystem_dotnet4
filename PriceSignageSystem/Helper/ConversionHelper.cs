@@ -16,13 +16,20 @@ namespace PriceSignageSystem.Helper
             return decimal.Parse(date.ToString("yyMMdd"));
         }
 
-        // from decimal(6,0) to datetime yyMMdd
-        public static DateTime ToDateTime(decimal value)
+        // from decimal(6,0) to string date yyMMdd
+        public static string ToDateTime(decimal value)
         {
-            string stringValue = value.ToString("000000");
-            DateTime dateTimeValue = DateTime.ParseExact(stringValue, "yyMMdd", CultureInfo.InvariantCulture);
 
-            return dateTimeValue;
+            // Convert the decimal value to a string with 'yyMMdd' format
+            string dateString = value.ToString("000000");
+
+            // Parse the string as a DateTime object using the desired format
+            DateTime date = DateTime.ParseExact(dateString, "yyMMdd", CultureInfo.InvariantCulture);
+
+            // Format the DateTime object as 'yy-mm-dd'
+            string formattedDate = date.ToString("yy-MM-dd");
+
+            return formattedDate;
         }
 
         public static DataTable ConvertObjectToDataTable<T>(T obj)

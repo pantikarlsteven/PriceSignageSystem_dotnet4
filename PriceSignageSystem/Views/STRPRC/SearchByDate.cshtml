@@ -114,7 +114,7 @@
                             <tr>
                                 <th><input type="checkbox" id="selectAll" /></th>
                                 <th></th>
-                                <th>IsPrinted</th>
+                                <th>Printed?</th>
                                 <th>SKU</th>
                                 <th>UPC</th>
                                 <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
@@ -126,7 +126,7 @@
                                 <th>Size</th>
                                 <th>Category</th>
                                 <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
-                                <th>IsReverted</th>
+                                <th>Reverted?</th>
                                 <th><button class="printAllBtn btn btn-secondary px-3">Print Selected</button></th>
                             </tr>
                         </thead>
@@ -170,8 +170,17 @@
                 url: "/STRPRC/UpdateSTRPRCData",
                 type: "POST",
                 success: function (response) {
+                    
+                    $.ajax({
+                        url: '@Url.Action("GetDataByDate", "STRPRC")',
+                        type: 'POST',
+                        data: { startDate: response, withInventory: "@withInventory" },
+                        success: function (data) { },
+                        error: function () { }
 
-                    window.location.href = "/STRPRC/SearchByDate?withInventory=" + "@withInventory";
+                    });
+
+                    @*window.location.href = "/STRPRC/SearchByDate?withInventory=" + "@withInventory";*@
                 },
                 error: function (error) {
 
@@ -218,7 +227,7 @@
             var distinctValues = column.data().unique().sort().toArray();
 
             // Retrieve previously selected values (if any)
-     
+
             var selectedValues = column.search().split('|').map(function (value) {
                 return value.trim();
             });

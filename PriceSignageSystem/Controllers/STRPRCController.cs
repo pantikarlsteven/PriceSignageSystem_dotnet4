@@ -147,16 +147,14 @@ namespace PriceSignageSystem.Controllers
 
             return Json(dto);
         }
-
+        [HttpPost]
         public ActionResult UpdateSTRPRCData()
         {
             var storeId = int.Parse(ConfigurationManager.AppSettings["StoreID"]);
-            var count = _sTRPRCRepository.UpdateSTRPRCTable(storeId);
-            var data = new UserStoreDto()
-            {
-                DataCount = count
-            };
-            return RedirectToAction("Index", data);
+            var date = _sTRPRCRepository.UpdateSTRPRCTable(storeId);
+            var formattedDate = ConversionHelper.ToDateTime(date);
+
+            return Json(formattedDate);
         }
 
         [HttpPost]

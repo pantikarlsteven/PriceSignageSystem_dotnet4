@@ -18,7 +18,7 @@ namespace PriceSignageSystem.Models.Interface
         List<STRPRCLogDto> GetUpdatedData(decimal sku = 0);
         STRPRCDto GetDataBySKU(decimal O3SKU);
         DateTime GetLatestUpdate();
-        int UpdateSTRPRCTable(int storeId);
+        decimal UpdateSTRPRCTable(int storeId);
         CountryDto GetCountryImg(string country);
         ReportDto GetReportData(decimal O3SKU);
         List<ReportDto> GetReportDataList(List<decimal> O3SKU);
