@@ -105,37 +105,43 @@ namespace PriceSignageSystem.Models.Dto
         public string ColumnName { get { return _text; }
             set {
                 // Perform filtering logic here
-                _text = value;
-                switch (_text)
+                var listText = new List<string>();
+
+                foreach (var item in value.Split(',').ToList())
                 {
-                    case "O3IDSC":
-                        _text = "Description";
-                        break;
-                    case "O3FNAM":
-                        _text = "Brand";
-                        break;
-                    case "O3MODL":
-                        _text = "Model";
-                        break;
-                    case "O3TUOM":
-                        _text = "To UOM";
-                        break;
-                    case "O3SCCD":
-                        _text = "Item Status";
-                        break;
-                    case "O3UPC":
-                        _text = "UPC";
-                        break;
-                    case "O3TRB3":
-                        _text = "FLAG";
-                        break;
-                    case "O3LONG":
-                        _text = "Long Description";
-                        break;
-                    case "O3DEPT":
-                        _text = "Hierarchy";
-                        break;
+                    switch (item)
+                    {
+                        case "O3IDSC":
+                            listText.Add("Description");
+                            break;
+                        case "O3FNAM":
+                            listText.Add("Brand");
+                            break;
+                        case "O3MODL":
+                            listText.Add("Model");
+                            break;
+                        case "O3TUOM":
+                            listText.Add("To UOM");
+                            break;
+                        case "O3SCCD":
+                            listText.Add("Item Status");
+                            break;
+                        case "O3UPC":
+                            listText.Add("UPC");
+                            break;
+                        case "O3TRB3":
+                            listText.Add("FLAG");
+                            break;
+                        case "O3LONG":
+                            listText.Add("Long Description");
+                            break;
+                        case "O3DEPT":
+                            listText.Add("Hierarchy");
+                            break;
+                    }
                 }
+
+                _text = string.Join(",", listText);
             } 
         }
         public string FromValue { get; set; }

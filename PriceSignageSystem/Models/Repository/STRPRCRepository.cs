@@ -352,7 +352,7 @@ namespace PriceSignageSystem.Models.Repository
                     var record = new STRPRCLogDto
                     {
                         O3SKU = (decimal)reader["O3SKU"],
-                        IsPrinted = (bool)reader["IsPrinted"] ? "Printed" : "",
+                        IsPrinted = (bool)reader["IsPrinted"] ? "Yes" : "No",
                         O3IDSC = reader["O3IDSC"].ToString(),
                         ColumnName = reader["ColumnName"].ToString(),
                         DateUpdated = (DateTime)reader["DateUpdated"],
