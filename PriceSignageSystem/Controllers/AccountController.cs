@@ -111,7 +111,7 @@ namespace PriceSignageSystem.Controllers
                 var data = _userRepository.AddUser(user);
 
                 TempData["RegistrationSuccessMessage"] = "Registration successful!";
-                return RedirectToAction("SearchByDate", "STRPRC");
+                return RedirectToAction("SearchByDate", "STRPRC", new { withInventory = true});
             }
             return View(user);
         }

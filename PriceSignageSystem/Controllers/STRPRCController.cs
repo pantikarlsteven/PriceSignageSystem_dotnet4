@@ -151,10 +151,14 @@ namespace PriceSignageSystem.Controllers
         public ActionResult UpdateSTRPRCData()
         {
             var storeId = int.Parse(ConfigurationManager.AppSettings["StoreID"]);
-            var date = _sTRPRCRepository.UpdateSTRPRCTable(storeId);
-            var formattedDate = ConversionHelper.ToDateTime(date);
+            //var startdate = _sTRPRCRepository.UpdateSTRPRCTable(storeId);
+            //var dateString = startdate.ToString(); 
+            var dateString = (230620).ToString();
 
-            return Json(formattedDate);
+            DateTime date;
+            DateTime.TryParseExact(dateString, "yyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out date);
+
+            return Json(date.Date);
         }
 
         [HttpPost]

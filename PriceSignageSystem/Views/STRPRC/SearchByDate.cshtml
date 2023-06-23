@@ -150,10 +150,25 @@
 </html>
 
 <script>
-        //var $j = jQuery.noConflict();
+
+    // Start Date default value
+    //document.addEventListener("DOMContentLoaded", function () {
+    //    var today = new Date();
+    //    var tomorrow = new Date(today);
+    //    tomorrow.setDate(tomorrow.getDate() + 1);
+    //    var formattedDate = tomorrow.toISOString().split('T')[0];
+    //    document.getElementById('startDate').value = formattedDate;
+
+    //});
+    
+    var today = new Date();
+    var tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    var formattedDate = tomorrow.toISOString().split('T')[0];
+    $('#startDate').val(formattedDate);
 
     $(document).ready(function () {
-        //
+        
         $('#registrationSuccessModal').modal('show');
         setTimeout(function () {
             $('#registrationSuccessModal').modal('hide');
@@ -161,7 +176,7 @@
                 $('#registrationSuccessModal').remove();
             }, 500); // Delay removing the modal for 500 milliseconds after hiding
         }, 2000); // 2000 milliseconds = 2 seconds
-        //
+        
 
         $("#updateButton").click(function () {
             $("#loadingContainer").show();
@@ -170,17 +185,25 @@
                 url: "/STRPRC/UpdateSTRPRCData",
                 type: "POST",
                 success: function (response) {
-                    
-                    $.ajax({
-                        url: '@Url.Action("GetDataByDate", "STRPRC")',
-                        type: 'POST',
-                        data: { startDate: response, withInventory: "@withInventory" },
-                        success: function (data) { },
-                        error: function () { }
+                    debugger
+                    var timestamp = parseInt(response.match(/\d+/)[0]);
+                    var date = new Date(timestamp);
 
+                    $.ajax({
+                        url: '/STRPRC/GetDataByDate',
+                        method: 'POST',
+                        data: { startDate: date.toISOString(), withInventory : "@withInventory" },
+                        success: function (data) {
+                            
+                            $('#startDate').val(date.toISOString().split('T')[0]);
+                            RenderDatatable(data);
+                            $("#loadingContainer").hide();
+
+                        },
+                        error: function () {
+                        }
                     });
 
-                    @*window.location.href = "/STRPRC/SearchByDate?withInventory=" + "@withInventory";*@
                 },
                 error: function (error) {
 
@@ -310,7 +333,68 @@
             }
         });
 
-            $("#searchBtn").click(function () {
+        function RenderDatatable(data) {
+            table = $('#dataTable').DataTable({
+                scrollY: 500,
+                scrollX: true,
+                //scroller: true,
+                lengthMenu: [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, 'All']
+                ],
+                pageLength: -1,
+                data: data,
+                columnDefs: [
+                    { targets: [0, 1, 13, 14, 15], orderable: false },
+                ],
+                columns: [
+                    {
+                        data: null, orderable: false, searchable: false, render: function (data) {
+                            return '<input type="checkbox" class="rowCheckbox" data-id="' + data.O3SKU + '">';
+                        }
+                    },
+                    {
+                        "className": 'details-control',
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": '',
+                        "render": function () {
+                            return '<i class="fa-solid fa-square-caret-down"></i>';
+                        },
+                        width: "15px"
+                    },
+                    {
+                        data: 'IsPrinted', name: 'IsPrinted', render: function (data) {
+                            if (data === 'Yes') {
+                                return '<span style="color: green;">' + data + '</span>';
+                            } else {
+                                return '<span style="color: red;">' + data + '</span>';
+                            }
+                        }
+                    },
+                    { data: 'O3SKU', name: 'O3SKU' },
+                    { data: 'O3UPC', name: 'O3UPC' },
+                    { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap' },
+                    { data: 'O3REGU', name: 'O3REGU' },
+                    { data: 'O3POS', name: 'O3POS' },
+                    { data: 'O3SDT', name: 'O3SDT' },
+                    { data: 'O3EDT', name: 'O3EDT' },
+                    { data: 'TypeName', name: 'TypeName' },
+                    { data: 'SizeName', name: 'SizeName' },
+                    { data: 'CategoryName', name: 'CategoryName' },
+                    { data: 'DepartmentName', name: 'DepartmentName' },
+                    { data: 'IsReverted', name: 'IsReverted' },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            return '<button class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '">Print</button>';
+                        }
+                    }
+                ],
+            });
+        }
+
+        $("#searchBtn").click(function () {
                 var startDate = $("#startDate").val();
                 $("#loadingContainer").show();
 
@@ -319,9 +403,6 @@
                     type: 'POST',
                     data: { startDate: startDate, withInventory: "@withInventory"},
                     success: function (data) {
-                        debugger
-                        $("#loadingContainer").hide();
-
                         if (data.IsAuthenticated == false)
                             window.location.href = data.RedirectUrl;
                         else {
@@ -329,64 +410,8 @@
                                 table.destroy();
                             }
                             // DATATABLE
-                            table = $('#dataTable').DataTable({
-                                scrollY: 500,
-                                scrollX: true,
-                                //scroller: true,
-                                lengthMenu: [
-                                    [10, 25, 50, -1],
-                                    [10, 25, 50, 'All']
-                                ],
-                                pageLength: -1,
-                                data: data,
-                                columnDefs: [
-                                    { targets: [0, 1, 13, 14, 15], orderable: false },
-                                ],
-                                columns: [
-                                    {
-                                        data: null, orderable: false, searchable: false, render: function (data) {
-                                            return '<input type="checkbox" class="rowCheckbox" data-id="' + data.O3SKU + '">';
-                                        }
-                                    },
-                                    {
-                                        "className": 'details-control',
-                                        "orderable": false,
-                                        "data": null,
-                                        "defaultContent": '',
-                                        "render": function () {
-                                            return '<i class="fa-solid fa-square-caret-down"></i>';
-                                        },
-                                        width: "15px"
-                                    },
-                                    {
-                                        data: 'IsPrinted', name: 'IsPrinted', render: function (data) {
-                                            if (data === 'Yes') {
-                                                return '<span style="color: green;">' + data + '</span>';
-                                            } else {
-                                                return '<span style="color: red;">' + data + '</span>';
-                                            }
-                                        }
-                                    },
-                                    { data: 'O3SKU', name: 'O3SKU'},
-                                    { data: 'O3UPC', name: 'O3UPC' },
-                                    { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap'},
-                                    { data: 'O3REGU', name: 'O3REGU'},
-                                    { data: 'O3POS', name: 'O3POS'},
-                                    { data: 'O3SDT', name: 'O3SDT' },
-                                    { data: 'O3EDT', name: 'O3EDT' },
-                                    { data: 'TypeName', name: 'TypeName' },
-                                    { data: 'SizeName', name: 'SizeName'},
-                                    { data: 'CategoryName', name: 'CategoryName' },
-                                    { data: 'DepartmentName', name: 'DepartmentName' },
-                                    { data: 'IsReverted', name: 'IsReverted' },
-                                    {
-                                        data: null,
-                                        render: function (data, type, row) {
-                                            return '<button class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '">Print</button>';
-                                        }
-                                    }
-                                ],
-                            });
+                            RenderDatatable(data);
+                            $("#loadingContainer").hide();
 
 
                             $('#selectAll').on('change', function () {
@@ -633,15 +658,7 @@
                 }
             });
     });
-        // Start Date default value
-        document.addEventListener("DOMContentLoaded", function () {
-            var today = new Date();
-            var tomorrow = new Date(today);
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            var formattedDate = tomorrow.toISOString().split('T')[0];
-            document.getElementById('startDate').value = formattedDate;
-
-        });
+        
 
     function format(d) {
             // `d` is the original data object for the row
