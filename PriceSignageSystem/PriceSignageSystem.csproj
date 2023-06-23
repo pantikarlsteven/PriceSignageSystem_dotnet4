@@ -326,8 +326,12 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\buttons.dataTables.min.css" />
     <Content Include="Content\fonts.css" />
+    <Content Include="Content\Images\changes.png" />
     <Content Include="Content\Images\generic_user.png" />
+    <Content Include="Content\Images\inventory.png" />
     <Content Include="Content\Images\loading.gif" />
+    <Content Include="Content\Images\not-available.png" />
+    <Content Include="Content\Images\printer.png" />
     <Content Include="Content\Images\snrlogo_blue.png" />
     <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\jquery.dataTables.min.css" />
