@@ -644,8 +644,9 @@
                             response.SizeId = $('#sizeDropdown').val();
                             response.TypeId = $('#typeDropdown').val();
                             response.CategoryId = $('#categoryDropdown').val();
-                            response.O3FNAM = "";
+                            response.O3IDSC = "";
                             response.O3LONG = "";
+                            response.O3FNAM = "";
                             response.O3MODL = "";
                             $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(response));
 
