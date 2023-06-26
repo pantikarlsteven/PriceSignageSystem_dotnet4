@@ -1,4 +1,4 @@
-﻿@{ 
+﻿@{
     bool withInventory = ViewBag.WithInventory;
 }
 
@@ -32,7 +32,7 @@
 </head>
 
 <body>
-    <iframe id="reportIframe" src="" style="display: none;"></iframe> @*For printing preview*@
+    <iframe id="reportIframe" src="" style="display: none;"></iframe>
 
     <div class="content-wrapper bg-white px-3">
         <br />
@@ -99,7 +99,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="startDate">Start Date:</label>
-                            <input type="text" id="startDate" name="startDate" class="form-control"/>
+                            <input type="text" id="startDate" name="startDate" class="form-control" />
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -160,7 +160,7 @@
     //    document.getElementById('startDate').value = formattedDate;
 
     //});
-    
+
     var today = new Date();
     var tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
@@ -168,7 +168,9 @@
     $('#startDate').val(formattedDate);
 
     $(document).ready(function () {
-        
+
+        InitLoad();
+
         $('#registrationSuccessModal').modal('show');
         setTimeout(function () {
             $('#registrationSuccessModal').modal('hide');
@@ -176,7 +178,7 @@
                 $('#registrationSuccessModal').remove();
             }, 500); // Delay removing the modal for 500 milliseconds after hiding
         }, 2000); // 2000 milliseconds = 2 seconds
-        
+
 
         $("#updateButton").click(function () {
             $("#loadingContainer").show();
@@ -185,17 +187,23 @@
                 url: "/STRPRC/UpdateSTRPRCData",
                 type: "POST",
                 success: function (response) {
-                    debugger
+
                     var timestamp = parseInt(response.match(/\d+/)[0]);
                     var date = new Date(timestamp);
+                    var year = date.getFullYear();
+                    var month = String(date.getMonth() + 1).padStart(2, '0');
+                    var day = String(date.getDate()).padStart(2, '0');
+                    var formattedDate = year + '-' + month + '-' + day;
 
                     $.ajax({
                         url: '/STRPRC/GetDataByDate',
                         method: 'POST',
                         data: { startDate: date.toISOString(), withInventory : "@withInventory" },
                         success: function (data) {
-                            
-                            $('#startDate').val(date.toISOString().split('T')[0]);
+                            if (table !== null) {
+                                table.destroy();
+                            }
+                            $('#startDate').val(formattedDate);
                             RenderDatatable(data);
                             $("#loadingContainer").hide();
 
@@ -333,67 +341,96 @@
             }
         });
 
-        function RenderDatatable(data) {
-            table = $('#dataTable').DataTable({
-                scrollY: 500,
-                scrollX: true,
-                //scroller: true,
-                lengthMenu: [
-                    [10, 25, 50, -1],
-                    [10, 25, 50, 'All']
-                ],
-                pageLength: -1,
-                data: data,
-                columnDefs: [
-                    { targets: [0, 1, 13, 14, 15], orderable: false },
-                ],
-                columns: [
-                    {
-                        data: null, orderable: false, searchable: false, render: function (data) {
-                            return '<input type="checkbox" class="rowCheckbox" data-id="' + data.O3SKU + '">';
-                        }
+        function InitLoad() {
+            $("#loadingContainer").show();
+
+        $.ajax({
+            url: '/STRPRC/LoadPCA',
+            type: "POST",
+            data: { withInventory: "@withInventory"},
+            success: function (data) {
+                
+                var latestDate = data[0].O3SDT;
+                // Extracting year, month, and day
+                const day = latestDate.toString().substr(4, 2);
+                const month = latestDate.toString().substr(2, 2);
+                const year = latestDate.toString().substr(0, 2);
+
+                // Creating the formatted date
+                const formattedDate = `20${year}-${month}-${day}`;
+
+                $('#startDate').val(formattedDate);
+                RenderDatatable(data);
+                $("#loadingContainer").hide();
+
+            },
+            error: function (error) {
+
+                $("#loadingContainer").hide();
+            }
+        });
+          }
+
+    function RenderDatatable(data) {
+        table = $('#dataTable').DataTable({
+            scrollY: 500,
+            scrollX: true,
+            //scroller: true,
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, 'All']
+            ],
+            pageLength: -1,
+            data: data,
+            columnDefs: [
+                { targets: [0, 1, 13, 14, 15], orderable: false },
+            ],
+            columns: [
+                {
+                    data: null, orderable: false, searchable: false, render: function (data) {
+                        return '<input type="checkbox" class="rowCheckbox" data-id="' + data.O3SKU + '">';
+                    }
+                },
+                {
+                    "className": 'details-control',
+                    "orderable": false,
+                    "data": null,
+                    "defaultContent": '',
+                    "render": function () {
+                        return '<i class="fa-solid fa-square-caret-down"></i>';
                     },
-                    {
-                        "className": 'details-control',
-                        "orderable": false,
-                        "data": null,
-                        "defaultContent": '',
-                        "render": function () {
-                            return '<i class="fa-solid fa-square-caret-down"></i>';
-                        },
-                        width: "15px"
-                    },
-                    {
-                        data: 'IsPrinted', name: 'IsPrinted', render: function (data) {
-                            if (data === 'Yes') {
-                                return '<span style="color: green;">' + data + '</span>';
-                            } else {
-                                return '<span style="color: red;">' + data + '</span>';
-                            }
-                        }
-                    },
-                    { data: 'O3SKU', name: 'O3SKU' },
-                    { data: 'O3UPC', name: 'O3UPC' },
-                    { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap' },
-                    { data: 'O3REGU', name: 'O3REGU' },
-                    { data: 'O3POS', name: 'O3POS' },
-                    { data: 'O3SDT', name: 'O3SDT' },
-                    { data: 'O3EDT', name: 'O3EDT' },
-                    { data: 'TypeName', name: 'TypeName' },
-                    { data: 'SizeName', name: 'SizeName' },
-                    { data: 'CategoryName', name: 'CategoryName' },
-                    { data: 'DepartmentName', name: 'DepartmentName' },
-                    { data: 'IsReverted', name: 'IsReverted' },
-                    {
-                        data: null,
-                        render: function (data, type, row) {
-                            return '<button class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '">Print</button>';
+                    width: "15px"
+                },
+                {
+                    data: 'IsPrinted', name: 'IsPrinted', render: function (data) {
+                        if (data === 'Yes') {
+                            return '<span style="color: green;">' + data + '</span>';
+                        } else {
+                            return '<span style="color: red;">' + data + '</span>';
                         }
                     }
-                ],
-            });
-        }
-
+                },
+                { data: 'O3SKU', name: 'O3SKU' },
+                { data: 'O3UPC', name: 'O3UPC' },
+                { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap' },
+                { data: 'O3REGU', name: 'O3REGU' },
+                { data: 'O3POS', name: 'O3POS' },
+                { data: 'O3SDT', name: 'O3SDT' },
+                { data: 'O3EDT', name: 'O3EDT' },
+                { data: 'TypeName', name: 'TypeName' },
+                { data: 'SizeName', name: 'SizeName' },
+                { data: 'CategoryName', name: 'CategoryName' },
+                { data: 'DepartmentName', name: 'DepartmentName' },
+                { data: 'IsReverted', name: 'IsReverted' },
+                {
+                    data: null,
+                    render: function (data, type, row) {
+                        return '<button class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '">Print</button>';
+                    }
+                }
+            ],
+        });
+    }
         $("#searchBtn").click(function () {
                 var startDate = $("#startDate").val();
                 $("#loadingContainer").show();
@@ -658,7 +695,7 @@
                 }
             });
     });
-        
+
 
     function format(d) {
             // `d` is the original data object for the row
@@ -719,4 +756,6 @@
                 '</div>'
                 '</div>';
     }
+
+
 </script>

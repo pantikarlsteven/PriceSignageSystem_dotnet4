@@ -234,5 +234,29 @@ namespace PriceSignageSystem.Controllers
             jsonResult.MaxJsonLength = int.MaxValue;
             return jsonResult;
         }
+
+        [HttpPost]
+        public ActionResult LoadPCA(bool withInventory)
+        {
+            var data = _sTRPRCRepository.GetLatestPCAData(withInventory).ToList();
+            foreach (var item in data)
+            {
+                item.TypeName =  item.TypeId == 2 ? "Save"
+                                : item.TypeId == 1 ? "Regular"
+                                : "Save";
+                item.SizeName = item.SizeId == 1 ? "Whole"
+                                : item.SizeId == 2 ? "Skinny"
+                                : item.SizeId == 3 ? "1/8"
+                                : item.SizeId == 4 ? "Jewelry"
+                                : "Whole";
+                item.CategoryName = item.CategoryId == 1 ? "Appliance"
+                                    : item.CategoryId == 2 ? "Non-Appliance"
+                                    : "Non-Appliance";
+                item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
+                item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
+            }
+
+            return Json(data);
+        }
     }
 }

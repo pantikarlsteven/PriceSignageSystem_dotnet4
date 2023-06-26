@@ -96,6 +96,7 @@ namespace PriceSignageSystem.Models.Dto
         public string DepartmentName { get; set; }
         public string IsReverted { get; set; }
         public string IsPrinted { get; set; }
+        public decimal LatestDate { get; set; }
     }
 
 

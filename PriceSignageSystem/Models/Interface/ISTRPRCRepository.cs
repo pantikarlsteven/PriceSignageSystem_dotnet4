@@ -25,5 +25,6 @@ namespace PriceSignageSystem.Models.Interface
         void UpdateSelection(decimal startDate, decimal endDate);
         void UpdateMultipleStatus(List<decimal> o3skus);
         void UpdateSingleStatus(decimal O3SKU);
+        List<STRPRCDto> GetLatestPCAData(bool withInventory);
     }
 }
