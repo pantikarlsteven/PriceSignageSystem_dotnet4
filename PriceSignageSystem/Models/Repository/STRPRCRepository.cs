@@ -358,6 +358,7 @@ namespace PriceSignageSystem.Models.Repository
                         DateUpdated = (DateTime)reader["DateUpdated"],
                         O3FNAM = reader["O3FNAM"].ToString(),
                         O3DEPT = (decimal)reader["O3DEPT"],
+                        DepartmentName = reader["DepartmentName"].ToString(),
                         O3CLAS = (decimal)reader["O3CLAS"],
                         O3SCCD = reader["O3SCCD"].ToString(),
                         O3LONG = reader["O3LONG"].ToString(),
