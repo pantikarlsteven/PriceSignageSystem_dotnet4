@@ -744,7 +744,7 @@ namespace PriceSignageSystem.Models.Repository
                         CategoryId = (int)reader["CategoryId"],
                         DepartmentName = reader["DPTNAM"].ToString(),
                         IsReverted = reader["O3FLAG1"].ToString(),
-                        IsPrinted = reader["IsPrinted"].ToString(),
+                        IsPrinted = reader["IsPrinted_STRPRC"].ToString(),
                         LatestDate = (decimal)reader["LatestDate"]
                     };
 
@@ -758,6 +758,59 @@ namespace PriceSignageSystem.Models.Repository
 
             return data;
 
+        }
+
+        public List<ExportPCADto> PCAToExport(bool withInventory)
+        {
+            var sp = "sp_ExportPCAData";
+            var HasInv = withInventory == true ? 'Y' : 'N';
+            var data = new List<ExportPCADto>();
+            // Set up the connection and command
+            using (var connection = new SqlConnection(connectionString))
+            using (var command = new SqlCommand(sp, connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandTimeout = commandTimeoutInSeconds;
+
+                // Add parameters if required
+                command.Parameters.AddWithValue("@HasInv", HasInv);
+
+                // Open the connection and execute the command
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                // Process the result set
+                while (reader.Read())
+                {
+                    var record = new ExportPCADto
+                    {
+                        O3IDSC = reader["O3IDSC"].ToString(),
+                        O3SKU = (decimal)reader["O3SKU"],
+                        O3UPC = (decimal)reader["O3UPC"],
+                        O3POS = (decimal)reader["O3POS"],
+                        O3REGU = (decimal)reader["O3REGU"],
+                        O3SDT = (decimal)reader["O3SDT"],
+                        O3EDT = (decimal)reader["O3EDT"],
+                        O3FNAM = reader["O3FNAM"].ToString(),
+                        O3MODL = reader["O3MODL"].ToString(),
+                        O3LONG = reader["O3LONG"].ToString(),
+                        TypeId = (int)reader["TypeId"],
+                        SizeId = (int)reader["SizeId"],
+                        CategoryId = (int)reader["CategoryId"],
+                        DepartmentName = reader["DPTNAM"].ToString(),
+                        IsReverted = reader["O3FLAG1"].ToString(),
+                        IsPrinted = reader["IsPrinted_STRPRC"].ToString(),
+                    };
+
+                    data.Add(record);
+                }
+
+                // Close the reader and connection
+                reader.Close();
+                connection.Close();
+            }
+
+            return data;
         }
     }
 }

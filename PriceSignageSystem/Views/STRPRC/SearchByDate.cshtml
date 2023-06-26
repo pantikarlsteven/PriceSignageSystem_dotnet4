@@ -431,6 +431,27 @@
                 ],
             });
 
+            // Create a custom button
+            var exportToExcelBtn = $('<button id="exportToExcelBtn" class="ml-2">Export</button>');
+
+            // Insert the button next to the "Show entries" dropdown
+            $('.dataTables_length').append(exportToExcelBtn);
+
+            $('.dataTables_length').click(function () {
+             
+                window.location.href = '/STRPRC/ExportDataTableToExcel?withInventory=' + '@withInventory';
+                //$.ajax({
+                //    url: '/STRPRC/ExportDataTableToExcel',
+                //    type: 'POST',
+                //    data: { records: records },
+                //    success: function (response) {
+                //    },
+                //    error: function (error) {
+                //    }
+                //});
+            });
+
+
             $('#selectAll').on('change', function () {
                 var isChecked = $(this).is(':checked');
                 $('.rowCheckbox').prop('checked', isChecked);
