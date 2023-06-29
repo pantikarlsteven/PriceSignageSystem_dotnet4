@@ -4,7 +4,9 @@ using PriceSignageSystem.Models;
 using PriceSignageSystem.Models.Constants;
 using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -55,6 +57,11 @@ namespace PriceSignageSystem.Controllers
                     //Session["Username"] = user.UserName;
                     //Session["RoleId"] = user.RoleId;
                     //return RedirectToAction("SearchByDate", "STRPRC");
+
+                    var date = _sTRPRCRepository.GetLatestUpdate();
+                    if (date.Date != DateTime.Now.Date)
+                        _sTRPRCRepository.UpdateSTRPRCTable(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
+
                     return (returnUrl != null ? Redirect(returnUrl) : Redirect("/STRPRC/SearchByDate?withInventory=true"));
                 }
                 else
