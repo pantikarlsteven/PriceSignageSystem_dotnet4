@@ -1,4 +1,6 @@
-﻿using CrystalDecisions.CrystalReports.Engine;
+﻿using ClosedXML.Excel;
+using CrystalDecisions.CrystalReports.Engine;
+using Newtonsoft.Json;
 using PriceSignageSystem.Code;
 using PriceSignageSystem.Code.CustomValidations;
 using PriceSignageSystem.Helper;
@@ -12,7 +14,6 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
-using System.Web.Script.Serialization;
 
 namespace PriceSignageSystem.Controllers
 {
@@ -127,12 +128,10 @@ namespace PriceSignageSystem.Controllers
                 item.CategoryName = item.CategoryId == 1 ? "Appliance"
                                     : item.CategoryId == 2 ? "Non-Appliance"
                                     : "Non-Appliance";
-                item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
+                item.IsPrinted = item.IsPrinted == "1" ? "Yes" : "No";
                 item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
             }
 
-            //UPDATE SIZE, TYPE AND CATEGORY
-            //_sTRPRCRepository.UpdateSelection(startDateFormatted, endDateFormatted);
             return Json(data);
         }
 
@@ -257,6 +256,77 @@ namespace PriceSignageSystem.Controllers
             }
 
             return Json(data);
+        }
+
+        [HttpGet]
+        public FileResult ExportDataTableToExcel(bool withInventory)
+        {
+            var toExport = _sTRPRCRepository.PCAToExport(withInventory).ToList();
+            foreach (var item in toExport)
+            {
+                item.TypeName = item.TypeId == 2 ? "Save"
+                                : item.TypeId == 1 ? "Regular"
+                                : "Save";
+                item.SizeName = item.SizeId == 1 ? "Whole"
+                                : item.SizeId == 2 ? "Skinny"
+                                : item.SizeId == 3 ? "1/8"
+                                : item.SizeId == 4 ? "Jewelry"
+                                : "Whole";
+                item.CategoryName = item.CategoryId == 1 ? "Appliance"
+                                    : item.CategoryId == 2 ? "Non-Appliance"
+                                    : "Non-Appliance";
+                item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
+                item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
+            }
+
+            var dataTable = ConversionHelper.ConvertListToDataTable(toExport);
+            using (XLWorkbook workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("Sheet1");
+
+                // Set the column headers
+                for (int i = 0; i < dataTable.Columns.Count; i++)
+                {
+                    worksheet.Cell(1, i + 1).Value = dataTable.Columns[i].ColumnName;
+                }
+
+                // Populate the data rows
+                for (int row = 0; row < dataTable.Rows.Count; row++)
+                {
+                    for (int col = 0; col < dataTable.Columns.Count; col++)
+                    {
+                        worksheet.Cell(row + 2, col + 1).Value = dataTable.Rows[row][col].ToString();
+                    }
+                }
+
+                // Save the Excel file to a memory stream
+                using (var memoryStream = new System.IO.MemoryStream())
+                {
+                    workbook.SaveAs(memoryStream);
+
+                    // Return the Excel file as a downloadable response
+                    var fileContents = memoryStream.ToArray();
+                    var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    var fileName = string.Empty;
+                    if (withInventory)
+                    {
+                         fileName = "PCA_With_Inventory.xlsx"; // Default filename
+
+                    }
+                    else
+                    {
+                         fileName = "PCA_Without_Inventory.xlsx"; // Default filename
+
+                    }
+
+                    return File(fileContents, contentType, fileName);
+                }
+            }
+        }
+
+        public ActionResult PCA()
+        {
+            return View();
         }
     }
 }

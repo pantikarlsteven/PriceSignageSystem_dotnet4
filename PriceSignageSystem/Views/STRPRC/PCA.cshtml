@@ -1,0 +1,1183 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>PCA</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.3.3/css/select.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+
+    <style>
+        td.details-control {
+            text-align: center;
+            color: #6396fd;
+            cursor: pointer;
+        }
+
+        tr.shown td.details-control {
+            text-align: center;
+            color: #fd6363;
+        }
+
+        th.no-sort::after {
+            display: none !important;
+        }
+
+        .custom-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-left: 10px;
+        }
+
+        .dataTables_wrapper .dataTables_filter {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <iframe id="reportIframe" src="" style="display: none;"></iframe>
+
+    <div class="content-wrapper bg-white px-3">
+        <br />
+        <div class="content">
+            <div class="overlay-wrapper" id="loadingContainer" style="display:none;">
+                <div class="overlay" style="background-color: rgba(0, 0, 0, 0.59); z-index: 99;">
+                    <img class="" src="~/Content/Images/loading.gif" alt="Loading" style="max-width:350px;" />
+                </div>
+            </div>
+        </div>
+        <center>
+            @if (TempData["RegistrationSuccessMessage"] != null)
+            {
+                <div class="modal" tabindex="-1" role="dialog" id="registrationSuccessModal">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Registration Success</h5>
+                            </div>
+                            <div class="modal-body">
+                                <div class="alert alert-success">
+                                    @TempData["RegistrationSuccessMessage"]
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </center>
+        <br />
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="startDate">Start Date:</label>
+                    <input type="text" id="startDate" name="startDate" class="form-control" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label class="text-white d-sm-none d-lg-block">Search</label>
+                <button id="searchBtn" class="btn btn-primary btn-block">Search</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="card elevation-3  px-0 ">
+
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs bg-primary1 px-2 pt-2">
+                    <li class="nav-item">
+                        <a class="nav-link active" style="color:white;" data-toggle="tab" href="#with-inventory">With Inventory</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" style="color:white;" data-toggle="tab" href="#without-inventory">Without Inventory</a>
+                    </li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div id="with-inventory" class="tab-pane active mx-2">
+                        <h3 class="text-center mt-2">With Inventory</h3>
+                        <table id="with-inventory-table" class="table table-sm table-hover" style="width: 100%; text-align: center;">
+                            <thead style="background-color: #1C3766;" class="text-white">
+                                <tr>
+                                    <th><input type="checkbox" id="selectAllWith" /></th>
+                                    <th></th>
+                                    <th>Printed?</th>
+                                    <th>SKU</th>
+                                    <th>UPC</th>
+                                    <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
+                                    <th>Reg Price</th>
+                                    <th>Current Price</th>
+                                    <th>Date Start</th>
+                                    <th>Date End</th>
+                                    <th>Type</th>
+                                    <th>Size</th>
+                                    <th>Category</th>
+                                    <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
+                                    <th>Reverted?</th>
+                                    <th><button class="printAllBtnWith btn btn-secondary px-3">Print Selected</button></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="16" style="text-align: center;">Please enter start date</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="without-inventory" class="tab-pane fade mx-2">
+                        <h3 class="text-center mt-2">Without Inventory</h3>
+                        <table id="without-inventory-table" class="table table-sm table-hover" style="width: 100%; text-align: center;">
+                            <thead style="background-color: #1C3766;" class="text-white">
+                                <tr>
+                                    <th><input type="checkbox" id="selectAllWithout" /></th>
+                                    <th></th>
+                                    <th>Printed?</th>
+                                    <th>SKU</th>
+                                    <th>UPC</th>
+                                    <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
+                                    <th>Reg Price</th>
+                                    <th>Current Price</th>
+                                    <th>Date Start</th>
+                                    <th>Date End</th>
+                                    <th>Type</th>
+                                    <th>Size</th>
+                                    <th>Category</th>
+                                    <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
+                                    <th>Reverted?</th>
+                                    <th><button class="printAllBtnWithout btn btn-secondary px-3">Print Selected</button></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="16" style="text-align: center;">Please enter start date</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
+
+
+</body>
+</html>
+<script>
+    $(document).ready(function () {
+
+        InitLoad();
+
+        var tableWith = null;
+        var tableWithout = null;
+
+        function InitLoad() {
+            $("#loadingContainer").show();
+
+            $.ajax({
+                url: '/STRPRC/LoadPCA',
+                type: "POST",
+                data: { withInventory: "true"},
+                success: function (data) {
+
+                    RenderDatatableWithInv(data);
+                    $("#loadingContainer").hide();
+
+                },
+                error: function (error) {
+
+                    $("#loadingContainer").hide();
+                }
+            });
+
+            $.ajax({
+                url: '/STRPRC/LoadPCA',
+                type: "POST",
+                data: { withInventory: "false"},
+                success: function (data) {
+
+                    RenderDatatableWithoutInv(data);
+                    $("#loadingContainer").hide();
+
+                },
+                error: function (error) {
+
+                    $("#loadingContainer").hide();
+                }
+            });
+        }
+
+        // Save the state of the DataTables when switching tabs
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            var targetTab = $(e.target).attr("href");
+            if (targetTab === "#without-inventory") {
+                withoutInventoryTable.columns.adjust().draw();
+            } else if (targetTab === "#with-inventory") {
+                withInventoryTable.columns.adjust().draw();
+            }
+        });
+
+        function RenderDatatableWithInv(data) {
+            tableWith = $('#with-inventory-table').DataTable({
+                scrollY: 500,
+                scrollX: true,
+                lengthMenu: [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, 'All']
+                ],
+                pageLength: -1,
+                data: data,
+                columnDefs: [
+                    { targets: [0, 1, 13, 14, 15], orderable: false },
+                ],
+                columns: [
+                    {
+                        data: null, orderable: false, searchable: false, render: function (data) {
+                            return '<input type="checkbox" class="rowCheckbox" data-id="' + data.O3SKU + '">';
+                        }
+                    },
+                    {
+                        "className": 'details-control',
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": '',
+                        "render": function () {
+                            return '<i class="fa-solid fa-square-caret-down"></i>';
+                        },
+                        width: "15px"
+                    },
+                    {
+                        data: 'IsPrinted', name: 'IsPrinted', render: function (data) {
+                            if (data === 'Yes') {
+                                return '<span style="color: green;">' + data + '</span>';
+                            } else {
+                                return '<span style="color: red;">' + data + '</span>';
+                            }
+                        }
+                    },
+                    { data: 'O3SKU', name: 'O3SKU' },
+                    { data: 'O3UPC', name: 'O3UPC' },
+                    { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap' },
+                    { data: 'O3REGU', name: 'O3REGU' },
+                    { data: 'O3POS', name: 'O3POS' },
+                    { data: 'O3SDT', name: 'O3SDT' },
+                    { data: 'O3EDT', name: 'O3EDT' },
+                    { data: 'TypeName', name: 'TypeName' },
+                    { data: 'SizeName', name: 'SizeName' },
+                    { data: 'CategoryName', name: 'CategoryName' },
+                    { data: 'DepartmentName', name: 'DepartmentName' },
+                    { data: 'IsReverted', name: 'IsReverted' },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            return '<button class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '">Print</button>';
+                        }
+                    }
+                ],
+                "dom": '<"top"lfB>rt<"bottom"ip>',
+
+                initComplete: function () {
+                    // Create the button element
+                    var $button = $('<button>')
+                        .addClass('custom-button')
+                        .text('Export')
+                        .on('click', function () {
+                             window.location.href = '/STRPRC/ExportDataTableToExcel?withInventory=true';
+                        });
+
+                    var dataTableWrapper = $('#with-inventory-table').closest('.dataTables_wrapper');
+                    dataTableWrapper.find('.dataTables_filter').before($button);
+                }
+            });
+
+
+            $('#selectAllWith').on('change', function () {
+                var isChecked = $(this).is(':checked');
+                $('.rowCheckbox').prop('checked', isChecked);
+            });
+
+            $('.printAllBtnWith').on('click', function () {
+
+                var selectedRows = [];
+                $('.rowCheckbox:checked').each(function () {
+                    var rowId = $(this).data('id');
+                    selectedRows.push(rowId);
+                });
+
+                if (selectedRows.length > 0) {
+                    console.log('Selected Row IDs:', selectedRows);
+
+                    // Build the HTML for the dropdowns
+                    var dropdownHtml = '<div class="form-row">' +
+                        '<div class="form-group row col-12">' +
+                        '<label class="col-sm-2 col-form-label" for="sizeDropdown">Size:</label>' +
+                        '<select class="col-sm-9  ml-3 form-control" id="sizeDropdown">' +
+                        '<option value="1">Whole</option>' +
+                        '<option value="2">Skinny</option>' +
+                        '<option value="3">1/8</option>' +
+                        '<option value="4">Jewelry</option>' +
+                        '</select>' +
+                        '</div>' +
+                        '</div>';
+                    // Build the HTML for the print button
+                    var printButtonHtml = '<button id="printSelectedButtonWith" class="btn btn-primary">Print</button>';
+
+                    // Create the modal content
+                    var modalContent = '<div class="modal-dialog modal-sm modal-dialog-centered">' +
+                        '<div class="modal-content">' +
+                        '<div class="modal-header">' +
+                        '<h5 class="modal-title">Print Report</h5>' +
+                        '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
+                        '<span aria-hidden="true">&times;</span>' +
+                        '</button>' +
+                        '</div>' +
+                        '<div class="modal-body">' +
+                        dropdownHtml +
+                        '</div>' +
+                        '<div class="modal-footer">' +
+                        printButtonHtml +
+                        '</div>' +
+                        '</div>' +
+                        '</div>';
+                    // Remove any existing modals
+                    $('#modalView').remove();
+
+                    // Append the modal to the body
+                    $('body').append('<div id="modalView" class="modal">' + modalContent + '</div>');
+
+                    // Show the modal with fade-in effect from top
+                    $('#modalView').modal({
+                        show: true,
+                        backdrop: false,
+                        keyboard: false
+                    });
+
+                    // Set default values for the dropdowns
+                    $('#sizeDropdown').val(2); // Skinny
+
+
+                    //Start for print preview multiple report
+                    // PRINT MULTIPLE
+                    $('#printSelectedButtonWith').click(function () {
+                        var sizeId = $('#sizeDropdown').val();
+
+                        $("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "");
+
+                        var reportIframe = document.getElementById("reportIframe");
+                        if (reportIframe) {
+                            reportIframe.onload = function () {
+                                reportIframe.contentWindow.print();
+                            };
+                            reportIframe.src = $("#reportIframe").attr("src");
+                        }
+                        $('#modalView').modal('hide');
+                        $('input[type="checkbox"]').prop('checked', false);
+
+                    });
+                    //End for print preview multiple report
+
+                } else {
+                    alert('Please select items to print.');
+                }
+            });
+        }
+
+        function RenderDatatableWithoutInv(data) {
+            tableWithout = $('#without-inventory-table').DataTable({
+                scrollY: 500,
+                scrollX: true,
+                //scroller: true,
+                lengthMenu: [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, 'All']
+                ],
+                pageLength: -1,
+                data: data,
+                columnDefs: [
+                    { targets: [0, 1, 13, 14, 15], orderable: false },
+                ],
+                columns: [
+                    {
+                        data: null, orderable: false, searchable: false, render: function (data) {
+                            return '<input type="checkbox" class="rowCheckbox" data-id="' + data.O3SKU + '">';
+                        }
+                    },
+                    {
+                        "className": 'details-control',
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": '',
+                        "render": function () {
+                            return '<i class="fa-solid fa-square-caret-down"></i>';
+                        },
+                        width: "15px"
+                    },
+                    {
+                        data: 'IsPrinted', name: 'IsPrinted', render: function (data) {
+                            if (data === 'Yes') {
+                                return '<span style="color: green;">' + data + '</span>';
+                            } else {
+                                return '<span style="color: red;">' + data + '</span>';
+                            }
+                        }
+                    },
+                    { data: 'O3SKU', name: 'O3SKU' },
+                    { data: 'O3UPC', name: 'O3UPC' },
+                    { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap' },
+                    { data: 'O3REGU', name: 'O3REGU' },
+                    { data: 'O3POS', name: 'O3POS' },
+                    { data: 'O3SDT', name: 'O3SDT' },
+                    { data: 'O3EDT', name: 'O3EDT' },
+                    { data: 'TypeName', name: 'TypeName' },
+                    { data: 'SizeName', name: 'SizeName' },
+                    { data: 'CategoryName', name: 'CategoryName' },
+                    { data: 'DepartmentName', name: 'DepartmentName' },
+                    { data: 'IsReverted', name: 'IsReverted' },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            return '<button class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '">Print</button>';
+                        }
+                    }
+                ],
+                "dom": '<"top"lfB>rt<"bottom"ip>',
+
+                initComplete: function () {
+                    // Create the button element
+                    var $button = $('<button>')
+                        .addClass('custom-button')
+                        .text('Export')
+                        .on('click', function () {
+                            window.location.href = '/STRPRC/ExportDataTableToExcel?withInventory=false';
+                        });
+
+                    var dataTableWrapper = $('#without-inventory-table').closest('.dataTables_wrapper');
+                    dataTableWrapper.find('.dataTables_filter').before($button);
+                }
+            });
+
+            $('#selectAllWithout').on('change', function () {
+                var isChecked = $(this).is(':checked');
+                $('.rowCheckbox').prop('checked', isChecked);
+            });
+
+            $('.printAllBtnWithout').on('click', function () {
+
+                var selectedRows = [];
+                $('.rowCheckbox:checked').each(function () {
+                    var rowId = $(this).data('id');
+                    selectedRows.push(rowId);
+                });
+
+                if (selectedRows.length > 0) {
+                    console.log('Selected Row IDs:', selectedRows);
+
+                    // Build the HTML for the dropdowns
+                    var dropdownHtml = '<div class="form-row">' +
+                        '<div class="form-group row col-12">' +
+                        '<label class="col-sm-2 col-form-label" for="sizeDropdown">Size:</label>' +
+                        '<select class="col-sm-9  ml-3 form-control" id="sizeDropdown">' +
+                        '<option value="1">Whole</option>' +
+                        '<option value="2">Skinny</option>' +
+                        '<option value="3">1/8</option>' +
+                        '<option value="4">Jewelry</option>' +
+                        '</select>' +
+                        '</div>' +
+                        '</div>';
+                    // Build the HTML for the print button
+                    var printButtonHtml = '<button id="printSelectedButton" class="btn btn-primary">Print</button>';
+
+                    // Create the modal content
+                    var modalContent = '<div class="modal-dialog modal-sm modal-dialog-centered">' +
+                        '<div class="modal-content">' +
+                        '<div class="modal-header">' +
+                        '<h5 class="modal-title">Print Report</h5>' +
+                        '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
+                        '<span aria-hidden="true">&times;</span>' +
+                        '</button>' +
+                        '</div>' +
+                        '<div class="modal-body">' +
+                        dropdownHtml +
+                        '</div>' +
+                        '<div class="modal-footer">' +
+                        printButtonHtml +
+                        '</div>' +
+                        '</div>' +
+                        '</div>';
+                    // Remove any existing modals
+                    $('#modalView').remove();
+
+                    // Append the modal to the body
+                    $('body').append('<div id="modalView" class="modal">' + modalContent + '</div>');
+
+                    // Show the modal with fade-in effect from top
+                    $('#modalView').modal({
+                        show: true,
+                        backdrop: false,
+                        keyboard: false
+                    });
+
+                    // Set default values for the dropdowns
+                    $('#sizeDropdown').val(2); // Skinny
+
+
+                    //Start for print preview multiple report
+                    // PRINT MULTIPLE
+                    $('#printSelectedButton').click(function () {
+                        $("#loadingContainer").show();
+                        var sizeId = $('#sizeDropdown').val();
+
+                        $("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "");
+
+                        var reportIframe = document.getElementById("reportIframe");
+                        if (reportIframe) {
+                            $("#loadingContainer").hide();
+                            reportIframe.onload = function () {
+                                reportIframe.contentWindow.print();
+                            };
+                            reportIframe.src = $("#reportIframe").attr("src");
+                        }
+                        $('#modalView').modal('hide');
+                        $('input[type="checkbox"]').prop('checked', false);
+
+                    });
+                    //End for print preview multiple report
+
+                } else {
+                    alert('Please select items to print.');
+                }
+            });
+        }
+
+        function format(d) {
+            // `d` is the original data object for the row
+            return '<div class="row">' +
+                '<div class="col-6">' +
+                '<form>' +
+                '<div class="form-row">' +
+                '   <div class="form-group col">' +
+                '       <label>Brand:</label>' +
+                '       <span>' + d.O3FNAM + '</span>' +
+                '   </div>' +
+                '  <div class="form-group col">' +
+                '       <label>Model:</label>' +
+                '       <span>' + d.O3MODL + '</span>' +
+                '   </div>' +
+                '</div>' +
+                '<div class="form-row">' +
+                '   <div class="form-group col">' +
+                '       <label>Dept:</label>' +
+                '       <span>' + d.O3DEPT + '</span>' +
+                '   </div>' +
+                '   <div class="form-group col">' +
+                '       <label>Sub-Dept:</label>' +
+                '       <span>' + d.O3SDPT + '</span>' +
+                '   </div>' +
+                '</div>' +
+                '<div class="form-row">' +
+                '   <div class="form-group col">' +
+                '       <label>Class:</label>' +
+                '       <span>' + d.O3CLAS + '</span>' +
+                '   </div>' +
+                '   <div class="form-group col">' +
+                '       <label>Sub-Class:</label>' +
+                '       <span>' + d.O3SCLS + '</span>' +
+                '   </div>' +
+                '</div>' +
+                '<div class="form-row">' +
+                '   <div class="form-group col">' +
+                '       <label>Status:</label>' +
+                '       <span>' + d.O3SCCD + '</span>' +
+                '   </div>' +
+                '   <div class="form-group col">' +
+                '       <label>Country:</label>' +
+                '       <span>' + d.O3TRB3 + '</span>' +
+                '   </div>' +
+                '</div>' +
+                '<div class="form-row">' +
+                '   <div class="form-group col">' +
+                '       <label>Long Desc:</label>' +
+                '       <span>' + d.O3LONG + '</span>' +
+                '   </div>' +
+                '</div>' +
+                '</form>' +
+                '</div>' +
+                '<div class="col-6">' +
+                @*'<iframe src="@Url.Action("PreviewReport", "Report")#toolbar=0&navpanes=0&scrollbar=0&zoom=50" style="width: 100%; height: 300px;" frameborder="0"></iframe>' +*@
+                '<iframe src="@Url.Action("PreviewCrystalReport", "Report")?id=' + d.O3SKU + '#toolbar=0&navpanes=0&scrollbar=0&zoom=50" style="width: 100%; height: 300px;" frameborder="0"></iframe>' +
+                '</div>'
+                '</div>';
+        }
+
+        $("#searchBtn").click(function () {
+            $("#loadingContainer").show();
+            var startDate = $("#startDate").val();
+
+                $.ajax({
+                    url: '@Url.Action("GetDataByDate", "STRPRC")',
+                    type: 'POST',
+                    data: { startDate: startDate, withInventory: "true" },
+                    async: false, // Make the request synchronous
+                    success: function (data) {
+                        if (data.IsAuthenticated == false)
+                            window.location.href = data.RedirectUrl;
+                        else {
+                            if (tableWith !== null) {
+                                tableWith.destroy();
+                            }
+                            RenderDatatableWithInv(data);
+
+                            // Proceed with the second AJAX call here
+                            $.ajax({
+                                url: '@Url.Action("GetDataByDate", "STRPRC")',
+                                type: 'POST',
+                                data: { startDate: startDate, withInventory: "false" },
+                                success: function (data) {
+                                    if (data.IsAuthenticated == false)
+                                        window.location.href = data.RedirectUrl;
+                                    else {
+                                        if (tableWithout !== null) {
+                                            tableWithout.destroy();
+                                        }
+                                        RenderDatatableWithoutInv(data);
+                                    }
+                                    $("#loadingContainer").hide();
+                                }
+                            });
+                        }
+                    }
+                });
+            return false;
+        });
+
+        $('#with-inventory-table').on('click', '.printBtn', function () {
+            var rowId = $(this).data('id');
+
+            $.ajax({
+                url: '@Url.Action("GetDataBySKU", "STRPRC")' ,
+                type: 'POST',
+                data: { id: rowId },
+                success: function (response) {
+
+                        // Create the dropdown options
+                        var sizeOptions = '';
+                        var typeOptions = '';
+                        var categoryOptions = '';
+
+                        // Populate dropdown options from the server response
+                        for (var i = 0; i < response.SizeArray.length; i++) {
+                            var option = response.SizeArray[i];
+                            sizeOptions += '<option value="' + option.Id + '">' + option.Name + '</option>';
+                        }
+                        for (var i = 0; i < response.TypeArray.length; i++) {
+                            var option = response.TypeArray[i];
+                            typeOptions += '<option value="' + option.Id + '">' + option.Name + '</option>';
+                        }
+                        for (var i = 0; i < response.CategoryArray.length; i++) {
+                            var option = response.CategoryArray[i];
+                            categoryOptions += '<option value="' + option.Id + '">' + option.Name + '</option>';
+                        }
+
+                        // Build the HTML for the dropdowns
+                        var dropdownHtml = '<div class="form-row">' +
+                            '<div class="form-group row col-12">' +
+                            '<label class="col-sm-2 col-form-label" for="sizeDropdown">Size:</label>' +
+                            '<select class="col-sm-9  ml-3 form-control" id="sizeDropdown" >' +
+                            sizeOptions +
+                            '</select>' +
+                            '</div>' +
+                            '<div class="form-group row col-md-12">' +
+                            '<label class="col-sm-2 col-form-label" for="typeDropdown">Type:</label>' +
+                            '<select class="col-sm-9  ml-3 form-control" id="typeDropdown">' +
+                            typeOptions +
+                            '</select>' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="form-row">' +
+                            '<div class="form-group row col-md-12">' +
+                            '<label class="col-sm-2 col-form-label" for="categoryDropdown">Category:</label>' +
+                            '<select class="col-sm-9  ml-3 form-control" id="categoryDropdown">' +
+                            categoryOptions +
+                            '</select>' +
+                            '</div>' +
+                            '</div>';
+
+                        // Build the HTML for the print button
+                        var printButtonHtml = '<button id="printButton" class="btn btn-primary">Print</button>';
+
+                        // Create the modal content
+                        var modalContent = '<div class="modal-dialog modal-dialog-centered">' +
+                            '<div class="modal-content">' +
+                            '<div class="modal-header">' +
+                            '<h5 class="modal-title">Print Report</h5>' +
+                            '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
+                            '<span aria-hidden="true">&times;</span>' +
+                            '</button>' +
+                            '</div>' +
+                            '<div class="modal-body">' +
+                            dropdownHtml +
+                            '</div>' +
+                            '<div class="modal-footer">' +
+                            printButtonHtml +
+                            '</div>' +
+                            '</div>' +
+                            '</div>';
+
+                        // Remove any existing modals
+                        $('#modalView').remove();
+
+                        // Append the modal to the body
+                        $('body').append('<div id="modalView" class="modal">' + modalContent + '</div>');
+
+                        // Show the modal with fade-in effect from top
+                        $('#modalView').modal({
+                            show: true,
+                            backdrop: false,
+                            keyboard: false
+                        });
+
+                        // Set default values for the dropdowns
+                        $('#sizeDropdown').val(response.SizeId);
+                        $('#typeDropdown').val(response.TypeId);
+                        $('#categoryDropdown').val(response.CategoryId);
+
+                        //Start for print preview single report
+                        // Print button click event handler
+                        $('#printButton').click(function () {
+                            response.SizeId = $('#sizeDropdown').val();
+                            response.TypeId = $('#typeDropdown').val();
+                            response.CategoryId = $('#categoryDropdown').val();
+                            response.O3IDSC = "";
+                            response.O3LONG = "";
+                            response.O3FNAM = "";
+                            response.O3MODL = "";
+                            $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(response));
+
+                            var reportIframe = document.getElementById("reportIframe");
+                            if (reportIframe) {
+                                reportIframe.onload = function () {
+                                    reportIframe.contentWindow.print();
+                                };
+                                reportIframe.src = $("#reportIframe").attr("src");
+                            }
+                        });
+                        //End for print preview single report
+                }
+            });
+        });
+
+        $('#without-inventory-table').on('click', '.printBtn', function () {
+            var rowId = $(this).data('id');
+
+            $.ajax({
+                url: '@Url.Action("GetDataBySKU", "STRPRC")' ,
+                type: 'POST',
+                data: { id: rowId },
+                success: function (response) {
+
+                        // Create the dropdown options
+                        var sizeOptions = '';
+                        var typeOptions = '';
+                        var categoryOptions = '';
+
+                        // Populate dropdown options from the server response
+                        for (var i = 0; i < response.SizeArray.length; i++) {
+                            var option = response.SizeArray[i];
+                            sizeOptions += '<option value="' + option.Id + '">' + option.Name + '</option>';
+                        }
+                        for (var i = 0; i < response.TypeArray.length; i++) {
+                            var option = response.TypeArray[i];
+                            typeOptions += '<option value="' + option.Id + '">' + option.Name + '</option>';
+                        }
+                        for (var i = 0; i < response.CategoryArray.length; i++) {
+                            var option = response.CategoryArray[i];
+                            categoryOptions += '<option value="' + option.Id + '">' + option.Name + '</option>';
+                        }
+
+                        // Build the HTML for the dropdowns
+                        var dropdownHtml = '<div class="form-row">' +
+                            '<div class="form-group row col-12">' +
+                            '<label class="col-sm-2 col-form-label" for="sizeDropdown">Size:</label>' +
+                            '<select class="col-sm-9  ml-3 form-control" id="sizeDropdown" >' +
+                            sizeOptions +
+                            '</select>' +
+                            '</div>' +
+                            '<div class="form-group row col-md-12">' +
+                            '<label class="col-sm-2 col-form-label" for="typeDropdown">Type:</label>' +
+                            '<select class="col-sm-9  ml-3 form-control" id="typeDropdown">' +
+                            typeOptions +
+                            '</select>' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="form-row">' +
+                            '<div class="form-group row col-md-12">' +
+                            '<label class="col-sm-2 col-form-label" for="categoryDropdown">Category:</label>' +
+                            '<select class="col-sm-9  ml-3 form-control" id="categoryDropdown">' +
+                            categoryOptions +
+                            '</select>' +
+                            '</div>' +
+                            '</div>';
+
+                        // Build the HTML for the print button
+                        var printButtonHtml = '<button id="printButton" class="btn btn-primary">Print</button>';
+
+                        // Create the modal content
+                        var modalContent = '<div class="modal-dialog modal-dialog-centered">' +
+                            '<div class="modal-content">' +
+                            '<div class="modal-header">' +
+                            '<h5 class="modal-title">Print Report</h5>' +
+                            '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
+                            '<span aria-hidden="true">&times;</span>' +
+                            '</button>' +
+                            '</div>' +
+                            '<div class="modal-body">' +
+                            dropdownHtml +
+                            '</div>' +
+                            '<div class="modal-footer">' +
+                            printButtonHtml +
+                            '</div>' +
+                            '</div>' +
+                            '</div>';
+
+                        // Remove any existing modals
+                        $('#modalView').remove();
+
+                        // Append the modal to the body
+                        $('body').append('<div id="modalView" class="modal">' + modalContent + '</div>');
+
+                        // Show the modal with fade-in effect from top
+                        $('#modalView').modal({
+                            show: true,
+                            backdrop: false,
+                            keyboard: false
+                        });
+
+                        // Set default values for the dropdowns
+                        $('#sizeDropdown').val(response.SizeId);
+                        $('#typeDropdown').val(response.TypeId);
+                        $('#categoryDropdown').val(response.CategoryId);
+
+                        //Start for print preview single report
+                        // Print button click event handler
+                        $('#printButton').click(function () {
+                            response.SizeId = $('#sizeDropdown').val();
+                            response.TypeId = $('#typeDropdown').val();
+                            response.CategoryId = $('#categoryDropdown').val();
+                            response.O3IDSC = "";
+                            response.O3LONG = "";
+                            response.O3FNAM = "";
+                            response.O3MODL = "";
+                            $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(response));
+
+                            var reportIframe = document.getElementById("reportIframe");
+                            if (reportIframe) {
+                                reportIframe.onload = function () {
+                                    reportIframe.contentWindow.print();
+                                };
+                                reportIframe.src = $("#reportIframe").attr("src");
+                            }
+                        });
+                        //End for print preview single report
+                }
+            });
+        });
+
+        // Close the modal when the modal close button is clicked
+        $(document).on('click', '.modal .close', function () {
+            $('#modalView').modal('hide');
+        });
+
+        // Remove the modal from the DOM when it is hidden
+        $(document).on('hidden.bs.modal', '.modal', function () {
+            $(this).remove();
+        });
+
+        // Add event listener for opening and closing details
+        $('#with-inventory-table tbody').on('click', 'td.details-control', function () {
+
+            var tr = $(this).closest('tr');
+            var tdi = tr.find("i.fa-solid");
+            var row = tableWith.row(tr);
+
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+                tdi.first().removeClass('fa-solid fa-square-caret-up');
+                tdi.first().addClass('fa-solid fa-square-caret-down');
+            }
+            else {
+                // Open this row
+                row.child(format(row.data())).show();
+                tr.addClass('shown');
+                tdi.first().removeClass('fa-solid fa-square-caret-down');
+                tdi.first().addClass('fa-solid fa-square-caret-up');
+            }
+        });
+
+        // Add event listener for opening and closing details
+        $('#without-inventory-table tbody').on('click', 'td.details-control', function () {
+
+            var tr = $(this).closest('tr');
+            var tdi = tr.find("i.fa-solid");
+            var row = tableWithout.row(tr);
+
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+                tdi.first().removeClass('fa-solid fa-square-caret-up');
+                tdi.first().addClass('fa-solid fa-square-caret-down');
+            }
+            else {
+                // Open this row
+                row.child(format(row.data())).show();
+                tr.addClass('shown');
+                tdi.first().removeClass('fa-solid fa-square-caret-down');
+                tdi.first().addClass('fa-solid fa-square-caret-up');
+            }
+        });
+
+        // FILTER DEPT FOR WITH TAB
+        var dialog = $('<div>').dialog({
+            autoOpen: false,
+            modal: true,
+            resizable: false,
+            width: 300,
+            position: { my: 'center', at: 'center', of: window },
+            open: function (event, ui) {
+                $('.ui-widget-overlay').bind('click', function () {
+                    dialog.dialog('close');
+                });
+            },
+            close: function (event, ui) {
+                $('.ui-widget-overlay').unbind('click');
+            }
+        });
+
+        // Handle filter icon click
+        $('#with-inventory-table thead').on('click', '.filter-icon', function (event) {
+            event.stopPropagation(); // Prevent event propagation
+
+            var columnIndex = $(this).closest('th').index();
+            var column = tableWith.column(columnIndex);
+
+            // Clear existing filter input
+            dialog.dialog('option', 'title', 'Filter Dept').html('');
+
+            // Get distinct values of the column
+            var distinctValues = column.data().unique().sort().toArray();
+
+            // Retrieve previously selected values (if any)
+
+            var selectedValues = column.search().split('|').map(function (value) {
+                return value.trim();
+            });
+
+            if (selectedValues.length > 0) {
+                selectedValues[0] = selectedValues[0].replace(/^\^\(/, '');
+                var lastIndex = selectedValues.length - 1;
+                selectedValues[lastIndex] = selectedValues[lastIndex].replace(/\)\$$/, '');
+            }
+
+
+            // Create checkboxes for each distinct value
+            var scrollableDiv = $('<div>').css({
+                'max-height': '200px', // Set a maximum height for scrolling
+                'overflow-y': 'scroll' // Enable vertical scrolling
+            });
+
+            var checkboxContainer = $('<div>').css({
+                'display': 'flex',
+                'flex-direction': 'column', // Align checkboxes vertically
+                'gap': '5px' // Add spacing between checkboxes
+            });
+
+            for (var i = 0; i < distinctValues.length; i++) {
+                var checkbox = $('<input type="checkbox">').addClass('filter-checkbox').val(distinctValues[i]);
+                if (selectedValues.includes(distinctValues[i])) {
+                    checkbox.prop('checked', true);
+                }
+                var label = $('<label>').text(distinctValues[i]).prepend(checkbox);
+                checkboxContainer.append(label);
+            }
+
+            scrollableDiv.append(checkboxContainer);
+            dialog.append(scrollableDiv);
+
+            // Create button container for the "OK" and "Clear All Checkboxes" buttons
+            var buttonContainer = $('<div>').css('display', 'flex');
+            dialog.append(buttonContainer);
+
+            // Create "Clear All Checkboxes" button
+            var clearButton = $('<button>').text('Clear All').addClass('small-button').click(function () {
+                $('.filter-checkbox').prop('checked', false);
+                applyFilter();
+            });
+            buttonContainer.append(clearButton);
+
+            // Create "OK" button
+            var okButton = $('<button>').text('OK').addClass('small-button').click(function () {
+                applyFilter();
+                dialog.dialog('close');
+            });
+            buttonContainer.append(okButton);
+
+            // Apply filter when checkbox state changes
+            $('.filter-checkbox').on('change', applyFilter);
+
+            // Open the filter dialog
+            dialog.dialog('open');
+
+            function applyFilter() {
+                var selectedValues = $('.filter-checkbox:checked').map(function () {
+                    return $(this).val();
+                }).get();
+
+                if (selectedValues.length === 0) {
+                    column.search('').draw();
+                } else {
+                    // Use a regular expression to match exact values
+                    var regex = '^(' + selectedValues.map(function (value) {
+                        return $.fn.dataTable.util.escapeRegex(value);
+                    }).join('|') + ')$';
+
+                    column.search(regex, true, false).draw();
+                }
+            }
+        });
+
+        // FOR WITHOUT TAB
+        var dialog2 = $('<div>').dialog({
+            autoOpen: false,
+            modal: true,
+            resizable: false,
+            width: 300,
+            position: { my: 'center', at: 'center', of: window },
+            open: function (event, ui) {
+                $('.ui-widget-overlay').bind('click', function () {
+                    dialog2.dialog('close');
+                });
+            },
+            close: function (event, ui) {
+                $('.ui-widget-overlay').unbind('click');
+            }
+        });
+
+        // Handle filter icon click
+        $('#without-inventory-table thead').on('click', '.filter-icon', function (event) {
+            event.stopPropagation(); // Prevent event propagation
+
+            var columnIndex = $(this).closest('th').index();
+            var column = tableWithout.column(columnIndex);
+
+            // Clear existing filter input
+            dialog2.dialog('option', 'title', 'Filter Dept').html('');
+
+            // Get distinct values of the column
+            var distinctValues = column.data().unique().sort().toArray();
+
+            // Retrieve previously selected values (if any)
+
+            var selectedValues = column.search().split('|').map(function (value) {
+                return value.trim();
+            });
+
+            if (selectedValues.length > 0) {
+                selectedValues[0] = selectedValues[0].replace(/^\^\(/, '');
+                var lastIndex = selectedValues.length - 1;
+                selectedValues[lastIndex] = selectedValues[lastIndex].replace(/\)\$$/, '');
+            }
+
+
+            // Create checkboxes for each distinct value
+            var scrollableDiv = $('<div>').css({
+                'max-height': '200px', // Set a maximum height for scrolling
+                'overflow-y': 'scroll' // Enable vertical scrolling
+            });
+
+            var checkboxContainer = $('<div>').css({
+                'display': 'flex',
+                'flex-direction': 'column', // Align checkboxes vertically
+                'gap': '5px' // Add spacing between checkboxes
+            });
+
+            for (var i = 0; i < distinctValues.length; i++) {
+                var checkbox = $('<input type="checkbox">').addClass('filter-checkbox').val(distinctValues[i]);
+                if (selectedValues.includes(distinctValues[i])) {
+                    checkbox.prop('checked', true);
+                }
+                var label = $('<label>').text(distinctValues[i]).prepend(checkbox);
+                checkboxContainer.append(label);
+            }
+
+            scrollableDiv.append(checkboxContainer);
+            dialog2.append(scrollableDiv);
+
+            // Create button container for the "OK" and "Clear All Checkboxes" buttons
+            var buttonContainer = $('<div>').css('display', 'flex');
+            dialog2.append(buttonContainer);
+
+            // Create "Clear All Checkboxes" button
+            var clearButton = $('<button>').text('Clear All').addClass('small-button').click(function () {
+                $('.filter-checkbox').prop('checked', false);
+                applyFilter();
+            });
+            buttonContainer.append(clearButton);
+
+            // Create "OK" button
+            var okButton = $('<button>').text('OK').addClass('small-button').click(function () {
+                applyFilter();
+                dialog2.dialog('close');
+            });
+            buttonContainer.append(okButton);
+
+            // Apply filter when checkbox state changes
+            $('.filter-checkbox').on('change', applyFilter);
+
+            // Open the filter dialog
+            dialog2.dialog('open');
+
+            function applyFilter() {
+                var selectedValues = $('.filter-checkbox:checked').map(function () {
+                    return $(this).val();
+                }).get();
+
+                if (selectedValues.length === 0) {
+                    column.search('').draw();
+                } else {
+                    // Use a regular expression to match exact values
+                    var regex = '^(' + selectedValues.map(function (value) {
+                        return $.fn.dataTable.util.escapeRegex(value);
+                    }).join('|') + ')$';
+
+                    column.search(regex, true, false).draw();
+                }
+            }
+        });
+
+        $("#startDate").datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+
+        var today = new Date();
+        var tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        var formattedDate = tomorrow.toISOString().split('T')[0];
+        $('#startDate').val(formattedDate);
+    });
+</script>
