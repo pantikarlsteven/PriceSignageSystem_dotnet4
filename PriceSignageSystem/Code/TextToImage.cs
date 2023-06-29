@@ -23,7 +23,7 @@ namespace PriceSignageSystem.Code
             Font brandFont = new Font("Arial Black", 4);
             Font descFont = new Font("Impact", (float)2.5);
             var brandMaxWidth = 64.63975;
-            var descMaxWidth = 63.692482;
+            var descMaxWidth = 60.692482;
             switch (sizeId)
             {
                 case ReportConstants.Size.OneEight:
