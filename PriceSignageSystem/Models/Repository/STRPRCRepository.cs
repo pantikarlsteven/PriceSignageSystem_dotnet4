@@ -246,10 +246,9 @@ namespace PriceSignageSystem.Models.Repository
             return _db.STRPRCs;
         }
 
-        public List<STRPRCDto> GetDataByStartDate(decimal startDate, bool withInventory)
+        public List<STRPRCDto> GetDataByStartDate(decimal startDate)
         {
             var sp = "sp_GettmpData";
-            var HasInv = withInventory == true ? 'Y' : 'N';
             var data = new List<STRPRCDto>();
             var store = int.Parse(ConfigurationManager.AppSettings["StoreID"]);
             // Set up the connection and command
@@ -262,7 +261,6 @@ namespace PriceSignageSystem.Models.Repository
                 // Add parameters if required
                 command.Parameters.AddWithValue("@O3SDT", startDate);
                 command.Parameters.AddWithValue("@O3LOC", store);
-                command.Parameters.AddWithValue("@HasInv", HasInv);
 
                 // Open the connection and execute the command
                 connection.Open();
@@ -314,7 +312,8 @@ namespace PriceSignageSystem.Models.Repository
                         CategoryId = (int)reader["CategoryId"],
                         DepartmentName = reader["DPTNAM"].ToString(),
                         IsReverted = reader["O3FLAG1"].ToString(),
-                        IsPrinted = reader["IsPrinted"].ToString()
+                        IsPrinted = reader["IsPrinted"].ToString(),
+                        HasInventory = reader["INV"].ToString()
                     };
 
                     data.Add(record);
@@ -679,10 +678,9 @@ namespace PriceSignageSystem.Models.Repository
             _db.SaveChanges();
         }
 
-        public List<STRPRCDto> GetLatestPCAData(bool withInventory)
+        public List<STRPRCDto> GetLatestPCAData()
         {
             var sp = "sp_GetLatestPCAData";
-            var HasInv = withInventory == true ? 'Y' : 'N';
             var data = new List<STRPRCDto>();
             // Set up the connection and command
             using (var connection = new SqlConnection(connectionString))
@@ -692,7 +690,7 @@ namespace PriceSignageSystem.Models.Repository
                 command.CommandTimeout = commandTimeoutInSeconds;
 
                 // Add parameters if required
-                command.Parameters.AddWithValue("@HasInv", HasInv);
+                //command.Parameters.AddWithValue("@Filter", filter);
 
                 // Open the connection and execute the command
                 connection.Open();
@@ -745,7 +743,8 @@ namespace PriceSignageSystem.Models.Repository
                         DepartmentName = reader["DPTNAM"].ToString(),
                         IsReverted = reader["O3FLAG1"].ToString(),
                         IsPrinted = reader["IsPrinted_STRPRC"].ToString(),
-                        LatestDate = (decimal)reader["LatestDate"]
+                        LatestDate = (decimal)reader["LatestDate"],
+                        HasInventory = reader["INV"].ToString()
                     };
 
                     data.Add(record);
@@ -794,9 +793,9 @@ namespace PriceSignageSystem.Models.Repository
                         O3FNAM = reader["O3FNAM"].ToString(),
                         O3MODL = reader["O3MODL"].ToString(),
                         O3LONG = reader["O3LONG"].ToString(),
-                        TypeId = (int)reader["TypeId"],
-                        SizeId = (int)reader["SizeId"],
-                        CategoryId = (int)reader["CategoryId"],
+                        Type = reader["Type"].ToString(),
+                        Size = reader["Size"].ToString(),
+                        Category = reader["Category"].ToString(),
                         DepartmentName = reader["DPTNAM"].ToString(),
                         IsReverted = reader["O3FLAG1"].ToString(),
                         IsPrinted = reader["IsPrinted_STRPRC"].ToString(),

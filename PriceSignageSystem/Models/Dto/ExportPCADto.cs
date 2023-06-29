@@ -17,14 +17,11 @@ namespace PriceSignageSystem.Models.Dto
         public decimal O3POS { get; set; }
         public decimal O3SDT { get; set; }
         public decimal O3EDT { get; set; }
-        public string SizeName { get; set; }
-        public string TypeName { get; set; }
-        public string CategoryName { get; set; }
         public string DepartmentName { get; set; }
         public string IsReverted { get; set; }
         public string IsPrinted { get; set; }
-        public int TypeId { get; set; }
-        public int SizeId { get; set; }
-        public int CategoryId { get; set; }
+        public string Type { get; set; }
+        public string Size { get; set; }
+        public string Category { get; set; }
     }
 }

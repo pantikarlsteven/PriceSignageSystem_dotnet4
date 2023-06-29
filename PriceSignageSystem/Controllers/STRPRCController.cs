@@ -111,11 +111,50 @@ namespace PriceSignageSystem.Controllers
         }
        
         [HttpPost]
-        public ActionResult GetDataByDate(DateTime startDate, bool withInventory)
+        public ActionResult GetPCAByDate(DateTime startDate)
         {
             var startDateFormatted = ConversionHelper.ToDecimal(startDate);
-            var data = _sTRPRCRepository.GetDataByStartDate(startDateFormatted, withInventory).ToList();
-            foreach (var item in data)
+            var data = new STRPRCDto();
+            var rawData = _sTRPRCRepository.GetDataByStartDate(startDateFormatted).ToList();
+            data.WithInventoryList = rawData.Where(a => a.HasInventory == "Y").ToList();
+            data.WithoutInventoryList = rawData.Where(a => a.HasInventory == string.Empty).ToList();
+            data.ExcemptionList = rawData.Where(a => a.O3SDT == a.O3EDT).ToList();
+
+            foreach (var item in data.WithInventoryList)
+            {
+                item.TypeName = startDateFormatted == item.O3SDT && item.O3EDT != 999999 ? "Save"
+                                : startDateFormatted == item.O3SDT && item.O3EDT == 999999 ? "Regular"
+                                : "Save";
+                item.SizeName = item.SizeId == 1 ? "Whole"
+                                : item.SizeId == 2 ? "Skinny"
+                                : item.SizeId == 3 ? "1/8"
+                                : item.SizeId == 4 ? "Jewelry"
+                                : "Whole";
+                item.CategoryName = item.CategoryId == 1 ? "Appliance"
+                                    : item.CategoryId == 2 ? "Non-Appliance"
+                                    : "Non-Appliance";
+                item.IsPrinted = item.IsPrinted == "1" ? "Yes" : "No";
+                item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
+            }
+
+            foreach (var item in data.WithoutInventoryList)
+            {
+                item.TypeName = startDateFormatted == item.O3SDT && item.O3EDT != 999999 ? "Save"
+                                : startDateFormatted == item.O3SDT && item.O3EDT == 999999 ? "Regular"
+                                : "Save";
+                item.SizeName = item.SizeId == 1 ? "Whole"
+                                : item.SizeId == 2 ? "Skinny"
+                                : item.SizeId == 3 ? "1/8"
+                                : item.SizeId == 4 ? "Jewelry"
+                                : "Whole";
+                item.CategoryName = item.CategoryId == 1 ? "Appliance"
+                                    : item.CategoryId == 2 ? "Non-Appliance"
+                                    : "Non-Appliance";
+                item.IsPrinted = item.IsPrinted == "1" ? "Yes" : "No";
+                item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
+            }
+
+            foreach (var item in data.ExcemptionList)
             {
                 item.TypeName = startDateFormatted == item.O3SDT && item.O3EDT != 999999 ? "Save"
                                 : startDateFormatted == item.O3SDT && item.O3EDT == 999999 ? "Regular"
@@ -235,12 +274,51 @@ namespace PriceSignageSystem.Controllers
         }
 
         [HttpPost]
-        public ActionResult LoadPCA(bool withInventory)
+        public ActionResult LoadPCA()
         {
-            var data = _sTRPRCRepository.GetLatestPCAData(withInventory).ToList();
-            foreach (var item in data)
+            var data = new STRPRCDto();
+            var LatestPCAData = _sTRPRCRepository.GetLatestPCAData().ToList();
+            
+            data.WithInventoryList = LatestPCAData.Where(a => a.HasInventory == "Y").ToList();
+            data.WithoutInventoryList = LatestPCAData.Where(a => a.HasInventory == string.Empty).ToList();
+            data.ExcemptionList = LatestPCAData.Where(a => a.O3SDT == a.O3EDT).ToList();
+            foreach (var item in data.WithInventoryList)
             {
                 item.TypeName =  item.TypeId == 2 ? "Save"
+                                : item.TypeId == 1 ? "Regular"
+                                : "Save";
+                item.SizeName = item.SizeId == 1 ? "Whole"
+                                : item.SizeId == 2 ? "Skinny"
+                                : item.SizeId == 3 ? "1/8"
+                                : item.SizeId == 4 ? "Jewelry"
+                                : "Whole";
+                item.CategoryName = item.CategoryId == 1 ? "Appliance"
+                                    : item.CategoryId == 2 ? "Non-Appliance"
+                                    : "Non-Appliance";
+                item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
+                item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
+            }
+
+            foreach (var item in data.WithoutInventoryList)
+            {
+                item.TypeName = item.TypeId == 2 ? "Save"
+                                : item.TypeId == 1 ? "Regular"
+                                : "Save";
+                item.SizeName = item.SizeId == 1 ? "Whole"
+                                : item.SizeId == 2 ? "Skinny"
+                                : item.SizeId == 3 ? "1/8"
+                                : item.SizeId == 4 ? "Jewelry"
+                                : "Whole";
+                item.CategoryName = item.CategoryId == 1 ? "Appliance"
+                                    : item.CategoryId == 2 ? "Non-Appliance"
+                                    : "Non-Appliance";
+                item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
+                item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
+            }
+
+            foreach (var item in data.ExcemptionList)
+            {
+                item.TypeName = item.TypeId == 2 ? "Save"
                                 : item.TypeId == 1 ? "Regular"
                                 : "Save";
                 item.SizeName = item.SizeId == 1 ? "Whole"
@@ -264,17 +342,6 @@ namespace PriceSignageSystem.Controllers
             var toExport = _sTRPRCRepository.PCAToExport(withInventory).ToList();
             foreach (var item in toExport)
             {
-                item.TypeName = item.TypeId == 2 ? "Save"
-                                : item.TypeId == 1 ? "Regular"
-                                : "Save";
-                item.SizeName = item.SizeId == 1 ? "Whole"
-                                : item.SizeId == 2 ? "Skinny"
-                                : item.SizeId == 3 ? "1/8"
-                                : item.SizeId == 4 ? "Jewelry"
-                                : "Whole";
-                item.CategoryName = item.CategoryId == 1 ? "Appliance"
-                                    : item.CategoryId == 2 ? "Non-Appliance"
-                                    : "Non-Appliance";
                 item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
                 item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
             }
@@ -287,7 +354,12 @@ namespace PriceSignageSystem.Controllers
                 // Set the column headers
                 for (int i = 0; i < dataTable.Columns.Count; i++)
                 {
-                    worksheet.Cell(1, i + 1).Value = dataTable.Columns[i].ColumnName;
+                    var cell = worksheet.Cell(1, i + 1);
+                    cell.Value = dataTable.Columns[i].ColumnName;
+
+                    // Set the cell style to bold
+                    var style = cell.Style;
+                    style.Font.Bold = true;
                 }
 
                 // Populate the data rows
@@ -296,6 +368,27 @@ namespace PriceSignageSystem.Controllers
                     for (int col = 0; col < dataTable.Columns.Count; col++)
                     {
                         worksheet.Cell(row + 2, col + 1).Value = dataTable.Rows[row][col].ToString();
+                    }
+                }
+
+                // Apply table styles for striped rows
+                var tableRange = worksheet.Range(1, 1, dataTable.Rows.Count + 1, dataTable.Columns.Count);
+                tableRange.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                tableRange.Style.Alignment.SetVertical(XLAlignmentVerticalValues.Center);
+                tableRange.Style.Border.SetInsideBorder(XLBorderStyleValues.Thin);
+                tableRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Thin);
+                tableRange.Style.Border.InsideBorderColor = XLColor.Gray;
+                tableRange.Style.Border.OutsideBorderColor = XLColor.Gray;
+                tableRange.Style.Fill.SetBackgroundColor(XLColor.White);
+                tableRange.Style.Fill.SetPatternType(XLFillPatternValues.Solid);
+
+                // Apply striped row style
+                var rows = tableRange.RowsUsed();
+                for (int i = 1; i <= rows.Count(); i++)
+                {
+                    if (i % 2 == 0)
+                    {
+                        rows.ElementAt(i - 1).Style.Fill.SetBackgroundColor(XLColor.LightGray);
                     }
                 }
 

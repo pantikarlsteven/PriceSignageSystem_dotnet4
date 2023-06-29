@@ -97,6 +97,11 @@ namespace PriceSignageSystem.Models.Dto
         public string IsReverted { get; set; }
         public string IsPrinted { get; set; }
         public decimal LatestDate { get; set; }
+        public string HasInventory { get; set; }
+
+        public List<STRPRCDto> WithInventoryList { get; set; }
+        public List<STRPRCDto> WithoutInventoryList { get; set; }
+        public List<STRPRCDto> ExcemptionList { get; set; }
     }
 
 
