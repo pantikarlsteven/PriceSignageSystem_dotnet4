@@ -132,8 +132,6 @@ namespace PriceSignageSystem.Controllers
                 item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
             }
 
-            //UPDATE SIZE, TYPE AND CATEGORY
-            //_sTRPRCRepository.UpdateSelection(startDateFormatted, endDateFormatted);
             return Json(data);
         }
 
@@ -324,6 +322,11 @@ namespace PriceSignageSystem.Controllers
                     return File(fileContents, contentType, fileName);
                 }
             }
+        }
+
+        public ActionResult PCA()
+        {
+            return View();
         }
     }
 }

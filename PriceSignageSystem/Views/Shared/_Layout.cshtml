@@ -31,6 +31,8 @@
                 color: #f00; 
             }
 
+        
+
         body {
             font-family: 'Poppins', sans-serif !important;
         }
@@ -48,9 +50,10 @@
         }
 
         .active {
-            color: #fff;
-            background-color: #182042 !important;
+            color:black !important;
         }
+
+        
 
         .btn-primary {
             background-color: #182042 !important;
@@ -118,27 +121,19 @@
                                 </p>
                             </a>
                         </li>
+                          <li class="nav-item">
+                            <a href="@Url.Action("UpdatedSTRPRC","STRPRC")" id="UpdatedSTRPRCsLink" class="nav-link text-white">
+                                <img style="width: 24px;" src="~/Content/Images/changes.png" />
+                                <p>
+                                    SKU Changes Update
+                                </p>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a href="@Url.Action("Index","STRPRC")" id="onDemandLink" class="nav-link text-white">
                                 <img style="width: 22px;" src="~/Content/Images/printer.png" />
                                 <p>
                                     On Demand Printing
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="@Url.Action("SearchByDate","STRPRC", new { withInventory = false })" id="PCANoInventoryLink" class="nav-link text-white">
-                                <img style="width: 24px;" src="~/Content/Images/not-available.png" />
-                                <p>
-                                    PCA w/o Inventory
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="@Url.Action("UpdatedSTRPRC","STRPRC")" id="UpdatedSTRPRCsLink" class="nav-link text-white">
-                                <img style="width: 24px;" src="~/Content/Images/changes.png" />
-                                <p>
-                                    SKU Changes Update
                                 </p>
                             </a>
                         </li>

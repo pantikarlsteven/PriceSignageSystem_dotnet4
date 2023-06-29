@@ -487,6 +487,7 @@
     <Content Include="Views\Queue\PrintQueueList.cshtml" />
     <Content Include="Views\Report\AutoPrintReportFromAdvancePrinting.cshtml" />
     <Content Include="Views\STRPRC\UpdatedSTRPRC.cshtml" />
+    <Content Include="Views\STRPRC\PCA.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

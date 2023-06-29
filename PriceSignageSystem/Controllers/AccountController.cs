@@ -55,7 +55,7 @@ namespace PriceSignageSystem.Controllers
                     //Session["Username"] = user.UserName;
                     //Session["RoleId"] = user.RoleId;
                     //return RedirectToAction("SearchByDate", "STRPRC");
-                    return (returnUrl != null ? Redirect(returnUrl) : Redirect("/STRPRC/SearchByDate?withInventory=true"));
+                    return (returnUrl != null ? Redirect(returnUrl) : Redirect("/STRPRC/PCA"));
                 }
                 else
                 {
@@ -111,7 +111,7 @@ namespace PriceSignageSystem.Controllers
                 var data = _userRepository.AddUser(user);
 
                 TempData["RegistrationSuccessMessage"] = "Registration successful!";
-                return RedirectToAction("SearchByDate", "STRPRC", new { withInventory = true});
+                return RedirectToAction("PCA", "STRPRC");
             }
             return View(user);
         }
