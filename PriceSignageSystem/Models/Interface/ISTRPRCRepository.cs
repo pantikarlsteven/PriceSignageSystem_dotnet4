@@ -14,7 +14,7 @@ namespace PriceSignageSystem.Models.Interface
         List<STRPRCDto> GetStores();
         List<STRPRCDto> GetData(decimal O3SKU);
         IEnumerable<STRPRC> GetAllData();
-        List<STRPRCDto> GetDataByStartDate(decimal startDate, bool withInventory);
+        List<STRPRCDto> GetDataByStartDate(decimal startDate);
         List<STRPRCLogDto> GetUpdatedData(decimal sku = 0);
         STRPRCDto GetDataBySKU(decimal O3SKU);
         DateTime GetLatestUpdate();
@@ -25,7 +25,7 @@ namespace PriceSignageSystem.Models.Interface
         void UpdateSelection(decimal startDate, decimal endDate);
         void UpdateMultipleStatus(List<decimal> o3skus);
         void UpdateSingleStatus(decimal O3SKU);
-        List<STRPRCDto> GetLatestPCAData(bool withInventory);
+        List<STRPRCDto> GetLatestPCAData();
         List<ExportPCADto> PCAToExport(bool withInventory);
     }
 }
