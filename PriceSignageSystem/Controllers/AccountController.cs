@@ -58,10 +58,6 @@ namespace PriceSignageSystem.Controllers
                     //Session["RoleId"] = user.RoleId;
                     //return RedirectToAction("SearchByDate", "STRPRC");
 
-                    var date = _sTRPRCRepository.GetLatestUpdate();
-                    if (date.Date != DateTime.Now.Date)
-                        _sTRPRCRepository.UpdateSTRPRCTable(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
-
                     return (returnUrl != null ? Redirect(returnUrl) : Redirect("/STRPRC/PCA"));
                 }
                 else
