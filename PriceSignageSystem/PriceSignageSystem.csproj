@@ -382,24 +382,6 @@
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Provider\UserRoleProvider.cs" />
-    <Compile Include="Reports\CrystalReports\Dynamic_JewelryReport.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Dynamic_JewelryReport.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\CrystalReports\Dynamic_OneEightReport.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Dynamic_OneEightReport.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\CrystalReports\Dynamic_SkinnyReport.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Dynamic_SkinnyReport.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="SqlServerTypes\Loader.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -558,18 +540,9 @@
     <EmbeddedResource Include="Migrations\202306220132277_remove_idSTRPRC.resx">
       <DependentUpon>202306220132277_remove_idSTRPRC.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\CrystalReports\Dynamic_JewelryReport.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>Dynamic_JewelryReport.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\CrystalReports\Dynamic_OneEightReport.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>Dynamic_OneEightReport.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\CrystalReports\Dynamic_SkinnyReport.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>Dynamic_SkinnyReport.cs</LastGenOutput>
-    </EmbeddedResource>
+    <Content Include="Reports\CrystalReports\Dynamic_JewelryReport.rpt" />
+    <Content Include="Reports\CrystalReports\Dynamic_OneEightReport.rpt" />
+    <Content Include="Reports\CrystalReports\Dynamic_SkinnyReport.rpt" />
     <Content Include="Reports\CrystalReports\Dynamic_WholeReport.rpt" />
   </ItemGroup>
   <ItemGroup>
