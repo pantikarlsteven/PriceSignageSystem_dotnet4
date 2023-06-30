@@ -101,7 +101,7 @@
                         <a class="nav-link" style="color:white;" data-toggle="tab" href="#without-inventory">Without Inventory</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" style="color:white;" data-toggle="tab" href="#excemption">Excemption</a>
+                        <a class="nav-link" style="color:white;" data-toggle="tab" href="#excemption">Exemption</a>
                     </li>
                 </ul>
 
@@ -168,7 +168,7 @@
                         </table>
                     </div>
                     <div id="excemption" class="tab-pane fade mx-2">
-                        <h3 class="text-center mt-2">Excemption</h3>
+                        <h3 class="text-center mt-2">Exemption</h3>
                         <table id="excemption-table" class="table table-sm table-hover" style="width: 100%; text-align: center;">
                             <thead style="background-color: #1C3766;" class="text-white">
                                 <tr>
@@ -1175,7 +1175,7 @@
             });
         });
 
-        // Close the modal when the modal close button is clicked
+        // Close the modal 
         $(document).on('click', '.modal .close', function () {
             $('#modalView').modal('hide');
         });
@@ -1575,11 +1575,31 @@
             }
         });
 
-        //Fixed dt header misalignment issue 
-        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-            $($.fn.dataTable.tables(true)).DataTable()
-                .scroller.measure();
+        // FIX DT HEADER MISALIGNMENT FOR WITHOUT INV TAB
+        $('.nav-link').click(function () {
+            // Remove 'active' class from all tabs
+            $('.nav-link').removeClass('active');
+
+            // Add 'active' class to the clicked tab
+            $(this).addClass('active');
+
+            // Get the href value of the clicked tab
+            var tabId = $(this).attr('href');
+
+            // Show the corresponding tab content
+            $('.tab-pane').removeClass('show active');
+            $(tabId).addClass('show active');
+
+            // Get the current active tab
+            var currentActiveTab = $('.nav-link.active').attr('href');
+            if (currentActiveTab == "#without-inventory") {
+                tableWithout.draw();
+            }
+           
         });
+
+        
+        
 
         $("#startDate").datepicker({
             dateFormat: 'yy-mm-dd'
