@@ -392,6 +392,8 @@
                     //Start for print preview multiple report
                     // PRINT MULTIPLE
                     $('#printSelectedButtonWith').click(function () {
+                        $("#loadingContainer").show();
+
                         var sizeId = $('#sizeDropdown').val();
 
                         $("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "");
@@ -399,6 +401,8 @@
                         var reportIframe = document.getElementById("reportIframe");
                         if (reportIframe) {
                             reportIframe.onload = function () {
+                                $("#loadingContainer").hide();
+
                                 reportIframe.contentWindow.print();
                             };
                             reportIframe.src = $("#reportIframe").attr("src");
@@ -564,8 +568,8 @@
 
                         var reportIframe = document.getElementById("reportIframe");
                         if (reportIframe) {
-                            $("#loadingContainer").hide();
                             reportIframe.onload = function () {
+                                $("#loadingContainer").hide();
                                 reportIframe.contentWindow.print();
                             };
                             reportIframe.src = $("#reportIframe").attr("src");
@@ -1594,6 +1598,9 @@
             var currentActiveTab = $('.nav-link.active').attr('href');
             if (currentActiveTab == "#without-inventory") {
                 tableWithout.draw();
+            }
+            else if (currentActiveTab == "#with-inventory") {
+                tableWith.draw();
             }
            
         });
