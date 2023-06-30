@@ -273,9 +273,23 @@ namespace PriceSignageSystem.Controllers
             return jsonResult;
         }
 
+        [HttpGet]
+        public JsonResult CheckSTRPRCUpdates()
+        {
+            var date = _sTRPRCRepository.GetLatestUpdate();
+            if (date.Date != DateTime.Now.Date)
+                return Json(false, JsonRequestBehavior.AllowGet);
+
+            return Json(true, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
         public ActionResult LoadPCA()
         {
+            var date = _sTRPRCRepository.GetLatestUpdate();
+            if (date.Date != DateTime.Now.Date)
+                _sTRPRCRepository.UpdateSTRPRCTable(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
+
             var data = new STRPRCDto();
             var LatestPCAData = _sTRPRCRepository.GetLatestPCAData().ToList();
             
