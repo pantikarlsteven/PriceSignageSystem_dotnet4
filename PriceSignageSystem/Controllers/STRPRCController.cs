@@ -292,10 +292,12 @@ namespace PriceSignageSystem.Controllers
 
             var data = new STRPRCDto();
             var LatestPCAData = _sTRPRCRepository.GetLatestPCAData().ToList();
-            
+
+            data.LatestDate = LatestPCAData[0].LatestDate;
             data.WithInventoryList = LatestPCAData.Where(a => a.HasInventory == "Y").ToList();
             data.WithoutInventoryList = LatestPCAData.Where(a => a.HasInventory == string.Empty).ToList();
             data.ExcemptionList = LatestPCAData.Where(a => a.O3SDT == a.O3EDT).ToList();
+            
             foreach (var item in data.WithInventoryList)
             {
                 item.TypeName =  item.TypeId == 2 ? "Save"

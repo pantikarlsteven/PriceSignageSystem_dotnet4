@@ -243,6 +243,13 @@
                         type: "POST",
                         success: function (data) {
 
+                            var latestDate = data.LatestDate;
+                            const day = latestDate.toString().substr(4, 2);
+                            const month = latestDate.toString().substr(2, 2);
+                            const year = latestDate.toString().substr(0, 2);
+                            const formattedDate = `20${year}-${month}-${day}`;
+                            $('#startDate').val(formattedDate);
+
                             if (tableWith !== null) {
                                 tableWith.destroy();
                             }
@@ -1565,14 +1572,14 @@
             dialog3.append(buttonContainer);
 
             // Create "Clear All Checkboxes" button
-            var clearButton = $('<button>').text('Clear All').addClass('small-button').click(function () {
+            var clearButton = $('<button>').text('Clear All').addClass('btn btn-secondary btn-sm').css('background-color', 'gray').click(function () {
                 $('.filter-checkbox').prop('checked', false);
                 applyFilter();
             });
             buttonContainer.append(clearButton);
 
             // Create "OK" button
-            var okButton = $('<button>').text('OK').addClass('small-button').click(function () {
+            var okButton = $('<button>').text('OK').addClass('btn btn-secondary btn-sm ml-2').css('background-color', 'orange').click(function () {
                 applyFilter();
                 dialog3.dialog('close');
             });
@@ -1625,11 +1632,12 @@
             else if (currentActiveTab == "#with-inventory") {
                 tableWith.draw();
             }
+            else if (currentActiveTab == "#excemption") {
+                tableExcemption.draw();
+            }
            
         });
 
-        
-        
 
         $("#startDate").datepicker({
             dateFormat: 'yy-mm-dd'
