@@ -58,7 +58,7 @@
                 </div>
             }
 
-            @if (ViewBag.IsDateLatest == true)
+            @*@if (ViewBag.IsDateLatest == true)
             {
                 <div class="alert alert-success">
                     <i class="fa fa-check-circle"></i>  The current data is as of <u>@ViewBag.DateVersion</u>
@@ -75,7 +75,7 @@
                         Update
                     </a>
                 </div>
-            }
+            }*@
 
         </center>
         <br />
@@ -167,6 +167,7 @@
         });
 
         var table = null;
+        var data = null;
         // Create dialog element for the filter input
         var dialog = $('<div>').dialog({
             autoOpen: false,
@@ -281,230 +282,219 @@
             }
         });
 
-        $("#withInventory").click(function () {
-            //InitLoad(true);
-            console.log(table);
-        });
+        function GetDataTable(data) {
+            for (var i = 0; i < data.length; i++) {
+                var dateString = data[i].DateUpdated;
+                var timestamp = parseInt(dateString.match(/\d+/)[0]);
+                var date = new Date(timestamp);
 
-        $("#withoutInventory").click(function () {
-            //InitLoad(false);
-            console.log(table);
+                var options = { month: 'long', day: 'numeric', year: 'numeric' };
+                data[i].DateUpdated = date.toLocaleDateString(undefined, options);
+            }
 
-            var filteredData = table.rows().data().filter(function (row) {
-                return row.SKU === "10324";
-            });
-
-            // Loop through the filtered data and process each row
-            filteredData.each(function (rowData) {
-                // Access the desired columns using the column names or indexes
-                var SKU = rowData.SKU;
-
-                // Perform further processing or display the data as needed
-                console.log("SKU: " + SKU);
-            });
-        });
-
-            function InitLoad() {
-                //var startDate = $("#startDate").val();
-                $("#loadingContainer").show();
-                $.ajax({
-                    url: '@Url.Action("GetUpdatedData", "STRPRC")',
-                    type: 'GET',
-                    success: function (data) {
-                        $("#loadingContainer").hide();
-
-                        for (var i = 0; i < data.length; i++) {
-                            var dateString = data[i].DateUpdated;
-                            var timestamp = parseInt(dateString.match(/\d+/)[0]);
-                            var date = new Date(timestamp);
-
-                            var options = { month: 'long', day: 'numeric', year: 'numeric' };
-                            data[i].DateUpdated = date.toLocaleDateString(undefined, options);
-                        }
-
-                        if (data.IsAuthenticated == false)
-                            window.location.href = data.RedirectUrl;
-                        else {
-                            if (table !== null) {
-                                table.destroy();
+            if (data.IsAuthenticated == false)
+                window.location.href = data.RedirectUrl;
+            else {
+                if (table !== null) {
+                    table.destroy();
+                }
+                // DATATABLE
+                table = $('#dataTable').DataTable({
+                    scrollY: 500,
+                    scrollX: true,
+                    lengthMenu: [
+                        [10, 25, 50, -1],
+                        [10, 25, 50, 'All']
+                    ],
+                    pageLength: -1,
+                    data: data,
+                    columns: [
+                        {
+                            data: null, orderable: false, searchable: false, render: function (data) {
+                                return '<input type="checkbox" class="rowCheckbox" data-id="' + data.O3SKU + '">';
                             }
-                            // DATATABLE
-                            table = $('#dataTable').DataTable({
-                                scrollY: 500,
-                                scrollX: true,
-                                lengthMenu: [
-                                    [10, 25, 50, -1],
-                                    [10, 25, 50, 'All']
-                                ],
-                                pageLength: -1,
-                                data: data,
-                                columns: [
-                                    {
-                                        data: null, orderable: false, searchable: false, render: function (data) {
-                                            return '<input type="checkbox" class="rowCheckbox" data-id="' + data.O3SKU + '">';
-                                        }
-                                    },
-                                    {
-                                        "className": 'details-control',
-                                        "orderable": false,
-                                        "data": null,
-                                        "defaultContent": '',
-                                        "render": function () {
-                                            return '<i class="fa-solid fa-square-caret-down"></i>';
-                                        },
-                                        width: "15px"
-                                    },
-                                    {
-                                        data: 'IsPrinted', name: 'IsPrinted', render: function (data) {
-                                            if (data === 'Yes') {
-                                                return '<span style="color: green;">' + data + '</span>';
-                                            } else {
-                                                return '<span style="color: red;">' + data + '</span>';
-                                            }
-                                        }
-                                    },
-                                    { data: 'O3SKU', name: 'O3SKU'},
-                                    { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap' },
-                                    { data: 'ColumnName', name: 'ColumnName'},
-                                    { data: 'DepartmentName', name: 'DepartmentName' },
-                                    { data: 'DateUpdated', name: 'DateUpdated' },
-                                    {
-                                        data: null,
-                                        render: function (data, type, row) {
-                                            return '<button style="float:right;" class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '">Print</button>';
-                                        }
-                                    }
-                                ],
-                            });
-
-
-                            $('#selectAll').on('change', function () {
-                                var isChecked = $(this).is(':checked');
-                                $('.rowCheckbox').prop('checked', isChecked);
-                            });
-
-                            $('.printAllBtn').on('click', function () {
-
-                                var selectedRows = [];
-                                $('.rowCheckbox:checked').each(function () {
-                                    var rowId = $(this).data('id');
-                                    selectedRows.push(rowId);
-                                });
-
-                                if (selectedRows.length > 0) {
-                                    console.log('Selected Row IDs:', selectedRows);
-
-                                    // Build the HTML for the dropdowns
-                                    var dropdownHtml = '<div class="form-row">' +
-                                        '<div class="form-group row col-12">' +
-                                        '<label class="col-sm-2 col-form-label" for="sizeDropdown">Size:</label>' +
-                                        '<select class="col-sm-9  ml-3 form-control" id="sizeDropdown">' +
-                                        '<option value="1">Whole</option>' +
-                                        '<option value="2">Skinny</option>' +
-                                        '<option value="3">1/8</option>' +
-                                        '<option value="4">Jewelry</option>' +
-                                        '</select>' +
-                                        '</div>' +
-                                        '</div>';
-                                    // Build the HTML for the print button
-                                    var printButtonHtml = '<button id="printSelectedButton" class="btn btn-primary">Print</button>';
-
-                                    // Create the modal content
-                                    var modalContent = '<div class="modal-dialog modal-sm modal-dialog-centered">' +
-                                        '<div class="modal-content">' +
-                                        '<div class="modal-header">' +
-                                        '<h5 class="modal-title">Print Report</h5>' +
-                                        '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
-                                        '<span aria-hidden="true">&times;</span>' +
-                                        '</button>' +
-                                        '</div>' +
-                                        '<div class="modal-body">' +
-                                        dropdownHtml +
-                                        '</div>' +
-                                        '<div class="modal-footer">' +
-                                        printButtonHtml +
-                                        '</div>' +
-                                        '</div>' +
-                                        '</div>';
-                                    // Remove any existing modals
-                                    $('#modalView').remove();
-
-                                    // Append the modal to the body
-                                    $('body').append('<div id="modalView" class="modal">' + modalContent + '</div>');
-
-                                    // Show the modal with fade-in effect from top
-                                    $('#modalView').modal({
-                                        show: true,
-                                        backdrop: false,
-                                        keyboard: false
-                                    });
-
-                                    // Set default values for the dropdowns
-                                    $('#sizeDropdown').val(2); // Skinny
-
-
-                                    //Start for print preview multiple report
-                                    // PRINT MULTIPLE
-                                    $('#printSelectedButton').click(function () {
-
-                                        $('.rowCheckbox:checked').each(function () {
-                                            var row  = $(this).closest('tr');
-                                            var table = row.closest('table');
-                                            var rowIndex = table.DataTable().row(row).index();
-                                            var specificRow = $('#dataTable tbody tr:eq(' + rowIndex + ')');
-                                            specificRow.find('td:eq(2)').text("Yes");
-                                            specificRow.find('td:eq(2)').css('color', 'green');
-
-                                        });
-
-                                        var sizeId = $('#sizeDropdown').val();
-
-                                        $("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "");
-
-                                        var reportIframe = document.getElementById("reportIframe");
-                                        if (reportIframe) {
-                                            reportIframe.onload = function () {
-                                                reportIframe.contentWindow.print();
-                                            };
-                                            reportIframe.src = $("#reportIframe").attr("src");
-                                        }
-                                        $('#modalView').modal('hide');
-                                        $('input[type="checkbox"]').prop('checked', false);
-
-                                    });
-                                    //End for print preview multiple report
-
+                        },
+                        {
+                            "className": 'details-control',
+                            "orderable": false,
+                            "data": null,
+                            "defaultContent": '',
+                            "render": function () {
+                                return '<i class="fa-solid fa-square-caret-down"></i>';
+                            },
+                            width: "15px"
+                        },
+                        {
+                            data: 'IsPrinted', name: 'IsPrinted', render: function (data) {
+                                if (data === 'Yes') {
+                                    return '<span style="color: green;">' + data + '</span>';
                                 } else {
-                                    alert('Please select items to print.');
+                                    return '<span style="color: red;">' + data + '</span>';
                                 }
-                            });
-
-                            // Add event listener for opening and closing details
-                            $('#dataTable tbody').on('click', 'td.details-control', function () {
-
-                                var tr = $(this).closest('tr');
-                                var tdi = tr.find("i.fa-solid");
-                                var row = table.row(tr);
-
-                                if (row.child.isShown()) {
-                                    // This row is already open - close it
-                                    row.child.hide();
-                                    tr.removeClass('shown');
-                                    tdi.first().removeClass('fa-solid fa-square-caret-up');
-                                    tdi.first().addClass('fa-solid fa-square-caret-down');
-                                }
-                                else {
-                                    // Open this row
-                                    row.child(format(row.data())).show();
-                                    tr.addClass('shown');
-                                    tdi.first().removeClass('fa-solid fa-square-caret-down');
-                                    tdi.first().addClass('fa-solid fa-square-caret-up');
-                                }
-                            });
+                            }
+                        },
+                        { data: 'O3SKU', name: 'O3SKU' },
+                        { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap' },
+                        { data: 'ColumnName', name: 'ColumnName' },
+                        { data: 'DepartmentName', name: 'DepartmentName' },
+                        { data: 'DateUpdated', name: 'DateUpdated' },
+                        {
+                            data: null,
+                            render: function (data, type, row) {
+                                return '<button style="float:right;" class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '">Print</button>';
+                            }
                         }
+                    ],
+                });
+
+
+                $('#selectAll').on('change', function () {
+                    var isChecked = $(this).is(':checked');
+                    $('.rowCheckbox').prop('checked', isChecked);
+                });
+
+                $('.printAllBtn').on('click', function () {
+
+                    var selectedRows = [];
+                    $('.rowCheckbox:checked').each(function () {
+                        var rowId = $(this).data('id');
+                        selectedRows.push(rowId);
+                    });
+
+                    if (selectedRows.length > 0) {
+                        console.log('Selected Row IDs:', selectedRows);
+
+                        // Build the HTML for the dropdowns
+                        var dropdownHtml = '<div class="form-row">' +
+                            '<div class="form-group row col-12">' +
+                            '<label class="col-sm-2 col-form-label" for="sizeDropdown">Size:</label>' +
+                            '<select class="col-sm-9  ml-3 form-control" id="sizeDropdown">' +
+                            '<option value="1">Whole</option>' +
+                            '<option value="2">Skinny</option>' +
+                            '<option value="3">1/8</option>' +
+                            '<option value="4">Jewelry</option>' +
+                            '</select>' +
+                            '</div>' +
+                            '</div>';
+                        // Build the HTML for the print button
+                        var printButtonHtml = '<button id="printSelectedButton" class="btn btn-primary">Print</button>';
+
+                        // Create the modal content
+                        var modalContent = '<div class="modal-dialog modal-sm modal-dialog-centered">' +
+                            '<div class="modal-content">' +
+                            '<div class="modal-header">' +
+                            '<h5 class="modal-title">Print Report</h5>' +
+                            '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
+                            '<span aria-hidden="true">&times;</span>' +
+                            '</button>' +
+                            '</div>' +
+                            '<div class="modal-body">' +
+                            dropdownHtml +
+                            '</div>' +
+                            '<div class="modal-footer">' +
+                            printButtonHtml +
+                            '</div>' +
+                            '</div>' +
+                            '</div>';
+                        // Remove any existing modals
+                        $('#modalView').remove();
+
+                        // Append the modal to the body
+                        $('body').append('<div id="modalView" class="modal">' + modalContent + '</div>');
+
+                        // Show the modal with fade-in effect from top
+                        $('#modalView').modal({
+                            show: true,
+                            backdrop: false,
+                            keyboard: false
+                        });
+
+                        // Set default values for the dropdowns
+                        $('#sizeDropdown').val(2); // Skinny
+
+
+                        //Start for print preview multiple report
+                        // PRINT MULTIPLE
+                        $('#printSelectedButton').click(function () {
+
+                            $('.rowCheckbox:checked').each(function () {
+                                var row = $(this).closest('tr');
+                                var table = row.closest('table');
+                                var rowIndex = table.DataTable().row(row).index();
+                                var specificRow = $('#dataTable tbody tr:eq(' + rowIndex + ')');
+                                specificRow.find('td:eq(2)').text("Yes");
+                                specificRow.find('td:eq(2)').css('color', 'green');
+
+                            });
+
+                            var sizeId = $('#sizeDropdown').val();
+
+                            $("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "");
+
+                            var reportIframe = document.getElementById("reportIframe");
+                            if (reportIframe) {
+                                reportIframe.onload = function () {
+                                    reportIframe.contentWindow.print();
+                                };
+                                reportIframe.src = $("#reportIframe").attr("src");
+                            }
+                            $('#modalView').modal('hide');
+                            $('input[type="checkbox"]').prop('checked', false);
+
+                        });
+                        //End for print preview multiple report
+
+                    } else {
+                        alert('Please select items to print.');
+                    }
+                });
+
+                // Add event listener for opening and closing details
+                $('#dataTable tbody').on('click', 'td.details-control', function () {
+
+                    var tr = $(this).closest('tr');
+                    var tdi = tr.find("i.fa-solid");
+                    var row = table.row(tr);
+
+                    if (row.child.isShown()) {
+                        // This row is already open - close it
+                        row.child.hide();
+                        tr.removeClass('shown');
+                        tdi.first().removeClass('fa-solid fa-square-caret-up');
+                        tdi.first().addClass('fa-solid fa-square-caret-down');
+                    }
+                    else {
+                        // Open this row
+                        row.child(format(row.data())).show();
+                        tr.addClass('shown');
+                        tdi.first().removeClass('fa-solid fa-square-caret-down');
+                        tdi.first().addClass('fa-solid fa-square-caret-up');
                     }
                 });
             }
+        }
+
+        $("#withInventory").click(function () {
+            GetDataTable(data.filter(row => row.Inv == 'Y'));
+
+        });
+
+        $("#withoutInventory").click(function () {
+            GetDataTable(data.filter(row => row.Inv == 'N'));
+        });
+
+        function InitLoad() {
+            $("#loadingContainer").show();
+            $.ajax({
+                url: '@Url.Action("GetUpdatedData", "STRPRC")',
+                type: 'GET',
+                success: function (myData) {
+                    data = myData
+                    $("#loadingContainer").hide();
+                    GetDataTable(data.filter(row => row.Inv == 'Y'));
+                }
+            });
+        }
 
 
             //PRINT BUTTON

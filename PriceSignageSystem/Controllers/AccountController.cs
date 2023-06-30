@@ -62,7 +62,7 @@ namespace PriceSignageSystem.Controllers
                     if (date.Date != DateTime.Now.Date)
                         _sTRPRCRepository.UpdateSTRPRCTable(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
 
-                    return (returnUrl != null ? Redirect(returnUrl) : Redirect("/STRPRC/SearchByDate?withInventory=true"));
+                    return (returnUrl != null ? Redirect(returnUrl) : Redirect("/STRPRC/PCA"));
                 }
                 else
                 {
