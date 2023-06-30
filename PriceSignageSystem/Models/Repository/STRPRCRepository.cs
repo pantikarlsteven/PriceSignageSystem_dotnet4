@@ -365,6 +365,7 @@ namespace PriceSignageSystem.Models.Repository
                         O3SDPT = (decimal)reader["O3SDPT"],
                         O3SCLS = (decimal)reader["O3SCLS"],
                         O3TRB3 = reader["O3TRB3"].ToString(),
+                        Inv = reader["INV2"].ToString(),
 
                         //O3LOC = (decimal)reader["O3LOC"],
                         //O3UPC = (decimal)reader["O3UPC"],
@@ -395,7 +396,6 @@ namespace PriceSignageSystem.Models.Repository
                         TypeName = reader["TypeName"].ToString(),
                         SizeName = reader["SizeName"].ToString(),
                         CategoryName = reader["CategoryName"].ToString()
-
                         //Id = (int)reader["Id"],
                         //FromValue = reader["FromValue"].ToString(),
                         //ToValue = reader["IdToValue"].ToString()
