@@ -283,15 +283,6 @@
         });
 
         function GetDataTable(data) {
-            for (var i = 0; i < data.length; i++) {
-                var dateString = data[i].DateUpdated;
-                var timestamp = parseInt(dateString.match(/\d+/)[0]);
-                var date = new Date(timestamp);
-
-                var options = { month: 'long', day: 'numeric', year: 'numeric' };
-                data[i].DateUpdated = date.toLocaleDateString(undefined, options);
-            }
-
             if (data.IsAuthenticated == false)
                 window.location.href = data.RedirectUrl;
             else {
@@ -491,6 +482,14 @@
                 success: function (myData) {
                     data = myData
                     $("#loadingContainer").hide();
+                    for (var i = 0; i < data.length; i++) {
+                        var dateString = data[i].DateUpdated;
+                        var timestamp = parseInt(dateString.match(/\d+/)[0]);
+                        var date = new Date(timestamp);
+
+                        var options = { month: 'long', day: 'numeric', year: 'numeric' };
+                        data[i].DateUpdated = date.toLocaleDateString(undefined, options);
+                    }
                     GetDataTable(data.filter(row => row.Inv == 'Y'));
                 }
             });
