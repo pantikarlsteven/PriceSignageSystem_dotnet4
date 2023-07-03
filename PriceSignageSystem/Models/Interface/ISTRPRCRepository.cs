@@ -26,6 +26,6 @@ namespace PriceSignageSystem.Models.Interface
         void UpdateMultipleStatus(List<decimal> o3skus);
         void UpdateSingleStatus(decimal O3SKU);
         List<STRPRCDto> GetLatestPCAData();
-        List<ExportPCADto> PCAToExport(bool withInventory);
+        List<ExportPCADto> PCAToExport(string tab, decimal date);
     }
 }

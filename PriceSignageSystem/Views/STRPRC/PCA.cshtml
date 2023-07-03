@@ -339,12 +339,13 @@
                 "dom": '<"top"lfB>rt<"bottom"ip>',
 
                 initComplete: function () {
+                    var date = $('#startDate').val();
                     // Create the button element
                     var $button = $('<button>')
                         .addClass('custom-button')
                         .text('Export')
                         .on('click', function () {
-                             window.location.href = '/STRPRC/ExportDataTableToExcel?withInventory=true';
+                            window.location.href = '/STRPRC/ExportDataTableToExcel?tab=WithInventory&date=' + date;
                         });
 
                     var dataTableWrapper = $('#with-inventory-table').closest('.dataTables_wrapper');
@@ -441,7 +442,6 @@
                         $('input[type="checkbox"]').prop('checked', false);
 
                     });
-                    //End for print preview multiple report
 
                 } else {
                     alert('Please select items to print.');
@@ -510,12 +510,13 @@
                 "dom": '<"top"lfB>rt<"bottom"ip>',
 
                 initComplete: function () {
+                    var date = $('#startDate').val();
                     // Create the button element
                     var $button = $('<button>')
                         .addClass('custom-button')
                         .text('Export')
                         .on('click', function () {
-                            window.location.href = '/STRPRC/ExportDataTableToExcel?withInventory=false';
+                            window.location.href = '/STRPRC/ExportDataTableToExcel?tab=WithoutInventory&date=' + date;
                         });
 
                     var dataTableWrapper = $('#without-inventory-table').closest('.dataTables_wrapper');
@@ -675,6 +676,21 @@
                         }
                     }
                 ],
+                "dom": '<"top"lfB>rt<"bottom"ip>',
+
+                initComplete: function () {
+                    var date = $('#startDate').val();
+                    // Create the button element
+                    var $button = $('<button>')
+                        .addClass('custom-button')
+                        .text('Export')
+                        .on('click', function () {
+                            window.location.href = '/STRPRC/ExportDataTableToExcel?tab=Exemption&date=' + date;
+                        });
+
+                    var dataTableWrapper = $('#excemption-table').closest('.dataTables_wrapper');
+                    dataTableWrapper.find('.dataTables_filter').before($button);
+                }
             });
 
 
@@ -761,7 +777,6 @@
                         $('input[type="checkbox"]').prop('checked', false);
 
                     });
-                    //End for print preview multiple report
 
                 } else {
                     alert('Please select items to print.');
@@ -971,6 +986,10 @@
                                 };
                                 reportIframe.src = $("#reportIframe").attr("src");
                             }
+                            $('#modalView').modal('hide');
+                            var cell = tableWith.cell({ row: 0, column: 2 });
+                            cell.data('Yes'); 
+                            tableWith.draw();
                         });
                         //End for print preview single report
                 }
@@ -1087,6 +1106,10 @@
                                 };
                                 reportIframe.src = $("#reportIframe").attr("src");
                             }
+                            $('#modalView').modal('hide');
+                            var cell = tableWithout.cell({ row: 0, column: 2 });
+                            cell.data('Yes');
+                            tableWithout.draw();
                         });
                         //End for print preview single report
                 }
@@ -1203,6 +1226,10 @@
                                 };
                                 reportIframe.src = $("#reportIframe").attr("src");
                             }
+                            $('#modalView').modal('hide');
+                            var cell = tableExcemption.cell({ row: 0, column: 2 });
+                            cell.data('Yes');
+                            tableExcemption.draw();
                         });
                         //End for print preview single report
                 }

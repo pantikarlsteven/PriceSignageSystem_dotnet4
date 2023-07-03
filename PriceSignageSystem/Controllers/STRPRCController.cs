@@ -293,7 +293,7 @@ namespace PriceSignageSystem.Controllers
 
             data.LatestDate = LatestPCAData[0].LatestDate;
             data.WithInventoryList = LatestPCAData.Where(a => a.HasInventory == "Y" && a.O3SDT == data.LatestDate).ToList();
-            data.WithoutInventoryList = LatestPCAData.Where(a => a.HasInventory == string.Empty && a.O3SDT == data.LatestDate).ToList();
+            data.WithoutInventoryList = LatestPCAData.Where(a => (a.HasInventory == string.Empty && a.O3SDT == data.LatestDate) && (a.O3EDT == 999999 || a.O3EDT == 0)).ToList();
             data.ExcemptionList = LatestPCAData.Where(a => (a.O3REG == a.O3POS && a.O3SDT == data.LatestDate) && a.O3EDT != 999999).ToList();
             
             foreach (var item in data.WithInventoryList)
@@ -351,9 +351,10 @@ namespace PriceSignageSystem.Controllers
         }
 
         [HttpGet]
-        public FileResult ExportDataTableToExcel(bool withInventory)
+        public FileResult ExportDataTableToExcel(string tab, DateTime date)
         {
-            var toExport = _sTRPRCRepository.PCAToExport(withInventory).ToList();
+            var decimalDate = ConversionHelper.ToDecimal(date);
+            var toExport = _sTRPRCRepository.PCAToExport(tab, decimalDate).ToList();
             foreach (var item in toExport)
             {
                 item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
@@ -414,17 +415,7 @@ namespace PriceSignageSystem.Controllers
                     
                     var fileContents = memoryStream.ToArray();
                     var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                    var fileName = string.Empty;
-                    if (withInventory)
-                    {
-                         fileName = "PCA_With_Inventory.xlsx"; 
-
-                    }
-                    else
-                    {
-                         fileName = "PCA_Without_Inventory.xlsx";
-
-                    }
+                    var fileName = tab + "_" + DateTime.Today.ToShortDateString() + ".xlsx";
 
                     return File(fileContents, contentType, fileName);
                 }

@@ -759,10 +759,10 @@ namespace PriceSignageSystem.Models.Repository
 
         }
 
-        public List<ExportPCADto> PCAToExport(bool withInventory)
+        public List<ExportPCADto> PCAToExport(string tab, decimal date)
         {
             var sp = "sp_ExportPCAData";
-            var HasInv = withInventory == true ? 'Y' : 'N';
+           
             var data = new List<ExportPCADto>();
             // Set up the connection and command
             using (var connection = new SqlConnection(connectionString))
@@ -772,7 +772,8 @@ namespace PriceSignageSystem.Models.Repository
                 command.CommandTimeout = commandTimeoutInSeconds;
 
                 // Add parameters if required
-                command.Parameters.AddWithValue("@HasInv", HasInv);
+                command.Parameters.AddWithValue("@TabName", tab);
+                command.Parameters.AddWithValue("@SearchDate", date);
 
                 // Open the connection and execute the command
                 connection.Open();
