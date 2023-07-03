@@ -161,10 +161,8 @@
         $(".nav-sidebar a").each(function () {
             // Get the href attribute of the <a> element
             var linkUrl = $(this).attr("href");
-            console.log(currentUrl.indexOf(linkUrl));
             // Check if the current URL matches the href attribute
             if (currentUrl.indexOf(linkUrl) !== -1) {
-                console.log('pasok sa banga');
                 $(this).closest("li a").addClass("active");
             }
         });
