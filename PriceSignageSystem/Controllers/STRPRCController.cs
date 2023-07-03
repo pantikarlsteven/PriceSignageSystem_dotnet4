@@ -1,6 +1,5 @@
 ﻿using ClosedXML.Excel;
 using CrystalDecisions.CrystalReports.Engine;
-using Newtonsoft.Json;
 using PriceSignageSystem.Code;
 using PriceSignageSystem.Code.CustomValidations;
 using PriceSignageSystem.Helper;
@@ -8,7 +7,6 @@ using PriceSignageSystem.Models.Constants;
 using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Globalization;
@@ -294,9 +292,9 @@ namespace PriceSignageSystem.Controllers
             var LatestPCAData = _sTRPRCRepository.GetLatestPCAData().ToList();
 
             data.LatestDate = LatestPCAData[0].LatestDate;
-            data.WithInventoryList = LatestPCAData.Where(a => a.HasInventory == "Y").ToList();
-            data.WithoutInventoryList = LatestPCAData.Where(a => a.HasInventory == string.Empty).ToList();
-            data.ExcemptionList = LatestPCAData.Where(a => a.O3SDT == a.O3EDT).ToList();
+            data.WithInventoryList = LatestPCAData.Where(a => a.HasInventory == "Y" && a.O3SDT == data.LatestDate).ToList();
+            data.WithoutInventoryList = LatestPCAData.Where(a => a.HasInventory == string.Empty && a.O3SDT == data.LatestDate).ToList();
+            data.ExcemptionList = LatestPCAData.Where(a => (a.O3REG == a.O3POS && a.O3SDT == data.LatestDate) && a.O3EDT != 999999).ToList();
             
             foreach (var item in data.WithInventoryList)
             {
@@ -413,18 +411,18 @@ namespace PriceSignageSystem.Controllers
                 {
                     workbook.SaveAs(memoryStream);
 
-                    // Return the Excel file as a downloadable response
+                    
                     var fileContents = memoryStream.ToArray();
                     var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
                     var fileName = string.Empty;
                     if (withInventory)
                     {
-                         fileName = "PCA_With_Inventory.xlsx"; // Default filename
+                         fileName = "PCA_With_Inventory.xlsx"; 
 
                     }
                     else
                     {
-                         fileName = "PCA_Without_Inventory.xlsx"; // Default filename
+                         fileName = "PCA_Without_Inventory.xlsx";
 
                     }
 
