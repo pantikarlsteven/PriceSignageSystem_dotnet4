@@ -112,6 +112,7 @@ namespace PriceSignageSystem.Controllers
         [HttpGet]
         public ActionResult PrintPreviewSingleReport(string response)
         {
+            var isSuccess = true;
             try
             {
                 var model = JsonConvert.DeserializeObject<ReportDto>(response);
@@ -147,80 +148,101 @@ namespace PriceSignageSystem.Controllers
 
                 report.SetDataSource(ConversionHelper.ConvertObjectToDataTable(skuModel));
 
-                Stream stream = report.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
-                var pdfBytes = new byte[stream.Length];
-                stream.Read(pdfBytes, 0, pdfBytes.Length);
+                //Stream stream = report.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                //var pdfBytes = new byte[stream.Length];
+                //stream.Read(pdfBytes, 0, pdfBytes.Length);
+                //Response.AppendHeader("Content-Disposition", "inline; filename=" + model.O3SKU.ToString() + ".pdf");
 
-                Response.AppendHeader("Content-Disposition", "inline; filename=" + model.O3SKU.ToString() + ".pdf");
+                PrinterSettings printersettings = new PrinterSettings();
+                printersettings.PrinterName = _printerName;
+                printersettings.Copies = 1;
+                printersettings.Collate = false;
+                report.PrintToPrinter(printersettings, new PageSettings(), false);
+
                 report.Close();
                 report.Dispose();
 
                 _sTRPRCRepository.UpdateSingleStatus(model.O3SKU);
 
-                return File(pdfBytes, "application/pdf");
+                //return File(pdfBytes, "application/pdf");
             }
             catch (Exception ex)
             {
                 Logs.WriteToFile(ex.Message);
-                return Content("<h2>Error: " + ex.Message + "</h2>", "text/html");
+                //return Content("<h2>Error: " + ex.Message + "</h2>", "text/html");
+                isSuccess = false;
             }
+
+            return Json(isSuccess, JsonRequestBehavior.AllowGet);
+
         }
 
         [HttpGet]
         public ActionResult PrintPreviewMultipleReport(string[] selectedIds, int sizeId)
         {
-            if (selectedIds != null && selectedIds.Length > 0)
+            var isSuccess = true;
+            try
             {
-                List<decimal> o3skus = selectedIds[0].Split(',').Select(decimal.Parse).ToList();
-                var data = _sTRPRCRepository.GetReportDataList(o3skus);
-                foreach (var item in data)
+                if (selectedIds != null && selectedIds.Length > 0)
                 {
-                    item.UserName = User.Identity.Name;
-                    var textToImage = new TextToImage();
-                    textToImage.GetImageWidth(item.O3FNAM, item.O3IDSC, sizeId);
-                    item.IsSLBrand = textToImage.IsSLBrand;
-                    item.IsSLDescription = textToImage.IsSLDescription;
-                }
-                var dataTable = ConversionHelper.ConvertListToDataTable(data);
-                var reportPath = string.Empty;
+                    List<decimal> o3skus = selectedIds[0].Split(',').Select(decimal.Parse).ToList();
+                    var data = _sTRPRCRepository.GetReportDataList(o3skus);
+                    foreach (var item in data)
+                    {
+                        item.UserName = User.Identity.Name;
+                        var textToImage = new TextToImage();
+                        textToImage.GetImageWidth(item.O3FNAM, item.O3IDSC, sizeId);
+                        item.IsSLBrand = textToImage.IsSLBrand;
+                        item.IsSLDescription = textToImage.IsSLDescription;
+                    }
+                    var dataTable = ConversionHelper.ConvertListToDataTable(data);
+                    var reportPath = string.Empty;
 
-                if (sizeId == ReportConstants.Size.Whole)
-                {
-                    reportPath = Server.MapPath(ReportConstants.Dynamic_WholeReportPath);
-                }
-                else if (sizeId == ReportConstants.Size.OneEight)
-                {
-                    reportPath = Server.MapPath(ReportConstants.Dynamic_OneEightReportPath);
-                }
-                else if (sizeId == ReportConstants.Size.Skinny)
-                {
-                    reportPath = Server.MapPath(ReportConstants.Dynamic_SkinnyReportPath);
-                }
-                else if (sizeId == ReportConstants.Size.Jewelry)
-                {
-                    reportPath = Server.MapPath(ReportConstants.Dynamic_JewelryReportPath);
-                }
+                    if (sizeId == ReportConstants.Size.Whole)
+                    {
+                        reportPath = Server.MapPath(ReportConstants.Dynamic_WholeReportPath);
+                    }
+                    else if (sizeId == ReportConstants.Size.OneEight)
+                    {
+                        reportPath = Server.MapPath(ReportConstants.Dynamic_OneEightReportPath);
+                    }
+                    else if (sizeId == ReportConstants.Size.Skinny)
+                    {
+                        reportPath = Server.MapPath(ReportConstants.Dynamic_SkinnyReportPath);
+                    }
+                    else if (sizeId == ReportConstants.Size.Jewelry)
+                    {
+                        reportPath = Server.MapPath(ReportConstants.Dynamic_JewelryReportPath);
+                    }
 
-                ReportDocument report = new ReportDocument();
-                report.Load(reportPath);
-                report.SetDataSource(dataTable);
+                    ReportDocument report = new ReportDocument();
+                    report.Load(reportPath);
+                    report.SetDataSource(dataTable);
 
-                Stream stream = report.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
-                var pdfBytes = new byte[stream.Length];
-                stream.Read(pdfBytes, 0, pdfBytes.Length);
+                    //Stream stream = report.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                    //var pdfBytes = new byte[stream.Length];
+                    //stream.Read(pdfBytes, 0, pdfBytes.Length);
+                    //Response.AppendHeader("Content-Disposition", "inline; filename=MultipleSKUs.pdf");
 
-                Response.AppendHeader("Content-Disposition", "inline; filename=MultipleSKUs.pdf");
-                report.Close();
-                report.Dispose();
+                    PrinterSettings printersettings = new PrinterSettings();
+                    printersettings.PrinterName = _printerName;
+                    printersettings.Copies = 1;
+                    printersettings.Collate = false;
+                    report.PrintToPrinter(printersettings, new PageSettings(), false);
 
-                _sTRPRCRepository.UpdateMultipleStatus(o3skus);
-                return File(pdfBytes, "application/pdf");
+                    report.Close();
+                    report.Dispose();
+
+                    _sTRPRCRepository.UpdateMultipleStatus(o3skus);
+                    //return File(pdfBytes, "application/pdf");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                // Handle the case when no row IDs are selected
-                return Content("<h2>Error: No rows have found.</h2>", "text/html");
+                isSuccess = false;
             }
+
+            return Json(isSuccess, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

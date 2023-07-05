@@ -212,24 +212,34 @@ namespace PriceSignageSystem.Controllers
 
             try
             {
-                ReportDocument rptH = new ReportDocument();
+                var model = _sTRPRCRepository.GetReportData(id);
+                ReportDocument report = new ReportDocument();
                 var strReport = string.Empty;
 
-                Logs.WriteToFile("test 00");
+                Logs.WriteToFile("test 0");
 
-                var strReportPath = Server.MapPath(ReportConstants.Dynamic_OneEightReportPath);
-                Logs.WriteToFile(strReportPath);
-                rptH.Load(strReportPath);
-                Logs.WriteToFile("test 01");
+                var path = Server.MapPath(ReportConstants.Dynamic_WholeReportPath);
+                report.Load(path);
 
-                rptH.SetDataSource(ConversionHelper.ConvertObjectToDataTable(_sTRPRCRepository.GetDataBySKU(id)));
+                var textToImage = new TextToImage();
+                textToImage.GetImageWidth(model.O3FNAM, model.O3IDSC, model.SizeId);
+                model.IsSLBrand = textToImage.IsSLBrand;
+                model.IsSLDescription = textToImage.IsSLDescription;
+
+                report.SetDataSource(ConversionHelper.ConvertObjectToDataTable(model));
+                //report.PrintOptions.PrinterName = @"\\199.85.2.3\Canon LBP2900";
                 Logs.WriteToFile("test 1");
-                //rptH.PrintOptions.PrinterName = "Canon LBP2900 (redirected 3)";
+                //report.PrintToPrinter(1, false, 0, 0);
 
-                rptH.PrintToPrinter(1, true, 0, 0);
+                System.Drawing.Printing.PrinterSettings printersettings = new System.Drawing.Printing.PrinterSettings();
+                printersettings.PrinterName = "\\\\SYSTEMSPC_8801\\Canon LBP2900";
+                printersettings.Copies = 1;
+                printersettings.Collate = false;
+                report.PrintToPrinter(printersettings, new System.Drawing.Printing.PageSettings(), false);
+
                 Logs.WriteToFile("test 2");
-                rptH.Close();
-                rptH.Dispose();
+                report.Close();
+                report.Dispose();
                 //Response.AppendHeader("Content-Disposition", "inline; filename=test.pdf");
                 //return File(pdfBytes, "application/pdf");
 

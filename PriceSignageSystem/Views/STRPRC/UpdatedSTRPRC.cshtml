@@ -28,7 +28,7 @@
 </head>
 
 <body>
-    <iframe id="reportIframe" src="" style="display: none;"></iframe> @*For printing preview*@
+    @*<iframe id="reportIframe" src="" style="display: none;"></iframe>*@ @*For printing preview*@
 
     <div class="content-wrapper bg-white px-3">
         <br />
@@ -407,30 +407,46 @@
                         //Start for print preview multiple report
                         // PRINT MULTIPLE
                         $('#printSelectedButton').click(function () {
-
-                            $('.rowCheckbox:checked').each(function () {
-                                var row = $(this).closest('tr');
-                                var table = row.closest('table');
-                                var rowIndex = table.DataTable().row(row).index();
-                                var specificRow = $('#dataTable tbody tr:eq(' + rowIndex + ')');
-                                specificRow.find('td:eq(2)').text("Yes");
-                                specificRow.find('td:eq(2)').css('color', 'green');
-
-                            });
-
+                            $("#loadingContainer").show();
                             var sizeId = $('#sizeDropdown').val();
 
-                            $("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "");
+                            //$("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "");
 
-                            var reportIframe = document.getElementById("reportIframe");
-                            if (reportIframe) {
-                                reportIframe.onload = function () {
-                                    reportIframe.contentWindow.print();
-                                };
-                                reportIframe.src = $("#reportIframe").attr("src");
-                            }
-                            $('#modalView').modal('hide');
-                            $('input[type="checkbox"]').prop('checked', false);
+                            //var reportIframe = document.getElementById("reportIframe");
+                            //if (reportIframe) {
+                            //    reportIframe.onload = function () {
+                            //        reportIframe.contentWindow.print();
+                            //        $("#loadingContainer").hide();
+                            //    };
+                            //    reportIframe.src = $("#reportIframe").attr("src");
+                            //}
+                            //$('#modalView').modal('hide');
+                            //$('input[type="checkbox"]').prop('checked', false);
+                            var url = "/Report/PrintPreviewMultipleReport?selectedIds=" + encodeURIComponent(selectedRows.join(',')) + "&sizeId=" + sizeId + "";
+                            $.ajax({
+                                url: url,
+                                type: 'GET',
+                                data: { selectedIds: selectedRows, sizeId: sizeId},
+                                success: function (data) {
+                                    if (!data)
+                                        alert("Error in printing.");
+                                    else {
+                                        $('.rowCheckbox:checked').each(function () {
+                                            var row = $(this).closest('tr');
+                                            var table = row.closest('table');
+                                            var rowIndex = table.DataTable().row(row).index();
+                                            var specificRow = $('#dataTable tbody tr:eq(' + rowIndex + ')');
+                                            specificRow.find('td:eq(2)').text("Yes");
+                                            specificRow.find('td:eq(2)').css('color', 'green');
+
+                                        });
+                                    }
+
+                                    $("#loadingContainer").hide();
+                                    $('#modalView').modal('hide');
+                                    $('input[type="checkbox"]').prop('checked', false);
+                                }
+                            });
 
                         });
                         //End for print preview multiple report
@@ -595,10 +611,7 @@
                         //Start for print preview single report
                         // Print button click event handler
                         $('#printButton').click(function () {
-                            var specificRow = $('#dataTable tbody tr:eq(' + rowIndex + ')');
-                            specificRow.find('td:eq(2)').text("Yes");
-                            specificRow.find('td:eq(2)').css('color', 'green');
-
+                            $("#loadingContainer").show();
 
                             response.SizeId = $('#sizeDropdown').val();
                             response.TypeId = $('#typeDropdown').val();
@@ -607,15 +620,35 @@
                             response.O3LONG = "";
                             response.O3FNAM = "";
                             response.O3MODL = "";
-                            $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(response));
 
-                            var reportIframe = document.getElementById("reportIframe");
-                            if (reportIframe) {
-                                reportIframe.onload = function () {
-                                    reportIframe.contentWindow.print();
-                                };
-                                reportIframe.src = $("#reportIframe").attr("src");
-                            }
+                            //$("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(response));
+                            //var reportIframe = document.getElementById("reportIframe");
+                            //if (reportIframe) {
+                            //    reportIframe.onload = function () {
+                            //        reportIframe.contentWindow.print();
+                            //        $("#loadingContainer").hide();
+                            //    };
+                            //    reportIframe.src = $("#reportIframe").attr("src");
+                            //}
+
+                            $.ajax({
+                                url: '@Url.Action("PrintPreviewSingleReport", "Report")',
+                                type: 'GET',
+                                data: { response: JSON.stringify(response)},
+                                success: function (data) {
+                                    if (!data)
+                                        alert("Error in printing.");
+                                    else {
+                                        var specificRow = $('#dataTable tbody tr:eq(' + rowIndex + ')');
+                                        specificRow.find('td:eq(2)').text("Yes");
+                                        specificRow.find('td:eq(2)').css('color', 'green');
+                                    }
+
+                                    $("#loadingContainer").hide();
+                                    $('#modalView').modal('hide');
+                                }
+                            });
+
                         });
                         //End for print preview single report
                     }
