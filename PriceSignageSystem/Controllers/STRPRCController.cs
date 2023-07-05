@@ -1,6 +1,5 @@
 ﻿using ClosedXML.Excel;
 using CrystalDecisions.CrystalReports.Engine;
-using Newtonsoft.Json;
 using PriceSignageSystem.Code;
 using PriceSignageSystem.Code.CustomValidations;
 using PriceSignageSystem.Helper;
@@ -8,7 +7,6 @@ using PriceSignageSystem.Models.Constants;
 using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Globalization;
@@ -302,10 +300,12 @@ namespace PriceSignageSystem.Controllers
 
             var data = new STRPRCDto();
             var LatestPCAData = _sTRPRCRepository.GetLatestPCAData().ToList();
+
+            data.LatestDate = LatestPCAData[0].LatestDate;
+            data.WithInventoryList = LatestPCAData.Where(a => a.HasInventory == "Y" && a.O3SDT == data.LatestDate).ToList();
+            data.WithoutInventoryList = LatestPCAData.Where(a => (a.HasInventory == string.Empty && a.O3SDT == data.LatestDate) && (a.O3EDT == 999999 || a.O3EDT == 0)).ToList();
+            data.ExcemptionList = LatestPCAData.Where(a => (a.O3REG == a.O3POS && a.O3SDT == data.LatestDate) && a.O3EDT != 999999).ToList();
             
-            data.WithInventoryList = LatestPCAData.Where(a => a.HasInventory == "Y").ToList();
-            data.WithoutInventoryList = LatestPCAData.Where(a => a.HasInventory == string.Empty).ToList();
-            data.ExcemptionList = LatestPCAData.Where(a => a.O3SDT == a.O3EDT).ToList();
             foreach (var item in data.WithInventoryList)
             {
                 item.TypeName =  item.TypeId == 2 ? "Save"
@@ -361,9 +361,10 @@ namespace PriceSignageSystem.Controllers
         }
 
         [HttpGet]
-        public FileResult ExportDataTableToExcel(bool withInventory)
+        public FileResult ExportDataTableToExcel(string tab, DateTime date)
         {
-            var toExport = _sTRPRCRepository.PCAToExport(withInventory).ToList();
+            var decimalDate = ConversionHelper.ToDecimal(date);
+            var toExport = _sTRPRCRepository.PCAToExport(tab, decimalDate).ToList();
             foreach (var item in toExport)
             {
                 item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
@@ -421,20 +422,10 @@ namespace PriceSignageSystem.Controllers
                 {
                     workbook.SaveAs(memoryStream);
 
-                    // Return the Excel file as a downloadable response
+                    
                     var fileContents = memoryStream.ToArray();
                     var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                    var fileName = string.Empty;
-                    if (withInventory)
-                    {
-                         fileName = "PCA_With_Inventory.xlsx"; // Default filename
-
-                    }
-                    else
-                    {
-                         fileName = "PCA_Without_Inventory.xlsx"; // Default filename
-
-                    }
+                    var fileName = tab + "_" + DateTime.Today.ToShortDateString() + ".xlsx";
 
                     return File(fileContents, contentType, fileName);
                 }

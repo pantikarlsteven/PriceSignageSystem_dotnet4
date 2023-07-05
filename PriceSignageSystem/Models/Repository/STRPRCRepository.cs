@@ -760,10 +760,10 @@ namespace PriceSignageSystem.Models.Repository
 
         }
 
-        public List<ExportPCADto> PCAToExport(bool withInventory)
+        public List<ExportPCADto> PCAToExport(string tab, decimal date)
         {
             var sp = "sp_ExportPCAData";
-            var HasInv = withInventory == true ? 'Y' : 'N';
+           
             var data = new List<ExportPCADto>();
             // Set up the connection and command
             using (var connection = new SqlConnection(connectionString))
@@ -773,7 +773,8 @@ namespace PriceSignageSystem.Models.Repository
                 command.CommandTimeout = commandTimeoutInSeconds;
 
                 // Add parameters if required
-                command.Parameters.AddWithValue("@HasInv", HasInv);
+                command.Parameters.AddWithValue("@TabName", tab);
+                command.Parameters.AddWithValue("@SearchDate", date);
 
                 // Open the connection and execute the command
                 connection.Open();
@@ -784,16 +785,16 @@ namespace PriceSignageSystem.Models.Repository
                 {
                     var record = new ExportPCADto
                     {
-                        O3IDSC = reader["O3IDSC"].ToString(),
-                        O3SKU = (decimal)reader["O3SKU"],
-                        O3UPC = (decimal)reader["O3UPC"],
-                        O3POS = (decimal)reader["O3POS"],
-                        O3REGU = (decimal)reader["O3REGU"],
-                        O3SDT = (decimal)reader["O3SDT"],
-                        O3EDT = (decimal)reader["O3EDT"],
-                        O3FNAM = reader["O3FNAM"].ToString(),
-                        O3MODL = reader["O3MODL"].ToString(),
-                        O3LONG = reader["O3LONG"].ToString(),
+                        ItemDesc = reader["O3IDSC"].ToString(),
+                        SKU = (decimal)reader["O3SKU"],
+                        UPC = (decimal)reader["O3UPC"],
+                        CurrentPrice = (decimal)reader["O3POS"],
+                        RegularPrice = (decimal)reader["O3REGU"],
+                        StartDate = (decimal)reader["O3SDT"],
+                        EndDate = (decimal)reader["O3EDT"],
+                        Brand = reader["O3FNAM"].ToString(),
+                        Model = reader["O3MODL"].ToString(),
+                        LongDesc = reader["O3LONG"].ToString(),
                         Type = reader["Type"].ToString(),
                         Size = reader["Size"].ToString(),
                         Category = reader["Category"].ToString(),

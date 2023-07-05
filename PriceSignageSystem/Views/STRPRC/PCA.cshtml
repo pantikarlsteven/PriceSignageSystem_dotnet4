@@ -243,6 +243,13 @@
                         type: "POST",
                         success: function (data) {
 
+                            var latestDate = data.LatestDate;
+                            const day = latestDate.toString().substr(4, 2);
+                            const month = latestDate.toString().substr(2, 2);
+                            const year = latestDate.toString().substr(0, 2);
+                            const formattedDate = `20${year}-${month}-${day}`;
+                            $('#startDate').val(formattedDate);
+
                             if (tableWith !== null) {
                                 tableWith.destroy();
                             }
@@ -332,12 +339,13 @@
                 "dom": '<"top"lfB>rt<"bottom"ip>',
 
                 initComplete: function () {
+                    var date = $('#startDate').val();
                     // Create the button element
                     var $button = $('<button>')
                         .addClass('custom-button')
                         .text('Export')
                         .on('click', function () {
-                             window.location.href = '/STRPRC/ExportDataTableToExcel?withInventory=true';
+                            window.location.href = '/STRPRC/ExportDataTableToExcel?tab=WithInventory&date=' + date;
                         });
 
                     var dataTableWrapper = $('#with-inventory-table').closest('.dataTables_wrapper');
@@ -415,6 +423,8 @@
                     //Start for print preview multiple report
                     // PRINT MULTIPLE
                     $('#printSelectedButtonWith').click(function () {
+                        $("#loadingContainer").show();
+
                         var sizeId = $('#sizeDropdown').val();
 
                         $("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "");
@@ -422,6 +432,8 @@
                         var reportIframe = document.getElementById("reportIframe");
                         if (reportIframe) {
                             reportIframe.onload = function () {
+                                $("#loadingContainer").hide();
+
                                 reportIframe.contentWindow.print();
                             };
                             reportIframe.src = $("#reportIframe").attr("src");
@@ -430,7 +442,6 @@
                         $('input[type="checkbox"]').prop('checked', false);
 
                     });
-                    //End for print preview multiple report
 
                 } else {
                     alert('Please select items to print.');
@@ -499,12 +510,13 @@
                 "dom": '<"top"lfB>rt<"bottom"ip>',
 
                 initComplete: function () {
+                    var date = $('#startDate').val();
                     // Create the button element
                     var $button = $('<button>')
                         .addClass('custom-button')
                         .text('Export')
                         .on('click', function () {
-                            window.location.href = '/STRPRC/ExportDataTableToExcel?withInventory=false';
+                            window.location.href = '/STRPRC/ExportDataTableToExcel?tab=WithoutInventory&date=' + date;
                         });
 
                     var dataTableWrapper = $('#without-inventory-table').closest('.dataTables_wrapper');
@@ -587,8 +599,8 @@
 
                         var reportIframe = document.getElementById("reportIframe");
                         if (reportIframe) {
-                            $("#loadingContainer").hide();
                             reportIframe.onload = function () {
+                                $("#loadingContainer").hide();
                                 reportIframe.contentWindow.print();
                             };
                             reportIframe.src = $("#reportIframe").attr("src");
@@ -664,6 +676,21 @@
                         }
                     }
                 ],
+                "dom": '<"top"lfB>rt<"bottom"ip>',
+
+                initComplete: function () {
+                    var date = $('#startDate').val();
+                    // Create the button element
+                    var $button = $('<button>')
+                        .addClass('custom-button')
+                        .text('Export')
+                        .on('click', function () {
+                            window.location.href = '/STRPRC/ExportDataTableToExcel?tab=Exemption&date=' + date;
+                        });
+
+                    var dataTableWrapper = $('#excemption-table').closest('.dataTables_wrapper');
+                    dataTableWrapper.find('.dataTables_filter').before($button);
+                }
             });
 
 
@@ -750,7 +777,6 @@
                         $('input[type="checkbox"]').prop('checked', false);
 
                     });
-                    //End for print preview multiple report
 
                 } else {
                     alert('Please select items to print.');
@@ -960,6 +986,10 @@
                                 };
                                 reportIframe.src = $("#reportIframe").attr("src");
                             }
+                            $('#modalView').modal('hide');
+                            var cell = tableWith.cell({ row: 0, column: 2 });
+                            cell.data('Yes'); 
+                            tableWith.draw();
                         });
                         //End for print preview single report
                 }
@@ -1076,6 +1106,10 @@
                                 };
                                 reportIframe.src = $("#reportIframe").attr("src");
                             }
+                            $('#modalView').modal('hide');
+                            var cell = tableWithout.cell({ row: 0, column: 2 });
+                            cell.data('Yes');
+                            tableWithout.draw();
                         });
                         //End for print preview single report
                 }
@@ -1192,6 +1226,10 @@
                                 };
                                 reportIframe.src = $("#reportIframe").attr("src");
                             }
+                            $('#modalView').modal('hide');
+                            var cell = tableExcemption.cell({ row: 0, column: 2 });
+                            cell.data('Yes');
+                            tableExcemption.draw();
                         });
                         //End for print preview single report
                 }
@@ -1561,14 +1599,14 @@
             dialog3.append(buttonContainer);
 
             // Create "Clear All Checkboxes" button
-            var clearButton = $('<button>').text('Clear All').addClass('small-button').click(function () {
+            var clearButton = $('<button>').text('Clear All').addClass('btn btn-secondary btn-sm').css('background-color', 'gray').click(function () {
                 $('.filter-checkbox').prop('checked', false);
                 applyFilter();
             });
             buttonContainer.append(clearButton);
 
             // Create "OK" button
-            var okButton = $('<button>').text('OK').addClass('small-button').click(function () {
+            var okButton = $('<button>').text('OK').addClass('btn btn-secondary btn-sm ml-2').css('background-color', 'orange').click(function () {
                 applyFilter();
                 dialog3.dialog('close');
             });
@@ -1618,11 +1656,15 @@
             if (currentActiveTab == "#without-inventory") {
                 tableWithout.draw();
             }
+            else if (currentActiveTab == "#with-inventory") {
+                tableWith.draw();
+            }
+            else if (currentActiveTab == "#excemption") {
+                tableExcemption.draw();
+            }
            
         });
 
-        
-        
 
         $("#startDate").datepicker({
             dateFormat: 'yy-mm-dd'
