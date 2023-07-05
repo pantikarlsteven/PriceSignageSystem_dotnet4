@@ -368,7 +368,8 @@
                             '</div>' +
                             '</div>';
                         // Build the HTML for the print button
-                        var printButtonHtml = '<button id="printSelectedButton" class="btn btn-primary">Print</button>';
+                        var buttonHtml = '<button id="printSelectedButton" class="btn btn-primary">Print</button>' +
+                            '<button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancel</button>';
 
                         // Create the modal content
                         var modalContent = '<div class="modal-dialog modal-sm modal-dialog-centered">' +
@@ -383,7 +384,7 @@
                             dropdownHtml +
                             '</div>' +
                             '<div class="modal-footer">' +
-                            printButtonHtml +
+                            buttonHtml +
                             '</div>' +
                             '</div>' +
                             '</div>';
@@ -570,7 +571,8 @@
                             '</div>';
 
                         // Build the HTML for the print button
-                        var printButtonHtml = '<button id="printButton" class="btn btn-primary">Print</button>';
+                        var buttonHtml = '<button id="printButton" class="btn btn-primary">Print</button>' +
+                            '<button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancel</button>';
 
                         // Create the modal content
                         var modalContent = '<div class="modal-dialog modal-dialog-centered">' +
@@ -585,7 +587,7 @@
                             dropdownHtml +
                             '</div>' +
                             '<div class="modal-footer">' +
-                            printButtonHtml +
+                            buttonHtml +
                             '</div>' +
                             '</div>' +
                             '</div>';

@@ -46,13 +46,13 @@
     </style>
 </head>
 <body>
-    <iframe id="reportIframe" src="" style="display: none;"></iframe>
+    @*<iframe id="reportIframe" src="" style="display: none;"></iframe>*@
 
     <div class="content-wrapper bg-white px-3">
         <br />
         <div class="content">
             <div class="overlay-wrapper" id="loadingContainer" style="display:none;">
-                <div class="overlay" style="background-color: rgba(0, 0, 0, 0.59); z-index: 99;">
+                <div class="overlay" style="background-color: rgba(0, 0, 0, 0.59); z-index: 999999;">
                     <img class="" src="~/Content/Images/loading.gif" alt="Loading" style="max-width:350px;" />
                 </div>
             </div>
@@ -384,8 +384,8 @@
                         '</div>' +
                         '</div>';
                     // Build the HTML for the print button
-                    var printButtonHtml = '<button id="printSelectedButtonWith" class="btn btn-primary">Print</button>';
-
+                    var buttonHtml = '<button id="printSelectedButtonWith" class="btn btn-primary">Print</button>' +
+                        '<button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancel</button>';
                     // Create the modal content
                     var modalContent = '<div class="modal-dialog modal-sm modal-dialog-centered">' +
                         '<div class="modal-content">' +
@@ -399,7 +399,7 @@
                         dropdownHtml +
                         '</div>' +
                         '<div class="modal-footer">' +
-                        printButtonHtml +
+                        buttonHtml +
                         '</div>' +
                         '</div>' +
                         '</div>';
@@ -424,22 +424,46 @@
                     // PRINT MULTIPLE
                     $('#printSelectedButtonWith').click(function () {
                         $("#loadingContainer").show();
-
                         var sizeId = $('#sizeDropdown').val();
 
-                        $("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "");
+                        //$("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "");
+                        //var reportIframe = document.getElementById("reportIframe");
+                        //if (reportIframe) {
+                        //    reportIframe.onload = function () {
+                        //        $("#loadingContainer").hide();
 
-                        var reportIframe = document.getElementById("reportIframe");
-                        if (reportIframe) {
-                            reportIframe.onload = function () {
+                        //        reportIframe.contentWindow.print();
+                        //    };
+                        //    reportIframe.src = $("#reportIframe").attr("src");
+                        //}
+                        //$('#modalView').modal('hide');
+                        //$('input[type="checkbox"]').prop('checked', false);
+
+                        var url = "/Report/PrintPreviewMultipleReport?selectedIds=" + encodeURIComponent(selectedRows.join(',')) + "&sizeId=" + sizeId + "";
+                        $.ajax({
+                            url: url,
+                            type: 'GET',
+                            data: { selectedIds: selectedRows, sizeId: sizeId },
+                            success: function (data) {
+                                if (!data)
+                                    alert("Error in printing.");
+                                else {
+                                    $('.rowCheckboxWith:checked').each(function () {
+                                        var row = $(this).closest('tr');
+                                        var table = row.closest('table');
+                                        var rowIndex = table.DataTable().row(row).index();
+                                        var specificRow = $('#with-inventory-table tbody tr:eq(' + rowIndex + ')');
+                                        specificRow.find('td:eq(2)').text("Yes");
+                                        specificRow.find('td:eq(2)').css('color', 'green');
+
+                                    });
+                                }
+
                                 $("#loadingContainer").hide();
-
-                                reportIframe.contentWindow.print();
-                            };
-                            reportIframe.src = $("#reportIframe").attr("src");
-                        }
-                        $('#modalView').modal('hide');
-                        $('input[type="checkbox"]').prop('checked', false);
+                                $('#modalView').modal('hide');
+                                $('input[type="checkbox"]').prop('checked', false);
+                            }
+                        });
 
                     });
 
@@ -553,8 +577,8 @@
                         '</div>' +
                         '</div>';
                     // Build the HTML for the print button
-                    var printButtonHtml = '<button id="printSelectedButton" class="btn btn-primary">Print</button>';
-
+                    var buttonHtml = '<button id="printSelectedButtonWithout" class="btn btn-primary">Print</button>' +
+                        '<button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancel</button>';
                     // Create the modal content
                     var modalContent = '<div class="modal-dialog modal-sm modal-dialog-centered">' +
                         '<div class="modal-content">' +
@@ -568,7 +592,7 @@
                         dropdownHtml +
                         '</div>' +
                         '<div class="modal-footer">' +
-                        printButtonHtml +
+                        buttonHtml +
                         '</div>' +
                         '</div>' +
                         '</div>';
@@ -591,22 +615,47 @@
 
                     //Start for print preview multiple report
                     // PRINT MULTIPLE
-                    $('#printSelectedButton').click(function () {
+                    $('#printSelectedButtonWithout').click(function () {
                         $("#loadingContainer").show();
                         var sizeId = $('#sizeDropdown').val();
 
-                        $("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "");
+                        //$("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "");
+                        //var reportIframe = document.getElementById("reportIframe");
+                        //if (reportIframe) {
+                        //    reportIframe.onload = function () {
+                        //        $("#loadingContainer").hide();
+                        //        reportIframe.contentWindow.print();
+                        //    };
+                        //    reportIframe.src = $("#reportIframe").attr("src");
+                        //}
+                        //$('#modalView').modal('hide');
+                        //$('input[type="checkbox"]').prop('checked', false);
 
-                        var reportIframe = document.getElementById("reportIframe");
-                        if (reportIframe) {
-                            reportIframe.onload = function () {
+                        var url = "/Report/PrintPreviewMultipleReport?selectedIds=" + encodeURIComponent(selectedRows.join(',')) + "&sizeId=" + sizeId + "";
+                        $.ajax({
+                            url: url,
+                            type: 'GET',
+                            data: { selectedIds: selectedRows, sizeId: sizeId },
+                            success: function (data) {
+                                if (!data)
+                                    alert("Error in printing.");
+                                else {
+                                    $('.rowCheckboxWithout:checked').each(function () {
+                                        var row = $(this).closest('tr');
+                                        var table = row.closest('table');
+                                        var rowIndex = table.DataTable().row(row).index();
+                                        var specificRow = $('#without-inventory-table tbody tr:eq(' + rowIndex + ')');
+                                        specificRow.find('td:eq(2)').text("Yes");
+                                        specificRow.find('td:eq(2)').css('color', 'green');
+
+                                    });
+                                }
+
                                 $("#loadingContainer").hide();
-                                reportIframe.contentWindow.print();
-                            };
-                            reportIframe.src = $("#reportIframe").attr("src");
-                        }
-                        $('#modalView').modal('hide');
-                        $('input[type="checkbox"]').prop('checked', false);
+                                $('#modalView').modal('hide');
+                                $('input[type="checkbox"]').prop('checked', false);
+                            }
+                        });
 
                     });
                     //End for print preview multiple report
@@ -723,8 +772,8 @@
                         '</div>' +
                         '</div>';
                     // Build the HTML for the print button
-                    var printButtonHtml = '<button id="printSelectedButtonExcemption" class="btn btn-primary">Print</button>';
-
+                    var buttonHtml = '<button id="printSelectedButtonExcemption" class="btn btn-primary">Print</button>' +
+                        '<button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancel</button>';
                     // Create the modal content
                     var modalContent = '<div class="modal-dialog modal-sm modal-dialog-centered">' +
                         '<div class="modal-content">' +
@@ -738,7 +787,7 @@
                         dropdownHtml +
                         '</div>' +
                         '<div class="modal-footer">' +
-                        printButtonHtml +
+                        buttonHtml +
                         '</div>' +
                         '</div>' +
                         '</div>';
@@ -762,19 +811,46 @@
                     //Start for print preview multiple report
                     // PRINT MULTIPLE
                     $('#printSelectedButtonExcemption').click(function () {
+                        $("#loadingContainer").show();
                         var sizeId = $('#sizeDropdown').val();
 
-                        $("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "");
+                        //$("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "");
 
-                        var reportIframe = document.getElementById("reportIframe");
-                        if (reportIframe) {
-                            reportIframe.onload = function () {
-                                reportIframe.contentWindow.print();
-                            };
-                            reportIframe.src = $("#reportIframe").attr("src");
-                        }
-                        $('#modalView').modal('hide');
-                        $('input[type="checkbox"]').prop('checked', false);
+                        //var reportIframe = document.getElementById("reportIframe");
+                        //if (reportIframe) {
+                        //    reportIframe.onload = function () {
+                        //        reportIframe.contentWindow.print();
+                        //    };
+                        //    reportIframe.src = $("#reportIframe").attr("src");
+                        //}
+                        //$('#modalView').modal('hide');
+                        //$('input[type="checkbox"]').prop('checked', false);
+
+                        var url = "/Report/PrintPreviewMultipleReport?selectedIds=" + encodeURIComponent(selectedRows.join(',')) + "&sizeId=" + sizeId + "";
+                        $.ajax({
+                            url: url,
+                            type: 'GET',
+                            data: { selectedIds: selectedRows, sizeId: sizeId },
+                            success: function (data) {
+                                if (!data)
+                                    alert("Error in printing.");
+                                else {
+                                    $('.rowCheckboxExcemption:checked').each(function () {
+                                        var row = $(this).closest('tr');
+                                        var table = row.closest('table');
+                                        var rowIndex = table.DataTable().row(row).index();
+                                        var specificRow = $('#excemption-table tbody tr:eq(' + rowIndex + ')');
+                                        specificRow.find('td:eq(2)').text("Yes");
+                                        specificRow.find('td:eq(2)').css('color', 'green');
+
+                                    });
+                                }
+
+                                $("#loadingContainer").hide();
+                                $('#modalView').modal('hide');
+                                $('input[type="checkbox"]').prop('checked', false);
+                            }
+                        });
 
                     });
 
@@ -929,7 +1005,9 @@
                             '</div>';
 
                         // Build the HTML for the print button
-                        var printButtonHtml = '<button id="printButton" class="btn btn-primary">Print</button>';
+                        var buttonHtml = '<button id="printButton" class="btn btn-primary">Print</button>' +
+                                         '<button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancel</button>';
+
 
                         // Create the modal content
                         var modalContent = '<div class="modal-dialog modal-dialog-centered">' +
@@ -944,7 +1022,7 @@
                             dropdownHtml +
                             '</div>' +
                             '<div class="modal-footer">' +
-                            printButtonHtml +
+                            buttonHtml +
                             '</div>' +
                             '</div>' +
                             '</div>';
@@ -969,7 +1047,8 @@
 
                         //Start for print preview single report
                         // Print button click event handler
-                        $('#printButton').click(function () {
+                    $('#printButton').click(function () {
+                            $("#loadingContainer").show();
                             response.SizeId = $('#sizeDropdown').val();
                             response.TypeId = $('#typeDropdown').val();
                             response.CategoryId = $('#categoryDropdown').val();
@@ -977,19 +1056,36 @@
                             response.O3LONG = "";
                             response.O3FNAM = "";
                             response.O3MODL = "";
-                            $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(response));
+                            //$("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(response));
+                            //var reportIframe = document.getElementById("reportIframe");
+                            //if (reportIframe) {
+                            //    reportIframe.onload = function () {
+                            //        reportIframe.contentWindow.print();
+                            //    };
+                            //    reportIframe.src = $("#reportIframe").attr("src");
+                            //}
+                            //$('#modalView').modal('hide');
+                            //var cell = tableWith.cell({ row: 0, column: 2 });
+                            //cell.data('Yes');
+                            //tableWith.draw();
 
-                            var reportIframe = document.getElementById("reportIframe");
-                            if (reportIframe) {
-                                reportIframe.onload = function () {
-                                    reportIframe.contentWindow.print();
-                                };
-                                reportIframe.src = $("#reportIframe").attr("src");
-                            }
-                            $('#modalView').modal('hide');
-                            var cell = tableWith.cell({ row: 0, column: 2 });
-                            cell.data('Yes'); 
-                            tableWith.draw();
+                            $.ajax({
+                                url: '@Url.Action("PrintPreviewSingleReport", "Report")',
+                                type: 'GET',
+                                data: { response: JSON.stringify(response)},
+                                success: function (data) {
+                                    if (!data)
+                                        alert("Error in printing.");
+                                    else {
+                                        var specificRow = $('#with-inventory-table tbody tr:eq(' + rowIndex + ')');
+                                        specificRow.find('td:eq(2)').text("Yes");
+                                        specificRow.find('td:eq(2)').css('color', 'green');
+                                    }
+
+                                    $("#loadingContainer").hide();
+                                    $('#modalView').modal('hide');
+                                }
+                            });
                         });
                         //End for print preview single report
                 }
@@ -1049,7 +1145,8 @@
                             '</div>';
 
                         // Build the HTML for the print button
-                        var printButtonHtml = '<button id="printButton" class="btn btn-primary">Print</button>';
+                        var buttonHtml = '<button id="printButton" class="btn btn-primary">Print</button>' +
+                        '<button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancel</button>';
 
                         // Create the modal content
                         var modalContent = '<div class="modal-dialog modal-dialog-centered">' +
@@ -1064,7 +1161,7 @@
                             dropdownHtml +
                             '</div>' +
                             '<div class="modal-footer">' +
-                            printButtonHtml +
+                            buttonHtml +
                             '</div>' +
                             '</div>' +
                             '</div>';
@@ -1089,7 +1186,8 @@
 
                         //Start for print preview single report
                         // Print button click event handler
-                        $('#printButton').click(function () {
+                    $('#printButton').click(function () {
+                            $("#loadingContainer").show();
                             response.SizeId = $('#sizeDropdown').val();
                             response.TypeId = $('#typeDropdown').val();
                             response.CategoryId = $('#categoryDropdown').val();
@@ -1097,19 +1195,36 @@
                             response.O3LONG = "";
                             response.O3FNAM = "";
                             response.O3MODL = "";
-                            $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(response));
+                            //$("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(response));
+                            //var reportIframe = document.getElementById("reportIframe");
+                            //if (reportIframe) {
+                            //    reportIframe.onload = function () {
+                            //        reportIframe.contentWindow.print();
+                            //    };
+                            //    reportIframe.src = $("#reportIframe").attr("src");
+                            //}
+                            //$('#modalView').modal('hide');
+                            //var cell = tableWithout.cell({ row: 0, column: 2 });
+                            //cell.data('Yes');
+                            //tableWithout.draw();
 
-                            var reportIframe = document.getElementById("reportIframe");
-                            if (reportIframe) {
-                                reportIframe.onload = function () {
-                                    reportIframe.contentWindow.print();
-                                };
-                                reportIframe.src = $("#reportIframe").attr("src");
-                            }
-                            $('#modalView').modal('hide');
-                            var cell = tableWithout.cell({ row: 0, column: 2 });
-                            cell.data('Yes');
-                            tableWithout.draw();
+                             $.ajax({
+                                url: '@Url.Action("PrintPreviewSingleReport", "Report")',
+                                type: 'GET',
+                                data: { response: JSON.stringify(response)},
+                                success: function (data) {
+                                    if (!data)
+                                        alert("Error in printing.");
+                                    else {
+                                        var specificRow = $('#without-inventory-table tbody tr:eq(' + rowIndex + ')');
+                                        specificRow.find('td:eq(2)').text("Yes");
+                                        specificRow.find('td:eq(2)').css('color', 'green');
+                                    }
+
+                                    $("#loadingContainer").hide();
+                                    $('#modalView').modal('hide');
+                                }
+                            });
                         });
                         //End for print preview single report
                 }
@@ -1169,7 +1284,8 @@
                             '</div>';
 
                         // Build the HTML for the print button
-                        var printButtonHtml = '<button id="printButton" class="btn btn-primary">Print</button>';
+                        var buttonHtml = '<button id="printButton" class="btn btn-primary">Print</button>' +
+                        '<button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancel</button>';
 
                         // Create the modal content
                         var modalContent = '<div class="modal-dialog modal-dialog-centered">' +
@@ -1184,7 +1300,7 @@
                             dropdownHtml +
                             '</div>' +
                             '<div class="modal-footer">' +
-                            printButtonHtml +
+                            buttonHtml +
                             '</div>' +
                             '</div>' +
                             '</div>';
@@ -1209,7 +1325,9 @@
 
                         //Start for print preview single report
                         // Print button click event handler
-                        $('#printButton').click(function () {
+                    $('#printButton').click(function () {
+                            $("#loadingContainer").show();
+
                             response.SizeId = $('#sizeDropdown').val();
                             response.TypeId = $('#typeDropdown').val();
                             response.CategoryId = $('#categoryDropdown').val();
@@ -1217,26 +1335,43 @@
                             response.O3LONG = "";
                             response.O3FNAM = "";
                             response.O3MODL = "";
-                            $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(response));
+                            //$("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(response));
+                            //var reportIframe = document.getElementById("reportIframe");
+                            //if (reportIframe) {
+                            //    reportIframe.onload = function () {
+                            //        reportIframe.contentWindow.print();
+                            //    };
+                            //    reportIframe.src = $("#reportIframe").attr("src");
+                            //}
+                            //$('#modalView').modal('hide');
+                            //var cell = tableExcemption.cell({ row: 0, column: 2 });
+                            //cell.data('Yes');
+                            //tableExcemption.draw();
 
-                            var reportIframe = document.getElementById("reportIframe");
-                            if (reportIframe) {
-                                reportIframe.onload = function () {
-                                    reportIframe.contentWindow.print();
-                                };
-                                reportIframe.src = $("#reportIframe").attr("src");
-                            }
-                            $('#modalView').modal('hide');
-                            var cell = tableExcemption.cell({ row: 0, column: 2 });
-                            cell.data('Yes');
-                            tableExcemption.draw();
+                             $.ajax({
+                                url: '@Url.Action("PrintPreviewSingleReport", "Report")',
+                                type: 'GET',
+                                data: { response: JSON.stringify(response)},
+                                success: function (data) {
+                                    if (!data)
+                                        alert("Error in printing.");
+                                    else {
+                                        var specificRow = $('#excemption-table tbody tr:eq(' + rowIndex + ')');
+                                        specificRow.find('td:eq(2)').text("Yes");
+                                        specificRow.find('td:eq(2)').css('color', 'green');
+                                    }
+
+                                    $("#loadingContainer").hide();
+                                    $('#modalView').modal('hide');
+                                }
+                            });
                         });
                         //End for print preview single report
                 }
             });
         });
 
-        // Close the modal 
+        // Close the modal
         $(document).on('click', '.modal .close', function () {
             $('#modalView').modal('hide');
         });
@@ -1692,7 +1827,7 @@
             else if (currentActiveTab == "#excemption") {
                 tableExcemption.draw();
             }
-           
+
         });
 
 
