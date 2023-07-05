@@ -1368,6 +1368,11 @@
                 'gap': '5px' // Add spacing between checkboxes
             });
 
+            // Add "Select All" checkbox
+            var selectAllCheckbox = $('<input type="checkbox">').addClass('filter-checkbox select-all-checkbox');
+            var selectAllLabel = $('<label>').text('Select All').prepend(selectAllCheckbox);
+            checkboxContainer.prepend(selectAllLabel);
+
             for (var i = 0; i < distinctValues.length; i++) {
                 var checkbox = $('<input type="checkbox">').addClass('filter-checkbox').val(distinctValues[i]);
                 if (selectedValues.includes(distinctValues[i])) {
@@ -1400,6 +1405,11 @@
 
             // Apply filter when checkbox state changes
             $('.filter-checkbox').on('change', applyFilter);
+
+            // Toggle state of all checkboxes when "Select All" checkbox changes
+            selectAllCheckbox.click(function () {
+                $('.filter-checkbox').not('.select-all-checkbox').prop('checked', $(this).prop('checked'));
+            });
 
             // Open the filter dialog
             dialog.dialog('open');
@@ -1475,6 +1485,11 @@
                 'gap': '5px' // Add spacing between checkboxes
             });
 
+            // Add "Select All" checkbox
+            var selectAllCheckbox = $('<input type="checkbox">').addClass('filter-checkbox select-all-checkbox');
+            var selectAllLabel = $('<label>').text('Select All').prepend(selectAllCheckbox);
+            checkboxContainer.prepend(selectAllLabel);
+
             for (var i = 0; i < distinctValues.length; i++) {
                 var checkbox = $('<input type="checkbox">').addClass('filter-checkbox').val(distinctValues[i]);
                 if (selectedValues.includes(distinctValues[i])) {
@@ -1507,6 +1522,11 @@
 
             // Apply filter when checkbox state changes
             $('.filter-checkbox').on('change', applyFilter);
+
+            // Toggle state of all checkboxes when "Select All" checkbox changes
+            selectAllCheckbox.click(function () {
+                $('.filter-checkbox').not('.select-all-checkbox').prop('checked', $(this).prop('checked'));
+            });
 
             // Open the filter dialog
             dialog2.dialog('open');
@@ -1582,6 +1602,11 @@
                 'gap': '5px' // Add spacing between checkboxes
             });
 
+            // Add "Select All" checkbox
+            var selectAllCheckbox = $('<input type="checkbox">').addClass('filter-checkbox select-all-checkbox');
+            var selectAllLabel = $('<label>').text('Select All').prepend(selectAllCheckbox);
+            checkboxContainer.prepend(selectAllLabel);
+
             for (var i = 0; i < distinctValues.length; i++) {
                 var checkbox = $('<input type="checkbox">').addClass('filter-checkbox').val(distinctValues[i]);
                 if (selectedValues.includes(distinctValues[i])) {
@@ -1614,6 +1639,11 @@
 
             // Apply filter when checkbox state changes
             $('.filter-checkbox').on('change', applyFilter);
+
+            // Toggle state of all checkboxes when "Select All" checkbox changes
+            selectAllCheckbox.click(function () {
+                $('.filter-checkbox').not('.select-all-checkbox').prop('checked', $(this).prop('checked'));
+            });
 
             // Open the filter dialog
             dialog3.dialog('open');
