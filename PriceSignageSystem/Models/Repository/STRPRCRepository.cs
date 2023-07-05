@@ -338,6 +338,7 @@ namespace PriceSignageSystem.Models.Repository
             {
                 command.CommandType = CommandType.StoredProcedure;
 
+                command.Parameters.Add("@o3loc", SqlDbType.Decimal).Value = ConfigurationManager.AppSettings["StoreID"];
                 if (o3sku > 0)
                     command.Parameters.Add("@o3sku", SqlDbType.Decimal).Value = o3sku;
 
