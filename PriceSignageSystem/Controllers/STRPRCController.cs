@@ -97,12 +97,12 @@ namespace PriceSignageSystem.Controllers
         {
             var date = _sTRPRCRepository.GetLatestUpdate();
 
-            if (date.Date == DateTime.Now.Date)
+            if (date.DateUpdated.Date == DateTime.Now.Date)
             {
                 ViewBag.IsDateLatest = true;
             }
 
-            ViewBag.DateVersion = date.ToString("MMM dd yyyy HH:mm:ss tt");
+            ViewBag.DateVersion = date.DateUpdated.ToString("MMM dd yyyy HH:mm:ss tt");
             ViewBag.WithInventory = withInventory;
 
             return View();
@@ -115,7 +115,7 @@ namespace PriceSignageSystem.Controllers
             var data = new STRPRCDto();
             var rawData = _sTRPRCRepository.GetDataByStartDate(startDateFormatted).ToList();
 
-            data.WithInventoryList = rawData.Where(a => a.HasInventory == "Y").ToList();
+            data.WithInventoryList = rawData.Where(a => a.HasInventory == "Y" && a.IsExemp == "N").ToList();
             data.WithoutInventoryList = rawData.Where(a => a.HasInventory == ""  && a.IsExemp == "N").ToList();
             data.ExcemptionList = rawData.Where(a => a.IsExemp == "Y").ToList();
 
@@ -262,12 +262,12 @@ namespace PriceSignageSystem.Controllers
         {
             var date = _sTRPRCRepository.GetLatestUpdate();
 
-            if (date.Date == DateTime.Now.Date)
+            if (date.DateUpdated.Date == DateTime.Now.Date)
             {
                 ViewBag.IsDateLatest = true;
             }
 
-            ViewBag.DateVersion = date.ToString("MMM dd yyyy HH:mm:ss tt");
+            ViewBag.DateVersion = date.DateUpdated.ToString("MMM dd yyyy HH:mm:ss tt");
 
             return View();
         }
@@ -286,7 +286,7 @@ namespace PriceSignageSystem.Controllers
         public JsonResult CheckSTRPRCUpdates()
         {
             var date = _sTRPRCRepository.GetLatestUpdate();
-            if (date.Date != DateTime.Now.Date)
+            if (date.DateUpdated.Date != DateTime.Now.Date)
                 return Json(false, JsonRequestBehavior.AllowGet);
 
             return Json(true, JsonRequestBehavior.AllowGet);
@@ -295,18 +295,18 @@ namespace PriceSignageSystem.Controllers
         [HttpPost]
         public ActionResult LoadPCA()
         {
-            var date = _sTRPRCRepository.GetLatestUpdate();
-            if (date.Date != DateTime.Now.Date)
+            var result = _sTRPRCRepository.GetLatestUpdate();
+            if (result.DateUpdated.Date != DateTime.Now.Date)
                 _sTRPRCRepository.UpdateSTRPRCTable(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
 
             var data = new STRPRCDto();
-            var LatestPCAData = _sTRPRCRepository.GetLatestPCAData().ToList();
+            var rawData = _sTRPRCRepository.GetDataByStartDate(result.LatestDate).ToList();
 
-            data.LatestDate = LatestPCAData[0].LatestDate;
-            data.WithInventoryList = LatestPCAData.Where(a => a.HasInventory == "Y" && a.O3SDT == data.LatestDate).ToList();
-            data.WithoutInventoryList = LatestPCAData.Where(a => a.HasInventory == "" && a.O3SDT == data.LatestDate && a.IsExemp == "N").ToList();
-            data.ExcemptionList = LatestPCAData.Where(a => a.O3SDT == data.LatestDate && a.IsExemp == "Y" ).ToList();
-            
+            data.LatestDate = result.LatestDate;
+            data.WithInventoryList = rawData.Where(a => a.HasInventory == "Y" && a.IsExemp == "N").ToList();
+            data.WithoutInventoryList = rawData.Where(a => a.HasInventory == "" && a.IsExemp == "N").ToList();
+            data.ExcemptionList = rawData.Where(a => a.IsExemp == "Y").ToList();
+
             foreach (var item in data.WithInventoryList)
             {
                 item.TypeName =  item.TypeId == 2 ? "Save"

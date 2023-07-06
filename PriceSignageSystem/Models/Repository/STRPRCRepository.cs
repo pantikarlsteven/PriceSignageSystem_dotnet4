@@ -474,13 +474,16 @@ namespace PriceSignageSystem.Models.Repository
             return data;
         }
 
-        public DateTime GetLatestUpdate()
+        public STRPRCDto GetLatestUpdate()
         {
-            var date = (from a in _db.STRPRCs
+            var data = (from a in _db.STRPRCs
                         orderby a.DateUpdated descending
-                        select a.DateUpdated).FirstOrDefault();
+                        select new STRPRCDto {
+                            DateUpdated = a.DateUpdated,
+                            LatestDate = a.O3DATE
+                        }).FirstOrDefault();
 
-            return date;
+            return data;
         }
 
         public decimal UpdateSTRPRCTable(int storeId)
