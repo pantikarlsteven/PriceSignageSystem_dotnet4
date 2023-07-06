@@ -1835,10 +1835,5 @@
             dateFormat: 'yy-mm-dd'
         });
 
-        var today = new Date();
-        var tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        var formattedDate = tomorrow.toISOString().split('T')[0];
-        $('#startDate').val(formattedDate);
     });
 </script>

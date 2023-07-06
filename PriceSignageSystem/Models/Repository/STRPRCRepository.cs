@@ -313,7 +313,8 @@ namespace PriceSignageSystem.Models.Repository
                         DepartmentName = reader["DPTNAM"].ToString(),
                         IsReverted = reader["O3FLAG1"].ToString(),
                         IsPrinted = reader["IsPrinted"].ToString(),
-                        HasInventory = reader["INV"].ToString()
+                        HasInventory = reader["INV"].ToString(),
+                        IsExemp = reader["IsExemp"].ToString()
                     };
 
                     data.Add(record);
@@ -745,7 +746,9 @@ namespace PriceSignageSystem.Models.Repository
                         IsReverted = reader["O3FLAG1"].ToString(),
                         IsPrinted = reader["IsPrinted_STRPRC"].ToString(),
                         LatestDate = (decimal)reader["LatestDate"],
-                        HasInventory = reader["INV"].ToString()
+                        HasInventory = reader["INV"].ToString(),
+                        IsExemp = reader["IsExemp"].ToString()
+
                     };
 
                     data.Add(record);

@@ -114,14 +114,15 @@ namespace PriceSignageSystem.Controllers
             var startDateFormatted = ConversionHelper.ToDecimal(startDate);
             var data = new STRPRCDto();
             var rawData = _sTRPRCRepository.GetDataByStartDate(startDateFormatted).ToList();
+
             data.WithInventoryList = rawData.Where(a => a.HasInventory == "Y").ToList();
-            data.WithoutInventoryList = rawData.Where(a => a.HasInventory == string.Empty).ToList();
-            data.ExcemptionList = rawData.Where(a => a.O3SDT == a.O3EDT).ToList();
+            data.WithoutInventoryList = rawData.Where(a => a.HasInventory == ""  && a.IsExemp == "N").ToList();
+            data.ExcemptionList = rawData.Where(a => a.IsExemp == "Y").ToList();
 
             foreach (var item in data.WithInventoryList)
             {
-                item.TypeName = startDateFormatted == item.O3SDT && item.O3EDT != 999999 ? "Save"
-                                : startDateFormatted == item.O3SDT && item.O3EDT == 999999 ? "Regular"
+                item.TypeName = item.TypeId == 2 ? "Save"
+                                : item.TypeId == 1 ? "Regular"
                                 : "Save";
                 item.SizeName = item.SizeId == 1 ? "Whole"
                                 : item.SizeId == 2 ? "Skinny"
@@ -131,14 +132,14 @@ namespace PriceSignageSystem.Controllers
                 item.CategoryName = item.CategoryId == 1 ? "Appliance"
                                     : item.CategoryId == 2 ? "Non-Appliance"
                                     : "Non-Appliance";
-                item.IsPrinted = item.IsPrinted == "1" ? "Yes" : "No";
+                item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
                 item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
             }
 
             foreach (var item in data.WithoutInventoryList)
             {
-                item.TypeName = startDateFormatted == item.O3SDT && item.O3EDT != 999999 ? "Save"
-                                : startDateFormatted == item.O3SDT && item.O3EDT == 999999 ? "Regular"
+                item.TypeName = item.TypeId == 2 ? "Save"
+                                : item.TypeId == 1 ? "Regular"
                                 : "Save";
                 item.SizeName = item.SizeId == 1 ? "Whole"
                                 : item.SizeId == 2 ? "Skinny"
@@ -148,14 +149,14 @@ namespace PriceSignageSystem.Controllers
                 item.CategoryName = item.CategoryId == 1 ? "Appliance"
                                     : item.CategoryId == 2 ? "Non-Appliance"
                                     : "Non-Appliance";
-                item.IsPrinted = item.IsPrinted == "1" ? "Yes" : "No";
+                item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
                 item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
             }
 
             foreach (var item in data.ExcemptionList)
             {
-                item.TypeName = startDateFormatted == item.O3SDT && item.O3EDT != 999999 ? "Save"
-                                : startDateFormatted == item.O3SDT && item.O3EDT == 999999 ? "Regular"
+                item.TypeName = item.TypeId == 2 ? "Save"
+                                : item.TypeId == 1 ? "Regular"
                                 : "Save";
                 item.SizeName = item.SizeId == 1 ? "Whole"
                                 : item.SizeId == 2 ? "Skinny"
@@ -165,7 +166,7 @@ namespace PriceSignageSystem.Controllers
                 item.CategoryName = item.CategoryId == 1 ? "Appliance"
                                     : item.CategoryId == 2 ? "Non-Appliance"
                                     : "Non-Appliance";
-                item.IsPrinted = item.IsPrinted == "1" ? "Yes" : "No";
+                item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
                 item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
             }
 
@@ -303,8 +304,8 @@ namespace PriceSignageSystem.Controllers
 
             data.LatestDate = LatestPCAData[0].LatestDate;
             data.WithInventoryList = LatestPCAData.Where(a => a.HasInventory == "Y" && a.O3SDT == data.LatestDate).ToList();
-            data.WithoutInventoryList = LatestPCAData.Where(a => (a.HasInventory == string.Empty && a.O3SDT == data.LatestDate) && (a.O3EDT == 999999 || a.O3EDT == 0)).ToList();
-            data.ExcemptionList = LatestPCAData.Where(a => (a.O3REG == a.O3POS && a.O3SDT == data.LatestDate) && a.O3EDT != 999999).ToList();
+            data.WithoutInventoryList = LatestPCAData.Where(a => a.HasInventory == "" && a.O3SDT == data.LatestDate && a.IsExemp == "N").ToList();
+            data.ExcemptionList = LatestPCAData.Where(a => a.O3SDT == data.LatestDate && a.IsExemp == "Y" ).ToList();
             
             foreach (var item in data.WithInventoryList)
             {

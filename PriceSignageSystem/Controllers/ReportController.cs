@@ -51,6 +51,12 @@ namespace PriceSignageSystem.Controllers
             var o3sku = decimal.Parse(id);
             var data = _sTRPRCRepository.GetReportData(o3sku);
             data.UserName = User.Identity.Name;
+
+            var textToImage = new TextToImage();
+            textToImage.GetImageWidth(data.O3FNAM, data.O3IDSC, data.SizeId);
+            data.IsSLBrand = textToImage.IsSLBrand;
+            data.IsSLDescription = textToImage.IsSLDescription;
+
             var dataTable = ConversionHelper.ConvertObjectToDataTable(data);
 
             ReportDocument report = new ReportDocument();
