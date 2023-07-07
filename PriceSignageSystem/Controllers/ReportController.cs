@@ -118,7 +118,7 @@ namespace PriceSignageSystem.Controllers
         [HttpGet]
         public ActionResult PrintPreviewSingleReport(string response)
         {
-            var isSuccess = true;
+            //var isSuccess = true;
             try
             {
                 var model = JsonConvert.DeserializeObject<ReportDto>(response);
@@ -154,39 +154,41 @@ namespace PriceSignageSystem.Controllers
 
                 report.SetDataSource(ConversionHelper.ConvertObjectToDataTable(skuModel));
 
-                //Stream stream = report.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
-                //var pdfBytes = new byte[stream.Length];
-                //stream.Read(pdfBytes, 0, pdfBytes.Length);
-                //Response.AppendHeader("Content-Disposition", "inline; filename=" + model.O3SKU.ToString() + ".pdf");
+                Stream stream = report.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                var pdfBytes = new byte[stream.Length];
+                stream.Read(pdfBytes, 0, pdfBytes.Length);
+                Response.AppendHeader("Content-Disposition", "inline; filename=" + model.O3SKU.ToString() + ".pdf");
 
-                PrinterSettings printersettings = new PrinterSettings();
-                printersettings.PrinterName = _printerName;
-                printersettings.Copies = 1;
-                printersettings.Collate = false;
-                report.PrintToPrinter(printersettings, new PageSettings(), false);
+                //PrinterSettings printersettings = new PrinterSettings();
+                //System.Drawing.Printing.PaperSize letterPaperSize = new System.Drawing.Printing.PaperSize("Letter", 850, 1100);
+                //printersettings.PrinterName = _printerName;
+                //printersettings.Copies = 1;
+                //printersettings.DefaultPageSettings.PaperSize = letterPaperSize;
+                //printersettings.Collate = false;
+                //report.PrintToPrinter(printersettings, new PageSettings(), false);
 
                 report.Close();
                 report.Dispose();
 
                 _sTRPRCRepository.UpdateSingleStatus(model.O3SKU);
 
-                //return File(pdfBytes, "application/pdf");
+                return File(pdfBytes, "application/pdf");
             }
             catch (Exception ex)
             {
                 Logs.WriteToFile(ex.Message);
-                //return Content("<h2>Error: " + ex.Message + "</h2>", "text/html");
-                isSuccess = false;
+                return Content("<h2>Error: " + ex.Message + "</h2>", "text/html");
+                //isSuccess = false;
             }
 
-            return Json(isSuccess, JsonRequestBehavior.AllowGet);
+            //return Json(isSuccess, JsonRequestBehavior.AllowGet);
 
         }
 
         [HttpGet]
         public ActionResult PrintPreviewMultipleReport(string[] selectedIds, int sizeId)
         {
-            var isSuccess = true;
+            //var isSuccess = true;
             try
             {
                 if (selectedIds != null && selectedIds.Length > 0)
@@ -225,30 +227,33 @@ namespace PriceSignageSystem.Controllers
                     report.Load(reportPath);
                     report.SetDataSource(dataTable);
 
-                    //Stream stream = report.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
-                    //var pdfBytes = new byte[stream.Length];
-                    //stream.Read(pdfBytes, 0, pdfBytes.Length);
-                    //Response.AppendHeader("Content-Disposition", "inline; filename=MultipleSKUs.pdf");
+                    Stream stream = report.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                    var pdfBytes = new byte[stream.Length];
+                    stream.Read(pdfBytes, 0, pdfBytes.Length);
+                    Response.AppendHeader("Content-Disposition", "inline; filename=MultipleSKUs.pdf");
 
-                    PrinterSettings printersettings = new PrinterSettings();
-                    printersettings.PrinterName = _printerName;
-                    printersettings.Copies = 1;
-                    printersettings.Collate = false;
-                    report.PrintToPrinter(printersettings, new PageSettings(), false);
+                    //PrinterSettings printersettings = new PrinterSettings();
+                    //printersettings.PrinterName = _printerName;
+                    //printersettings.Copies = 1;
+                    //printersettings.Collate = false;
+                    //report.PrintToPrinter(printersettings, new PageSettings(), false);
 
                     report.Close();
                     report.Dispose();
 
                     _sTRPRCRepository.UpdateMultipleStatus(o3skus);
-                    //return File(pdfBytes, "application/pdf");
+                    return File(pdfBytes, "application/pdf");
                 }
+                else
+                    throw new Exception("No Selected Id");
             }
             catch (Exception ex)
             {
-                isSuccess = false;
+                //isSuccess = false;
+                return Content("<h2>Error: " + ex.Message + "</h2>", "text/html");
             }
 
-            return Json(isSuccess, JsonRequestBehavior.AllowGet);
+            //return Json(isSuccess, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
