@@ -136,7 +136,7 @@
                                     <th>Category</th>
                                     <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
                                     <th>Reverted?</th>
-                                    <th><button class="printAllBtnWith btn btn-secondary px-3">Print Selected</button></th>
+                                    <th><button class="printAllBtnWith btn btn-secondary px-3" disabled>Print Selected</button></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -166,7 +166,7 @@
                                     <th>Category</th>
                                     <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
                                     <th>Reverted?</th>
-                                    <th><button class="printAllBtnWithout btn btn-secondary px-3">Print Selected</button></th>
+                                    <th><button class="printAllBtnWithout btn btn-secondary px-3" disabled>Print Selected</button></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -196,7 +196,7 @@
                                     <th>Category</th>
                                     <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
                                     <th>Reverted?</th>
-                                    <th><button class="printAllBtnExcemption btn btn-secondary px-3">Print Selected</button></th>
+                                    <th><button class="printAllBtnExcemption btn btn-secondary px-3" disabled>Print Selected</button></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -220,6 +220,7 @@
 </html>
 <script>
     $(document).ready(function () {
+
 
         InitLoad();
 
@@ -332,7 +333,7 @@
                     {
                         data: null,
                         render: function (data, type, row) {
-                            return '<button class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '">Print</button>';
+                            return '<button class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '" disabled>Print</button>';
                         }
                     }
                 ],
@@ -536,7 +537,7 @@
                     {
                         data: null,
                         render: function (data, type, row) {
-                            return '<button class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '">Print</button>';
+                            return '<button class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '" disabled>Print</button>';
                         }
                     }
                 ],
@@ -739,7 +740,7 @@
                     {
                         data: null,
                         render: function (data, type, row) {
-                            return '<button class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '">Print</button>';
+                            return '<button class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '" disabled>Print</button>';
                         }
                     }
                 ],
@@ -1860,7 +1861,6 @@
             }
 
         });
-
 
         $("#startDate").datepicker({
             dateFormat: 'yy-mm-dd'

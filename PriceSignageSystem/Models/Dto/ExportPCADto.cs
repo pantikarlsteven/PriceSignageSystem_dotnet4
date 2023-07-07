@@ -23,5 +23,7 @@ namespace PriceSignageSystem.Models.Dto
         public string Type { get; set; }
         public string Size { get; set; }
         public string Category { get; set; }
+        public string WithInventory { get; set; }
+        public string IsExemption { get; set; }
     }
 }

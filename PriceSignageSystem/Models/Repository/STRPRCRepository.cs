@@ -766,7 +766,7 @@ namespace PriceSignageSystem.Models.Repository
 
         }
 
-        public List<ExportPCADto> PCAToExport(string tab, decimal date)
+        public List<ExportPCADto> PCAToExport(decimal date)
         {
             var sp = "sp_ExportPCAData";
            
@@ -779,7 +779,6 @@ namespace PriceSignageSystem.Models.Repository
                 command.CommandTimeout = commandTimeoutInSeconds;
 
                 // Add parameters if required
-                command.Parameters.AddWithValue("@TabName", tab);
                 command.Parameters.AddWithValue("@SearchDate", date);
 
                 // Open the connection and execute the command
@@ -805,8 +804,10 @@ namespace PriceSignageSystem.Models.Repository
                         Size = reader["Size"].ToString(),
                         Category = reader["Category"].ToString(),
                         DepartmentName = reader["DPTNAM"].ToString(),
-                        IsReverted = reader["O3FLAG1"].ToString(),
                         IsPrinted = reader["IsPrinted_STRPRC"].ToString(),
+                        WithInventory = reader["INV"].ToString(),
+                        IsExemption = reader["IsExemp"].ToString(),
+
                     };
 
                     data.Add(record);
