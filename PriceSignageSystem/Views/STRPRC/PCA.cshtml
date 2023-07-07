@@ -46,7 +46,7 @@
     </style>
 </head>
 <body>
-    @*<iframe id="reportIframe" src="" style="display: none;"></iframe>*@
+    <iframe id="reportIframe" src="" style="display: none;"></iframe>
 
     <div class="content-wrapper bg-white px-3">
         <br />
@@ -426,44 +426,53 @@
                         $("#loadingContainer").show();
                         var sizeId = $('#sizeDropdown').val();
 
-                        //$("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "");
-                        //var reportIframe = document.getElementById("reportIframe");
-                        //if (reportIframe) {
-                        //    reportIframe.onload = function () {
-                        //        $("#loadingContainer").hide();
+                        $("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "");
+                        var reportIframe = document.getElementById("reportIframe");
+                        if (reportIframe) {
+                            $('.rowCheckboxWith:checked').each(function () {
+                                var row = $(this).closest('tr');
+                                var table = row.closest('table');
+                                var rowIndex = table.DataTable().row(row).index();
+                                var specificRow = $('#with-inventory-table tbody tr:eq(' + rowIndex + ')');
+                                specificRow.find('td:eq(2)').text("Yes");
+                                specificRow.find('td:eq(2)').css('color', 'green');
 
-                        //        reportIframe.contentWindow.print();
-                        //    };
-                        //    reportIframe.src = $("#reportIframe").attr("src");
-                        //}
-                        //$('#modalView').modal('hide');
-                        //$('input[type="checkbox"]').prop('checked', false);
-
-                        var url = "/Report/PrintPreviewMultipleReport?selectedIds=" + encodeURIComponent(selectedRows.join(',')) + "&sizeId=" + sizeId + "";
-                        $.ajax({
-                            url: url,
-                            type: 'GET',
-                            data: { selectedIds: selectedRows, sizeId: sizeId },
-                            success: function (data) {
-                                if (!data)
-                                    alert("Error in printing.");
-                                else {
-                                    $('.rowCheckboxWith:checked').each(function () {
-                                        var row = $(this).closest('tr');
-                                        var table = row.closest('table');
-                                        var rowIndex = table.DataTable().row(row).index();
-                                        var specificRow = $('#with-inventory-table tbody tr:eq(' + rowIndex + ')');
-                                        specificRow.find('td:eq(2)').text("Yes");
-                                        specificRow.find('td:eq(2)').css('color', 'green');
-
-                                    });
-                                }
-
+                            });
+                            reportIframe.onload = function () {
                                 $("#loadingContainer").hide();
-                                $('#modalView').modal('hide');
-                                $('input[type="checkbox"]').prop('checked', false);
-                            }
-                        });
+
+                                reportIframe.contentWindow.print();
+                            };
+                            reportIframe.src = $("#reportIframe").attr("src");
+                        }
+                        $('#modalView').modal('hide');
+                        $('input[type="checkbox"]').prop('checked', false);
+
+                        //var url = "/Report/PrintPreviewMultipleReport?selectedIds=" + encodeURIComponent(selectedRows.join(',')) + "&sizeId=" + sizeId + "";
+                        //$.ajax({
+                        //    url: url,
+                        //    type: 'GET',
+                        //    data: { selectedIds: selectedRows, sizeId: sizeId },
+                        //    success: function (data) {
+                        //        if (!data)
+                        //            alert("Error in printing.");
+                        //        else {
+                        //            $('.rowCheckboxWith:checked').each(function () {
+                        //                var row = $(this).closest('tr');
+                        //                var table = row.closest('table');
+                        //                var rowIndex = table.DataTable().row(row).index();
+                        //                var specificRow = $('#with-inventory-table tbody tr:eq(' + rowIndex + ')');
+                        //                specificRow.find('td:eq(2)').text("Yes");
+                        //                specificRow.find('td:eq(2)').css('color', 'green');
+
+                        //            });
+                        //        }
+
+                        //        $("#loadingContainer").hide();
+                        //        $('#modalView').modal('hide');
+                        //        $('input[type="checkbox"]').prop('checked', false);
+                        //    }
+                        //});
 
                     });
 
@@ -619,43 +628,52 @@
                         $("#loadingContainer").show();
                         var sizeId = $('#sizeDropdown').val();
 
-                        //$("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "");
-                        //var reportIframe = document.getElementById("reportIframe");
-                        //if (reportIframe) {
-                        //    reportIframe.onload = function () {
-                        //        $("#loadingContainer").hide();
-                        //        reportIframe.contentWindow.print();
-                        //    };
-                        //    reportIframe.src = $("#reportIframe").attr("src");
-                        //}
-                        //$('#modalView').modal('hide');
-                        //$('input[type="checkbox"]').prop('checked', false);
+                        $("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "");
+                        var reportIframe = document.getElementById("reportIframe");
+                        if (reportIframe) {
+                            $('.rowCheckboxWith:checked').each(function () {
+                                var row = $(this).closest('tr');
+                                var table = row.closest('table');
+                                var rowIndex = table.DataTable().row(row).index();
+                                var specificRow = $('#with-inventory-table tbody tr:eq(' + rowIndex + ')');
+                                specificRow.find('td:eq(2)').text("Yes");
+                                specificRow.find('td:eq(2)').css('color', 'green');
 
-                        var url = "/Report/PrintPreviewMultipleReport?selectedIds=" + encodeURIComponent(selectedRows.join(',')) + "&sizeId=" + sizeId + "";
-                        $.ajax({
-                            url: url,
-                            type: 'GET',
-                            data: { selectedIds: selectedRows, sizeId: sizeId },
-                            success: function (data) {
-                                if (!data)
-                                    alert("Error in printing.");
-                                else {
-                                    $('.rowCheckboxWithout:checked').each(function () {
-                                        var row = $(this).closest('tr');
-                                        var table = row.closest('table');
-                                        var rowIndex = table.DataTable().row(row).index();
-                                        var specificRow = $('#without-inventory-table tbody tr:eq(' + rowIndex + ')');
-                                        specificRow.find('td:eq(2)').text("Yes");
-                                        specificRow.find('td:eq(2)').css('color', 'green');
-
-                                    });
-                                }
-
+                            });
+                            reportIframe.onload = function () {
                                 $("#loadingContainer").hide();
-                                $('#modalView').modal('hide');
-                                $('input[type="checkbox"]').prop('checked', false);
-                            }
-                        });
+                                reportIframe.contentWindow.print();
+                            };
+                            reportIframe.src = $("#reportIframe").attr("src");
+                        }
+                        $('#modalView').modal('hide');
+                        $('input[type="checkbox"]').prop('checked', false);
+
+                        //var url = "/Report/PrintPreviewMultipleReport?selectedIds=" + encodeURIComponent(selectedRows.join(',')) + "&sizeId=" + sizeId + "";
+                        //$.ajax({
+                        //    url: url,
+                        //    type: 'GET',
+                        //    data: { selectedIds: selectedRows, sizeId: sizeId },
+                        //    success: function (data) {
+                        //        if (!data)
+                        //            alert("Error in printing.");
+                        //        else {
+                        //            $('.rowCheckboxWithout:checked').each(function () {
+                        //                var row = $(this).closest('tr');
+                        //                var table = row.closest('table');
+                        //                var rowIndex = table.DataTable().row(row).index();
+                        //                var specificRow = $('#without-inventory-table tbody tr:eq(' + rowIndex + ')');
+                        //                specificRow.find('td:eq(2)').text("Yes");
+                        //                specificRow.find('td:eq(2)').css('color', 'green');
+
+                        //            });
+                        //        }
+
+                        //        $("#loadingContainer").hide();
+                        //        $('#modalView').modal('hide');
+                        //        $('input[type="checkbox"]').prop('checked', false);
+                        //    }
+                        //});
 
                     });
                     //End for print preview multiple report
@@ -814,43 +832,53 @@
                         $("#loadingContainer").show();
                         var sizeId = $('#sizeDropdown').val();
 
-                        //$("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "");
+                        $("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "");
 
-                        //var reportIframe = document.getElementById("reportIframe");
-                        //if (reportIframe) {
-                        //    reportIframe.onload = function () {
-                        //        reportIframe.contentWindow.print();
-                        //    };
-                        //    reportIframe.src = $("#reportIframe").attr("src");
-                        //}
-                        //$('#modalView').modal('hide');
-                        //$('input[type="checkbox"]').prop('checked', false);
+                        var reportIframe = document.getElementById("reportIframe");
+                        if (reportIframe) {
+                            $('.rowCheckboxWith:checked').each(function () {
+                                var row = $(this).closest('tr');
+                                var table = row.closest('table');
+                                var rowIndex = table.DataTable().row(row).index();
+                                var specificRow = $('#with-inventory-table tbody tr:eq(' + rowIndex + ')');
+                                specificRow.find('td:eq(2)').text("Yes");
+                                specificRow.find('td:eq(2)').css('color', 'green');
 
-                        var url = "/Report/PrintPreviewMultipleReport?selectedIds=" + encodeURIComponent(selectedRows.join(',')) + "&sizeId=" + sizeId + "";
-                        $.ajax({
-                            url: url,
-                            type: 'GET',
-                            data: { selectedIds: selectedRows, sizeId: sizeId },
-                            success: function (data) {
-                                if (!data)
-                                    alert("Error in printing.");
-                                else {
-                                    $('.rowCheckboxExcemption:checked').each(function () {
-                                        var row = $(this).closest('tr');
-                                        var table = row.closest('table');
-                                        var rowIndex = table.DataTable().row(row).index();
-                                        var specificRow = $('#excemption-table tbody tr:eq(' + rowIndex + ')');
-                                        specificRow.find('td:eq(2)').text("Yes");
-                                        specificRow.find('td:eq(2)').css('color', 'green');
-
-                                    });
-                                }
-
+                            });
+                            reportIframe.onload = function () {
                                 $("#loadingContainer").hide();
-                                $('#modalView').modal('hide');
-                                $('input[type="checkbox"]').prop('checked', false);
-                            }
-                        });
+                                reportIframe.contentWindow.print();
+                            };
+                            reportIframe.src = $("#reportIframe").attr("src");
+                        }
+                        $('#modalView').modal('hide');
+                        $('input[type="checkbox"]').prop('checked', false);
+
+                        //var url = "/Report/PrintPreviewMultipleReport?selectedIds=" + encodeURIComponent(selectedRows.join(',')) + "&sizeId=" + sizeId + "";
+                        //$.ajax({
+                        //    url: url,
+                        //    type: 'GET',
+                        //    data: { selectedIds: selectedRows, sizeId: sizeId },
+                        //    success: function (data) {
+                        //        if (!data)
+                        //            alert("Error in printing.");
+                        //        else {
+                        //            $('.rowCheckboxExcemption:checked').each(function () {
+                        //                var row = $(this).closest('tr');
+                        //                var table = row.closest('table');
+                        //                var rowIndex = table.DataTable().row(row).index();
+                        //                var specificRow = $('#excemption-table tbody tr:eq(' + rowIndex + ')');
+                        //                specificRow.find('td:eq(2)').text("Yes");
+                        //                specificRow.find('td:eq(2)').css('color', 'green');
+
+                        //            });
+                        //        }
+
+                        //        $("#loadingContainer").hide();
+                        //        $('#modalView').modal('hide');
+                        //        $('input[type="checkbox"]').prop('checked', false);
+                        //    }
+                        //});
 
                     });
 
@@ -1056,20 +1084,21 @@
                             response.O3LONG = "";
                             response.O3FNAM = "";
                             response.O3MODL = "";
-                            //$("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(response));
-                            //var reportIframe = document.getElementById("reportIframe");
-                            //if (reportIframe) {
-                            //    reportIframe.onload = function () {
-                            //        reportIframe.contentWindow.print();
-                            //    };
-                            //    reportIframe.src = $("#reportIframe").attr("src");
-                            //}
-                            //$('#modalView').modal('hide');
-                            //var cell = tableWith.cell({ row: 0, column: 2 });
-                            //cell.data('Yes');
-                            //tableWith.draw();
+                            $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(response));
+                            var reportIframe = document.getElementById("reportIframe");
+                            if (reportIframe) {
+                                reportIframe.onload = function () {
+                                    $("#loadingContainer").hide();
+                                    reportIframe.contentWindow.print();
+                                };
+                                reportIframe.src = $("#reportIframe").attr("src");
+                            }
+                            $('#modalView').modal('hide');
+                            var cell = tableWith.cell({ row: 0, column: 2 });
+                            cell.data('Yes');
+                            tableWith.draw();
 
-                            $.ajax({
+                            @*$.ajax({
                                 url: '@Url.Action("PrintPreviewSingleReport", "Report")',
                                 type: 'GET',
                                 data: { response: JSON.stringify(response)},
@@ -1085,7 +1114,7 @@
                                     $("#loadingContainer").hide();
                                     $('#modalView').modal('hide');
                                 }
-                            });
+                            });*@
                         });
                         //End for print preview single report
                 }
@@ -1195,20 +1224,21 @@
                             response.O3LONG = "";
                             response.O3FNAM = "";
                             response.O3MODL = "";
-                            //$("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(response));
-                            //var reportIframe = document.getElementById("reportIframe");
-                            //if (reportIframe) {
-                            //    reportIframe.onload = function () {
-                            //        reportIframe.contentWindow.print();
-                            //    };
-                            //    reportIframe.src = $("#reportIframe").attr("src");
-                            //}
-                            //$('#modalView').modal('hide');
-                            //var cell = tableWithout.cell({ row: 0, column: 2 });
-                            //cell.data('Yes');
-                            //tableWithout.draw();
+                            $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(response));
+                            var reportIframe = document.getElementById("reportIframe");
+                            if (reportIframe) {
+                                reportIframe.onload = function () {
+                                    $("#loadingContainer").hide();
+                                    reportIframe.contentWindow.print();
+                                };
+                                reportIframe.src = $("#reportIframe").attr("src");
+                            }
+                            $('#modalView').modal('hide');
+                            var cell = tableWithout.cell({ row: 0, column: 2 });
+                            cell.data('Yes');
+                            tableWithout.draw();
 
-                             $.ajax({
+                             @*$.ajax({
                                 url: '@Url.Action("PrintPreviewSingleReport", "Report")',
                                 type: 'GET',
                                 data: { response: JSON.stringify(response)},
@@ -1224,7 +1254,7 @@
                                     $("#loadingContainer").hide();
                                     $('#modalView').modal('hide');
                                 }
-                            });
+                            });*@
                         });
                         //End for print preview single report
                 }
@@ -1335,20 +1365,21 @@
                             response.O3LONG = "";
                             response.O3FNAM = "";
                             response.O3MODL = "";
-                            //$("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(response));
-                            //var reportIframe = document.getElementById("reportIframe");
-                            //if (reportIframe) {
-                            //    reportIframe.onload = function () {
-                            //        reportIframe.contentWindow.print();
-                            //    };
-                            //    reportIframe.src = $("#reportIframe").attr("src");
-                            //}
-                            //$('#modalView').modal('hide');
-                            //var cell = tableExcemption.cell({ row: 0, column: 2 });
-                            //cell.data('Yes');
-                            //tableExcemption.draw();
+                            $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(response));
+                            var reportIframe = document.getElementById("reportIframe");
+                            if (reportIframe) {
+                                reportIframe.onload = function () {
+                                    $("#loadingContainer").hide();
+                                    reportIframe.contentWindow.print();
+                                };
+                                reportIframe.src = $("#reportIframe").attr("src");
+                            }
+                            $('#modalView').modal('hide');
+                            var cell = tableExcemption.cell({ row: 0, column: 2 });
+                            cell.data('Yes');
+                            tableExcemption.draw();
 
-                             $.ajax({
+                             @*$.ajax({
                                 url: '@Url.Action("PrintPreviewSingleReport", "Report")',
                                 type: 'GET',
                                 data: { response: JSON.stringify(response)},
@@ -1364,7 +1395,7 @@
                                     $("#loadingContainer").hide();
                                     $('#modalView').modal('hide');
                                 }
-                            });
+                            });*@
                         });
                         //End for print preview single report
                 }
