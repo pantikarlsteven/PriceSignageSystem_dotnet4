@@ -349,7 +349,12 @@
     <Compile Include="Migrations\202306220132277_remove_idSTRPRC.designer.cs">
       <DependentUpon>202306220132277_remove_idSTRPRC.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202307070755032_add_InventoryPrintingLogTbl.cs" />
+    <Compile Include="Migrations\202307070755032_add_InventoryPrintingLogTbl.designer.cs">
+      <DependentUpon>202307070755032_add_InventoryPrintingLogTbl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\InventoryPrintingLog.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Constants\ReportConstants.cs" />
     <Compile Include="Models\Constants\UserStatusConstants.cs" />
@@ -544,6 +549,9 @@
     <Content Include="Reports\CrystalReports\Dynamic_OneEightReport.rpt" />
     <Content Include="Reports\CrystalReports\Dynamic_SkinnyReport.rpt" />
     <Content Include="Reports\CrystalReports\Dynamic_WholeReport.rpt" />
+    <EmbeddedResource Include="Migrations\202307070755032_add_InventoryPrintingLogTbl.resx">
+      <DependentUpon>202307070755032_add_InventoryPrintingLogTbl.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
