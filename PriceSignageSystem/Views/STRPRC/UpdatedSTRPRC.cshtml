@@ -28,7 +28,7 @@
 </head>
 
 <body>
-    @*<iframe id="reportIframe" src="" style="display: none;"></iframe>*@ @*For printing preview*@
+    <iframe id="reportIframe" src="" style="display: none;"></iframe> @*For printing preview*@
 
     <div class="content-wrapper bg-white px-3">
         <br />
@@ -349,146 +349,7 @@
                 });
 
 
-                $('#selectAll').on('change', function () {
-                    var isChecked = $(this).is(':checked');
-                    $('.rowCheckbox').prop('checked', isChecked);
-                });
-
-                $('.printAllBtn').on('click', function () {
-
-                    var selectedRows = [];
-                    $('.rowCheckbox:checked').each(function () {
-                        var rowId = $(this).data('id');
-                        selectedRows.push(rowId);
-                    });
-
-                    if (selectedRows.length > 0) {
-                        console.log('Selected Row IDs:', selectedRows);
-
-                        // Build the HTML for the dropdowns
-                        var dropdownHtml = '<div class="form-row">' +
-                            '<div class="form-group row col-12">' +
-                            '<label class="col-sm-2 col-form-label" for="sizeDropdown">Size:</label>' +
-                            '<select class="col-sm-9  ml-3 form-control" id="sizeDropdown">' +
-                            '<option value="1">Whole</option>' +
-                            '<option value="2">Skinny</option>' +
-                            '<option value="3">1/8</option>' +
-                            '<option value="4">Jewelry</option>' +
-                            '</select>' +
-                            '</div>' +
-                            '</div>';
-                        // Build the HTML for the print button
-                        var buttonHtml = '<button id="printSelectedButton" class="btn btn-primary">Print</button>' +
-                            '<button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancel</button>';
-
-                        // Create the modal content
-                        var modalContent = '<div class="modal-dialog modal-sm modal-dialog-centered">' +
-                            '<div class="modal-content">' +
-                            '<div class="modal-header">' +
-                            '<h5 class="modal-title">Print Report</h5>' +
-                            '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
-                            '<span aria-hidden="true">&times;</span>' +
-                            '</button>' +
-                            '</div>' +
-                            '<div class="modal-body">' +
-                            dropdownHtml +
-                            '</div>' +
-                            '<div class="modal-footer">' +
-                            buttonHtml +
-                            '</div>' +
-                            '</div>' +
-                            '</div>';
-                        // Remove any existing modals
-                        $('#modalView').remove();
-
-                        // Append the modal to the body
-                        $('body').append('<div id="modalView" class="modal">' + modalContent + '</div>');
-
-                        // Show the modal with fade-in effect from top
-                        $('#modalView').modal({
-                            show: true,
-                            backdrop: false,
-                            keyboard: false
-                        });
-
-                        // Set default values for the dropdowns
-                        $('#sizeDropdown').val(2); // Skinny
-
-
-                        //Start for print preview multiple report
-                        // PRINT MULTIPLE
-                        $('#printSelectedButton').click(function () {
-                            $("#loadingContainer").show();
-                            var sizeId = $('#sizeDropdown').val();
-
-                            //$("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "");
-
-                            //var reportIframe = document.getElementById("reportIframe");
-                            //if (reportIframe) {
-                            //    reportIframe.onload = function () {
-                            //        reportIframe.contentWindow.print();
-                            //        $("#loadingContainer").hide();
-                            //    };
-                            //    reportIframe.src = $("#reportIframe").attr("src");
-                            //}
-                            //$('#modalView').modal('hide');
-                            //$('input[type="checkbox"]').prop('checked', false);
-                            var url = "/Report/PrintPreviewMultipleReport?selectedIds=" + encodeURIComponent(selectedRows.join(',')) + "&sizeId=" + sizeId + "";
-                            $.ajax({
-                                url: url,
-                                type: 'GET',
-                                data: { selectedIds: selectedRows, sizeId: sizeId},
-                                success: function (data) {
-                                    if (!data)
-                                        alert("Error in printing.");
-                                    else {
-                                        $('.rowCheckbox:checked').each(function () {
-                                            var row = $(this).closest('tr');
-                                            var table = row.closest('table');
-                                            var rowIndex = table.DataTable().row(row).index();
-                                            var specificRow = $('#dataTable tbody tr:eq(' + rowIndex + ')');
-                                            specificRow.find('td:eq(2)').text("Yes");
-                                            specificRow.find('td:eq(2)').css('color', 'green');
-
-                                        });
-                                    }
-
-                                    $("#loadingContainer").hide();
-                                    $('#modalView').modal('hide');
-                                    $('input[type="checkbox"]').prop('checked', false);
-                                }
-                            });
-
-                        });
-                        //End for print preview multiple report
-
-                    } else {
-                        alert('Please select items to print.');
-                    }
-                });
-
-                // Add event listener for opening and closing details
-                $('#dataTable tbody').on('click', 'td.details-control', function () {
-
-                    var tr = $(this).closest('tr');
-                    var tdi = tr.find("i.fa-solid");
-                    var row = table.row(tr);
-
-                    if (row.child.isShown()) {
-                        // This row is already open - close it
-                        row.child.hide();
-                        tr.removeClass('shown');
-                        tdi.first().removeClass('fa-solid fa-square-caret-up');
-                        tdi.first().addClass('fa-solid fa-square-caret-down');
-                    }
-                    else {
-                        // Open this row
-                        row.child(format(row.data())).show();
-                        tr.addClass('shown');
-                        tdi.first().removeClass('fa-solid fa-square-caret-down');
-                        tdi.first().addClass('fa-solid fa-square-caret-up');
-                    }
-                });
+                
             }
         }
 
@@ -518,6 +379,157 @@
                         data[i].DateUpdated = date.toLocaleDateString(undefined, options);
                     }
                     GetDataTable(data.filter(row => row.Inv == 'Y'));
+                    $('#selectAll').on('change', function () {
+                        var isChecked = $(this).is(':checked');
+                        $('.rowCheckbox').prop('checked', isChecked);
+                    });
+
+                    $('.printAllBtn').on('click', function () {
+
+                        var selectedRows = [];
+                        $('.rowCheckbox:checked').each(function () {
+                            var rowId = $(this).data('id');
+                            selectedRows.push(rowId);
+                        });
+
+                        if (selectedRows.length > 0) {
+                            console.log('Selected Row IDs:', selectedRows);
+
+                            // Build the HTML for the dropdowns
+                            var dropdownHtml = '<div class="form-row">' +
+                                '<div class="form-group row col-12">' +
+                                '<label class="col-sm-2 col-form-label" for="sizeDropdown">Size:</label>' +
+                                '<select class="col-sm-9  ml-3 form-control" id="sizeDropdown">' +
+                                '<option value="1">Whole</option>' +
+                                '<option value="2">Skinny</option>' +
+                                '<option value="3">1/8</option>' +
+                                '<option value="4">Jewelry</option>' +
+                                '</select>' +
+                                '</div>' +
+                                '</div>';
+                            // Build the HTML for the print button
+                            var buttonHtml = '<button id="printSelectedButton" class="btn btn-primary">Print</button>' +
+                                '<button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancel</button>';
+
+                            // Create the modal content
+                            var modalContent = '<div class="modal-dialog modal-sm modal-dialog-centered">' +
+                                '<div class="modal-content">' +
+                                '<div class="modal-header">' +
+                                '<h5 class="modal-title">Print Report</h5>' +
+                                '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
+                                '<span aria-hidden="true">&times;</span>' +
+                                '</button>' +
+                                '</div>' +
+                                '<div class="modal-body">' +
+                                dropdownHtml +
+                                '</div>' +
+                                '<div class="modal-footer">' +
+                                buttonHtml +
+                                '</div>' +
+                                '</div>' +
+                                '</div>';
+                            // Remove any existing modals
+                            $('#modalView').remove();
+
+                            // Append the modal to the body
+                            $('body').append('<div id="modalView" class="modal">' + modalContent + '</div>');
+
+                            // Show the modal with fade-in effect from top
+                            $('#modalView').modal({
+                                show: true,
+                                backdrop: false,
+                                keyboard: false
+                            });
+
+                            // Set default values for the dropdowns
+                            $('#sizeDropdown').val(2); // Skinny
+
+
+                            //Start for print preview multiple report
+                            // PRINT MULTIPLE
+                            $('#printSelectedButton').click(function () {
+                                $("#loadingContainer").show();
+                                var sizeId = $('#sizeDropdown').val();
+
+                                $("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "");
+
+                                var reportIframe = document.getElementById("reportIframe");
+                                if (reportIframe) {
+                                    $('.rowCheckbox:checked').each(function () {
+                                        var rowId = $(this).data('id');
+                                        selectedRows.push(rowId);
+                                        var row = $(this).closest('tr');
+                                        var table = row.closest('table');
+                                        var rowIndex = table.DataTable().row(row).index();
+                                        var specificRow = $('#dataTable tbody tr:eq(' + rowIndex + ')');
+                                        specificRow.find('td:eq(2)').text("Yes");
+                                        specificRow.find('td:eq(2)').css('color', 'green');
+                                    });
+                                    reportIframe.onload = function () {
+                                        reportIframe.contentWindow.print();
+                                        $("#loadingContainer").hide();
+                                    };
+                                    reportIframe.src = $("#reportIframe").attr("src");
+                                }
+                                $('#modalView').modal('hide');
+                                $('input[type="checkbox"]').prop('checked', false);
+
+                                //var url = "/Report/PrintPreviewMultipleReport?selectedIds=" + encodeURIComponent(selectedRows.join(',')) + "&sizeId=" + sizeId + "";
+                                //$.ajax({
+                                //    url: url,
+                                //    type: 'GET',
+                                //    data: { selectedIds: selectedRows, sizeId: sizeId},
+                                //    success: function (data) {
+                                //        if (!data)
+                                //            alert("Error in printing.");
+                                //        else {
+                                //            $('.rowCheckbox:checked').each(function () {
+                                //                var row = $(this).closest('tr');
+                                //                var table = row.closest('table');
+                                //                var rowIndex = table.DataTable().row(row).index();
+                                //                var specificRow = $('#dataTable tbody tr:eq(' + rowIndex + ')');
+                                //                specificRow.find('td:eq(2)').text("Yes");
+                                //                specificRow.find('td:eq(2)').css('color', 'green');
+
+                                //            });
+                                //        }
+
+                                //        $("#loadingContainer").hide();
+                                //        $('#modalView').modal('hide');
+                                //        $('input[type="checkbox"]').prop('checked', false);
+                                //    }
+                                //});
+
+                            });
+                            //End for print preview multiple report
+
+                        } else {
+                            alert('Please select items to print.');
+                        }
+                    });
+
+                    // Add event listener for opening and closing details
+                    $('#dataTable tbody').on('click', 'td.details-control', function () {
+
+                        var tr = $(this).closest('tr');
+                        var tdi = tr.find("i.fa-solid");
+                        var row = table.row(tr);
+
+                        if (row.child.isShown()) {
+                            // This row is already open - close it
+                            row.child.hide();
+                            tr.removeClass('shown');
+                            tdi.first().removeClass('fa-solid fa-square-caret-up');
+                            tdi.first().addClass('fa-solid fa-square-caret-down');
+                        }
+                        else {
+                            // Open this row
+                            row.child(format(row.data())).show();
+                            tr.addClass('shown');
+                            tdi.first().removeClass('fa-solid fa-square-caret-down');
+                            tdi.first().addClass('fa-solid fa-square-caret-up');
+                        }
+                    });
                 }
             });
         }
@@ -633,17 +645,22 @@
                             response.O3FNAM = "";
                             response.O3MODL = "";
 
-                            //$("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(response));
-                            //var reportIframe = document.getElementById("reportIframe");
-                            //if (reportIframe) {
-                            //    reportIframe.onload = function () {
-                            //        reportIframe.contentWindow.print();
-                            //        $("#loadingContainer").hide();
-                            //    };
-                            //    reportIframe.src = $("#reportIframe").attr("src");
-                            //}
+                            $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(response));
+                            var reportIframe = document.getElementById("reportIframe");
+                            if (reportIframe) {
+                                reportIframe.onload = function () {
+                                    reportIframe.contentWindow.print();
+                                    $("#loadingContainer").hide();
+                                    var specificRow = $('#dataTable tbody tr:eq(' + rowIndex + ')');
+                                    specificRow.find('td:eq(2)').text("Yes");
+                                    specificRow.find('td:eq(2)').css('color', 'green');
+                                };
+                                reportIframe.src = $("#reportIframe").attr("src");
+                            }
 
-                            $.ajax({
+                            $('#modalView').modal('hide');
+
+                            @*$.ajax({
                                 url: '@Url.Action("PrintPreviewSingleReport", "Report")',
                                 type: 'GET',
                                 data: { response: JSON.stringify(response)},
@@ -659,7 +676,7 @@
                                     $("#loadingContainer").hide();
                                     $('#modalView').modal('hide');
                                 }
-                            });
+                            });*@
 
                         });
                         //End for print preview single report
