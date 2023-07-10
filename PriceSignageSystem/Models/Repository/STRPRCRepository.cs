@@ -668,6 +668,20 @@ namespace PriceSignageSystem.Models.Repository
 
         }
 
+        public void AddMultipleInventoryPrintingLog(List<decimal> o3skus, string user)
+        {
+            foreach (var item in o3skus)
+            {
+                _db.InventoryPrintingLogs.Add(new InventoryPrintingLog()
+                {
+                    O3SKU = item,
+                    PrintedBy = user,
+                    DateCreated = DateTime.Now
+                });
+            }
+            _db.SaveChanges();
+        }
+
         public void UpdateSingleStatus(decimal O3SKU)
         {
             var data = _db.STRPRCs.Where(a => a.O3SKU == O3SKU).FirstOrDefault();
@@ -680,6 +694,18 @@ namespace PriceSignageSystem.Models.Repository
                 log.IsPrinted = true;
             }
 
+            _db.SaveChanges();
+        }
+
+        public void AddInventoryPrintingLog(decimal O3SKU, string user)
+        {
+
+            var data = new InventoryPrintingLog() {
+                O3SKU = O3SKU,
+                PrintedBy = user,
+                DateCreated = DateTime.Now
+            };
+            _db.InventoryPrintingLogs.Add(data);
             _db.SaveChanges();
         }
 

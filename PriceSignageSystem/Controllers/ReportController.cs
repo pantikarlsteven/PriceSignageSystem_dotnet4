@@ -171,6 +171,7 @@ namespace PriceSignageSystem.Controllers
                 report.Dispose();
 
                 _sTRPRCRepository.UpdateSingleStatus(model.O3SKU);
+                _sTRPRCRepository.AddInventoryPrintingLog(model.O3SKU, User.Identity.Name);
 
                 return File(pdfBytes, "application/pdf");
             }
@@ -242,6 +243,8 @@ namespace PriceSignageSystem.Controllers
                     report.Dispose();
 
                     _sTRPRCRepository.UpdateMultipleStatus(o3skus);
+                    _sTRPRCRepository.AddMultipleInventoryPrintingLog(o3skus, User.Identity.Name);
+
                     return File(pdfBytes, "application/pdf");
                 }
                 else
