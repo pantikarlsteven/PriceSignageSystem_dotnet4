@@ -24,7 +24,9 @@ namespace PriceSignageSystem.Models.Interface
         List<ReportDto> GetReportDataList(List<decimal> O3SKU);
         void UpdateSelection(decimal startDate, decimal endDate);
         void UpdateMultipleStatus(List<decimal> o3skus);
+        void AddMultipleInventoryPrintingLog(List<decimal> o3skus, string user);
         void UpdateSingleStatus(decimal O3SKU);
+        void AddInventoryPrintingLog(decimal O3SKU, string user);
         List<STRPRCDto> GetLatestPCAData();
         List<ExportPCADto> PCAToExport();
     }
