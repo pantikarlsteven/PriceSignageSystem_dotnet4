@@ -367,11 +367,11 @@ namespace PriceSignageSystem.Controllers
 
             if(tab == "WithInventory")
             {
-                toExportRawData = toExportRawData.Where(a => a.WithInventory == "Y" && a.IsExemption == "No").ToList();
+                toExportRawData = toExportRawData.Where(a => a.WithInventory == "Yes" && a.IsExemption == "No").ToList();
             }
             else if (tab == "WithoutInventory")
             {
-                toExportRawData = toExportRawData.Where(a => a.WithInventory == "" && a.IsExemption == "No").ToList();
+                toExportRawData = toExportRawData.Where(a => a.WithInventory == "No" && a.IsExemption == "No").ToList();
             }
             else
             {

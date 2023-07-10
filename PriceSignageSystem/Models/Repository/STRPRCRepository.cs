@@ -248,7 +248,7 @@ namespace PriceSignageSystem.Models.Repository
 
         public List<STRPRCDto> GetDataByStartDate(decimal startDate)
         {
-            var sp = "sp_GettmpDataTest";
+            var sp = "sp_GettmpData";
             var data = new List<STRPRCDto>();
             var store = int.Parse(ConfigurationManager.AppSettings["StoreID"]);
             // Set up the connection and command
@@ -831,7 +831,7 @@ namespace PriceSignageSystem.Models.Repository
                         Category = reader["Category"].ToString(),
                         DepartmentName = reader["DPTNAM"].ToString(),
                         IsPrinted = reader["IsPrintedYN"].ToString(),
-                        WithInventory = reader["INV"].ToString(),
+                        WithInventory = reader["INVYN"].ToString(),
                         IsExemption = reader["IsExemp"].ToString(),
 
                     };
