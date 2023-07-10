@@ -252,8 +252,6 @@ namespace PriceSignageSystem.Controllers
                 Logs.WriteToFile(ex.InnerException.StackTrace);
                 Logs.WriteToFile(ex.InnerException.Source);
 
-
-
                 //return Content("<h2>Error: " + ex.Message + "</h2>", "text/html");
             }
         }
