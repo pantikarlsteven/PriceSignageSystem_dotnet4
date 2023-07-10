@@ -365,26 +365,20 @@ namespace PriceSignageSystem.Controllers
         public FileResult ExportDataTableToExcel(string tab, DateTime date)
         {
             var decimalDate = ConversionHelper.ToDecimal(date);
-            var toExportRawData = _sTRPRCRepository.PCAToExport(decimalDate).ToList();
+            var toExportRawData = _sTRPRCRepository.PCAToExport().ToList();
 
             if(tab == "WithInventory")
             {
-                toExportRawData = toExportRawData.Where(a => a.WithInventory == "Y" && a.IsExemption == "N").ToList();
+                toExportRawData = toExportRawData.Where(a => a.WithInventory == "Y" && a.IsExemption == "No").ToList();
             }
             else if (tab == "WithoutInventory")
             {
-                toExportRawData = toExportRawData.Where(a => a.WithInventory == "" && a.IsExemption == "N").ToList();
+                toExportRawData = toExportRawData.Where(a => a.WithInventory == "" && a.IsExemption == "No").ToList();
             }
             else
             {
-                toExportRawData = toExportRawData.Where(a => a.IsExemption == "Y").ToList();
+                toExportRawData = toExportRawData.Where(a => a.IsExemption == "Yes").ToList();
 
-            }
-
-            foreach (var item in toExportRawData)
-            {
-                item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
-                item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
             }
 
             var dataTable = ConversionHelper.ConvertListToDataTable(toExportRawData);

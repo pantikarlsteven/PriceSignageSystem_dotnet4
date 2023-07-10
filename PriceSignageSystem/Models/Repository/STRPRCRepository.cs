@@ -248,7 +248,7 @@ namespace PriceSignageSystem.Models.Repository
 
         public List<STRPRCDto> GetDataByStartDate(decimal startDate)
         {
-            var sp = "sp_GettmpData";
+            var sp = "sp_GettmpDataTest";
             var data = new List<STRPRCDto>();
             var store = int.Parse(ConfigurationManager.AppSettings["StoreID"]);
             // Set up the connection and command
@@ -766,7 +766,7 @@ namespace PriceSignageSystem.Models.Repository
 
         }
 
-        public List<ExportPCADto> PCAToExport(decimal date)
+        public List<ExportPCADto> PCAToExport()
         {
             var sp = "sp_ExportPCAData";
            
@@ -779,7 +779,7 @@ namespace PriceSignageSystem.Models.Repository
                 command.CommandTimeout = commandTimeoutInSeconds;
 
                 // Add parameters if required
-                command.Parameters.AddWithValue("@SearchDate", date);
+                //command.Parameters.AddWithValue("@SearchDate", date);
 
                 // Open the connection and execute the command
                 connection.Open();
@@ -790,7 +790,6 @@ namespace PriceSignageSystem.Models.Repository
                 {
                     var record = new ExportPCADto
                     {
-                        ItemDesc = reader["O3IDSC"].ToString(),
                         SKU = (decimal)reader["O3SKU"],
                         UPC = (decimal)reader["O3UPC"],
                         CurrentPrice = (decimal)reader["O3POS"],
@@ -800,11 +799,12 @@ namespace PriceSignageSystem.Models.Repository
                         Brand = reader["O3FNAM"].ToString(),
                         Model = reader["O3MODL"].ToString(),
                         LongDesc = reader["O3LONG"].ToString(),
+                        ItemDesc = reader["O3IDSC"].ToString(),
                         Type = reader["Type"].ToString(),
                         Size = reader["Size"].ToString(),
                         Category = reader["Category"].ToString(),
                         DepartmentName = reader["DPTNAM"].ToString(),
-                        IsPrinted = reader["IsPrinted_STRPRC"].ToString(),
+                        IsPrinted = reader["IsPrintedYN"].ToString(),
                         WithInventory = reader["INV"].ToString(),
                         IsExemption = reader["IsExemp"].ToString(),
 
