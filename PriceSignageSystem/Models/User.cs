@@ -13,6 +13,8 @@ namespace PriceSignageSystem.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int UserId { get; set; }
+        [Display(Name = "Role")]
+        [Required(ErrorMessage = "Role is required.")]
         public int RoleId { get; set; }
         [Display(Name = "Username")]
         [Required(ErrorMessage = "Username is required.")]

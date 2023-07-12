@@ -91,6 +91,12 @@ namespace PriceSignageSystem.Controllers
         public ActionResult Register()
         {
             var user = new User();
+            var roles = _userRepository.GetRoles().Select(a => new SelectListItem 
+                        {
+                            Value = a.Id.ToString(),
+                            Text = a.Name.ToString()
+                        });
+            ViewBag.Roles = roles;
             return View(user);
         }
 
@@ -110,7 +116,6 @@ namespace PriceSignageSystem.Controllers
                 var encryptedPassword = EncryptionHelper.Encrypt(user.Password);
                 user.Password = encryptedPassword;
                 user.IsActive = 1;
-                user.RoleId = 2;
                 var data = _userRepository.AddUser(user);
 
                 TempData["RegistrationSuccessMessage"] = "Registration successful!";

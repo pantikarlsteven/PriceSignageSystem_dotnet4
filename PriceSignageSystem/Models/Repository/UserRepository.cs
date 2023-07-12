@@ -36,5 +36,10 @@ namespace PriceSignageSystem.Models.Repository
             return data;
 
         }
+
+        public List<Role> GetRoles()
+        {
+            return _db.Roles.ToList();
+        }
     }
 }
