@@ -98,7 +98,7 @@
                         <div class="col-4">
                             <div class="form-group ">
                                 @Html.LabelFor(m => m.SelectedTypeId, htmlAttributes: new { @class = "font-weight-bold" })
-                                @Html.DropDownListFor(m => m.SelectedTypeId, Model.Types ?? new List<SelectListItem>(), "Select Type", new { @class = "form-control form-control-sm custom-select" })
+                                @Html.DropDownListFor(m => m.SelectedTypeId, Model.Types ?? new List<SelectListItem>(), "Select Type", new { @class = "form-control form-control-sm custom-select", disabled = true })
                             </div>
                         </div>
                         <div class="col-4">
@@ -110,13 +110,22 @@
                         <div class="col-4">
                             <div class="form-group ">
                                 @Html.LabelFor(m => m.SelectedCategoryId, htmlAttributes: new { @class = "font-weight-bold" })
-                                @Html.DropDownListFor(m => m.SelectedCategoryId, Model.Categories ?? new List<SelectListItem>(), "Select Category", new { @class = "form-control form-control-sm custom-select" })
+                                @Html.DropDownListFor(m => m.SelectedCategoryId, Model.Categories ?? new List<SelectListItem>(), "Select Category", new { @class = "form-control form-control-sm custom-select", disabled = true })
                             </div>
                         </div>
                         <div class="d-flex justify-content-center">
-                            <button type="button" class="newPrint btn btn-primary mr-1" disabled>Print</button>
-                            <button type="button" class="queuebtn btn btn-warning mr-1" disabled>Queue</button>
-                            <button type="button" class="qListbtn btn btn-success mr-1" disabled>Print Queue</button>
+                            @if (User.IsInRole("Merchandiser"))
+                            {
+                                <button type="button" class="newPrint btn btn-primary mr-1" disabled>Print</button>
+                                <button type="button" class="queuebtn btn btn-warning mr-1" disabled>Queue</button>
+                                <button type="button" class="qListbtn btn btn-success mr-1" disabled>Print Queue</button>
+                            }
+                            else
+                            {
+                                <button type="button" class="newPrint btn btn-primary mr-1">Print</button>
+                                <button type="button" class="queuebtn btn btn-warning mr-1">Queue</button>
+                                <button type="button" class="qListbtn btn btn-success mr-1">Print Queue</button>
+                            }
                         </div>
                     </div>
                 </div>
@@ -144,9 +153,19 @@
                         <div class="col-4">
                         </div>
                         <div class="d-flex justify-content-center">
-                            <button type="button" class="newPrint btn btn-primary mr-1" disabled>Print</button>
-                            <button type="button" class="queuebtn btn btn-warning mr-1" disabled>Queue</button>
-                            <button type="button" class="qListbtn btn btn-success mr-1" disabled>Print Queue</button>
+                            @if (User.IsInRole("Merchandiser"))
+                            {
+                                <button type="button" class="newPrint btn btn-primary mr-1" disabled>Print</button>
+                                <button type="button" class="queuebtn btn btn-warning mr-1" disabled>Queue</button>
+                                <button type="button" class="qListbtn btn btn-success mr-1" disabled>Print Queue</button>
+                            }
+                            else
+                            {
+                                <button type="button" class="newPrint btn btn-primary mr-1">Print</button>
+                                <button type="button" class="queuebtn btn btn-warning mr-1">Queue</button>
+                                <button type="button" class="qListbtn btn btn-success mr-1">Print Queue</button>
+                            }
+
                         </div>
                     </div>
                 </div>

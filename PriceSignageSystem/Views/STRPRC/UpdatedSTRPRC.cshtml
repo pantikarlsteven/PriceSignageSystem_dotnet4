@@ -59,23 +59,23 @@
             }
 
             @*@if (ViewBag.IsDateLatest == true)
-            {
-                <div class="alert alert-success">
-                    <i class="fa fa-check-circle"></i>  The current data is as of <u>@ViewBag.DateVersion</u>
-                    <a id="updateButton" href="#" class="ml-2 mt-2 btn btn-secondary text-bold btn-sm">
-                        Update
-                    </a>
-                </div>
-            }
-            else
-            {
-                <div class="alert alert-warning">
-                    <i class="fa fa-exclamation-triangle"></i> The current data is as of <u>@ViewBag.DateVersion</u>
-                    <a id="updateButton" href="#" class="ml-2 mt-2 btn btn-secondary text-bold btn-sm">
-                        Update
-                    </a>
-                </div>
-            }*@
+                {
+                    <div class="alert alert-success">
+                        <i class="fa fa-check-circle"></i>  The current data is as of <u>@ViewBag.DateVersion</u>
+                        <a id="updateButton" href="#" class="ml-2 mt-2 btn btn-secondary text-bold btn-sm">
+                            Update
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning">
+                        <i class="fa fa-exclamation-triangle"></i> The current data is as of <u>@ViewBag.DateVersion</u>
+                        <a id="updateButton" href="#" class="ml-2 mt-2 btn btn-secondary text-bold btn-sm">
+                            Update
+                        </a>
+                    </div>
+                }*@
 
         </center>
         <br />
@@ -91,8 +91,8 @@
                     </li>
                 </ul>
                 @*<div class="card-header bg-primary1 text-white">
-                    <h3 class="card-title">SKU Changes Update</h3>
-                </div>*@
+                        <h3 class="card-title">SKU Changes Update</h3>
+                    </div>*@
                 @*<hr />*@
                 <div class="card-body table-responsive">
                     <table id="dataTable" class="table table-sm table-hover" style="width: 100%">
@@ -106,7 +106,7 @@
                                 <th>Changed On</th>
                                 <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
                                 <th>Last Updated</th>
-                                <th><button class="printAllBtn btn btn-secondary px-3" style="float: right;" disabled>Print Selected</button></th>
+                                <th><button class="printAllBtn btn btn-secondary px-3" style="float: right;">Print Selected</button></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -342,14 +342,26 @@
                         {
                             data: null,
                             render: function (data, type, row) {
-                                return '<button style="float:right;" class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '" disabled>Print</button>';
+                                return '<button style="float:right;" class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '">Print</button>';
                             }
                         }
                     ],
                 });
 
+                if ('@User.IsInRole("Merchandiser")' == 'True' ) {
+                        // DISABLED BUTTONS IF ROLE = MERCHANDISER
+                        var buttonsprintAll = document.querySelectorAll(".printAllBtn");
+                                buttonsprintAll.forEach(function (button) {
+                                    button.disabled = true;
+                                });
 
-                
+                        var buttonsEachRow = document.querySelectorAll('.printBtn');
+                                buttonsEachRow.forEach(function (button) {
+                                    button.disabled = true;
+                                });
+                                //
+                 }   
+
             }
         }
 
@@ -379,6 +391,7 @@
                         data[i].DateUpdated = date.toLocaleDateString(undefined, options);
                     }
                     GetDataTable(data.filter(row => row.Inv == 'Y'));
+
                     $('#selectAll').on('change', function () {
                         var isChecked = $(this).is(':checked');
                         $('.rowCheckbox').prop('checked', isChecked);
