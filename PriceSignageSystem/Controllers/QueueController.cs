@@ -2,10 +2,12 @@
 using PriceSignageSystem.Code;
 using PriceSignageSystem.Code.CustomValidations;
 using PriceSignageSystem.Helper;
+using PriceSignageSystem.Models;
 using PriceSignageSystem.Models.Constants;
 using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.IO;
@@ -38,6 +40,13 @@ namespace PriceSignageSystem.Controllers
             strprcDto.SelectedSizeId = sizeId;
             strprcDto.SelectedTypeId = typeId;
             var data = _queueRepository.AddItemQueue(strprcDto);
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
+        public ActionResult QueueSelectedItems(int sizeId, decimal[] selectedRows)
+        {
+            _queueRepository.QueueMultipleItems(selectedRows, sizeId);
             return Json(new { success = true });
         }
 

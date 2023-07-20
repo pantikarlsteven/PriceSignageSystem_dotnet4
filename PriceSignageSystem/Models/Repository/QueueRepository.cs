@@ -102,5 +102,31 @@ namespace PriceSignageSystem.Models.Repository
             }
             _db.SaveChanges();
         }
+
+        public void QueueMultipleItems(decimal[] skus, int sizeId)
+        {
+            var list = new List<STRPRC>();
+           
+            foreach(var sku in skus)
+            {
+                var eachData = _db.STRPRCs.Where(a => a.O3SKU == sku).FirstOrDefault();
+                list.Add(eachData);
+            }
+
+            foreach(var item in list)
+            {
+                var model = new ItemQueue();
+                model.O3SKU = item.O3SKU;
+                model.SizeId = sizeId;
+                model.CategoryId = item.CategoryId;
+                model.TypeId = item.TypeId;
+                model.UserName = HttpContext.Current.User.Identity.Name;
+                model.Status = ReportConstants.Status.InQueue;
+                model.DateCreated = DateTime.Now;
+
+                _db.ItemQueues.Add(model);
+                _db.SaveChanges();
+            }
+        }
     }
 }
