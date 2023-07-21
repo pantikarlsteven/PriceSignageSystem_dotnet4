@@ -412,16 +412,6 @@ namespace PriceSignageSystem.Models.Repository
             }
 
             return records;
-
-            var data = (from a in _db.STRPRCLogs
-                        join b in _db.STRPRCs on a.O3SKU equals b.O3SKU into ab
-                        from c in ab.DefaultIfEmpty()
-                        select new STRPRCLogDto
-                        {
-                            
-                        }).Take(10).ToList();
-
-            return data;
         }
 
         public STRPRCDto GetDataBySKU(decimal O3SKU)
