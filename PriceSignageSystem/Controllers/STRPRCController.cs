@@ -444,5 +444,10 @@ namespace PriceSignageSystem.Controllers
         {
             return View();
         }
+
+        public ActionResult Scan()
+        {
+            return View();
+        }
     }
 }

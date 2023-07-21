@@ -1,0 +1,132 @@
+﻿@using PriceSignageSystem.Models.Dto;
+@{
+    ViewData["Title"] = "Product Page";
+}
+
+<html>
+<head>
+  <style>
+      #reader{
+          width: 600px;
+      }
+      #result{
+          text-align: center;
+          font-size: 1.5rem;
+      }
+  </style>
+</head>
+<body>
+    <div class="content-wrapper bg-white px-3">
+        <br />
+
+        @if (!String.IsNullOrEmpty(ViewBag.ErrorMessage))
+        {
+            <div class="alert text-white text-bold" style="background-color: #8d0303;">
+                <center>
+                    <h3>@ViewBag.ErrorMessage</h3>
+                </center>
+            </div>
+        }
+
+    <div class="wrapper">
+        <div class="row align-items-center justify-content-center">
+            <div class="col-auto">
+                <label for="searchInput" class="form-label fw-bold">Enter SKU/UPC:</label>
+            </div>
+            <div class="col-auto">
+                <input type="text" id="searchInput" class="form-control" style="max-width: 200px;" placeholder="Search...">
+            </div>
+            <div class="col-auto">
+                <button id="scanBarcode" class="btn btn-primary"> Scan </button>
+            </div>
+        </div>
+        <div id="scannerContainer" style="display:none; width: 300px; height: 200px;"></div>
+    </div>
+        <br />
+        <div id="searchResults">
+            @Html.Partial("_SearchResultPartialView", new STRPRCDto())
+        </div>
+    </div>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+</body>
+</html>
+
+
+
+<script>
+    $('#searchInput').focus();
+
+    $(document).ready(function () {
+        var timeoutId;
+        $('#searchInput').on('input', function () {
+            var searchQuery = $(this).val();
+
+            // Clear any previously scheduled request
+            clearTimeout(timeoutId);
+
+            // Schedule a new request after 300 milliseconds (adjust as needed)
+            timeoutId = setTimeout(function() {
+                $.ajax({
+                    url: '@Url.Action("Search", "STRPRC")',
+                    type: 'POST',
+                    data: { query: searchQuery },
+                    success: function (result) {
+                        $('#searchResults').html(result);
+                    },
+                    error: function () {
+                        // Handle error if necessary
+                    }
+                });
+            }, 300); // Adjust the delay as needed
+        });
+    });
+
+     // BARCODE SCANNING
+    var scanner;
+
+    // Function to initialize the scanner
+    function initializeScanner() {
+        scanner = new Html5QrcodeScanner('scannerContainer', {
+            qrbox: {
+                width: 300,
+                height: 200
+            },
+            fps: 20,
+        });
+
+        scanner.render(success, error);
+    }
+
+    // Function to handle successful scan
+    function success(result) {
+        $('#searchInput').val(result);
+        var searchQuery = result;
+
+        $.ajax({
+            url: '@Url.Action("Search", "STRPRC")',
+            type: 'POST',
+            data: { query: searchQuery },
+            success: function (result) {
+                $('#searchResults').html(result);
+            },
+            error: function () {
+                // Handle error if necessary
+            }
+        });
+
+        // Hide the scanner after successful scan
+        scanner.clear();
+        $('#scannerContainer').hide();
+    }
+
+    function error(err) {
+        // Handle error if necessary
+    }
+
+    // Attach event handler for the "Scan" button
+    $('#scanBarcode').click(function () {
+        // Show the scanner when the button is clicked
+        $('#scannerContainer').show();
+        initializeScanner();
+    });
+</script>
