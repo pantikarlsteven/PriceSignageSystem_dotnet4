@@ -223,20 +223,25 @@ namespace PriceSignageSystem.Controllers
                 report.Load(path);
 
                 var textToImage = new TextToImage();
+                //model.O3FNAM = "LUNA DA LUNA";
+                //model.O3IDSC = "CABERNET MERLOT/RED BLEND 750MLL";
+                model.SizeId = 1;
+                model.CategoryId = 1;
+                model.UserName = "Noel";
                 textToImage.GetImageWidth(model.O3FNAM, model.O3IDSC, model.SizeId);
                 model.IsSLBrand = textToImage.IsSLBrand;
                 model.IsSLDescription = textToImage.IsSLDescription;
 
                 report.SetDataSource(ConversionHelper.ConvertObjectToDataTable(model));
-                //report.PrintOptions.PrinterName = @"\\199.85.2.3\Canon LBP2900";
-                Logs.WriteToFile("test 1");
-                //report.PrintToPrinter(1, false, 0, 0);
+                ////report.PrintOptions.PrinterName = @"\\199.85.2.3\Canon LBP2900";
+                //Logs.WriteToFile("test 1");
+                report.PrintToPrinter(1, false, 0, 0);
 
-                System.Drawing.Printing.PrinterSettings printersettings = new System.Drawing.Printing.PrinterSettings();
-                printersettings.PrinterName = "\\\\SYSTEMSPC_8801\\Canon LBP2900";
-                printersettings.Copies = 1;
-                printersettings.Collate = false;
-                report.PrintToPrinter(printersettings, new System.Drawing.Printing.PageSettings(), false);
+                //System.Drawing.Printing.PrinterSettings printersettings = new System.Drawing.Printing.PrinterSettings();
+                //printersettings.PrinterName = "\\\\SYSTEMSPC_8801\\Canon LBP2900";
+                //printersettings.Copies = 1;
+                //printersettings.Collate = false;
+                //report.PrintToPrinter(printersettings, new System.Drawing.Printing.PageSettings(), false);
 
                 Logs.WriteToFile("test 2");
                 report.Close();
