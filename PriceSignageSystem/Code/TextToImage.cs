@@ -20,23 +20,24 @@ namespace PriceSignageSystem.Code
         public void GetImageWidth(string brand, string desc, int sizeId)
         {
             //Default is Whole
-            Font brandFont = new Font("Arial Black", 4);
-            Font descFont = new Font("Impact", (float)2.5);
-            var brandMaxWidth = 64.63975;
-            var descMaxWidth = 60.692482;
+            //sizeId = 1;
+            Font brandFont = new Font("Arial Black", (float)4.375);
+            Font descFont = new Font("Impact", (float)1.875);
+            var brandMaxWidth = 52.6784821;
+            var descMaxWidth = 39.09749;
             switch (sizeId)
             {
                 case ReportConstants.Size.OneEight:
-                    brandFont = new Font("Arial Black", (float)1.25);
+                    brandFont = new Font("Arial Black", (float)1.5625);
                     descFont = new Font("Impact", (float)1.125);
-                    brandMaxWidth = 24.58957;
-                    descMaxWidth = 21.57397;
+                    brandMaxWidth = 20.2399311;
+                    descMaxWidth = 19.7897911;
                     break;
                 case ReportConstants.Size.Jewelry:
                     brandFont = new Font("Arial Black", 1);
                     descFont = new Font("Impact", (float)0.75);
-                    brandMaxWidth = 20.0512123;
-                    descMaxWidth = 17.0183887;
+                    brandMaxWidth = 15.1657963;
+                    descMaxWidth = 13.9070625;
                     break;
                 case ReportConstants.Size.Skinny:
                     brandFont = new Font("Arial Black", (float)2.188);

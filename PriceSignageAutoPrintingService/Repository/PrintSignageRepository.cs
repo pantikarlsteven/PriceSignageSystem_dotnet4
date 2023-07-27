@@ -15,6 +15,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Drawing.Printing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,15 +34,17 @@ namespace PriceSignageAutoPrintingService.Repository
         private readonly ApplicationDbContext _db;
         private readonly string connectionString;
         private readonly int storeId;
-        private readonly string printerLocation;
+        private readonly string defaultPDFViewerLocation;
         private readonly string printer;
+        private readonly string crystalReportPath;
 
         public PrintSignageRepository()
         {
             connectionString = ConfigurationManager.ConnectionStrings["MyConnectionString"].ConnectionString;
             storeId = int.Parse(ConfigurationManager.AppSettings["StoreID"]);
-            printerLocation = ConfigurationManager.AppSettings["PrinterLocation"];
+            defaultPDFViewerLocation = ConfigurationManager.AppSettings["DefaultPDFViewerLocation"];
             printer = ConfigurationManager.AppSettings["Printer"];
+            crystalReportPath = ConfigurationManager.AppSettings["CrystalReportPath"];
             _db = new ApplicationDbContext();
         }
 
@@ -146,11 +149,17 @@ namespace PriceSignageAutoPrintingService.Repository
         public void Print(List<decimal> skuList)
         {
             string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            WriteToFile.Log(baseDirectory);
-            var pdfPath = @"C:\Services\PriceSignageService\PriceSignageAutoPrintingService\Reports\";
-            var path = @"C:\Users\skarl\source\repos\vs2019\PriceSignageSystem\PriceSignageSystem\Reports\CrystalReports\";
-            //var pdfPath = @"C:\users\syste\source\repos\PriceSignageSystem_dotnet4\PriceSignageSystem_dotnet4\PriceSignageAutoPrintingService\Reports\";
-            //var path = @"C:\users\syste\source\repos\PriceSignageSystem_dotnet4\PriceSignageSystem_dotnet4\PriceSignageSystem\Reports\CrystalReports\";
+            string pdfPath = baseDirectory + @"Reports";
+
+            #region for testing on local
+            //pdfPath = @"C:\users\syste\source\repos\PriceSignageSystem_dotnet4\PriceSignageSystem_dotnet4\PriceSignageAutoPrintingService\Reports";
+            //crystalReportPath = @"C:\users\syste\source\repos\PriceSignageSystem_dotnet4\PriceSignageSystem_dotnet4\PriceSignageSystem\Reports\CrystalReports\";
+            #endregion
+
+            //Create Reports folder if not existing
+            if (!Directory.Exists(pdfPath))
+                Directory.CreateDirectory(pdfPath);
+            
             var user = "Admin";
             try
             {
@@ -167,14 +176,14 @@ namespace PriceSignageAutoPrintingService.Repository
                     }
                     var dataTable = ConversionHelper.ConvertListToDataTable(data);
                     var reportPath = string.Empty;
-                    reportPath = path + "Dynamic_SkinnyReport.rpt";
+                    reportPath = crystalReportPath + "Dynamic_SkinnyReport.rpt";
                     WriteToFile.Log(reportPath);
 
                     ReportDocument report = new ReportDocument();
                     report.Load(reportPath);
                     report.SetDataSource(dataTable);
                     Guid guid = Guid.NewGuid();
-                    var pdf = pdfPath + guid + ".pdf";
+                    var pdf = pdfPath + "\\" + guid + ".pdf";
 
                     //Export report to pdf
                     ExportOptions CrExportOptions;
@@ -191,25 +200,9 @@ namespace PriceSignageAutoPrintingService.Repository
                     }
                     report.Export();
 
-                    #region old
-                    //string pdfArguments = string.Format(" /t \"{0}\\{1}.pdf\" \"{2}\"", pdfPath, guid, printer);
-                    //ProcessStartInfo newProcess = new ProcessStartInfo(printerLocation, pdfArguments);
-                    //newProcess.CreateNoWindow = true;
-                    //newProcess.RedirectStandardOutput = true;
-                    //newProcess.UseShellExecute = false;
-
-                    //Process pdfProcess = new Process();
-                    //pdfProcess.StartInfo = newProcess;
-                    //pdfProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                    //pdfProcess.Start();
-                    //WriteToFile.Log("Start printing");
-                    //UpdatePrintStatus();
-                    //pdfProcess.WaitForExit();
-                    #endregion
-
                     const string pdfFileExtension = ".pdf";
                     // Check if the PDF viewer executable path exists
-                    if (!System.IO.File.Exists(printerLocation))
+                    if (!System.IO.File.Exists(defaultPDFViewerLocation))
                     {
                         WriteToFile.Log("PDF viewer executable path does not exist.");
                         return;
@@ -236,7 +229,7 @@ namespace PriceSignageAutoPrintingService.Repository
                     {
                         if (openCommandKey != null)
                         {
-                            openCommandKey.SetValue("", "\"" + printerLocation + "\" \"%1\"", RegistryValueKind.String);
+                            openCommandKey.SetValue("", "\"" + defaultPDFViewerLocation + "\" \"%1\"", RegistryValueKind.String);
                         }
                     }
 
@@ -270,6 +263,7 @@ namespace PriceSignageAutoPrintingService.Repository
                             printDocument.DefaultPageSettings = pageSettings;
                             printDocument.PrintController = (PrintController)new StandardPrintController();
                             printDocument.Print();
+                            WriteToFile.Log("Start printing");
                         }
                     }
 

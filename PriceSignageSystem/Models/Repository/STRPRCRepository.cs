@@ -165,7 +165,8 @@ namespace PriceSignageSystem.Models.Repository
                             O3USER = a.O3USER,
                             DateUpdated = a.DateUpdated,
                             SelectedTypeId = a.O3REGU == a.O3POS ? 1 : 2,
-                            SelectedCategoryId = a.O3DEPT == 150 && (a.O3SDPT == 10 || a.O3SDPT == 12 || a.O3SDPT == 13 || a.O3SDPT == 14) ? 1 : 2
+                            SelectedCategoryId = (a.O3DEPT == 150 && (a.O3SDPT == 10 || a.O3SDPT == 12 || a.O3SDPT == 13 || a.O3SDPT == 14)) || 
+                            (a.O3DEPT == 401 || a.O3DEPT == 402 || a.O3DEPT == 403 || a.O3DEPT == 404) ? 1 : 2
                         }).FirstOrDefault();
             return data;
         }

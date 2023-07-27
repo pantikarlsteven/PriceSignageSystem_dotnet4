@@ -211,15 +211,25 @@
             reportDto.TypeId = $('#SelectedTypeId').val();
             reportDto.CategoryId = $('#SelectedCategoryId').val();
             reportDto.SizeId= $('#SelectedSizeId').val();
-            $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(reportDto));
+            //$("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(reportDto));
 
-            var reportIframe = document.getElementById("reportIframe");
-            if (reportIframe) {
-                reportIframe.onload = function () {
-                    reportIframe.contentWindow.print();
-                };
-                reportIframe.src = $("#reportIframe").attr("src");
-            }
+            //var reportIframe = document.getElementById("reportIframe");
+            //if (reportIframe) {
+            //    reportIframe.onload = function () {
+            //        reportIframe.contentWindow.print();
+            //    };
+            //    reportIframe.src = $("#reportIframe").attr("src");
+            //}
+            $.ajax({
+                url: '@Url.Action("PrintPreviewSingleReport", "Report")',
+                type: 'GET',
+                data: { response: JSON.stringify(reportDto)},
+                success: function (data) {
+                    if (!data)
+                        alert("Error in printing.");
+                }
+            });
+
         });
 
         $(".queuebtn").click(function () {
@@ -336,14 +346,26 @@
                                 success: function (response) {
                                     if (response.success) {
                                         $('#modalView').modal('hide');
-                                        $("#reportIframe").attr("src", "/Queue/PrintPreviewQueueReport?sizeId=" + selectedSize + "");
-                                        var reportIframe = document.getElementById("reportIframe");
-                                        if (reportIframe) {
-                                            reportIframe.onload = function () {
-                                                reportIframe.contentWindow.print();
-                                            };
-                                            reportIframe.src = $("#reportIframe").attr("src");
-                                        }
+                                        //$("#reportIframe").attr("src", "/Queue/PrintPreviewQueueReport?sizeId=" + selectedSize + "");
+                                        //var reportIframe = document.getElementById("reportIframe");
+                                        //if (reportIframe) {
+                                        //    reportIframe.onload = function () {
+                                        //        reportIframe.contentWindow.print();
+                                        //    };
+                                        //    reportIframe.src = $("#reportIframe").attr("src");
+                                        //}
+
+                                        var url = "/Queue/PrintPreviewQueueReport";
+                                        $.ajax({
+                                            url: url,
+                                            type: 'GET',
+                                            data: { sizeId: selectedSize },
+                                            success: function (data) {
+                                                if (!data)
+                                                    alert("Error in printing.");
+
+                                            }
+                                        });
                                     } else {
                                         $('#modalView').modal('hide');
                                         // Show success modal
