@@ -155,6 +155,7 @@ namespace PriceSignageSystem.Controllers
                 skuModel.TypeId = model.TypeId;
                 skuModel.CategoryId = model.CategoryId;
                 skuModel.UserName = User.Identity.Name;
+                skuModel.O3SDSC = _sTRPRCRepository.GetSubClassDescription(model.O3SKU);
 
                 var textToImage = new TextToImage();
                 textToImage.GetImageWidth(skuModel.O3FNAM, skuModel.O3IDSC, model.SizeId);
@@ -252,6 +253,7 @@ namespace PriceSignageSystem.Controllers
                         textToImage.GetImageWidth(item.O3FNAM, item.O3IDSC, sizeId);
                         item.IsSLBrand = textToImage.IsSLBrand;
                         item.IsSLDescription = textToImage.IsSLDescription;
+                        item.O3SDSC = _sTRPRCRepository.GetSubClassDescription(item.O3SKU);
                     }
                     var dataTable = ConversionHelper.ConvertListToDataTable(data);
                     var reportPath = string.Empty;

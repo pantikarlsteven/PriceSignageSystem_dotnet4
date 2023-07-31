@@ -21,11 +21,13 @@ namespace PriceSignageSystem.Controllers
     [CustomAuthorize]
     public class QueueController : Controller
     {
+        private readonly ISTRPRCRepository _sTRPRCRepository;
         private readonly IQueueRepository _queueRepository;
         private readonly string _printerName;
         private readonly string defaultPDFViewerLocation;
         public QueueController(IQueueRepository queueRepository, ISTRPRCRepository sTRPRCRepository)
         {
+            _sTRPRCRepository = sTRPRCRepository;
             _queueRepository = queueRepository;
             _printerName = ConfigurationManager.AppSettings["ReportPrinter"];
             defaultPDFViewerLocation = ConfigurationManager.AppSettings["DefaultPDFViewerLocation"];
@@ -111,6 +113,7 @@ namespace PriceSignageSystem.Controllers
                     textToImage.GetImageWidth(item.O3FNAM, item.O3IDSC, sizeId);
                     item.IsSLBrand = textToImage.IsSLBrand;
                     item.IsSLDescription = textToImage.IsSLDescription;
+                    item.O3SDSC = _sTRPRCRepository.GetSubClassDescription(item.O3SKU);
                 }
                 var dataTable = ConversionHelper.ConvertListToDataTable(data);
                 var reportPath = string.Empty;
@@ -182,7 +185,7 @@ namespace PriceSignageSystem.Controllers
                         printDocument.PrinterSettings = printerSettings;
                         printDocument.DefaultPageSettings = pageSettings;
                         printDocument.PrintController = (PrintController)new StandardPrintController();
-                        //printDocument.Print();
+                        printDocument.Print();
                         Logs.WriteToFile("Start printing");
                     }
                 }

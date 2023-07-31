@@ -170,7 +170,9 @@ namespace PriceSignageSystem.Controllers
                 item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
             }
 
-            return Json(data);
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
         }
 
         [HttpPost]
@@ -361,7 +363,9 @@ namespace PriceSignageSystem.Controllers
                 item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
             }
 
-            return Json(data);
+            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = int.MaxValue;
+            return jsonResult;
         }
 
         [HttpGet]

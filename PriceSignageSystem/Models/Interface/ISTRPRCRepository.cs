@@ -29,5 +29,6 @@ namespace PriceSignageSystem.Models.Interface
         void AddInventoryPrintingLog(decimal O3SKU, string user);
         List<STRPRCDto> GetLatestPCAData();
         List<ExportPCADto> PCAToExport();
+        string GetSubClassDescription(decimal O3SKU);
     }
 }
