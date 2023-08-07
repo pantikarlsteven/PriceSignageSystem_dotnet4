@@ -21,11 +21,13 @@ namespace PriceSignageSystem.Controllers
     [CustomAuthorize]
     public class QueueController : Controller
     {
+        private readonly ISTRPRCRepository _sTRPRCRepository;
         private readonly IQueueRepository _queueRepository;
         private readonly string _printerName;
         private readonly string defaultPDFViewerLocation;
         public QueueController(IQueueRepository queueRepository, ISTRPRCRepository sTRPRCRepository)
         {
+            _sTRPRCRepository = sTRPRCRepository;
             _queueRepository = queueRepository;
             _printerName = ConfigurationManager.AppSettings["ReportPrinter"];
             defaultPDFViewerLocation = ConfigurationManager.AppSettings["DefaultPDFViewerLocation"];
@@ -99,7 +101,7 @@ namespace PriceSignageSystem.Controllers
         [HttpGet]
         public ActionResult PrintPreviewQueueReport(int sizeId)
         {
-            var isSuccess = true;
+            //var isSuccess = true;
             try
             {
                 var username = User.Identity.Name;
@@ -111,6 +113,7 @@ namespace PriceSignageSystem.Controllers
                     textToImage.GetImageWidth(item.O3FNAM, item.O3IDSC, sizeId);
                     item.IsSLBrand = textToImage.IsSLBrand;
                     item.IsSLDescription = textToImage.IsSLDescription;
+                    item.O3SDSC = _sTRPRCRepository.GetSubClassDescription(item.O3SKU);
                 }
                 var dataTable = ConversionHelper.ConvertListToDataTable(data);
                 var reportPath = string.Empty;
@@ -136,69 +139,66 @@ namespace PriceSignageSystem.Controllers
                 report.Load(reportPath);
                 report.SetDataSource(dataTable);
 
-                #region Old
-                //Stream stream = report.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
-                //var pdfBytes = new byte[stream.Length];
-                //stream.Read(pdfBytes, 0, pdfBytes.Length);
+                #region For Auto Printing
+                //string pdfPath = Server.MapPath("~/Reports/PDFs");
+                //Guid guid = Guid.NewGuid();
+                //var pdf = pdfPath + "\\" + guid + ".pdf";
+                //PDFConversion.ConvertCrystalReportToPDF(defaultPDFViewerLocation, report, pdfPath, pdf);
 
-                //_queueRepository.UpdateStatus(data);
-                //Response.AppendHeader("Content-Disposition", "inline; filename=QueueReport.pdf");
+                //PrinterSettings printerSettings = new PrinterSettings()
+                //{
+                //    PrinterName = _printerName,
+                //    Copies = 1
+                //};
+
+                //PageSettings pageSettings = new PageSettings(printerSettings)
+                //{
+                //    Margins = new Margins(0, 0, 0, 0)
+                //};
+
+                //foreach (System.Drawing.Printing.PaperSize paperSize in printerSettings.PaperSizes)
+                //{
+                //    if (paperSize.PaperName == "Letter")
+                //    {
+                //        pageSettings.PaperSize = paperSize;
+                //        break;
+                //    }
+                //}
+
+                //using (PdfDocument pdfDocument = PdfDocument.Load(pdf))
+                //{
+                //    using (PrintDocument printDocument = pdfDocument.CreatePrintDocument())
+                //    {
+                //        printDocument.PrinterSettings = printerSettings;
+                //        printDocument.DefaultPageSettings = pageSettings;
+                //        printDocument.PrintController = (PrintController)new StandardPrintController();
+                //        printDocument.Print();
+                //        Logs.WriteToFile("Start printing");
+                //    }
+                //}
+
                 //report.Close();
                 //report.Dispose();
-                //return File(pdfBytes, "application/pdf");
-
-                //report.PrintToPrinter(1, false, 0, 0);
+                //_queueRepository.UpdateStatus(data);
                 #endregion
 
-                string pdfPath = Server.MapPath("~/Reports/PDFs");
-                Guid guid = Guid.NewGuid();
-                var pdf = pdfPath + "\\" + guid + ".pdf";
-                PDFConversion.ConvertCrystalReportToPDF(defaultPDFViewerLocation, report, pdfPath, pdf);
+                Stream stream = report.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                var pdfBytes = new byte[stream.Length];
+                stream.Read(pdfBytes, 0, pdfBytes.Length);
 
-                PrinterSettings printerSettings = new PrinterSettings()
-                {
-                    PrinterName = _printerName,
-                    Copies = 1
-                };
-
-                PageSettings pageSettings = new PageSettings(printerSettings)
-                {
-                    Margins = new Margins(0, 0, 0, 0)
-                };
-
-                foreach (System.Drawing.Printing.PaperSize paperSize in printerSettings.PaperSizes)
-                {
-                    if (paperSize.PaperName == "Letter")
-                    {
-                        pageSettings.PaperSize = paperSize;
-                        break;
-                    }
-                }
-
-                using (PdfDocument pdfDocument = PdfDocument.Load(pdf))
-                {
-                    using (PrintDocument printDocument = pdfDocument.CreatePrintDocument())
-                    {
-                        printDocument.PrinterSettings = printerSettings;
-                        printDocument.DefaultPageSettings = pageSettings;
-                        printDocument.PrintController = (PrintController)new StandardPrintController();
-                        //printDocument.Print();
-                        Logs.WriteToFile("Start printing");
-                    }
-                }
-
+                _queueRepository.UpdateStatus(data);
+                Response.AppendHeader("Content-Disposition", "inline; filename=QueueReport.pdf");
                 report.Close();
                 report.Dispose();
-                _queueRepository.UpdateStatus(data);
-
+                return File(pdfBytes, "application/pdf");
             }
             catch (Exception ex)
             {
                 // Handle the case when no row IDs are selected
-                //return Content("<h2>Error:" + ex.Message + "</h2>", "text/html");
-                isSuccess = false;
+                return Content("<h2>Error:" + ex.Message + "</h2>", "text/html");
+                //isSuccess = false;
             }
-            return Json(isSuccess, JsonRequestBehavior.AllowGet);
+            //return Json(isSuccess, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

@@ -1,5 +1,6 @@
 ﻿using ClosedXML.Excel;
 using CrystalDecisions.CrystalReports.Engine;
+using Newtonsoft.Json;
 using PriceSignageSystem.Code;
 using PriceSignageSystem.Code.CustomValidations;
 using PriceSignageSystem.Helper;
@@ -10,7 +11,10 @@ using System;
 using System.Configuration;
 using System.Data;
 using System.Globalization;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Text;
 using System.Web.Mvc;
 
 namespace PriceSignageSystem.Controllers
@@ -170,7 +174,26 @@ namespace PriceSignageSystem.Controllers
                 item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
             }
 
-            return Json(data);
+            string jsonData = Newtonsoft.Json.JsonConvert.SerializeObject(data);
+
+            // Compress the JSON data using Gzip compression
+            byte[] compressedData;
+            using (MemoryStream outputStream = new MemoryStream())
+            {
+                using (GZipStream gzipStream = new GZipStream(outputStream, CompressionMode.Compress))
+                {
+                    using (StreamWriter writer = new StreamWriter(gzipStream))
+                    {
+                        writer.Write(jsonData);
+                    }
+                }
+                compressedData = outputStream.ToArray();
+            }
+
+            Response.AppendHeader("Content-Encoding", "gzip");
+            Response.AppendHeader("Content-Length", compressedData.Length.ToString());
+
+            return File(compressedData, "application/json");
         }
 
         [HttpPost]
@@ -280,9 +303,26 @@ namespace PriceSignageSystem.Controllers
         public ActionResult GetUpdatedData()
         {
             var data = _sTRPRCRepository.GetUpdatedData();
-            var jsonResult = Json(data, JsonRequestBehavior.AllowGet);
-            jsonResult.MaxJsonLength = int.MaxValue;
-            return jsonResult;
+            string jsonData = Newtonsoft.Json.JsonConvert.SerializeObject(data);
+
+            // Compress the JSON data using Gzip compression
+            byte[] compressedData;
+            using (MemoryStream outputStream = new MemoryStream())
+            {
+                using (GZipStream gzipStream = new GZipStream(outputStream, CompressionMode.Compress))
+                {
+                    using (StreamWriter writer = new StreamWriter(gzipStream))
+                    {
+                        writer.Write(jsonData);
+                    }
+                }
+                compressedData = outputStream.ToArray();
+            }
+
+            Response.AppendHeader("Content-Encoding", "gzip");
+            Response.AppendHeader("Content-Length", compressedData.Length.ToString());
+
+            return File(compressedData, "application/json");
         }
 
         [HttpGet]
@@ -361,7 +401,26 @@ namespace PriceSignageSystem.Controllers
                 item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
             }
 
-            return Json(data);
+            string jsonData = Newtonsoft.Json.JsonConvert.SerializeObject(data);
+
+            // Compress the JSON data using Gzip compression
+            byte[] compressedData;
+            using (MemoryStream outputStream = new MemoryStream())
+            {
+                using (GZipStream gzipStream = new GZipStream(outputStream, CompressionMode.Compress))
+                {
+                    using (StreamWriter writer = new StreamWriter(gzipStream))
+                    {
+                        writer.Write(jsonData);
+                    }
+                }
+                compressedData = outputStream.ToArray();
+            }
+
+            Response.AppendHeader("Content-Encoding", "gzip");
+            Response.AppendHeader("Content-Length", compressedData.Length.ToString());
+
+            return File(compressedData, "application/json");
         }
 
         [HttpGet]

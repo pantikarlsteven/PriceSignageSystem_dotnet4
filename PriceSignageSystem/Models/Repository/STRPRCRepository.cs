@@ -837,5 +837,23 @@ namespace PriceSignageSystem.Models.Repository
 
             return data;
         }
+
+        public string GetSubClassDescription(decimal O3SKU)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand($"SELECT TOP 1 O3SDSC FROM STRPRCs WHERE O3SKU = {O3SKU}", connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                            return reader.GetString(0);
+                        else
+                            return null;
+                    }
+                }
+            }
+        }
     }
 }
