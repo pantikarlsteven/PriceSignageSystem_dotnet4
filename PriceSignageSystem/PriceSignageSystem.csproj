@@ -494,6 +494,7 @@
     <Content Include="Views\STRPRC\UpdatedSTRPRC.cshtml" />
     <Content Include="Views\STRPRC\PCA.cshtml" />
     <Content Include="Views\STRPRC\Scan.cshtml" />
+    <Content Include="Views\STRPRC\testonly.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
