@@ -128,5 +128,40 @@ namespace PriceSignageSystem.Models.Repository
                 _db.SaveChanges();
             }
         }
+
+        public List<ItemQueueDto> GetHistory(string username)
+        {
+            var result = (from a in _db.ItemQueues
+                         join b in _db.Sizes on a.SizeId equals b.Id
+                         join c in _db.Types on a.TypeId equals c.Id
+                         join d in _db.Categories on a.CategoryId equals d.Id
+                         where a.UserName == username
+                         select new ItemQueueDto
+                         {
+                             Id = a.Id,
+                             O3SKU = a.O3SKU,
+                             SizeName = b.Name,
+                             TypeName = c.Name,
+                             CategoryName = d.Name,
+                             Status = a.Status,
+                             DateUpdated = a.DateUpdated
+                         })
+                         .OrderByDescending(f => f.Status)
+                         .ThenByDescending(f => f.DateUpdated)
+                         .ToList();
+          
+
+            return result;
+        }
+        public int RequeueItem(int id, string username)
+        {
+
+            var data = _db.ItemQueues.Where(a => a.Id == id && a.UserName == username).FirstOrDefault();
+            data.Status = ReportConstants.Status.InQueue;
+            data.DateUpdated = DateTime.Now;
+            var count = _db.SaveChanges();
+
+            return count;
+        }
     }
 }

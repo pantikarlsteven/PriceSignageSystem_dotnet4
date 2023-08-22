@@ -1,7 +1,6 @@
 ﻿@using PriceSignageSystem.Models.Dto;
 @model STRPRCDto
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,177 +14,184 @@
     @using (Html.BeginForm("AutoPrintOnDemandReport", "Report", FormMethod.Post))
     {
         @Html.HiddenFor(m => m.O3SKU)
-<div class="container">
-    <h2 class="text-center bg-primarydark text-white p-2">Item Details</h2>
-
-    <div class="row">
-        <div class="col-md-6">
-            <dl class="row">
-
-                <dt class="col-sm-4">@Html.LabelFor(m => m.O3UPC)</dt>
-                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3UPC)</dd>
-
-                <dt class="col-sm-4">@Html.LabelFor(m => m.O3SKU)</dt>
-                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SKU)</dd>
-
-                <dt class="col-sm-4">@Html.LabelFor(m => m.O3IDSC)</dt>
-                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3IDSC)</dd>
-
-                <dt class="col-sm-4">@Html.LabelFor(m => m.O3FNAM)</dt>
-                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3FNAM)</dd>
-
-                <dt class="col-sm-4">@Html.LabelFor(m => m.O3MODL)</dt>
-                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3MODL)</dd>
-
-                <dt class="col-sm-4">@Html.LabelFor(m => m.O3DEPT)</dt>
-                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3DEPT)</dd>
-
-                <dt class="col-sm-4">@Html.LabelFor(m => m.O3SDPT)</dt>
-                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SDPT)</dd>
-
-                <dt class="col-sm-4">@Html.LabelFor(m => m.O3CLAS)</dt>
-                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3CLAS)</dd>
-
-                <dt class="col-sm-4">@Html.LabelFor(m => m.O3SCLS)</dt>
-                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SCLS)</dd>
-
-                <dt class="col-sm-4">@Html.LabelFor(m => m.O3LONG)</dt>
-                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3LONG)</dd>
-            </dl>
-        </div>
-
-        <div class="col-md-6">
-            <dl class="row">
-                <dt class="col-sm-4">@Html.LabelFor(m => m.O3SCCD)</dt>
-                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SCCD)</dd>
-
-                <dt class="col-sm-4">@Html.LabelFor(m => m.O3TRB3)</dt>
-                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3TRB3)</dd>
-
-                <dt class="col-sm-4">@Html.LabelFor(m => m.O3REGU)</dt>
-                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3REGU)</dd>
-
-                <dt class="col-sm-4">@Html.LabelFor(m => m.O3POS)</dt>
-                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3POS)</dd>
-
-                <dt class="col-sm-4">@Html.LabelFor(m => m.O3SDT)</dt>
-                <dd class="col-sm-8">@Html.DisplayFor(m => m.StartDateFormattedDate)</dd>
-
-                <dt class="col-sm-4">@Html.LabelFor(m => m.O3EDT)</dt>
-                <dd class="col-sm-8">@Html.DisplayFor(m => m.EndDateFormattedDate)</dd>
-
-                <dt class="col-sm-4">@Html.LabelFor(m => m.O3SLUM)</dt>
-                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SLUM)</dd>
-
-                <dt class="col-sm-4">@Html.LabelFor(m => m.O3TUOM)</dt>
-                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3TUOM)</dd>
-
-                <dt class="col-sm-4">@Html.LabelFor(m => m.O3DIV)</dt>
-                <dd class="col-sm-8">@Html.DisplayFor(m => m.O3DIV)</dd>
-            </dl>
-        </div>
-    </div>
-
-    <hr />
-    @if (Model.O3SKU != 0)
-    {
         <div class="container">
-            <div class="row mb-3 d-flex justify-content-center">
-                <div class="col-2">
-                </div>
-                <div class="col-8">
-                    <div class="row">
-                        <div class="col-4">
-                            <div class="form-group ">
-                                @Html.LabelFor(m => m.SelectedTypeId, htmlAttributes: new { @class = "font-weight-bold" })
-                                @Html.DropDownListFor(m => m.SelectedTypeId, Model.Types ?? new List<SelectListItem>(), "Select Type", new { @class = "form-control form-control-sm custom-select", disabled = true })
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="form-group ">
-                                @Html.LabelFor(m => m.SelectedSizeId, htmlAttributes: new { @class = "font-weight-bold" })
-                                @Html.DropDownListFor(m => m.SelectedSizeId, Model.Sizes ?? new List<SelectListItem>(), "Select Size", new { @class = "form-control form-control-sm custom-select" })
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="form-group ">
-                                @Html.LabelFor(m => m.SelectedCategoryId, htmlAttributes: new { @class = "font-weight-bold" })
-                                @Html.DropDownListFor(m => m.SelectedCategoryId, Model.Categories ?? new List<SelectListItem>(), "Select Category", new { @class = "form-control form-control-sm custom-select", disabled = true })
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-center">
-                            @if (User.IsInRole("Merchandiser"))
-                            {
-                                <button type="button" class="newPrint btn btn-primary mr-1" disabled>Print</button>
-                                <button type="button" class="queuebtn btn btn-warning mr-1" disabled>Queue</button>
-                                <button type="button" class="qListbtn btn btn-success mr-1" disabled>Print Queue</button>
-                            }
-                            else
-                            {
-                                <button type="button" class="newPrint btn btn-primary mr-1">Print</button>
-                                <button type="button" class="queuebtn btn btn-warning mr-1">Queue</button>
-                                <button type="button" class="qListbtn btn btn-success mr-1">Print Queue</button>
-                            }
-                        </div>
-                    </div>
-                </div>
-                <div class="col-2">
-                </div>
-            </div>
+            <h2 class="text-center bg-primarydark text-white p-2">Item Details</h2>
 
             <div class="row">
+                <div class="col-md-6">
+                    <dl class="row">
 
-            </div>
-        </div>
-    }
-    else
-    {
-        <div class="container">
-            <div class="row mb-3 d-flex justify-content-center">
-                <div class="col-2">
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3UPC)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3UPC)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3SKU)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SKU)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3IDSC)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3IDSC)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3FNAM)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3FNAM)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3MODL)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3MODL)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3DEPT)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3DEPT)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3SDPT)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SDPT)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3CLAS)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3CLAS)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3SCLS)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SCLS)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3LONG)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3LONG)</dd>
+                    </dl>
                 </div>
-                <div class="col-8">
-                    <div class="row">
-                        <div class="col-4">
-                        </div>
-                        <div class="col-4">
-                        </div>
-                        <div class="col-4">
-                        </div>
-                        <div class="d-flex justify-content-center">
-                            @if (User.IsInRole("Merchandiser"))
-                            {
-                                <button type="button" class="newPrint btn btn-primary mr-1" disabled>Print</button>
-                                <button type="button" class="queuebtn btn btn-warning mr-1" disabled>Queue</button>
-                                <button type="button" class="qListbtn btn btn-success mr-1" disabled>Print Queue</button>
-                            }
-                            else
-                            {
-                                <button type="button" class="newPrint btn btn-primary mr-1">Print</button>
-                                <button type="button" class="queuebtn btn btn-warning mr-1">Queue</button>
-                                <button type="button" class="qListbtn btn btn-success mr-1">Print Queue</button>
-                            }
 
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3SCCD)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SCCD)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3TRB3)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3TRB3)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3REGU)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3REGU)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3POS)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3POS)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3SDT)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.StartDateFormattedDate)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3EDT)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.EndDateFormattedDate)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3SLUM)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3SLUM)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3TUOM)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3TUOM)</dd>
+
+                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3DIV)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(m => m.O3DIV)</dd>
+                    </dl>
+                </div>
+            </div>
+
+            @if (Model.O3SKU != 0)
+            {
+                <div class="container">
+                    <div class="row mb-3 d-flex justify-content-center">
+                        <div class="col-2">
+                        </div>
+                        <div class="col-8">
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="form-group ">
+                                        @Html.LabelFor(m => m.SelectedTypeId, htmlAttributes: new { @class = "font-weight-bold" })
+                                        @Html.DropDownListFor(m => m.SelectedTypeId, Model.Types ?? new List<SelectListItem>(), "Select Type", new { @class = "form-control form-control-sm custom-select", disabled = true })
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group ">
+                                        @Html.LabelFor(m => m.SelectedSizeId, htmlAttributes: new { @class = "font-weight-bold" })
+                                        @Html.DropDownListFor(m => m.SelectedSizeId, Model.Sizes ?? new List<SelectListItem>(), "Select Size", new { @class = "form-control form-control-sm custom-select" })
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group ">
+                                        @Html.LabelFor(m => m.SelectedCategoryId, htmlAttributes: new { @class = "font-weight-bold" })
+                                        @Html.DropDownListFor(m => m.SelectedCategoryId, Model.Categories ?? new List<SelectListItem>(), "Select Category", new { @class = "form-control form-control-sm custom-select", disabled = true })
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center">
+                                    @if (User.IsInRole("Merchandiser"))
+                                    {
+                                        <button type="button" class="newPrint btn btn-primary mr-1" disabled>Print</button>
+                                        <button type="button" class="queuebtn btn btn-warning mr-1" disabled>Queue</button>
+                                        <button type="button" class="qListbtn btn btn-success mr-1" disabled>Print Queue</button>
+
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class="newPrint btn btn-primary mr-1">Print</button>
+                                        <button type="button" class="queuebtn btn btn-warning mr-1">Queue</button>
+                                        <button type="button" class="qListbtn btn btn-success mr-1">Print Queue</button>
+
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-2">
                         </div>
                     </div>
-                </div>
-                <div class="col-2">
-                </div>
-            </div>
 
-            <div class="row">
+                    <div class="row">
 
-            </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="container">
+                    <div class="row mb-3 d-flex justify-content-center">
+                        <div class="col-2">
+                        </div>
+                        <div class="col-8">
+                            <div class="row">
+                                <div class="col-4">
+                                </div>
+                                <div class="col-4">
+                                </div>
+                                <div class="col-4">
+                                </div>
+                                <div class="d-flex justify-content-center">
+                                    @if (User.IsInRole("Merchandiser"))
+                                    {
+                                        <button type="button" class="newPrint btn btn-primary mr-1" disabled>Print</button>
+                                        <button type="button" class="queuebtn btn btn-warning mr-1" disabled>Queue</button>
+                                        <button type="button" class="qListbtn btn btn-success mr-1" disabled>Print Queue</button>
+
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class="newPrint btn btn-primary mr-1">Print</button>
+                                        <button type="button" class="queuebtn btn btn-warning mr-1">Queue</button>
+                                        <button type="button" class="qListbtn btn btn-success mr-1">Print Queue</button>
+
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                    </div>
+                </div>
+            }
+            <hr />
+
+
         </div>
-    }
-
-</div>
     }
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 </body>
 </html>
+
+
 <script>
     //function openReportInNewTab() {
     //    var form = document.getElementById('reportForm');

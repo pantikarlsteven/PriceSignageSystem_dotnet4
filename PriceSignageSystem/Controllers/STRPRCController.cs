@@ -26,18 +26,25 @@ namespace PriceSignageSystem.Controllers
         private readonly ITypeRepository _typeRepository;
         private readonly ISizeRepository _sizeRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IQueueRepository _queueRepository;
 
-        public STRPRCController(ISTRPRCRepository sTRPRCRepository, ITypeRepository typeRepository, ISizeRepository sizeRepository, ICategoryRepository categoryRepository)
+
+        public STRPRCController(ISTRPRCRepository sTRPRCRepository, ITypeRepository typeRepository, ISizeRepository sizeRepository, ICategoryRepository categoryRepository, IQueueRepository queueRepository)
         {
             _sTRPRCRepository = sTRPRCRepository;
             _typeRepository = typeRepository;
             _sizeRepository = sizeRepository;
             _categoryRepository = categoryRepository;
+            _queueRepository = queueRepository;
         }
 
         public ActionResult Index()
         {
-            return View();
+            var username = User.Identity.Name;
+
+            // get Item Queue history
+            var model = _queueRepository.GetHistory(username);
+            return View(model);
         }
 
         public ActionResult Search(string query)
@@ -54,19 +61,27 @@ namespace PriceSignageSystem.Controllers
                     if (dto.O3EDT == 999999)
                     {
                         dto.EndDateFormattedDate = "-";
-                    }
-
-                    else
+                    }else
                     {
                         DateTime enddateTimeValue = DateTime.ParseExact(dto.O3EDT.ToString(), "yyMMdd", CultureInfo.InvariantCulture);
                         dto.EndDateFormattedDate = enddateTimeValue.ToString("yy-MM-dd");
                     }
 
-                    dto.Sizes = _sizeRepository.GetAllSizes().Select(a => new SelectListItem
+                    if (dto.SelectedTypeId == 2)
                     {
-                        Value = a.Id.ToString(),
-                        Text = a.Name
-                    }).ToList();
+                        dto.Sizes = _sizeRepository.GetAllSizes().Where(a => a.Id == 1 || a.Id == 2).Select(a => new SelectListItem
+                        {
+                            Value = a.Id.ToString(),
+                            Text = a.Name
+                        }).ToList();
+                    }else
+                    {
+                        dto.Sizes = _sizeRepository.GetAllSizes().Select(a => new SelectListItem
+                        {
+                            Value = a.Id.ToString(),
+                            Text = a.Name
+                        }).ToList();
+                    }
 
                     dto.Types = _typeRepository.GetAllTypes().Select(a => new SelectListItem
                     {
@@ -79,7 +94,6 @@ namespace PriceSignageSystem.Controllers
                         Value = a.Id.ToString(),
                         Text = a.Name
                     }).ToList();
-
 
                 }
                 else
