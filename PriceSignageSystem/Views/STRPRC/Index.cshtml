@@ -1,7 +1,9 @@
 ﻿@using PriceSignageSystem.Models.Dto;
+@model List<ItemQueueDto>
 @{
     ViewData["Title"] = "Product Page";
 }
+
 
 <div class="content-wrapper bg-white px-3">
     <br />
@@ -28,10 +30,10 @@
     <br />
     <div id="searchResults">
         @Html.Partial("_SearchResultPartialView", new STRPRCDto())
+        @Html.Partial("_HistoryPartialView", Model)
     </div>
-
-
 </div>
+
 
 <script>
     $('#searchInput').focus();

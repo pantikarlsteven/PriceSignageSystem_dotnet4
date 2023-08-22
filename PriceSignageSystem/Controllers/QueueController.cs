@@ -214,5 +214,20 @@ namespace PriceSignageSystem.Controllers
             return Json(new { success = true });
 
         }
+
+        [HttpPost]
+        public ActionResult RequeueItem(int id)
+        {
+            var username = User.Identity.Name;
+
+            var count = _queueRepository.RequeueItem(id, username);
+
+            if(count > 0)
+            {
+                return Json(new { success = true});
+            }
+
+            return Json(new { success = false });
+        }
     }
 }

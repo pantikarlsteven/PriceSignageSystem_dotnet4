@@ -372,6 +372,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Dto\AutoPrintStatusDto.cs" />
+    <Compile Include="Models\Dto\ItemQueueDto.cs" />
     <Compile Include="Models\InventoryPrintingLog.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Constants\ReportConstants.cs" />
@@ -495,6 +496,7 @@
     <Content Include="Views\STRPRC\PCA.cshtml" />
     <Content Include="Views\STRPRC\Scan.cshtml" />
     <Content Include="Views\STRPRC\testonly.cshtml" />
+    <Content Include="Views\STRPRC\_HistoryPartialView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

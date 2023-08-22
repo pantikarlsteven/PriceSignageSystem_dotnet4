@@ -14,5 +14,7 @@ namespace PriceSignageSystem.Models.Interface
         List<ReportDto> GetQueueListPerUser(string username);
         void UpdateStatus(IEnumerable<ReportDto> data);
         void QueueMultipleItems(decimal[] skus, int sizeId);
+        List<ItemQueueDto> GetHistory(string username);
+        int RequeueItem(int id, string username);
     }
 }
