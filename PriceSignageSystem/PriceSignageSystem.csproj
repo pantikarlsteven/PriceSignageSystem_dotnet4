@@ -538,7 +538,6 @@
     <EmbeddedResource Include="Migrations\202306050123143_addFields_STRPRCs.resx">
       <DependentUpon>202306050123143_addFields_STRPRCs.cs</DependentUpon>
     </EmbeddedResource>
-    <Content Include="Reports\CrystalReports\Dynamic_HalfReport.rpt" />
     <EmbeddedResource Include="Migrations\202306140804469_add_Roletbl.resx">
       <DependentUpon>202306140804469_add_Roletbl.cs</DependentUpon>
     </EmbeddedResource>
@@ -567,12 +566,11 @@
       <DependentUpon>202306220132277_remove_idSTRPRC.cs</DependentUpon>
     </EmbeddedResource>
     <Content Include="Reports\CrystalReports\Dynamic_JewelryReport.rpt" />
-    <Content Include="Reports\CrystalReports\Dynamic_OneEightReport.rpt" />
-    <Content Include="Reports\CrystalReports\Dynamic_SkinnyReport.rpt" />
     <Content Include="Reports\CrystalReports\Dynamic_WholeReport.rpt" />
     <EmbeddedResource Include="Migrations\202307070755032_add_InventoryPrintingLogTbl.resx">
       <DependentUpon>202307070755032_add_InventoryPrintingLogTbl.cs</DependentUpon>
     </EmbeddedResource>
+    <Content Include="Reports\CrystalReports\Dynamic_OneEightReport.rpt" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />

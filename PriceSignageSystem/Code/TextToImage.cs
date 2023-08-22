@@ -28,16 +28,16 @@ namespace PriceSignageSystem.Code
             switch (sizeId)
             {
                 case ReportConstants.Size.OneEight:
-                    brandFont = new Font("Arial Black", (float)1.5625);
-                    descFont = new Font("Impact", (float)1.125);
-                    brandMaxWidth = 20.2399311;
-                    descMaxWidth = 19.7897911;
+                    brandFont = new Font("Calibri", (float)1.4375, FontStyle.Bold);
+                    descFont = new Font("Calibri", (float)1.4375, FontStyle.Bold);
+                    brandMaxWidth = 17.19166;
+                    descMaxWidth = 17.19166;
                     break;
                 case ReportConstants.Size.Jewelry:
-                    brandFont = new Font("Arial Black", 1);
-                    descFont = new Font("Impact", (float)0.75);
-                    brandMaxWidth = 15.1657963;
-                    descMaxWidth = 13.9070625;
+                    brandFont = new Font("Calibri", (float)1.125, FontStyle.Bold );
+                    descFont = new Font("Calibri", (float)1.125, FontStyle.Bold);
+                    brandMaxWidth = 15.1740694;
+                    descMaxWidth = 14.2768526;
                     break;
                 case ReportConstants.Size.Skinny:
                     brandFont = new Font("Arial Black", (float)2.188);
