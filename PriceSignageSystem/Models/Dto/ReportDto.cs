@@ -53,6 +53,7 @@ namespace PriceSignageSystem.Models.Dto
         public int ItemQueueId { get; set; }
         public bool IsSLBrand { get; set; }
         public bool IsSLDescription { get; set; }
+        public bool IsBiggerFont { get; set; }
         public string O3SDSC{ get; set; }
     }
 }

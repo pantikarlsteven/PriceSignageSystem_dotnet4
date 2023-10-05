@@ -11,14 +11,12 @@ namespace PriceSignageSystem.Models.Constants
         public const string Dynamic_WholeReportPath = "~/Reports/CrystalReports/Dynamic_WholeReport.rpt";
         public const string Dynamic_OneEightReportPath = "~/Reports/CrystalReports/Dynamic_OneEightReport.rpt";
         public const string Dynamic_JewelryReportPath = "~/Reports/CrystalReports/Dynamic_JewelryReport.rpt";
-        public const string Dynamic_SkinnyReportPath = "~/Reports/CrystalReports/Dynamic_SkinnyReport.rpt";
 
         public static class Size
         {
             public const int Whole = 1;
-            public const int Skinny = 2;
-            public const int OneEight = 3;
-            public const int Jewelry = 4;
+            public const int OneEight = 2;
+            public const int Jewelry = 3;
         }
 
         public static class Category

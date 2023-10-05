@@ -170,7 +170,7 @@ namespace PriceSignageAutoPrintingService.Repository
                     {
                         item.UserName = user;
                         var textToImage = new TextToImage();
-                        textToImage.GetImageWidth(item.O3FNAM, item.O3IDSC, ReportConstants.Size.Skinny);
+                        textToImage.GetImageWidth(item.O3FNAM, item.O3IDSC, ReportConstants.Size.Whole);
                         item.IsSLBrand = textToImage.IsSLBrand;
                         item.IsSLDescription = textToImage.IsSLDescription;
                     }

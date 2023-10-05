@@ -406,6 +406,12 @@
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Provider\UserRoleProvider.cs" />
+    <Compile Include="Reports\Dynamic_OneEightReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Dynamic_OneEightReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="SqlServerTypes\Loader.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -567,11 +573,16 @@
       <DependentUpon>202306220132277_remove_idSTRPRC.cs</DependentUpon>
     </EmbeddedResource>
     <Content Include="Reports\CrystalReports\Dynamic_JewelryReport.rpt" />
-    <Content Include="Reports\CrystalReports\Dynamic_WholeReport.rpt" />
+    <Content Include="Reports\CrystalReports\Dynamic_WholeReportBak.rpt" />
     <EmbeddedResource Include="Migrations\202307070755032_add_InventoryPrintingLogTbl.resx">
       <DependentUpon>202307070755032_add_InventoryPrintingLogTbl.cs</DependentUpon>
     </EmbeddedResource>
     <Content Include="Reports\CrystalReports\Dynamic_OneEightReport.rpt" />
+    <Content Include="Reports\CrystalReports\Dynamic_WholeReport.rpt" />
+    <EmbeddedResource Include="Reports\Dynamic_OneEightReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Dynamic_OneEightReport.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />

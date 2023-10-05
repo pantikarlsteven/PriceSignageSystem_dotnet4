@@ -11,6 +11,7 @@ namespace PriceSignageSystem.Code
     {
         public bool IsSLBrand { get; set; }
         public bool IsSLDescription { get; set; }
+        public bool IsBiggerFont { get; set; } = true;
         //Note: This code will generate an image from text and will verify the width of an
         //image if the brand name and description are single line or double line depending on the report size.
         //Whole: Brand Single Line Max Width=64.63975, Description Single Line Max Width=63.692482
@@ -19,12 +20,19 @@ namespace PriceSignageSystem.Code
         //jewelry: Brand Single Line Max Width=20.0512123, Description Single Line Max Width=17.0183887
         public void GetImageWidth(string brand, string desc, int sizeId)
         {
+
+            var bnTotalLines = GetBrandAndDescriptionTotalLines(brand.Split(' '));
+            var dnTotalLines = GetBrandAndDescriptionTotalLines(desc.Split(' '));
+
+            if ((bnTotalLines + dnTotalLines) > 4)
+                IsBiggerFont = false;
+
             //Default is Whole
             //sizeId = 1;
-            Font brandFont = new Font("Arial Black", (float)4.375);
-            Font descFont = new Font("Impact", (float)1.875);
-            var brandMaxWidth = 52.6784821;
-            var descMaxWidth = 39.09749;
+            Font brandFont = new Font("Arial", (float)4.375);
+            Font descFont = new Font("Arial", (float)4.375);
+            var brandMaxWidth = 62.0437164;
+            var descMaxWidth = 62.0437164;
             switch (sizeId)
             {
                 case ReportConstants.Size.OneEight:
@@ -39,12 +47,6 @@ namespace PriceSignageSystem.Code
                     brandMaxWidth = 15.1740694;
                     descMaxWidth = 14.2768526;
                     break;
-                case ReportConstants.Size.Skinny:
-                    brandFont = new Font("Arial Black", (float)2.188);
-                    descFont = new Font("Impact", (float)1.25);
-                    brandMaxWidth = 50.2095566;
-                    descMaxWidth = 41.0242958;
-                    break;
             }
 
             Image fakeImage = new Bitmap(1, 1);
@@ -57,6 +59,42 @@ namespace PriceSignageSystem.Code
 
             if (descSize.Width <= descMaxWidth)
                 IsSLDescription = true;
+        }
+
+        public int GetBrandAndDescriptionTotalLines(string[] words)
+        {
+            var totalLines = 0;
+            var lines = "";
+
+            // Iterate through the words and print them
+            foreach (string word in words)
+            {
+
+                if (lines.Length > 0)
+                    lines += " " + word;
+                else
+                    lines = word;
+
+                var brandMaxWidth = 62.0437164;
+                Font brandFont = new Font("Arial", (float)4.375);
+                Image fakeImage = new Bitmap(1, 1);
+                Graphics graphics = Graphics.FromImage(fakeImage);
+                SizeF brandSize = graphics.MeasureString(lines, brandFont);
+                var bsWidth = float.Parse(brandSize.Width.ToString("F5"));
+                var bmWidth = float.Parse(brandMaxWidth.ToString("F5"));
+
+                if (bsWidth > bmWidth)
+                {
+                    totalLines++;
+                    lines = word;
+                }
+
+            }
+
+            if (lines.Length > 0)
+                totalLines++;
+
+            return totalLines;
         }
     }
 }
