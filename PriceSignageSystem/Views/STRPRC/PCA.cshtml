@@ -1566,10 +1566,20 @@
             }
             else {
                 // Open this row
-                row.child(format(row.data())).show();
-                tr.addClass('shown');
-                tdi.first().removeClass('fa-solid fa-square-caret-down');
-                tdi.first().addClass('fa-solid fa-square-caret-up');
+                $.ajax({
+                    url: '/STRPRC/GetSKUDetails',
+                    type: "GET",
+                    data: { O3SKU: row.data().O3SKU },
+                    success: function (response)
+                    {
+                        row.child(format(response)).show();
+                        tr.addClass('shown');
+                        tdi.first().removeClass('fa-solid fa-square-caret-down');
+                        tdi.first().addClass('fa-solid fa-square-caret-up');
+                    }
+                });
+
+                
             }
         });
 
@@ -1589,10 +1599,18 @@
             }
             else {
                 // Open this row
-                row.child(format(row.data())).show();
-                tr.addClass('shown');
-                tdi.first().removeClass('fa-solid fa-square-caret-down');
-                tdi.first().addClass('fa-solid fa-square-caret-up');
+
+                $.ajax({
+                    url: '/STRPRC/GetSKUDetails',
+                    type: "GET",
+                    data: { O3SKU: row.data().O3SKU },
+                    success: function (response) {
+                        row.child(format(response)).show();
+                        tr.addClass('shown');
+                        tdi.first().removeClass('fa-solid fa-square-caret-down');
+                        tdi.first().addClass('fa-solid fa-square-caret-up');
+                    }
+                });
             }
         });
 
@@ -1612,10 +1630,17 @@
             }
             else {
                 // Open this row
-                row.child(format(row.data())).show();
-                tr.addClass('shown');
-                tdi.first().removeClass('fa-solid fa-square-caret-down');
-                tdi.first().addClass('fa-solid fa-square-caret-up');
+                $.ajax({
+                    url: '/STRPRC/GetSKUDetails',
+                    type: "GET",
+                    data: { O3SKU: row.data().O3SKU },
+                    success: function (response) {
+                        row.child(format(response)).show();
+                        tr.addClass('shown');
+                        tdi.first().removeClass('fa-solid fa-square-caret-down');
+                        tdi.first().addClass('fa-solid fa-square-caret-up');
+                    }
+                });
             }
         });
 

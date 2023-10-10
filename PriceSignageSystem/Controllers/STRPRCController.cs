@@ -349,6 +349,13 @@ namespace PriceSignageSystem.Controllers
             return Json(true, JsonRequestBehavior.AllowGet);
         }
 
+            [HttpGet]
+        public JsonResult GetSKUDetails(decimal O3SKU)
+        {
+            var data = _sTRPRCRepository.GetSKUDetails(O3SKU);
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
         public ActionResult LoadPCA()
         {

@@ -79,9 +79,6 @@ namespace PriceSignageSystem.Controllers
                 case ReportConstants.Size.Jewelry:
                     reportPath = Server.MapPath(ReportConstants.Dynamic_JewelryReportPath);
                     break;
-                case ReportConstants.Size.Skinny:
-                    reportPath = Server.MapPath(ReportConstants.Dynamic_SkinnyReportPath);
-                    break;
             }
             report.Load(reportPath);
             report.SetDataSource(ConversionHelper.ConvertListToDataTable(data));
@@ -125,10 +122,6 @@ namespace PriceSignageSystem.Controllers
                 else if (sizeId == ReportConstants.Size.OneEight)
                 {
                     reportPath = Server.MapPath(ReportConstants.Dynamic_OneEightReportPath);
-                }
-                else if (sizeId == ReportConstants.Size.Skinny)
-                {
-                    reportPath = Server.MapPath(ReportConstants.Dynamic_SkinnyReportPath);
                 }
                 else if (sizeId == ReportConstants.Size.Jewelry)
                 {

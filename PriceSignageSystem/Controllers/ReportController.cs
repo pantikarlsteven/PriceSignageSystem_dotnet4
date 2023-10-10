@@ -55,6 +55,7 @@ namespace PriceSignageSystem.Controllers
             return data;
         }
 
+        [AllowAnonymous]
         public ActionResult PreviewCrystalReport(string id)
         {
             var o3sku = decimal.Parse(id);
@@ -65,12 +66,68 @@ namespace PriceSignageSystem.Controllers
             textToImage.GetImageWidth(data.O3FNAM, data.O3IDSC, ReportConstants.Size.Whole);
             data.IsSLBrand = textToImage.IsSLBrand;
             data.IsSLDescription = textToImage.IsSLDescription;
+            data.IsBiggerFont = textToImage.IsBiggerFont;
 
+            var test = _sTRPRCRepository.GetReportData(11656);
+            data.country_img = test.country_img;
+            //data.O3FNAM = data.O3FNAM + " TESTING ONLY TESTING ONLY";
+            //data.O3IDSC = data.O3IDSC + " TESTING ONLY TESTING ONLY";
+            //data.O3MODL = test1.O3MODL;
+            //data.O3LONG = test1.O3LONG;
+            data.O3SDSC = _sTRPRCRepository.GetSubClassDescription(o3sku);
+            //data.O3IDSC  = "ELECTRIC KETTLE 2L";
+            //data.O3MODL = "KJK2-1";
+            //data.TypeId = 1;
+            //data.CategoryId = 1;
+            //data.O3POS = 110000;
             var dataTable = ConversionHelper.ConvertObjectToDataTable(data);
 
             ReportDocument report = new ReportDocument();
-            report.Load(Server.MapPath(ReportConstants.Dynamic_WholeReportPath));
+            report.Load(Server.MapPath("~/Reports/CrystalReports/Dynamic_WholeReportNew.rpt"));
             report.SetDataSource(dataTable);
+
+            string pdfPath = Server.MapPath("~/Reports/PDFs");
+            Guid guid = Guid.NewGuid();
+            var pdf = pdfPath + "\\" + guid + ".pdf";
+            PDFConversion.ConvertCrystalReportToPDF(defaultPDFViewerLocation, report, pdfPath, pdf);
+
+            Logs.WriteToFile("Installed Printers:");
+            foreach (string printer in PrinterSettings.InstalledPrinters)
+            {
+                Logs.WriteToFile(printer);
+            }
+
+            PrinterSettings printerSettings = new PrinterSettings()
+            {
+                PrinterName = _printerName,
+                Copies = 1
+            };
+
+            PageSettings pageSettings = new PageSettings(printerSettings)
+            {
+                Margins = new Margins(0, 0, 0, 0)
+            };
+
+            foreach (System.Drawing.Printing.PaperSize paperSize in printerSettings.PaperSizes)
+            {
+                if (paperSize.PaperName == "Letter")
+                {
+                    pageSettings.PaperSize = paperSize;
+                    break;
+                }
+            }
+
+            using (PdfDocument pdfDocument = PdfDocument.Load(pdf))
+            {
+                using (PrintDocument printDocument = pdfDocument.CreatePrintDocument())
+                {
+                    printDocument.PrinterSettings = printerSettings;
+                    printDocument.DefaultPageSettings = pageSettings;
+                    printDocument.PrintController = (PrintController)new StandardPrintController();
+                    //printDocument.Print();
+                    Logs.WriteToFile("Start printing");
+                }
+            }
 
             Stream stream = report.ExportToStream(ExportFormatType.PortableDocFormat);
             byte[] pdfBytes = new byte[stream.Length];
@@ -100,10 +157,6 @@ namespace PriceSignageSystem.Controllers
             else if (model.SelectedSizeId == ReportConstants.Size.OneEight)
             {
                 reportPath = Server.MapPath(ReportConstants.Dynamic_OneEightReportPath);
-            }
-            else if (model.SelectedSizeId == ReportConstants.Size.Skinny)
-            {
-                reportPath = Server.MapPath(ReportConstants.Dynamic_SkinnyReportPath);
             }
             else if (model.SelectedSizeId == ReportConstants.Size.Jewelry)
             {
@@ -145,9 +198,6 @@ namespace PriceSignageSystem.Controllers
                     case ReportConstants.Size.Jewelry:
                         path = Server.MapPath(ReportConstants.Dynamic_JewelryReportPath);
                         break;
-                    case ReportConstants.Size.Skinny:
-                        path = Server.MapPath(ReportConstants.Dynamic_SkinnyReportPath);
-                        break;
                 }
 
                 report.Load(path);
@@ -161,6 +211,7 @@ namespace PriceSignageSystem.Controllers
                 textToImage.GetImageWidth(skuModel.O3FNAM, skuModel.O3IDSC, model.SizeId);
                 skuModel.IsSLBrand = textToImage.IsSLBrand;
                 skuModel.IsSLDescription = textToImage.IsSLDescription;
+                skuModel.IsBiggerFont = textToImage.IsBiggerFont;
 
                 report.SetDataSource(ConversionHelper.ConvertObjectToDataTable(skuModel));
                 Stream stream = report.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
@@ -246,6 +297,7 @@ namespace PriceSignageSystem.Controllers
                         textToImage.GetImageWidth(item.O3FNAM, item.O3IDSC, sizeId);
                         item.IsSLBrand = textToImage.IsSLBrand;
                         item.IsSLDescription = textToImage.IsSLDescription;
+                        item.IsBiggerFont = textToImage.IsBiggerFont;
                         item.O3SDSC = _sTRPRCRepository.GetSubClassDescription(item.O3SKU);
                     }
                     var dataTable = ConversionHelper.ConvertListToDataTable(data);
@@ -258,10 +310,6 @@ namespace PriceSignageSystem.Controllers
                     else if (sizeId == ReportConstants.Size.OneEight)
                     {
                         reportPath = Server.MapPath(ReportConstants.Dynamic_OneEightReportPath);
-                    }
-                    else if (sizeId == ReportConstants.Size.Skinny)
-                    {
-                        reportPath = Server.MapPath(ReportConstants.Dynamic_SkinnyReportPath);
                     }
                     else if (sizeId == ReportConstants.Size.Jewelry)
                     {
@@ -362,10 +410,6 @@ namespace PriceSignageSystem.Controllers
                 {
                     reportPath = Server.MapPath(ReportConstants.Dynamic_OneEightReportPath);
                 }
-                else if (sizeId == ReportConstants.Size.Skinny)
-                {
-                    reportPath = Server.MapPath(ReportConstants.Dynamic_SkinnyReportPath);
-                }
                 else if (sizeId == ReportConstants.Size.Jewelry)
                 {
                     reportPath = Server.MapPath(ReportConstants.Dynamic_JewelryReportPath);
@@ -406,10 +450,6 @@ namespace PriceSignageSystem.Controllers
                 else if (model.SelectedSizeId == ReportConstants.Size.OneEight)
                 {
                     reportPath = Server.MapPath(ReportConstants.Dynamic_OneEightReportPath);
-                }
-                else if (model.SelectedSizeId == ReportConstants.Size.Skinny)
-                {
-                    reportPath = Server.MapPath(ReportConstants.Dynamic_SkinnyReportPath);
                 }
                 else if (model.SelectedSizeId == ReportConstants.Size.Jewelry)
                 {

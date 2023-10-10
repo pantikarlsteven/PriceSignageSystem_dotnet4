@@ -272,53 +272,71 @@ namespace PriceSignageSystem.Models.Repository
                 {
                     var record = new STRPRCDto
                     {
-                        O3LOC = (decimal)reader["O3LOC"],
-                        O3CLAS = (decimal)reader["O3CLAS"],
-                        O3IDSC = reader["O3IDSC"].ToString(),
+                        IsPrinted = reader["IsPrinted"].ToString(),
                         O3SKU = (decimal)reader["O3SKU"],
-                        O3SCCD = reader["O3SCCD"].ToString(),
                         O3UPC = (decimal)reader["O3UPC"],
-                        O3VNUM = (decimal)reader["O3VNUM"],
-                        O3TYPE = reader["O3TYPE"].ToString(),
-                        O3DEPT = (decimal)reader["O3DEPT"],
-                        O3SDPT = (decimal)reader["O3SDPT"],
-                        O3SCLS = (decimal)reader["O3SCLS"],
-                        O3POS = (decimal)reader["O3POS"],
-                        O3POSU = (decimal)reader["O3POSU"],
+                        O3IDSC = reader["O3IDSC"].ToString(),
                         O3REG = (decimal)reader["O3REG"],
-                        O3REGU = (decimal)reader["O3REGU"],
-                        O3ORIG = (decimal)reader["O3ORIG"],
-                        O3ORGU = (decimal)reader["O3ORGU"],
-                        O3EVT = (decimal)reader["O3EVT"],
-                        O3PMMX = (decimal)reader["O3PMMX"],
-                        O3PMTH = (decimal)reader["O3PMTH"],
-                        O3PDQT = (decimal)reader["O3PDQT"],
-                        O3PDPR = (decimal)reader["O3PDPR"],
+                        O3POS = (decimal)reader["O3POS"],
                         O3SDT = (decimal)reader["O3SDT"],
                         O3EDT = (decimal)reader["O3EDT"],
-                        O3TRB3 = reader["O3TRB3"].ToString(),
-                        O3FGR = (decimal)reader["O3FGR"],
-                        O3FNAM = reader["O3FNAM"].ToString(),
-                        O3MODL = reader["O3MODL"].ToString(),
-                        O3LONG = reader["O3LONG"].ToString(),
-                        O3SLUM = reader["O3SLUM"].ToString(),
-                        O3DIV = reader["O3DIV"].ToString(),
-                        O3TUOM = reader["O3TUOM"].ToString(),
-                        O3DATE = (decimal)reader["O3DATE"],
-                        O3CURD = (decimal)reader["O3CURD"],
-                        O3USER = reader["O3USER"].ToString(),
-                        DateUpdated = (DateTime)reader["DateUpdated"],
                         TypeId = (int)reader["TypeId"],
                         SizeId = (int)reader["SizeId"],
                         CategoryId = (int)reader["CategoryId"],
                         DepartmentName = reader["DPTNAM"].ToString(),
                         IsReverted = reader["O3FLAG1"].ToString(),
-                        IsPrinted = reader["IsPrinted"].ToString(),
                         HasInventory = reader["INV2"].ToString(),
                         IsExemp = reader["IsExemp"].ToString()
                     };
 
                     data.Add(record);
+                }
+
+                // Close the reader and connection
+                reader.Close();
+                connection.Close();
+            }
+
+            return data;
+
+        }
+
+        public STRPRCDto GetSKUDetails(decimal O3SKU)
+        {
+            var sp = "sp_GetSKUDetails";
+            var data = new STRPRCDto();
+            // Set up the connection and command
+            using (var connection = new SqlConnection(connectionString))
+            using (var command = new SqlCommand(sp, connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandTimeout = commandTimeoutInSeconds;
+
+                // Add parameters if required
+                command.Parameters.AddWithValue("@O3SKU", O3SKU);
+
+                // Open the connection and execute the command
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                // Process the result set
+                if (reader.Read())
+                {
+                    var record = new STRPRCDto
+                    {
+                        O3SKU = (decimal)reader["O3SKU"],
+                        O3FNAM = reader["O3FNAM"].ToString(),
+                        O3MODL = reader["O3MODL"].ToString(),
+                        O3DEPT = (decimal)reader["O3DEPT"],
+                        O3SDPT = (decimal)reader["O3SDPT"],
+                        O3CLAS = (decimal)reader["O3CLAS"],
+                        O3SCLS = (decimal)reader["O3SCLS"],
+                        O3SCCD = reader["O3SCCD"].ToString(),
+                        O3TRB3 = reader["O3TRB3"].ToString(),
+                        O3LONG = reader["O3LONG"].ToString()
+                    };
+
+                    data = record;
                 }
 
                 // Close the reader and connection
