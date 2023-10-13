@@ -339,6 +339,7 @@ namespace PriceSignageSystem.Controllers
             return File(compressedData, "application/json");
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public JsonResult CheckSTRPRCUpdates()
         {
@@ -356,6 +357,7 @@ namespace PriceSignageSystem.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public ActionResult LoadPCA()
         {

@@ -357,6 +357,7 @@ namespace PriceSignageSystem.Models.Repository
             using (var command = new SqlCommand("sp_GetUpdatedData", connection))
             {
                 command.CommandType = CommandType.StoredProcedure;
+                command.CommandTimeout = commandTimeoutInSeconds;
 
                 command.Parameters.Add("@o3loc", SqlDbType.Decimal).Value = ConfigurationManager.AppSettings["StoreID"];
                 if (o3sku > 0)
