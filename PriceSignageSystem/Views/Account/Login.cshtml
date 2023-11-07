@@ -26,13 +26,21 @@
 </head>
 <body class="hold-transition login-page">
 
+    <div class="content">
+        <div class="overlay-wrapper" id="loadingSTRPRCUpdate" style="display:none;">
+            <div class="overlay" style="background-color: rgba(0, 0, 0, 0.59); z-index: 99;">
+                <img class="" src="~/Content/Images/loading.gif" alt="Loading" style="max-width:350px;" />
+                <p style="position: absolute; margin-top: 250px; background-color: #dee2e6; padding: 10px;">Updating Data. Please Wait...</p>
+            </div>
+        </div>
+    </div>
 
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
         <div class="login-box">
             <div class="text-center mb-2">
-                <img class="img-fluid w-75" src="~/Content/Images/snrlogo_blue.png" alt="Logo"/>
+                <img class="img-fluid w-75" src="~/Content/Images/snrlogo_blue.png" alt="Logo" />
             </div>
             <div class="card text-white card-outline shadow-lg">
                 <div class="card-body">
@@ -67,6 +75,41 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        InitLoad();
+
+        function InitLoad() {
+            //Check strprc updates
+            $.ajax({
+                url: '/STRPRC/CheckSTRPRCUpdates',
+                type: "GET",
+                success: function (isUpdated) {
+                    console.log(isUpdated);
+                    if (!isUpdated) {
+                        $("#loadingSTRPRCUpdate").show();
+
+                        $.ajax({
+                            url: '/STRPRC/LoadPCA',
+                            type: "POST",
+                            dataType: 'json',
+                            beforeSend: function (xhr) {
+                                // Add the 'Accept-Encoding' header to let the server know that we can handle Gzip compression
+                                xhr.setRequestHeader('Accept-Encoding', 'gzip');
+                            },
+                            success: function (data) {
+                                window.location.href = "/strprc/pca";
+                                $("#loadingSTRPRCUpdate").hide();
+                            },
+                            error: function (error) {
+                                $("#loadingSTRPRCUpdate").hide();
+                            }
+                        });
+                    }
+                }
+            });
+        }
+    </script>
 </body>
 </html>
 

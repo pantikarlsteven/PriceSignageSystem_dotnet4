@@ -143,9 +143,9 @@ namespace PriceSignageSystem.Controllers
                                 : item.TypeId == 1 ? "Regular"
                                 : "Save";
                 item.SizeName = item.SizeId == 1 ? "Whole"
-                                : item.SizeId == 2 ? "Skinny"
-                                : item.SizeId == 3 ? "1/8"
-                                : item.SizeId == 4 ? "Jewelry"
+                                : item.SizeId == 2 ? "1/8"
+                                : item.SizeId == 3 ? "Jewelry"
+                                //: item.SizeId == 4 ? "Jewelry"
                                 : "Whole";
                 item.CategoryName = item.CategoryId == 1 ? "Appliance"
                                     : item.CategoryId == 2 ? "Non-Appliance"
@@ -160,9 +160,9 @@ namespace PriceSignageSystem.Controllers
                                 : item.TypeId == 1 ? "Regular"
                                 : "Save";
                 item.SizeName = item.SizeId == 1 ? "Whole"
-                                : item.SizeId == 2 ? "Skinny"
-                                : item.SizeId == 3 ? "1/8"
-                                : item.SizeId == 4 ? "Jewelry"
+                                : item.SizeId == 2 ? "1/8"
+                                : item.SizeId == 3 ? "Jewelry"
+                                //: item.SizeId == 4 ? "Jewelry"
                                 : "Whole";
                 item.CategoryName = item.CategoryId == 1 ? "Appliance"
                                     : item.CategoryId == 2 ? "Non-Appliance"
@@ -177,9 +177,9 @@ namespace PriceSignageSystem.Controllers
                                 : item.TypeId == 1 ? "Regular"
                                 : "Save";
                 item.SizeName = item.SizeId == 1 ? "Whole"
-                                : item.SizeId == 2 ? "Skinny"
-                                : item.SizeId == 3 ? "1/8"
-                                : item.SizeId == 4 ? "Jewelry"
+                                : item.SizeId == 2 ? "1/8"
+                                : item.SizeId == 3 ? "Jewelry"
+                                //: item.SizeId == 4 ? "Jewelry"
                                 : "Whole";
                 item.CategoryName = item.CategoryId == 1 ? "Appliance"
                                     : item.CategoryId == 2 ? "Non-Appliance"
@@ -339,6 +339,7 @@ namespace PriceSignageSystem.Controllers
             return File(compressedData, "application/json");
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public JsonResult CheckSTRPRCUpdates()
         {
@@ -356,6 +357,7 @@ namespace PriceSignageSystem.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public ActionResult LoadPCA()
         {
@@ -377,9 +379,9 @@ namespace PriceSignageSystem.Controllers
                                 : item.TypeId == 1 ? "Regular"
                                 : "Save";
                 item.SizeName = item.SizeId == 1 ? "Whole"
-                                : item.SizeId == 2 ? "Skinny"
-                                : item.SizeId == 3 ? "1/8"
-                                : item.SizeId == 4 ? "Jewelry"
+                                : item.SizeId == 2 ? "1/8"
+                                : item.SizeId == 3 ? "Jewelry"
+                                //: item.SizeId == 4 ? "Jewelry"
                                 : "Whole";
                 item.CategoryName = item.CategoryId == 1 ? "Appliance"
                                     : item.CategoryId == 2 ? "Non-Appliance"
@@ -394,9 +396,9 @@ namespace PriceSignageSystem.Controllers
                                 : item.TypeId == 1 ? "Regular"
                                 : "Save";
                 item.SizeName = item.SizeId == 1 ? "Whole"
-                                : item.SizeId == 2 ? "Skinny"
-                                : item.SizeId == 3 ? "1/8"
-                                : item.SizeId == 4 ? "Jewelry"
+                                : item.SizeId == 2 ? "1/8"
+                                : item.SizeId == 3 ? "Jewelry"
+                                //: item.SizeId == 4 ? "Jewelry"
                                 : "Whole";
                 item.CategoryName = item.CategoryId == 1 ? "Appliance"
                                     : item.CategoryId == 2 ? "Non-Appliance"
@@ -411,9 +413,9 @@ namespace PriceSignageSystem.Controllers
                                 : item.TypeId == 1 ? "Regular"
                                 : "Save";
                 item.SizeName = item.SizeId == 1 ? "Whole"
-                                : item.SizeId == 2 ? "Skinny"
-                                : item.SizeId == 3 ? "1/8"
-                                : item.SizeId == 4 ? "Jewelry"
+                                : item.SizeId == 2 ? "1/8"
+                                : item.SizeId == 3 ? "Jewelry"
+                                //: item.SizeId == 4 ? "Jewelry"
                                 : "Whole";
                 item.CategoryName = item.CategoryId == 1 ? "Appliance"
                                     : item.CategoryId == 2 ? "Non-Appliance"

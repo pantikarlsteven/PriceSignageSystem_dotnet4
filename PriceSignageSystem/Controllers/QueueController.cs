@@ -110,8 +110,10 @@ namespace PriceSignageSystem.Controllers
                     textToImage.GetImageWidth(item.O3FNAM, item.O3IDSC, sizeId);
                     item.IsSLBrand = textToImage.IsSLBrand;
                     item.IsSLDescription = textToImage.IsSLDescription;
+                    item.IsBiggerFont = textToImage.IsBiggerFont;
                     item.O3SDSC = _sTRPRCRepository.GetSubClassDescription(item.O3SKU);
                 }
+
                 var dataTable = ConversionHelper.ConvertListToDataTable(data);
                 var reportPath = string.Empty;
 
