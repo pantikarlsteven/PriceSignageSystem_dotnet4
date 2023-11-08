@@ -80,7 +80,7 @@
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
-                @if (User.IsInRole("Admin"))
+                @if (User.IsInRole("Administrator/Manager"))
                 {
                     <li class="nav-item">
                         <a href="@Url.Action("Register","Account")" id="logoutLink" class="nav-link">

@@ -1,4 +1,5 @@
-﻿using PriceSignageSystem.Models.DatabaseContext;
+﻿using Org.BouncyCastle.Asn1.Pkcs;
+using PriceSignageSystem.Models.DatabaseContext;
 using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
 using System;
@@ -270,6 +271,12 @@ namespace PriceSignageSystem.Models.Repository
                 // Process the result set
                 while (reader.Read())
                 {
+
+                    if (((decimal)reader["O3RSDT"] == startDate && (decimal)reader["O3SDT"] != startDate))
+                    {
+
+                    }
+
                     var record = new STRPRCDto
                     {
                         IsPrinted = reader["IsPrinted"].ToString(),
@@ -280,6 +287,8 @@ namespace PriceSignageSystem.Models.Repository
                         O3POS = (decimal)reader["O3POS"],
                         O3SDT = (decimal)reader["O3SDT"],
                         O3EDT = (decimal)reader["O3EDT"],
+                        O3RSDT = (decimal)reader["O3RSDT"],
+                        O3REDT = (decimal)reader["O3REDT"],
                         TypeId = (int)reader["TypeId"],
                         SizeId = (int)reader["SizeId"],
                         CategoryId = (int)reader["CategoryId"],

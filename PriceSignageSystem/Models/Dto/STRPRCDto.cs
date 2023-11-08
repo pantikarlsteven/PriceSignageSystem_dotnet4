@@ -51,8 +51,10 @@ namespace PriceSignageSystem.Models.Dto
         public decimal O3PDPR { get; set; }
         [Display(Name = "START DATE")]
         public decimal O3SDT { get; set; }
+        public decimal O3RSDT { get; set; }
         [Display(Name = "END DATE")]
         public decimal O3EDT { get; set; }
+        public decimal O3REDT { get; set; }
         [Display(Name = "COUNTRY")]
         public string O3TRB3 { get; set; }
         [Display(Name = "BRAND NO.")]
