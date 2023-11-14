@@ -271,7 +271,7 @@ namespace PriceSignageSystem.Models.Repository
                 // Process the result set
                 while (reader.Read())
                 {
-
+                    //to be continued by noel
                     if (((decimal)reader["O3RSDT"] == startDate && (decimal)reader["O3SDT"] != startDate))
                     {
 
