@@ -83,7 +83,7 @@ namespace PriceSignageSystem.Controllers
             var dataTable = ConversionHelper.ConvertObjectToDataTable(data);
 
             ReportDocument report = new ReportDocument();
-            report.Load(Server.MapPath("~/Reports/CrystalReports/Dynamic_WholeReportNew.rpt"));
+            report.Load(Server.MapPath("~/Reports/CrystalReports/Dynamic_WholeReport.rpt"));
             report.SetDataSource(dataTable);
 
             string pdfPath = Server.MapPath("~/Reports/PDFs");
