@@ -365,6 +365,11 @@
                     ],
                 });
 
+                //if (data.filter(row => row.Inv == 'Y').length == 0) {
+                //    table.column(2).visible(false);
+                //    table.column(8).visible(false);
+                //}
+
                 if ('@User.IsInRole("Merchandiser")' == 'True' ) {
                         // DISABLED BUTTONS IF ROLE = MERCHANDISER
                         var buttonsprintAll = document.querySelectorAll(".printAllBtn");
@@ -609,7 +614,7 @@
                             '</div>' +
                             '<div class="form-group row col-md-12">' +
                             '<label class="col-sm-2 col-form-label" for="typeDropdown">Type:</label>' +
-                            '<select class="col-sm-9  ml-3 form-control" id="typeDropdown">' +
+                            '<select class="col-sm-9  ml-3 form-control" id="typeDropdown" disabled>' +
                             typeOptions +
                             '</select>' +
                             '</div>' +
@@ -617,7 +622,7 @@
                             '<div class="form-row">' +
                             '<div class="form-group row col-md-12">' +
                             '<label class="col-sm-2 col-form-label" for="categoryDropdown">Category:</label>' +
-                            '<select class="col-sm-9  ml-3 form-control" id="categoryDropdown">' +
+                            '<select class="col-sm-9  ml-3 form-control" id="categoryDropdown" disabled>' +
                             categoryOptions +
                             '</select>' +
                             '</div>' +

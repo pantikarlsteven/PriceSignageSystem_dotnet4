@@ -1,4 +1,5 @@
 ﻿using Org.BouncyCastle.Asn1.Pkcs;
+using PriceSignageSystem.Models.Constants;
 using PriceSignageSystem.Models.DatabaseContext;
 using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
@@ -8,6 +9,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace PriceSignageSystem.Models.Repository
 {
@@ -15,12 +17,14 @@ namespace PriceSignageSystem.Models.Repository
     {
         private readonly ApplicationDbContext _db;
         private readonly string connectionString;
+        private readonly string connectionString151;
         private readonly int commandTimeoutInSeconds;
 
         public STRPRCRepository(ApplicationDbContext db)
         {
             _db = db;
             connectionString = ConfigurationManager.ConnectionStrings["MyConnectionString"].ConnectionString;
+            connectionString151 = ConfigurationManager.ConnectionStrings["MyConnectionString151"].ConnectionString;
             commandTimeoutInSeconds = 180;
 
         }
@@ -248,7 +252,7 @@ namespace PriceSignageSystem.Models.Repository
             return _db.STRPRCs;
         }
 
-        public List<STRPRCDto> GetDataByStartDate(decimal startDate)
+        public async Task<List<STRPRCDto>> GetDataByStartDate(decimal startDate)
         {
             var sp = "sp_GettmpData";
             var data = new List<STRPRCDto>();
@@ -266,17 +270,11 @@ namespace PriceSignageSystem.Models.Repository
 
                 // Open the connection and execute the command
                 connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
+                SqlDataReader reader = await command.ExecuteReaderAsync();
 
                 // Process the result set
                 while (reader.Read())
                 {
-                    //to be continued by noel
-                    if (((decimal)reader["O3RSDT"] == startDate && (decimal)reader["O3SDT"] != startDate))
-                    {
-
-                    }
-
                     var record = new STRPRCDto
                     {
                         IsPrinted = reader["IsPrinted"].ToString(),
@@ -297,6 +295,16 @@ namespace PriceSignageSystem.Models.Repository
                         HasInventory = reader["INV2"].ToString(),
                         IsExemp = reader["IsExemp"].ToString()
                     };
+
+                    if ((decimal)reader["O3RSDT"] == startDate)
+                    {
+                        if ((int)reader["TypeId"] == ReportConstants.Type.Regular)
+                        {
+                            record.O3SDT = (decimal)reader["O3RSDT"];
+                            record.O3EDT = (decimal)reader["O3REDT"];
+                        }
+                        else continue;
+                    }
 
                     data.Add(record);
                 }
@@ -359,7 +367,6 @@ namespace PriceSignageSystem.Models.Repository
 
         public List<STRPRCLogDto> GetUpdatedData(decimal o3sku = 0)
         {
-
             var records = new List<STRPRCLogDto>();
             // Set up the connection and command
             using (var connection = new SqlConnection(connectionString))
@@ -508,25 +515,49 @@ namespace PriceSignageSystem.Models.Repository
         public decimal UpdateSTRPRCTable(int storeId)
         {
             decimal date = 0;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            try
             {
-                using (SqlCommand command = new SqlCommand("sp_GetLatestSTRPRCTable", connection))
+                using (SqlConnection connection = new SqlConnection(connectionString151))
                 {
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.CommandTimeout = commandTimeoutInSeconds;
-                    // Add any required parameters to the command if needed
-                    command.Parameters.AddWithValue("@O3LOC", storeId);
+                    using (SqlCommand command = new SqlCommand("sp_GetSTRPRC", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.CommandTimeout = commandTimeoutInSeconds;
+                        // Add any required parameters to the command if needed
+                        command.Parameters.AddWithValue("@Store", storeId);
 
-                    connection.Open();
+                        connection.Open();
 
-                    // Execute the command and retrieve the result count
-                    date = (decimal)command.ExecuteScalar();
-
-                    connection.Close();
-
-                    // Use the result count as needed
-                    //Console.WriteLine("Result Count: " + resultCount);
+                        // Execute the command and retrieve the result count
+                        command.ExecuteNonQuery();
+                        connection.Close();
+                    }
                 }
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand("sp_GetLatestSTRPRCTable", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.CommandTimeout = commandTimeoutInSeconds;
+                        // Add any required parameters to the command if needed
+                        command.Parameters.AddWithValue("@O3LOC", storeId);
+
+                        connection.Open();
+
+                        // Execute the command and retrieve the result count
+                        date = (decimal)command.ExecuteScalar();
+
+                        connection.Close();
+
+                        // Use the result count as needed
+                        //Console.WriteLine("Result Count: " + resultCount);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error executing stored procedure: " + ex.Message);
             }
             return date;
         }

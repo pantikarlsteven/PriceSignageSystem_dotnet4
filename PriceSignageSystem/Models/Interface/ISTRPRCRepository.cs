@@ -14,7 +14,7 @@ namespace PriceSignageSystem.Models.Interface
         List<STRPRCDto> GetStores();
         List<STRPRCDto> GetData(decimal O3SKU);
         IEnumerable<STRPRC> GetAllData();
-        List<STRPRCDto> GetDataByStartDate(decimal startDate);
+        Task<List<STRPRCDto>> GetDataByStartDate(decimal startDate);
         STRPRCDto GetSKUDetails(decimal O3SKU);
         List<STRPRCLogDto> GetUpdatedData(decimal sku = 0);
         STRPRCDto GetDataBySKU(decimal O3SKU);

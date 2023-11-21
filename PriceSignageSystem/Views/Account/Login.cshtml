@@ -33,6 +33,13 @@
                 <p style="position: absolute; margin-top: 250px; background-color: #dee2e6; padding: 10px;">Updating Data. Please Wait...</p>
             </div>
         </div>
+
+        <div class="overlay-wrapper" id="loadingCheckingSTRPRCUpdate" style="display:none;">
+            <div class="overlay" style="background-color: rgba(0, 0, 0, 0.59); z-index: 99;">
+                <img class="" src="~/Content/Images/loading.gif" alt="Loading" style="max-width:350px;" />
+                <p style="position: absolute; margin-top: 250px; background-color: #dee2e6; padding: 10px;">Checking for updates...</p>
+            </div>
+        </div>
     </div>
 
     @using (Html.BeginForm())
@@ -81,14 +88,15 @@
 
         function InitLoad() {
             //Check strprc updates
+            $("#loadingCheckingSTRPRCUpdate").show();
             $.ajax({
                 url: '/STRPRC/CheckSTRPRCUpdates',
                 type: "GET",
                 success: function (isUpdated) {
                     console.log(isUpdated);
+                    $("#loadingCheckingSTRPRCUpdate").hide();
                     if (!isUpdated) {
                         $("#loadingSTRPRCUpdate").show();
-
                         $.ajax({
                             url: '/STRPRC/LoadPCA',
                             type: "POST",

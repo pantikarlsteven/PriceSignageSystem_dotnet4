@@ -15,6 +15,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace PriceSignageSystem.Controllers
@@ -127,11 +128,11 @@ namespace PriceSignageSystem.Controllers
         }
        
         [HttpPost]
-        public ActionResult GetPCAByDate(DateTime startDate)
+        public async Task<ActionResult> GetPCAByDate(DateTime startDate)
         {
             var startDateFormatted = ConversionHelper.ToDecimal(startDate);
             var data = new STRPRCDto();
-            var rawData = _sTRPRCRepository.GetDataByStartDate(startDateFormatted).ToList();
+            var rawData = await _sTRPRCRepository.GetDataByStartDate(startDateFormatted);
 
             data.WithInventoryList = rawData.Where(a => a.HasInventory == "Y" && a.IsExemp == "N").ToList();
             data.WithoutInventoryList = rawData.Where(a => a.HasInventory == ""  && a.IsExemp == "N").ToList();
@@ -359,14 +360,14 @@ namespace PriceSignageSystem.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public ActionResult LoadPCA()
+        public async Task<ActionResult> LoadPCA()
         {
             var result = _sTRPRCRepository.GetLatestUpdate();
             if (result.DateUpdated.Date != DateTime.Now.Date)
                 _sTRPRCRepository.UpdateSTRPRCTable(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
 
             var data = new STRPRCDto();
-            var rawData = _sTRPRCRepository.GetDataByStartDate(result.LatestDate).ToList();
+            var rawData = await _sTRPRCRepository.GetDataByStartDate(result.LatestDate);
 
             data.LatestDate = result.LatestDate;
             data.WithInventoryList = rawData.Where(a => a.HasInventory == "Y" && a.IsExemp == "N").ToList();
@@ -409,9 +410,7 @@ namespace PriceSignageSystem.Controllers
 
             foreach (var item in data.ExcemptionList)
             {
-                item.TypeName = item.TypeId == 2 ? "Save"
-                                : item.TypeId == 1 ? "Regular"
-                                : "Save";
+                item.TypeName = item.O3EDT != 999999 ? "Save" : "Regular";
                 item.SizeName = item.SizeId == 1 ? "Whole"
                                 : item.SizeId == 2 ? "1/8"
                                 : item.SizeId == 3 ? "Jewelry"

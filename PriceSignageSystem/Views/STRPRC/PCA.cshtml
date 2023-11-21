@@ -59,15 +59,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="content">
-            <div class="overlay-wrapper" id="loadingSTRPRCUpdate" style="display:none;">
-                <div class="overlay" style="background-color: rgba(0, 0, 0, 0.59); z-index: 99;">
-                    <img class="" src="~/Content/Images/loading.gif" alt="Loading" style="max-width:350px;" />
-                    <p style="position: absolute; margin-top: 250px; background-color: #dee2e6; padding: 10px;">Updating Data. Please Wait...</p>
-                </div>
-            </div>
-        </div>
         <center>
             @if (TempData["RegistrationSuccessMessage"] != null)
             {
@@ -155,36 +146,6 @@
                                 <tr>
                                     <th><input type="checkbox" id="selectAllWithout" /></th>
                                     <th>-</th>
-                                    @*<th>Printed?</th>*@
-                                    <th>SKU</th>
-                                    <th>UPC</th>
-                                    <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
-                                    <th>Reg Price</th>
-                                    <th>Current Price</th>
-                                    <th>Date Start</th>
-                                    <th>Date End</th>
-                                    <th>Type</th>
-                                    <th>Size</th>
-                                    <th>Category</th>
-                                    <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
-                                    <th>Reverted?</th>
-                                    @*<th><button class="printAllBtnWithout btn btn-secondary px-3">Print Selected</button></th>*@
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="14" style="text-align: center;">Please enter start date</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div id="excemption" class="tab-pane fade mx-2">
-                        <h3 class="text-center mt-2">Exemption</h3>
-                        <table id="excemption-table" class="table table-sm table-hover" style="width: 100%; text-align: center;">
-                            <thead style="background-color: #1C3766;" class="text-white">
-                                <tr>
-                                    <th><input type="checkbox" id="selectAllExcemption" /></th>
-                                    <th>-</th>
                                     <th>Printed?</th>
                                     <th>SKU</th>
                                     <th>UPC</th>
@@ -198,12 +159,42 @@
                                     <th>Category</th>
                                     <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
                                     <th>Reverted?</th>
-                                    <th><button class="printAllBtnExcemption btn btn-secondary px-3">Print Selected</button></th>
+                                    <th><button class="printAllBtnWithout btn btn-secondary px-3">Print Selected</button></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td colspan="16" style="text-align: center;">Please enter start date</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="excemption" class="tab-pane fade mx-2">
+                        <h3 class="text-center mt-2">Exemption</h3>
+                        <table id="excemption-table" class="table table-sm table-hover" style="width: 100%; text-align: center;">
+                            <thead style="background-color: #1C3766;" class="text-white">
+                                <tr>
+                                    <th><input type="checkbox" id="selectAllExcemption" /></th>
+                                    <th>-</th>
+                                    @*<th>Printed?</th>*@
+                                    <th>SKU</th>
+                                    <th>UPC</th>
+                                    <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
+                                    <th>Reg Price</th>
+                                    <th>Current Price</th>
+                                    <th>Date Start</th>
+                                    <th>Date End</th>
+                                    <th>Type</th>
+                                    <th>Size</th>
+                                    <th>Category</th>
+                                    <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
+                                    <th>Reverted?</th>
+                                    @*<th><button class="printAllBtnExcemption btn btn-secondary px-3">Print Selected</button></th>*@
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="14" style="text-align: center;">Please enter start date</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -231,71 +222,57 @@
         var tableExcemption = null;
 
         function InitLoad() {
-            //Check strprc updates
+            $("#loadingContainer").show();
+
             $.ajax({
-                url: '/STRPRC/CheckSTRPRCUpdates',
-                type: "GET",
-                success: function (isUpdated) {
-                    if (isUpdated)
-                        $("#loadingContainer").show();
-                    else
-                        $("#loadingSTRPRCUpdate").show();
+                url: '/STRPRC/LoadPCA',
+                type: "POST",
+                dataType: 'json',
+                beforeSend: function (xhr) {
+                    // Add the 'Accept-Encoding' header to let the server know that we can handle Gzip compression
+                    xhr.setRequestHeader('Accept-Encoding', 'gzip');
+                },
+                success: function (data) {
 
-                    $.ajax({
-                        url: '/STRPRC/LoadPCA',
-                        type: "POST",
-                        dataType: 'json',
-                        beforeSend: function (xhr) {
-                            // Add the 'Accept-Encoding' header to let the server know that we can handle Gzip compression
-                            xhr.setRequestHeader('Accept-Encoding', 'gzip');
-                        },
-                        success: function (data) {
+                    var latestDate = data.LatestDate;
+                    const day = latestDate.toString().substr(4, 2);
+                    const month = latestDate.toString().substr(2, 2);
+                    const year = latestDate.toString().substr(0, 2);
+                    const formattedDate = `20${year}-${month}-${day}`;
+                    $('#startDate').val(formattedDate);
 
-                            var latestDate = data.LatestDate;
-                            const day = latestDate.toString().substr(4, 2);
-                            const month = latestDate.toString().substr(2, 2);
-                            const year = latestDate.toString().substr(0, 2);
-                            const formattedDate = `20${year}-${month}-${day}`;
-                            $('#startDate').val(formattedDate);
+                    if (tableWith !== null) {
+                        tableWith.destroy();
+                    }
+                    if (tableWithout !== null) {
+                        tableWithout.destroy();
+                    }
+                    if (tableExcemption !== null) {
+                        tableExcemption.destroy();
+                    }
 
-                            if (tableWith !== null) {
-                                tableWith.destroy();
-                            }
-                            if (tableWithout !== null) {
-                                tableWithout.destroy();
-                            }
-                            if (tableExcemption !== null) {
-                                tableExcemption.destroy();
-                            }
+                    RenderDatatableWithInv(data.WithInventoryList);
+                    RenderDatatableWithoutInv(data.WithoutInventoryList);
+                    RenderDatatableExcemption(data.ExcemptionList);
 
-                            RenderDatatableWithInv(data.WithInventoryList);
-                            RenderDatatableWithoutInv(data.WithoutInventoryList);
-                            RenderDatatableExcemption(data.ExcemptionList);
+                    if ('@User.IsInRole("Merchandiser")' == 'True') {
 
-                            if ('@User.IsInRole("Merchandiser")' == 'True') {
+                        // DISABLED BUTTONS IF ROLE = MERCHANDISER
+                        var buttonsprintAll = document.querySelectorAll(".printAllBtnWith, .printAllBtnWithout, .printAllBtnExcemption");
+                        buttonsprintAll.forEach(function (button) {
+                            button.disabled = true;
+                        });
 
-                                // DISABLED BUTTONS IF ROLE = MERCHANDISER
-                                var buttonsprintAll = document.querySelectorAll(".printAllBtnWith, .printAllBtnWithout, .printAllBtnExcemption");
-                                buttonsprintAll.forEach(function (button) {
-                                    button.disabled = true;
-                                });
+                        var buttonsEachRow = document.querySelectorAll('.printBtn');
+                        buttonsEachRow.forEach(function (button) {
+                            button.disabled = true;
+                        });
+                    }
 
-                                var buttonsEachRow = document.querySelectorAll('.printBtn');
-                                buttonsEachRow.forEach(function (button) {
-                                    button.disabled = true;
-                                });
-                                //
-                            }
-
-
-                            $("#loadingContainer").hide();
-                            $("#loadingSTRPRCUpdate").hide();
-                        },
-                        error: function (error) {
-                            $("#loadingContainer").hide();
-                            $("#loadingSTRPRCUpdate").hide();
-                        }
-                    });
+                    $("#loadingContainer").hide();
+                },
+                error: function (error) {
+                    $("#loadingContainer").hide();
                 }
             });
         }
@@ -630,7 +607,7 @@
                 pageLength: -1,
                 data: data,
                 columnDefs: [
-                    { targets: [0, 1, 11, 12, 13], orderable: false },
+                    { targets: [0, 1, 13, 14, 15], orderable: false },
                 ],
                 columns: [
                     {
@@ -648,15 +625,15 @@
                         },
                         width: "15px"
                     },
-                    //{
-                    //    data: 'IsPrinted', name: 'IsPrinted', render: function (data) {
-                    //        if (data === 'Yes') {
-                    //            return '<span style="color: green;">' + data + '</span>';
-                    //        } else {
-                    //            return '<span style="color: red;">' + data + '</span>';
-                    //        }
-                    //    }
-                    //},
+                    {
+                        data: 'IsPrinted', name: 'IsPrinted', render: function (data) {
+                            if (data === 'Yes') {
+                                return '<span style="color: green;">' + data + '</span>';
+                            } else {
+                                return '<span style="color: red;">' + data + '</span>';
+                            }
+                        }
+                    },
                     { data: 'O3SKU', name: 'O3SKU' },
                     { data: 'O3UPC', name: 'O3UPC' },
                     { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap' },
@@ -668,13 +645,13 @@
                     { data: 'SizeName', name: 'SizeName' },
                     { data: 'CategoryName', name: 'CategoryName' },
                     { data: 'DepartmentName', name: 'DepartmentName' },
-                    { data: 'IsReverted', name: 'IsReverted' }
-                    //{
-                    //    data: null,
-                    //    render: function (data, type, row) {
-                    //        return '<button class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '">Print</button>';
-                    //    }
-                    //}
+                    { data: 'IsReverted', name: 'IsReverted' },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            return '<button class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '">Print</button>';
+                        }
+                    }
                 ],
                 "dom": '<"top"lfB>rt<"bottom"ip>',
 
@@ -687,13 +664,126 @@
                         .on('click', function () {
                             window.location.href = '/STRPRC/ExportDataTableToExcel?tab=WithoutInventory&date=' + date;
                         });
+
+                    var $queueButton = $('<button>')
+                        .addClass('queueBtnWithout btn btn-warning')
+                        .text('Queue Selected')
+                        .on('click', function () {
+
+                        });
                    
                     var dataTableWrapper = $('#without-inventory-table').closest('.dataTables_wrapper');
                     dataTableWrapper.find('.dataTables_filter').before($button);
+                    dataTableWrapper.find('.dataTables_filter').before($queueButton);
 
                 }
             });
 
+            $('.queueBtnWithout').click(function () {
+                var selectedRows = [];
+                $('.rowCheckboxWithout:checked').each(function () {
+                    var rowId = $(this).data('id');
+                    selectedRows.push(rowId);
+                });
+
+                if (selectedRows.length > 0) {
+                    console.log('Selected Row IDs:', selectedRows);
+
+                    // Build the HTML for the dropdowns
+                    var dropdownHtml = '<div class="form-row">' +
+                        '<div class="form-group row col-12">' +
+                        '<label class="col-sm-2 col-form-label" for="sizeDropdown">Size:</label>' +
+                        '<select class="col-sm-9  ml-3 form-control" id="sizeDropdown">' +
+                        '<option value="1">Whole</option>' +
+                        '<option value="2">1/8</option>' +
+                        '<option value="3">Jewelry</option>' +
+                        '</select>' +
+                        '</div>' +
+                        '</div>';
+                    // Build the HTML for the print button
+                    var buttonHtml = '<button id="queueSelectedButtonWithout" class="btn btn-primary">Queue</button>' +
+                        '<button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancel</button>';
+                    // Create the modal content
+                    var modalContent = '<div class="modal-dialog modal-sm modal-dialog-centered">' +
+                        '<div class="modal-content">' +
+                        '<div class="modal-header">' +
+                        '<h5 class="modal-title">Queue</h5>' +
+                        '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
+                        '<span aria-hidden="true">&times;</span>' +
+                        '</button>' +
+                        '</div>' +
+                        '<div class="modal-body">' +
+                        dropdownHtml +
+                        '</div>' +
+                        '<div class="modal-footer">' +
+                        buttonHtml +
+                        '</div>' +
+                        '</div>' +
+                        '</div>';
+                    // Remove any existing modals
+                    $('#modalView').remove();
+
+                    // Append the modal to the body
+                    $('body').append('<div id="modalView" class="modal">' + modalContent + '</div>');
+
+                    // Show the modal with fade-in effect from top
+                    $('#modalView').modal({
+                        show: true,
+                        backdrop: false,
+                        keyboard: false
+                    });
+
+                    // Set default values for the dropdowns
+                    $('#sizeDropdown').val(2); // 1/8
+
+                    // PRINT MULTIPLE
+                    $('#queueSelectedButtonWithout').click(function () {
+                        $("#loadingContainer").show();
+                        var sizeId = $('#sizeDropdown').val();
+
+                        $.ajax({
+                            url: '/Queue/QueueSelectedItems',
+                            type: "POST",
+                            data: { sizeId: sizeId, selectedRows: selectedRows },
+                            success: function (data) {
+                                $("#loadingContainer").hide();
+                                // Show success modal
+                                var modalHtml = '<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">';
+                                modalHtml += '<div class="modal-dialog" role="document">';
+                                modalHtml += '<div class="modal-content">';
+                                modalHtml += '<div class="modal-header">';
+                                modalHtml += '<h5 class="modal-title" id="successModalLabel">Success!</h5>';
+                                modalHtml += '<button type="button" class="close" data-dismiss="modal" aria-label="Close">';
+                                modalHtml += '<span aria-hidden="true">&times;</span>';
+                                modalHtml += '</button>';
+                                modalHtml += '</div>';
+                                modalHtml += '<div class="modal-body">';
+                                modalHtml += 'Item queued successfully!';
+                                modalHtml += '</div>';
+                                modalHtml += '<div class="modal-footer">';
+                                modalHtml += '<button type="button" class="qOkBtn btn btn-primary" data-dismiss="modal">OK</button>';
+                                modalHtml += '</div>';
+                                modalHtml += '</div>';
+                                modalHtml += '</div>';
+                                modalHtml += '</div>';
+
+                                $('body').append(modalHtml);
+                                $('#successModal').modal('show');
+                            },
+                            error: function (error) {
+
+                            }
+                        })
+
+                        $('#modalView').modal('hide');
+                        $('input[type="checkbox"]').prop('checked', false);
+
+                    });
+
+                } else {
+                    alert('Please select items to queue.');
+                }
+            });
 
             $('#selectAllWithout').on('change', function () {
                 var isChecked = $(this).is(':checked');
@@ -772,7 +862,7 @@
                                 var row = $(this).closest('tr');
                                 var table = row.closest('table');
                                 var rowIndex = table.DataTable().row(row).index();
-                                var specificRow = $('#with-inventory-table tbody tr:eq(' + rowIndex + ')');
+                                var specificRow = $('#without-inventory-table tbody tr:eq(' + rowIndex + ')');
                                 specificRow.find('td:eq(2)').text("Yes");
                                 specificRow.find('td:eq(2)').css('color', 'green');
 
@@ -833,7 +923,7 @@
                 pageLength: -1,
                 data: data,
                 columnDefs: [
-                    { targets: [0, 1, 13, 14, 15], orderable: false },
+                    { targets: [0, 1, 11, 12, 13], orderable: false },
                 ],
                 columns: [
                     {
@@ -851,15 +941,15 @@
                         },
                         width: "15px"
                     },
-                    {
-                        data: 'IsPrinted', name: 'IsPrinted', render: function (data) {
-                            if (data === 'Yes') {
-                                return '<span style="color: green;">' + data + '</span>';
-                            } else {
-                                return '<span style="color: red;">' + data + '</span>';
-                            }
-                        }
-                    },
+                    //{
+                    //    data: 'IsPrinted', name: 'IsPrinted', render: function (data) {
+                    //        if (data === 'Yes') {
+                    //            return '<span style="color: green;">' + data + '</span>';
+                    //        } else {
+                    //            return '<span style="color: red;">' + data + '</span>';
+                    //        }
+                    //    }
+                    //},
                     { data: 'O3SKU', name: 'O3SKU' },
                     { data: 'O3UPC', name: 'O3UPC' },
                     { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap' },
@@ -871,13 +961,13 @@
                     { data: 'SizeName', name: 'SizeName' },
                     { data: 'CategoryName', name: 'CategoryName' },
                     { data: 'DepartmentName', name: 'DepartmentName' },
-                    { data: 'IsReverted', name: 'IsReverted' },
-                    {
-                        data: null,
-                        render: function (data, type, row) {
-                            return '<button class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '">Print</button>';
-                        }
-                    }
+                    { data: 'IsReverted', name: 'IsReverted' }
+                    //{
+                    //    data: null,
+                    //    render: function (data, type, row) {
+                    //        return '<button class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '">Print</button>';
+                    //    }
+                    //}
                 ],
                 "dom": '<"top"lfB>rt<"bottom"ip>',
 
@@ -1158,7 +1248,7 @@
                             '</div>' +
                             '<div class="form-group row col-md-12">' +
                             '<label class="col-sm-2 col-form-label" for="typeDropdown">Type:</label>' +
-                            '<select class="col-sm-9  ml-3 form-control" id="typeDropdown">' +
+                            '<select class="col-sm-9  ml-3 form-control" id="typeDropdown" disabled>' +
                             typeOptions +
                             '</select>' +
                             '</div>' +
@@ -1166,7 +1256,7 @@
                             '<div class="form-row">' +
                             '<div class="form-group row col-md-12">' +
                             '<label class="col-sm-2 col-form-label" for="categoryDropdown">Category:</label>' +
-                            '<select class="col-sm-9  ml-3 form-control" id="categoryDropdown">' +
+                            '<select class="col-sm-9  ml-3 form-control" id="categoryDropdown" disabled>' +
                             categoryOptions +
                             '</select>' +
                             '</div>' +
@@ -1299,7 +1389,7 @@
                             '</div>' +
                             '<div class="form-group row col-md-12">' +
                             '<label class="col-sm-2 col-form-label" for="typeDropdown">Type:</label>' +
-                            '<select class="col-sm-9  ml-3 form-control" id="typeDropdown">' +
+                            '<select class="col-sm-9  ml-3 form-control" id="typeDropdown" disabled>' +
                             typeOptions +
                             '</select>' +
                             '</div>' +
@@ -1307,7 +1397,7 @@
                             '<div class="form-row">' +
                             '<div class="form-group row col-md-12">' +
                             '<label class="col-sm-2 col-form-label" for="categoryDropdown">Category:</label>' +
-                            '<select class="col-sm-9  ml-3 form-control" id="categoryDropdown">' +
+                            '<select class="col-sm-9  ml-3 form-control" id="categoryDropdown" disabled>' +
                             categoryOptions +
                             '</select>' +
                             '</div>' +
