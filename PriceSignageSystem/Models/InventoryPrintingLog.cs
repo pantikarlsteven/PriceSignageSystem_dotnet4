@@ -15,5 +15,8 @@ namespace PriceSignageSystem.Models
         public decimal O3SKU { get; set; }
         public string PrintedBy { get; set; }
         public DateTime DateCreated { get; set; }
+        public decimal RegularPrice { get; set; }
+        public decimal CurrentPrice { get; set; }
+        public string Remarks { get; set; }
     }
 }

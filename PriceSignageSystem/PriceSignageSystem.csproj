@@ -291,6 +291,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\QueueController.cs" />
+    <Compile Include="Controllers\RegistersController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\STRPRCController.cs" />
     <Compile Include="Global.asax.cs">
@@ -370,9 +371,30 @@
     <Compile Include="Migrations\202307070755032_add_InventoryPrintingLogTbl.designer.cs">
       <DependentUpon>202307070755032_add_InventoryPrintingLogTbl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202401180808274_addFields_tblQueues.cs" />
+    <Compile Include="Migrations\202401180808274_addFields_tblQueues.designer.cs">
+      <DependentUpon>202401180808274_addFields_tblQueues.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202401180812425_removeFields_TblQueues.cs" />
+    <Compile Include="Migrations\202401180812425_removeFields_TblQueues.designer.cs">
+      <DependentUpon>202401180812425_removeFields_TblQueues.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202401180813311_addFields_TblPrintingLogs.cs" />
+    <Compile Include="Migrations\202401180813311_addFields_TblPrintingLogs.designer.cs">
+      <DependentUpon>202401180813311_addFields_TblPrintingLogs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202401240543105_addIsExempField_StrprcTbl.cs" />
+    <Compile Include="Migrations\202401240543105_addIsExempField_StrprcTbl.designer.cs">
+      <DependentUpon>202401240543105_addIsExempField_StrprcTbl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202401240629019_removeIsExempField_StrprcTbl.cs" />
+    <Compile Include="Migrations\202401240629019_removeIsExempField_StrprcTbl.designer.cs">
+      <DependentUpon>202401240629019_removeIsExempField_StrprcTbl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Dto\AutoPrintStatusDto.cs" />
     <Compile Include="Models\Dto\ItemQueueDto.cs" />
+    <Compile Include="Models\Interface\IRegistersRepository.cs" />
     <Compile Include="Models\InventoryPrintingLog.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Constants\ReportConstants.cs" />
@@ -394,6 +416,7 @@
     <Compile Include="Models\ItemQueue.cs" />
     <Compile Include="Models\Repository\CategoryRepository.cs" />
     <Compile Include="Models\Repository\QueueRepository.cs" />
+    <Compile Include="Models\Repository\RegistersRepository.cs" />
     <Compile Include="Models\Repository\SizeRepository.cs" />
     <Compile Include="Models\Repository\STRPRCRepository.cs" />
     <Compile Include="Models\Repository\TypeRepository.cs" />
@@ -425,11 +448,13 @@
     <Content Include="Content\buttons.dataTables.min.css" />
     <Content Include="Content\fonts.css" />
     <Content Include="Content\Images\changes.png" />
+    <Content Include="Content\Images\country.png" />
     <Content Include="Content\Images\generic_user.png" />
     <Content Include="Content\Images\inventory.png" />
     <Content Include="Content\Images\loading.gif" />
     <Content Include="Content\Images\not-available.png" />
     <Content Include="Content\Images\printer.png" />
+    <Content Include="Content\Images\register.png" />
     <Content Include="Content\Images\snrlogo_blue.png" />
     <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\jquery.dataTables.min.css" />
@@ -502,6 +527,7 @@
     <Content Include="Views\STRPRC\PCA.cshtml" />
     <Content Include="Views\STRPRC\Scan.cshtml" />
     <Content Include="Views\STRPRC\_HistoryPartialView.cshtml" />
+    <Content Include="Views\Registers\CountryIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -579,6 +605,21 @@
     </EmbeddedResource>
     <Content Include="Reports\CrystalReports\Dynamic_OneEightReport.rpt" />
     <Content Include="Reports\CrystalReports\Dynamic_WholeReport.rpt" />
+    <EmbeddedResource Include="Migrations\202401180808274_addFields_tblQueues.resx">
+      <DependentUpon>202401180808274_addFields_tblQueues.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202401180812425_removeFields_TblQueues.resx">
+      <DependentUpon>202401180812425_removeFields_TblQueues.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202401180813311_addFields_TblPrintingLogs.resx">
+      <DependentUpon>202401180813311_addFields_TblPrintingLogs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202401240543105_addIsExempField_StrprcTbl.resx">
+      <DependentUpon>202401240543105_addIsExempField_StrprcTbl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202401240629019_removeIsExempField_StrprcTbl.resx">
+      <DependentUpon>202401240629019_removeIsExempField_StrprcTbl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\Dynamic_OneEightReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Dynamic_OneEightReport.cs</LastGenOutput>

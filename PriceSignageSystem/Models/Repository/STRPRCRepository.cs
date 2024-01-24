@@ -170,8 +170,9 @@ namespace PriceSignageSystem.Models.Repository
                             O3USER = a.O3USER,
                             DateUpdated = a.DateUpdated,
                             SelectedTypeId = a.O3REGU == a.O3POS ? 1 : 2,
-                            SelectedCategoryId = (a.O3DEPT == 150 && (a.O3SDPT == 10 || a.O3SDPT == 12 || a.O3SDPT == 13 || a.O3SDPT == 14)) || 
-                            (a.O3DEPT == 401 || a.O3DEPT == 402 || a.O3DEPT == 403 || a.O3DEPT == 404) ? 1 : 2
+                            SelectedCategoryId = (a.O3DEPT == 150 && (a.O3SDPT == 10 || a.O3SDPT == 12 || a.O3SDPT == 13 || a.O3SDPT == 14)) ||
+                            (a.O3DEPT == 401 || a.O3DEPT == 402 || a.O3DEPT == 403 || a.O3DEPT == 404) ? 1 : 2,
+                            IsExemp = a.O3REG == a.O3POS && a.O3EDT != 999999 ? "Y" : "N",
                         }).FirstOrDefault();
             return data;
         }
@@ -293,7 +294,8 @@ namespace PriceSignageSystem.Models.Repository
                         DepartmentName = reader["DPTNAM"].ToString(),
                         IsReverted = reader["O3FLAG1"].ToString(),
                         HasInventory = reader["INV2"].ToString(),
-                        IsExemp = reader["IsExemp"].ToString()
+                        IsExemp = reader["IsExemp"].ToString(),
+                        O3TYPE = reader["O3TYPE"].ToString()
                     };
 
                     if ((decimal)reader["O3RSDT"] == startDate)
@@ -747,13 +749,16 @@ namespace PriceSignageSystem.Models.Repository
             _db.SaveChanges();
         }
 
-        public void AddInventoryPrintingLog(decimal O3SKU, string user)
+        public void AddInventoryPrintingLog(ReportDto model, string user)
         {
 
             var data = new InventoryPrintingLog() {
-                O3SKU = O3SKU,
+                O3SKU = model.O3SKU,
                 PrintedBy = user,
-                DateCreated = DateTime.Now
+                DateCreated = DateTime.Now,
+                RegularPrice = model.O3REGU,
+                CurrentPrice = model.O3POS,
+                Remarks = model.Remarks
             };
             _db.InventoryPrintingLogs.Add(data);
             _db.SaveChanges();

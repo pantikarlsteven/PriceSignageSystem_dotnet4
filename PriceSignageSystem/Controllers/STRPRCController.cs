@@ -54,7 +54,7 @@ namespace PriceSignageSystem.Controllers
             {
                 var dto = _sTRPRCRepository.SearchString(query);
 
-                if (dto != null)
+                if (dto != null && dto.IsExemp == "N")
                 {
                     DateTime startdateTimeValue = DateTime.ParseExact(dto.O3SDT.ToString(), "yyMMdd", CultureInfo.InvariantCulture);
                     dto.StartDateFormattedDate = startdateTimeValue.ToString("yy-MM-dd");
@@ -96,6 +96,10 @@ namespace PriceSignageSystem.Controllers
                         Text = a.Name
                     }).ToList();
 
+                }
+                else if (dto != null && dto.IsExemp == "Y")
+                {
+                    dto = new STRPRCDto();
                 }
                 else
                 {

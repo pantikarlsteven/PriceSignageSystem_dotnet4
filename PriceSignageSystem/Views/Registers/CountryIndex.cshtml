@@ -1,0 +1,204 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+</head>
+<body>
+    <div class="content-wrapper bg-white px-3">
+        <h3 class="text-center mt-2">Country List</h3>
+        <br />
+        <table id="countryTbl" class="table table-sm" style="width: 100%; text-align: center;">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="selectAll"></th>
+                    <th>Name</th>
+                    <th>Image</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="3" style="text-align: center;">No available data</td>
+                </tr>
+            </tbody>
+        </table>
+        <button id="createCountryBtn" class="btn btn-primary">Create</button>
+        <button id="deleteBtn" class="btn btn-danger">Delete</button>
+
+    </div>
+
+    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
+
+</body>
+</html>
+<script>
+    $(document).ready(function () {
+
+        $.ajax({
+            url: '/Registers/GetCountries',
+            type: "POST",
+            success: function (data) {
+                var countryTbl = $('#countryTbl').DataTable({
+                    scrollY: 600,
+                    scrollX: true,
+                    scroller: true,
+                    deferRender: true,
+                    lengthMenu: [
+                        [10, 25, 50, -1],
+                        [10, 25, 50, 'All']
+                    ],
+                    pageLength: -1,
+                    data: data,
+                    columnDefs: [],
+                    columns: [
+                        {
+                            data: null, orderable: false, searchable: false, render: function (data) {
+                                return '<input type="checkbox" class="selectCheckBox" data-id="' + data.iatrb3 + '">';
+                            }
+                        },
+                        { data: 'iatrb3', name: 'iatrb3' },
+                        {
+                            data: 'country_img',
+                            name: 'country_img',
+                            render: function (data, type, full, meta) {
+                                if (type === 'display' && data) {
+                                    // Convert byte array to base64
+                                    var base64Image = btoa(String.fromCharCode.apply(null, data));
+                                    return '<img src="data:image/png;base64,' + base64Image + '" alt="Country Image" style="max-width:100px; max-height:100px;">';
+                                } else {
+                                    return '';
+                                }
+                            }
+                        },
+                    ],
+                    "dom": '<"top"lfB>rt<"bottom"ip>',
+
+                });
+
+            },
+            error: function (error) {
+            }
+        })
+
+        $('#deleteBtn').click(function () {
+
+            var selectedRows = [];
+            $('.selectCheckBox:checked').each(function () {
+                var rowId = $(this).data('id');
+                selectedRows.push(rowId);
+            });
+
+            if (selectedRows.length > 0) {
+                $.ajax({
+                    url: '/Registers/DeleteCountry',
+                    type: "POST",
+                    data: { selectedRows: selectedRows },
+                    success: function (data) {
+                        alert('Item Deleted Successfully');
+                        location.reload();
+
+                    },
+                    error: function (error) {
+
+                    }
+                })
+            } else {
+                alert('Please select items to delete.');
+            }
+        });
+
+        $('#selectAll').on('change', function () {
+            var isChecked = $(this).is(':checked');
+            $('.selectCheckBox').prop('checked', isChecked);
+        });
+
+        $('#createCountryBtn').click(function () {
+
+             // Upload
+                var uploadHtml = '<div class="form-row">' +
+                    '<div class="form-group row col-12">' +
+                    '<label class="col-3"> Name: </label>' +
+                    '<input type="text" class="col-6 ml-3 form-control" id="countryName" maxlength="2" />' +
+
+                    '<label class="col-3" for="fileInput">File:</label>' +
+                    '<input type="file" id="fileInput" class="col-6 ml-3 form-control" />' +
+                    '</div>';
+                // Build the HTML for the print button
+                var uploadButtonHtml = '<button id="uploadBtn" class="btn btn-primary">Upload</button>' +
+                    '<button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancel</button>';
+;
+
+                // Create the modal content
+                var modalContent = '<div class="modal-dialog modal-dialog-centered">' +
+                    '<div class="modal-content">' +
+                    '<div class="modal-header">' +
+                    '<h5 class="modal-title">Upload File </h5>' +
+                    '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
+                    '<span aria-hidden="true">&times;</span>' +
+                    '</button>' +
+                    '</div>' +
+                    '<div class="modal-body">' +
+                    uploadHtml +
+                    '</div>' +
+                    '<div class="modal-footer">' +
+                    uploadButtonHtml +
+                    '</div>' +
+                    '</div>' +
+                    '</div>';
+
+                // Remove any existing modals
+                $('#modalView').remove();
+
+                // Append the modal to the body
+                $('body').append('<div id="modalView" class="modal">' + modalContent + '</div>');
+
+                // Show the modal with fade-in effect from top
+                $('#modalView').modal({
+                    show: true,
+                    backdrop: false,
+                    keyboard: false
+                });
+
+                $('#uploadBtn').click(function () {
+                    var fileInput = $('#fileInput')[0].files[0]; // get the selected file
+                    var countryName = $('#countryName').val();
+
+                    if (countryName !== "" && fileInput) {
+
+                        var formData = new FormData();
+                        formData.append('countryName', countryName);
+                        formData.append('fileInput', fileInput);
+
+                        $.ajax({
+                            url: '/Registers/UploadCountry',
+                            type: "POST",
+                            data: formData,
+                            processData: false, // Don't process the data
+                            contentType: false, // Don't set content type (will be automatically set when FormData is used)
+                            success: function (data) {
+                                if (data) {
+                                    alert('File Uploaded Successfully');
+                                    $('#modalView').modal('hide');
+                                    location.reload();
+
+                                }
+                            },
+                            error: function (e) {
+
+                            }
+                        });
+
+                    } else {
+                        alert('All fields are required.');
+                    }
+
+
+                    });
+        });
+
+    })
+</script>

@@ -128,13 +128,14 @@
                                     <th>Size</th>
                                     <th>Category</th>
                                     <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
+                                    <th>Type</th>
                                     <th>Reverted?</th>
                                     <th><button class="printAllBtnWith btn btn-secondary px-3">Print Selected</button></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="16" style="text-align: center;">Please enter start date</td>
+                                    <td colspan="17" style="text-align: center;">Please enter start date</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -146,7 +147,7 @@
                                 <tr>
                                     <th><input type="checkbox" id="selectAllWithout" /></th>
                                     <th>-</th>
-                                    <th>Printed?</th>
+                                    @*<th>Printed?</th>*@
                                     <th>SKU</th>
                                     <th>UPC</th>
                                     <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
@@ -159,12 +160,12 @@
                                     <th>Category</th>
                                     <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
                                     <th>Reverted?</th>
-                                    <th><button class="printAllBtnWithout btn btn-secondary px-3">Print Selected</button></th>
+                                    @*<th><button class="printAllBtnWithout btn btn-secondary px-3">Print Selected</button></th>*@
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="16" style="text-align: center;">Please enter start date</td>
+                                    <td colspan="14" style="text-align: center;">Please enter start date</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -228,10 +229,10 @@
                 url: '/STRPRC/LoadPCA',
                 type: "POST",
                 dataType: 'json',
-                beforeSend: function (xhr) {
-                    // Add the 'Accept-Encoding' header to let the server know that we can handle Gzip compression
-                    xhr.setRequestHeader('Accept-Encoding', 'gzip');
-                },
+                //beforeSend: function (xhr) {
+                //    // Add the 'Accept-Encoding' header to let the server know that we can handle Gzip compression
+                //    xhr.setRequestHeader('Accept-Encoding', 'gzip');
+                //},
                 success: function (data) {
 
                     var latestDate = data.LatestDate;
@@ -290,7 +291,7 @@
                 pageLength: -1,
                 data: data,
                 columnDefs: [
-                    { targets: [0, 1, 13, 14, 15], orderable: false },
+                    { targets: [0, 1, 13, 15], orderable: false },
                 ],
                 columns: [
                     {
@@ -328,6 +329,7 @@
                     { data: 'SizeName', name: 'SizeName' },
                     { data: 'CategoryName', name: 'CategoryName' },
                     { data: 'DepartmentName', name: 'DepartmentName' },
+                    { data: 'O3TYPE', name: 'O3TYPE' },
                     { data: 'IsReverted', name: 'IsReverted' },
                     {
                         data: null,
@@ -607,7 +609,7 @@
                 pageLength: -1,
                 data: data,
                 columnDefs: [
-                    { targets: [0, 1, 13, 14, 15], orderable: false },
+                    { targets: [0, 1, 11, 12, 13], orderable: false },
                 ],
                 columns: [
                     {
@@ -625,15 +627,15 @@
                         },
                         width: "15px"
                     },
-                    {
-                        data: 'IsPrinted', name: 'IsPrinted', render: function (data) {
-                            if (data === 'Yes') {
-                                return '<span style="color: green;">' + data + '</span>';
-                            } else {
-                                return '<span style="color: red;">' + data + '</span>';
-                            }
-                        }
-                    },
+                    //{
+                    //    data: 'IsPrinted', name: 'IsPrinted', render: function (data) {
+                    //        if (data === 'Yes') {
+                    //            return '<span style="color: green;">' + data + '</span>';
+                    //        } else {
+                    //            return '<span style="color: red;">' + data + '</span>';
+                    //        }
+                    //    }
+                    //},
                     { data: 'O3SKU', name: 'O3SKU' },
                     { data: 'O3UPC', name: 'O3UPC' },
                     { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap' },
@@ -646,12 +648,12 @@
                     { data: 'CategoryName', name: 'CategoryName' },
                     { data: 'DepartmentName', name: 'DepartmentName' },
                     { data: 'IsReverted', name: 'IsReverted' },
-                    {
-                        data: null,
-                        render: function (data, type, row) {
-                            return '<button class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '">Print</button>';
-                        }
-                    }
+                    //{
+                    //    data: null,
+                    //    render: function (data, type, row) {
+                    //        return '<button class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '">Print</button>';
+                    //    }
+                    //}
                 ],
                 "dom": '<"top"lfB>rt<"bottom"ip>',
 
@@ -665,16 +667,16 @@
                             window.location.href = '/STRPRC/ExportDataTableToExcel?tab=WithoutInventory&date=' + date;
                         });
 
-                    var $queueButton = $('<button>')
-                        .addClass('queueBtnWithout btn btn-warning')
-                        .text('Queue Selected')
-                        .on('click', function () {
+                    //var $queueButton = $('<button>')
+                    //    .addClass('queueBtnWithout btn btn-warning')
+                    //    .text('Queue Selected')
+                    //    .on('click', function () {
 
-                        });
+                    //    });
                    
                     var dataTableWrapper = $('#without-inventory-table').closest('.dataTables_wrapper');
                     dataTableWrapper.find('.dataTables_filter').before($button);
-                    dataTableWrapper.find('.dataTables_filter').before($queueButton);
+                    //dataTableWrapper.find('.dataTables_filter').before($queueButton);
 
                 }
             });

@@ -206,6 +206,9 @@ namespace PriceSignageSystem.Controllers
                 skuModel.CategoryId = model.CategoryId;
                 skuModel.UserName = User.Identity.Name;
                 skuModel.O3SDSC = _sTRPRCRepository.GetSubClassDescription(model.O3SKU);
+                skuModel.O3REGU = model.O3REGU != 0 ? model.O3REGU: skuModel.O3REGU;
+                skuModel.O3POS = model.O3POS != 0 ? model.O3POS : skuModel.O3POS;
+
 
                 var textToImage = new TextToImage();
                 textToImage.GetImageWidth(skuModel.O3FNAM, skuModel.O3IDSC, model.SizeId);
@@ -267,7 +270,7 @@ namespace PriceSignageSystem.Controllers
                 #endregion
 
                 _sTRPRCRepository.UpdateSingleStatus(model.O3SKU);
-                _sTRPRCRepository.AddInventoryPrintingLog(model.O3SKU, User.Identity.Name);
+                _sTRPRCRepository.AddInventoryPrintingLog(model, User.Identity.Name);
 
                 return File(pdfBytes, "application/pdf");
             }

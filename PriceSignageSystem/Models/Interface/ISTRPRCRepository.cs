@@ -27,7 +27,7 @@ namespace PriceSignageSystem.Models.Interface
         void UpdateMultipleStatus(List<decimal> o3skus);
         void AddMultipleInventoryPrintingLog(List<decimal> o3skus, string user);
         void UpdateSingleStatus(decimal O3SKU);
-        void AddInventoryPrintingLog(decimal O3SKU, string user);
+        void AddInventoryPrintingLog(ReportDto model, string user);
         List<STRPRCDto> GetLatestPCAData();
         List<ExportPCADto> PCAToExport();
         string GetSubClassDescription(decimal O3SKU);
