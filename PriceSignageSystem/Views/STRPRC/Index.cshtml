@@ -1,5 +1,4 @@
 ﻿@using PriceSignageSystem.Models.Dto;
-@model List<ItemQueueDto>
 @{
     ViewData["Title"] = "Product Page";
 }
@@ -7,6 +6,14 @@
 
 <div class="content-wrapper bg-white px-3">
     <br />
+
+    <div class="content">
+        <div class="overlay-wrapper" id="loadingContainer" style="display:none;">
+            <div class="overlay" style="background-color: rgba(0, 0, 0, 0.59); z-index: 999999;">
+                <img class="" src="~/Content/Images/loading.gif" alt="Loading" style="max-width:350px;" />
+            </div>
+        </div>
+    </div>
 
     @if (!String.IsNullOrEmpty(ViewBag.ErrorMessage))
     {
@@ -30,7 +37,6 @@
     <br />
     <div id="searchResults">
         @Html.Partial("_SearchResultPartialView", new STRPRCDto())
-        @Html.Partial("_HistoryPartialView", Model)
     </div>
 </div>
 

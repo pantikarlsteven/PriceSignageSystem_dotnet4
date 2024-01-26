@@ -112,14 +112,14 @@
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-center">
-                                  
+
                                     @if (User.IsInRole("PCA Captain"))
                                     {
                                         <button type="button" class="newPrint btn btn-primary mr-1">Print</button>
                                         <button type="button" class="queuebtn btn btn-warning mr-1">Queue</button>
                                         <button type="button" class="qListbtn btn btn-success mr-1">Print Queue</button>
                                     }
-                                    else if(User.IsInRole("Administrator/Manager"))
+                                    else if (User.IsInRole("Administrator/Manager"))
                                     {
                                         <button type="button" class="editBtn btn btn-secondary mr-1">Edit</button>
                                         <button type="button" class="newPrint btn btn-primary mr-1">Print</button>
@@ -186,6 +186,9 @@
 
         </div>
     }
+
+    @Html.Partial("_HistoryPartialView", Model.Histories)
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
@@ -206,21 +209,36 @@
     }
 
     $(document).ready(function () {
+        
+        var convertedRegPrice = 0;
+        var convertedCurrPrice = 0;
 
         $(".editBtn").click(function () {
-            $("#regPrice").prop("disabled", false);
             $("#currPrice").prop("disabled", false);
+        });
+
+        $("#currPrice").on("change", function () {
+            var regPrice = $("#regPrice");
+            var currPrice = $("#currPrice");
+            convertedRegPrice = Number(regPrice.val());
+            convertedCurrPrice = Number(currPrice.val());
+            var typeId = $('#SelectedTypeId');
+
+            if (convertedCurrPrice >= convertedRegPrice) {
+                regPrice.val($(this).val());
+                typeId.val(1); //Regular
+            }
+            else if (convertedCurrPrice < convertedRegPrice) {
+                typeId.val(2); //Save
+            }
 
         });
 
         $(".newPrint").click(function () {
             
-            var regPrice = $('#regPrice').val();
-            var isRegDisabled = $('#regPrice').prop('disabled');
-            var currPrice = $('#currPrice').val();
             var isCurrDisabled = $('#currPrice').prop('disabled');
 
-            if (isRegDisabled || isCurrDisabled) {
+            if (isCurrDisabled) {
 
                 var reportDto = {
                     O3SKU: @Model.O3SKU,
@@ -244,20 +262,10 @@
 
             }else {
 
-                if (currPrice > regPrice) {
-                    alert('Promo Price must not be greater than the regular price.');
-                    return false;
-                }
-
-
                 // TextArea
                 var textAreaHtml = '<div class="form-row">' +
                     '<div class="form-group row col-12">' +
-                    '<label class="col-3"> Reg Price: </label>' +
-                    '<div class="col-6  ml-3">' + regPrice + '</div>' +
-                    '<label class="col-3"> Curr Price: </label>' +
-                    '<div class="col-6  ml-3">' + currPrice + '</div>' +
-                    '<label class="col-3" for="remarks">Remarks: </label>' +
+                    '<label class="col-3" for="remarks" style="color: red;">Remarks: </label>' +
                     '<textarea class="col-6  ml-3 form-control" id="remarks" rows="2" cols="20" placeholder="required"></textarea>' +
                     '</div>';
                 // Build the HTML for the print button
@@ -297,64 +305,40 @@
                 });
 
                 $('#editPrintBtn').click(function () {
-                    debugger
+                    $("#loadingContainer").show();
                     var remarks = $('#remarks').val();
-                    var newTypeId = 0;
-                    var currFloat = parseFloat(currPrice);
-                    var regFloat = parseFloat(regPrice);
-                    
-
-                    if (Number.isInteger(currFloat)) {
-                        currPrice = currFloat.toFixed(3);
-                    }
-                    if (Number.isInteger(regFloat)) {
-                        regPrice = regFloat.toFixed(3);
-                    }
-
-
-                    if (currPrice < regPrice) {
-                        newTypeId = 2;
-                    }
-                    else if (currPrice == regPrice) {
-                        newTypeId = 1;
-                    } 
-
+                    var newtypeId = $('#SelectedTypeId').val();
 
                     if (remarks != "") {
 
                         var reportDto = {
                             O3SKU: @Model.O3SKU,
                             SizeId: 0,
-                            TypeId: newTypeId,
+                            TypeId: newtypeId,
                             CategoryId: 0,
-                            O3REGU: regPrice,
-                            O3POS: currPrice,
+                            O3REGU: convertedRegPrice,
+                            O3POS: convertedCurrPrice,
                             Remarks: remarks
                         };
 
-                        
-
-                        if (newTypeId != 0) {
-                            reportDto.TypeId = newTypeId;
-                        } else {
-                            reportDto.TypeId = $('#SelectedTypeId').val();
-                        }
-
+                        reportDto.TypeId = $('#SelectedTypeId').val();
                         reportDto.CategoryId = $('#SelectedCategoryId').val();
-
                         reportDto.SizeId = $('#SelectedSizeId').val();
                         $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(reportDto));
 
                         var reportIframe = document.getElementById("reportIframe");
                         if (reportIframe) {
                             reportIframe.onload = function () {
+                                $("#loadingContainer").hide();
                                 reportIframe.contentWindow.print();
                             };
                             reportIframe.src = $("#reportIframe").attr("src");
                         }
+                        $('#modalView').modal('hide');
+
                     } else {
                         alert('Please input remarks!');
-                        return false;
+                        $("#loadingContainer").hide();
                     }
 
 

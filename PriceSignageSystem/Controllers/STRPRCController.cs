@@ -41,11 +41,7 @@ namespace PriceSignageSystem.Controllers
 
         public ActionResult Index()
         {
-            var username = User.Identity.Name;
-
-            // get Item Queue history
-            var model = _queueRepository.GetHistory(username);
-            return View(model);
+            return View();
         }
 
         public ActionResult Search(string query)
@@ -53,11 +49,14 @@ namespace PriceSignageSystem.Controllers
             try
             {
                 var dto = _sTRPRCRepository.SearchString(query);
-
+                
                 if (dto != null && dto.IsExemp == "N")
                 {
                     DateTime startdateTimeValue = DateTime.ParseExact(dto.O3SDT.ToString(), "yyMMdd", CultureInfo.InvariantCulture);
                     dto.StartDateFormattedDate = startdateTimeValue.ToString("yy-MM-dd");
+                    var username = User.Identity.Name;
+                    // get Item Queue history
+                    dto.Histories = _queueRepository.GetHistory(username);
 
                     if (dto.O3EDT == 999999)
                     {
@@ -83,6 +82,12 @@ namespace PriceSignageSystem.Controllers
                             Text = a.Name
                         }).ToList();
                     }
+
+                    dto.O3REG = decimal.Parse(dto.O3REG.ToString("F2"));
+                    dto.O3REGU = decimal.Parse(dto.O3REGU.ToString("F2"));
+                    dto.O3POS = decimal.Parse(dto.O3POS.ToString("F2"));
+                    dto.O3POSU = decimal.Parse(dto.O3POSU.ToString("F2"));
+
 
                     dto.Types = _typeRepository.GetAllTypes().Select(a => new SelectListItem
                     {
