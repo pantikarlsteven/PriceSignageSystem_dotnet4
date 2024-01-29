@@ -83,7 +83,7 @@
             <div class="col-md-2">
                 <div class="form-group">
                     <label for="startDate">Data as of:</label>
-                    <input type="text" id="startDate" name="startDate" class="form-control" disabled/>
+                    <input type="text" id="startDate" name="startDate" class="form-control" disabled />
                 </div>
             </div>
             <div class="col-md-2">
@@ -97,14 +97,14 @@
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs bg-primary1 px-2 pt-2">
                     <li class="nav-item">
-                        <a class="nav-link active" style="color:white;" data-toggle="tab" href="#with-inventory">With Inventory</a>
+                        <a class="nav-link nav-link-tab active" style="color:white;" data-toggle="tab" href="#with-inventory">With Inventory</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" style="color:white;" data-toggle="tab" href="#without-inventory">Without Inventory</a>
+                        <a class="nav-link nav-link-tab" style="color:white;" data-toggle="tab" href="#new-exemption">Exemption</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" style="color:white;" data-toggle="tab" href="#excemption">Exemption</a>
-                    </li>
+                    @*<li class="nav-item">
+                            <a class="nav-link" style="color:white;" data-toggle="tab" href="#excemption">Exemption</a>
+                        </li>*@
                 </ul>
 
                 <!-- Tab panes -->
@@ -140,15 +140,17 @@
                             </tbody>
                         </table>
                     </div>
-                    <div id="without-inventory" class="tab-pane fade mx-2">
-                        <h3 class="text-center mt-2">Without Inventory</h3>
-                        <table id="without-inventory-table" class="table table-sm table-hover" style="width: 100%; text-align: center;">
+                    <div id="new-exemption" class="tab-pane fade mx-2">
+                        <h3 class="text-center mt-2">Exemption</h3>
+                        <table id="new-exemption-table" class="table table-sm table-hover" style="width: 100%; text-align: center;">
                             <thead style="background-color: #1C3766;" class="text-white">
                                 <tr>
-                                    <th><input type="checkbox" id="selectAllWithout" /></th>
+                                    <th><input type="checkbox" id="selectAllNewExemption" /></th>
                                     <th>-</th>
-                                    @*<th>Printed?</th>*@
+                                    <th>Printed?</th>
                                     <th>SKU</th>
+                                    <th>IsExemp</th>
+                                    <th>IBHAND</th>
                                     <th>UPC</th>
                                     <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
                                     <th>Reg Price</th>
@@ -160,7 +162,7 @@
                                     <th>Category</th>
                                     <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
                                     <th>Reverted?</th>
-                                    @*<th><button class="printAllBtnWithout btn btn-secondary px-3">Print Selected</button></th>*@
+                                    <th><button class="printAllBtnNewExemption btn btn-secondary px-3">Print Selected</button></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -219,7 +221,7 @@
         InitLoad();
 
         var tableWith = null;
-        var tableWithout = null;
+        var tableNewExemption = null;
         var tableExcemption = null;
 
         function InitLoad() {
@@ -245,21 +247,21 @@
                     if (tableWith !== null) {
                         tableWith.destroy();
                     }
-                    if (tableWithout !== null) {
-                        tableWithout.destroy();
+                    if (tableNewExemption !== null) {
+                        tableNewExemption.destroy();
                     }
                     if (tableExcemption !== null) {
                         tableExcemption.destroy();
                     }
 
                     RenderDatatableWithInv(data.WithInventoryList);
-                    RenderDatatableWithoutInv(data.WithoutInventoryList);
-                    RenderDatatableExcemption(data.ExcemptionList);
+                    RenderDatatableNewExemptionInv(data.ExcemptionList);
+                    //RenderDatatableExcemption(data.ExcemptionList);
 
                     if ('@User.IsInRole("Merchandiser")' == 'True') {
 
                         // DISABLED BUTTONS IF ROLE = MERCHANDISER
-                        var buttonsprintAll = document.querySelectorAll(".printAllBtnWith, .printAllBtnWithout, .printAllBtnExcemption");
+                        var buttonsprintAll = document.querySelectorAll(".printAllBtnWith, .printAllBtnNewExemption, .printAllBtnExcemption");
                         buttonsprintAll.forEach(function (button) {
                             button.disabled = true;
                         });
@@ -596,8 +598,8 @@
                 }
             });
         }
-        function RenderDatatableWithoutInv(data) {
-            tableWithout = $('#without-inventory-table').DataTable({
+        function RenderDatatableNewExemptionInv(data) {
+            tableNewExemption = $('#new-exemption-table').DataTable({
                 scrollY: 500,
                 scrollX: true,
                 scroller: true,
@@ -609,12 +611,13 @@
                 pageLength: -1,
                 data: data,
                 columnDefs: [
+                    { targets: [4,5], visible: false },
                     { targets: [0, 1, 11, 12, 13], orderable: false },
                 ],
                 columns: [
                     {
                         data: null, orderable: false, searchable: false, render: function (data) {
-                            return '<input type="checkbox" class="rowCheckboxWithout" data-id="' + data.O3SKU + '">';
+                            return '<input type="checkbox" class="rowCheckboxNewExemption" data-id="' + data.O3SKU + '">';
                         }
                     },
                     {
@@ -627,16 +630,18 @@
                         },
                         width: "15px"
                     },
-                    //{
-                    //    data: 'IsPrinted', name: 'IsPrinted', render: function (data) {
-                    //        if (data === 'Yes') {
-                    //            return '<span style="color: green;">' + data + '</span>';
-                    //        } else {
-                    //            return '<span style="color: red;">' + data + '</span>';
-                    //        }
-                    //    }
-                    //},
+                    {
+                        data: 'IsPrinted', name: 'IsPrinted', render: function (data) {
+                            if (data === 'Yes') {
+                                return '<span style="color: green;">' + data + '</span>';
+                            } else {
+                                return '<span style="color: red;">' + data + '</span>';
+                            }
+                        }
+                    },
                     { data: 'O3SKU', name: 'O3SKU' },
+                    { data: 'IsExemp', name: 'IsExemp' },
+                    { data: 'IBHAND', name: 'IBHAND' },
                     { data: 'O3UPC', name: 'O3UPC' },
                     { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap' },
                     { data: 'O3REG', name: 'O3REG' },
@@ -648,12 +653,15 @@
                     { data: 'CategoryName', name: 'CategoryName' },
                     { data: 'DepartmentName', name: 'DepartmentName' },
                     { data: 'IsReverted', name: 'IsReverted' },
-                    //{
-                    //    data: null,
-                    //    render: function (data, type, row) {
-                    //        return '<button class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '">Print</button>';
-                    //    }
-                    //}
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            if (data.IsExemp != "Y")
+                                return '<button class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '">Print</button>';
+                            else
+                                return "";
+                        }
+                    }
                 ],
                 "dom": '<"top"lfB>rt<"bottom"ip>',
 
@@ -664,26 +672,61 @@
                         .addClass('custom-button')
                         .text('Export')
                         .on('click', function () {
-                            window.location.href = '/STRPRC/ExportDataTableToExcel?tab=WithoutInventory&date=' + date;
+                            window.location.href = '/STRPRC/ExportDataTableToExcel?tab=NewExemptionInventory&date=' + date;
                         });
 
-                    //var $queueButton = $('<button>')
-                    //    .addClass('queueBtnWithout btn btn-warning')
-                    //    .text('Queue Selected')
-                    //    .on('click', function () {
+                    var $queueButton = $('<button>')
+                        .addClass('queueBtnNewExemption btn btn-warning')
+                        .text('Queue Selected')
+                        .on('click', function () {
 
-                    //    });
-                   
-                    var dataTableWrapper = $('#without-inventory-table').closest('.dataTables_wrapper');
+                        });
+
+                    // Create a select element
+                    var $select = $('<select style="margin-left: 20px; padding: 4px;">');
+
+                    // Add options to the select element
+                    var $All = $('<option>').text('All').val('all');
+                    var $negativeInventory = $('<option>').text('Negative Inventory').val('negative');
+                    var $zeroInventory = $('<option>').text('Zero Inventory').val('zero');
+                    var $saveZero = $('<option>').text('Save Zero').val('saveZero');
+
+                    // Append options to the select element
+                    $select.append($All, $negativeInventory, $zeroInventory, $saveZero);
+
+                    $select.on('change', function () {
+                        // Log the selected value to the console
+                        if ($select.val() == "negative") {
+                            tableNewExemption.column(5).search("^-\\d", true, false).draw();
+                            tableNewExemption.column(4).search("").draw();
+                        }
+                        else if ($select.val() == "zero") {
+                            tableNewExemption.column(5).search("^0$").draw();
+                            tableNewExemption.column(4).search("").draw();
+                        }
+                        else if ($select.val() == "saveZero") {
+                            tableNewExemption.column(5).search("").draw();
+                            tableNewExemption.column(4).search("Y").draw();
+                        }
+                        else {
+                            tableNewExemption.column(5).search("").draw();
+                            tableNewExemption.column(4).search("").draw();
+                        }
+
+                        //console.log(data);
+                    });
+
+                    var dataTableWrapper = $('#new-exemption-table').closest('.dataTables_wrapper');
                     dataTableWrapper.find('.dataTables_filter').before($button);
-                    //dataTableWrapper.find('.dataTables_filter').before($queueButton);
+                    dataTableWrapper.find('.dataTables_filter').before($queueButton);
+                    dataTableWrapper.find('.dataTables_filter').before($select);
 
                 }
             });
 
-            $('.queueBtnWithout').click(function () {
+            $('.queueBtnNewExemption').click(function () {
                 var selectedRows = [];
-                $('.rowCheckboxWithout:checked').each(function () {
+                $('.rowCheckboxNewExemption:checked').each(function () {
                     var rowId = $(this).data('id');
                     selectedRows.push(rowId);
                 });
@@ -703,7 +746,7 @@
                         '</div>' +
                         '</div>';
                     // Build the HTML for the print button
-                    var buttonHtml = '<button id="queueSelectedButtonWithout" class="btn btn-primary">Queue</button>' +
+                    var buttonHtml = '<button id="queueSelectedButtonNewExemption" class="btn btn-primary">Queue</button>' +
                         '<button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancel</button>';
                     // Create the modal content
                     var modalContent = '<div class="modal-dialog modal-sm modal-dialog-centered">' +
@@ -739,7 +782,7 @@
                     $('#sizeDropdown').val(2); // 1/8
 
                     // PRINT MULTIPLE
-                    $('#queueSelectedButtonWithout').click(function () {
+                    $('#queueSelectedButtonNewExemption').click(function () {
                         $("#loadingContainer").show();
                         var sizeId = $('#sizeDropdown').val();
 
@@ -787,15 +830,15 @@
                 }
             });
 
-            $('#selectAllWithout').on('change', function () {
+            $('#selectAllNewExemption').on('change', function () {
                 var isChecked = $(this).is(':checked');
-                $('.rowCheckboxWithout').prop('checked', isChecked);
+                $('.rowCheckboxNewExemption').prop('checked', isChecked);
             });
 
-            $('.printAllBtnWithout').on('click', function () {
+            $('.printAllBtnNewExemption').on('click', function () {
 
                 var selectedRows = [];
-                $('.rowCheckboxWithout:checked').each(function () {
+                $('.rowCheckboxNewExemption:checked').each(function () {
                     var rowId = $(this).data('id');
                     selectedRows.push(rowId);
                 });
@@ -815,7 +858,7 @@
                         '</div>' +
                         '</div>';
                     // Build the HTML for the print button
-                    var buttonHtml = '<button id="printSelectedButtonWithout" class="btn btn-primary">Print</button>' +
+                    var buttonHtml = '<button id="printSelectedButtonNewExemption" class="btn btn-primary">Print</button>' +
                         '<button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancel</button>';
                     // Create the modal content
                     var modalContent = '<div class="modal-dialog modal-sm modal-dialog-centered">' +
@@ -853,7 +896,7 @@
 
                     //Start for print preview multiple report
                     // PRINT MULTIPLE
-                    $('#printSelectedButtonWithout').click(function () {
+                    $('#printSelectedButtonNewExemption').click(function () {
                         $("#loadingContainer").show();
                         var sizeId = $('#sizeDropdown').val();
 
@@ -864,7 +907,7 @@
                                 var row = $(this).closest('tr');
                                 var table = row.closest('table');
                                 var rowIndex = table.DataTable().row(row).index();
-                                var specificRow = $('#without-inventory-table tbody tr:eq(' + rowIndex + ')');
+                                var specificRow = $('#new-exemption-table tbody tr:eq(' + rowIndex + ')');
                                 specificRow.find('td:eq(2)').text("Yes");
                                 specificRow.find('td:eq(2)').css('color', 'green');
 
@@ -887,11 +930,11 @@
                         //        if (!data)
                         //            alert("Error in printing.");
                         //        else {
-                        //            $('.rowCheckboxWithout:checked').each(function () {
+                        //            $('.rowCheckboxNewExemption:checked').each(function () {
                         //                var row = $(this).closest('tr');
                         //                var table = row.closest('table');
                         //                var rowIndex = table.DataTable().row(row).index();
-                        //                var specificRow = $('#without-inventory-table tbody tr:eq(' + rowIndex + ')');
+                        //                var specificRow = $('#new-exemption-table tbody tr:eq(' + rowIndex + ')');
                         //                specificRow.find('td:eq(2)').text("Yes");
                         //                specificRow.find('td:eq(2)').css('color', 'green');
 
@@ -1193,16 +1236,16 @@
                         if (tableWith !== null) {
                             tableWith.destroy();
                         }
-                        if (tableWithout !== null) {
-                            tableWithout.destroy();
+                        if (tableNewExemption !== null) {
+                            tableNewExemption.destroy();
                         }
                         if (tableExcemption !== null) {
                             tableExcemption.destroy();
                         }
 
                         RenderDatatableWithInv(data.WithInventoryList);
-                        RenderDatatableWithoutInv(data.WithoutInventoryList);
-                        RenderDatatableExcemption(data.ExcemptionList);
+                        RenderDatatableNewExemptionInv(data.ExcemptionList);
+                        //RenderDatatableExcemption(data.ExcemptionList);
 
                         $("#loadingContainer").hide();
                     },
@@ -1353,7 +1396,7 @@
             });
         });
 
-        $('#without-inventory-table').on('click', '.printBtn', function () {
+        $('#new-exemption-table').on('click', '.printBtn', function () {
             var rowId = $(this).data('id');
 
             $.ajax({
@@ -1466,9 +1509,9 @@
                             reportIframe.src = $("#reportIframe").attr("src");
                         }
                         $('#modalView').modal('hide');
-                        var cell = tableWithout.cell({ row: 0, column: 2 });
+                        var cell = tableNewExemption.cell({ row: 0, column: 2 });
                         cell.data('Yes');
-                        tableWithout.draw();
+                        tableNewExemption.draw();
 
                              @*$.ajax({
                                 url: '@Url.Action("PrintPreviewSingleReport", "Report")',
@@ -1478,7 +1521,7 @@
                                     if (!data)
                                         alert("Error in printing.");
                                     else {
-                                        var specificRow = $('#without-inventory-table tbody tr:eq(' + rowIndex + ')');
+                                        var specificRow = $('#new-exemption-table tbody tr:eq(' + rowIndex + ')');
                                         specificRow.find('td:eq(2)').text("Yes");
                                         specificRow.find('td:eq(2)').css('color', 'green');
                                     }
@@ -1673,16 +1716,16 @@
                     }
                 });
 
-                
+
             }
         });
 
-        // collapsible for without inv
-        $('#without-inventory-table tbody').on('click', 'td.details-control', function () {
+        // collapsible for NewExemption inv
+        $('#new-exemption-table tbody').on('click', 'td.details-control', function () {
 
             var tr = $(this).closest('tr');
             var tdi = tr.find("i.fa-solid");
-            var row = tableWithout.row(tr);
+            var row = tableNewExemption.row(tr);
 
             if (row.child.isShown()) {
                 // This row is already open - close it
@@ -1855,7 +1898,7 @@
             }
         });
 
-        // FOR WITHOUT TAB
+        // FOR NewExemption TAB
         var dialog2 = $('<div>').dialog({
             autoOpen: false,
             modal: true,
@@ -1871,11 +1914,11 @@
                 $('.ui-widget-overlay').unbind('click');
             }
         });
-        $('#without-inventory-table thead').on('click', '.filter-icon', function (event) {
+        $('#new-exemption-table thead').on('click', '.filter-icon', function (event) {
             event.stopPropagation(); // Prevent event propagation
 
-            var columnIndex = $(this).closest('th').index();
-            var column = tableWithout.column(columnIndex);
+            var columnIndex = $(this).closest('th').index() + 2;
+            var column = tableNewExemption.column(columnIndex);
 
             // Clear existing filter input
             dialog2.dialog('option', 'title', 'Filter Dept').html('');
@@ -2089,10 +2132,10 @@
             }
         });
 
-        // FIX DT HEADER MISALIGNMENT FOR WITHOUT INV TAB
-        $('.nav-link').click(function () {
+        // FIX DT HEADER MISALIGNMENT FOR NewExemption INV TAB
+        $('.nav-link-tab').click(function () {
             // Remove 'active' class from all tabs
-            $('.nav-link').removeClass('active');
+            $('.nav-link-tab').removeClass('active');
 
             // Add 'active' class to the clicked tab
             $(this).addClass('active');
@@ -2105,9 +2148,9 @@
             $(tabId).addClass('show active');
 
             // Get the current active tab
-            var currentActiveTab = $('.nav-link.active').attr('href');
-            if (currentActiveTab == "#without-inventory") {
-                tableWithout.draw();
+            var currentActiveTab = $('.nav-link-tab.active').attr('href');
+            if (currentActiveTab == "#new-exemption") {
+                tableNewExemption.draw();
             }
             else if (currentActiveTab == "#with-inventory") {
                 tableWith.draw();
@@ -2116,6 +2159,13 @@
                 tableExcemption.draw();
             }
 
+        });
+
+        // FIX DT HEADER MISALIGNMENT FOR NewExemption INV TAB
+        $('.nav-link-burger').click(function () {
+            setTimeout(function () {
+                $("a.nav-link-tab.active").trigger("click");
+            }, 300);
         });
 
         $("#startDate").datepicker({

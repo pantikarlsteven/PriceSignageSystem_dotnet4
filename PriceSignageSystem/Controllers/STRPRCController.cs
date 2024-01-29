@@ -384,27 +384,10 @@ namespace PriceSignageSystem.Controllers
 
             data.LatestDate = result.LatestDate;
             data.WithInventoryList = rawData.Where(a => a.HasInventory == "Y" && a.IsExemp == "N").ToList();
-            data.WithoutInventoryList = rawData.Where(a => a.HasInventory == "" && a.IsExemp == "N").ToList();
-            data.ExcemptionList = rawData.Where(a => a.IsExemp == "Y").ToList();
+            //data.WithoutInventoryList = rawData.Where(a => a.HasInventory == "" || a.IsExemp == "Y").ToList();
+            data.ExcemptionList = rawData.Where(a => a.HasInventory == "" || a.IsExemp == "Y").ToList();
 
             foreach (var item in data.WithInventoryList)
-            {
-                item.TypeName =  item.TypeId == 2 ? "Save"
-                                : item.TypeId == 1 ? "Regular"
-                                : "Save";
-                item.SizeName = item.SizeId == 1 ? "Whole"
-                                : item.SizeId == 2 ? "1/8"
-                                : item.SizeId == 3 ? "Jewelry"
-                                //: item.SizeId == 4 ? "Jewelry"
-                                : "Whole";
-                item.CategoryName = item.CategoryId == 1 ? "Appliance"
-                                    : item.CategoryId == 2 ? "Non-Appliance"
-                                    : "Non-Appliance";
-                item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
-                item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
-            }
-
-            foreach (var item in data.WithoutInventoryList)
             {
                 item.TypeName = item.TypeId == 2 ? "Save"
                                 : item.TypeId == 1 ? "Regular"
@@ -423,18 +406,52 @@ namespace PriceSignageSystem.Controllers
 
             foreach (var item in data.ExcemptionList)
             {
-                item.TypeName = item.O3EDT != 999999 ? "Save" : "Regular";
-                item.SizeName = item.SizeId == 1 ? "Whole"
-                                : item.SizeId == 2 ? "1/8"
-                                : item.SizeId == 3 ? "Jewelry"
-                                //: item.SizeId == 4 ? "Jewelry"
-                                : "Whole";
-                item.CategoryName = item.CategoryId == 1 ? "Appliance"
-                                    : item.CategoryId == 2 ? "Non-Appliance"
-                                    : "Non-Appliance";
-                item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
-                item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
+                if (item.IsExemp == "Y")
+                {
+                    item.TypeName = item.O3EDT != 999999 ? "Save" : "Regular";
+                    item.SizeName = item.SizeId == 1 ? "Whole"
+                                    : item.SizeId == 2 ? "1/8"
+                                    : item.SizeId == 3 ? "Jewelry"
+                                    //: item.SizeId == 4 ? "Jewelry"
+                                    : "Whole";
+                    item.CategoryName = item.CategoryId == 1 ? "Appliance"
+                                        : item.CategoryId == 2 ? "Non-Appliance"
+                                        : "Non-Appliance";
+                    item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
+                    item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
+                }
+                else
+                {
+                    item.TypeName = item.TypeId == 2 ? "Save"
+                                    : item.TypeId == 1 ? "Regular"
+                                    : "Save";
+                    item.SizeName = item.SizeId == 1 ? "Whole"
+                                    : item.SizeId == 2 ? "1/8"
+                                    : item.SizeId == 3 ? "Jewelry"
+                                    //: item.SizeId == 4 ? "Jewelry"
+                                    : "Whole";
+                    item.CategoryName = item.CategoryId == 1 ? "Appliance"
+                                        : item.CategoryId == 2 ? "Non-Appliance"
+                                        : "Non-Appliance";
+                    item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
+                    item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
+                }
             }
+
+            //foreach (var item in data.ExcemptionList)
+            //{
+            //    item.TypeName = item.O3EDT != 999999 ? "Save" : "Regular";
+            //    item.SizeName = item.SizeId == 1 ? "Whole"
+            //                    : item.SizeId == 2 ? "1/8"
+            //                    : item.SizeId == 3 ? "Jewelry"
+            //                    //: item.SizeId == 4 ? "Jewelry"
+            //                    : "Whole";
+            //    item.CategoryName = item.CategoryId == 1 ? "Appliance"
+            //                        : item.CategoryId == 2 ? "Non-Appliance"
+            //                        : "Non-Appliance";
+            //    item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
+            //    item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
+            //}
 
             string jsonData = Newtonsoft.Json.JsonConvert.SerializeObject(data);
 
@@ -464,17 +481,17 @@ namespace PriceSignageSystem.Controllers
             var decimalDate = ConversionHelper.ToDecimal(date);
             var toExportRawData = _sTRPRCRepository.PCAToExport().ToList();
 
-            if(tab == "WithInventory")
+            if (tab == "WithInventory")
             {
                 toExportRawData = toExportRawData.Where(a => a.WithInventory == "Yes" && a.IsExemption == "No").ToList();
             }
-            else if (tab == "WithoutInventory")
-            {
-                toExportRawData = toExportRawData.Where(a => a.WithInventory == "No" && a.IsExemption == "No").ToList();
-            }
+            //else if (tab == "WithoutInventory")
+            //{
+            //    toExportRawData = toExportRawData.Where(a => a.WithInventory == "No" && a.IsExemption == "No").ToList();
+            //}
             else
             {
-                toExportRawData = toExportRawData.Where(a => a.IsExemption == "Yes").ToList();
+                toExportRawData = toExportRawData.Where(a => a.IsExemption == "Yes" || a.WithInventory == "No").ToList();
 
             }
 
@@ -529,7 +546,7 @@ namespace PriceSignageSystem.Controllers
                 {
                     workbook.SaveAs(memoryStream);
 
-                    
+
                     var fileContents = memoryStream.ToArray();
                     var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
                     var fileName = tab + "_" + DateTime.Today.ToShortDateString() + ".xlsx";

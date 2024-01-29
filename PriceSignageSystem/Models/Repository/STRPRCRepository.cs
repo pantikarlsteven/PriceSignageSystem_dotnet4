@@ -295,7 +295,8 @@ namespace PriceSignageSystem.Models.Repository
                         IsReverted = reader["O3FLAG1"].ToString(),
                         HasInventory = reader["INV2"].ToString(),
                         IsExemp = reader["IsExemp"].ToString(),
-                        O3TYPE = reader["O3TYPE"].ToString()
+                        O3TYPE = reader["O3TYPE"].ToString(),
+                        IBHAND = (decimal)reader["IBHAND"],
                     };
 
                     if ((decimal)reader["O3RSDT"] == startDate)
@@ -506,7 +507,8 @@ namespace PriceSignageSystem.Models.Repository
         {
             var data = (from a in _db.STRPRCs
                         orderby a.DateUpdated descending
-                        select new STRPRCDto {
+                        select new STRPRCDto
+                        {
                             DateUpdated = a.DateUpdated,
                             LatestDate = a.O3DATE
                         }).FirstOrDefault();
@@ -752,7 +754,8 @@ namespace PriceSignageSystem.Models.Repository
         public void AddInventoryPrintingLog(ReportDto model, string user)
         {
 
-            var data = new InventoryPrintingLog() {
+            var data = new InventoryPrintingLog()
+            {
                 O3SKU = model.O3SKU,
                 PrintedBy = user,
                 DateCreated = DateTime.Now,
@@ -850,7 +853,7 @@ namespace PriceSignageSystem.Models.Repository
         public List<ExportPCADto> PCAToExport()
         {
             var sp = "sp_ExportPCAData";
-           
+
             var data = new List<ExportPCADto>();
             // Set up the connection and command
             using (var connection = new SqlConnection(connectionString))

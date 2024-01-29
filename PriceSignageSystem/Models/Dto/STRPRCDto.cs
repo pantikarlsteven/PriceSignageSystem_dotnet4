@@ -61,7 +61,7 @@ namespace PriceSignageSystem.Models.Dto
         public decimal O3FGR { get; set; }
         [Display(Name = "BRAND NAME")]
         public string O3FNAM { get; set; }
-        [Display(Name="MODEL")]
+        [Display(Name = "MODEL")]
         public string O3MODL { get; set; }
         [Display(Name = "LONG DESC")]
         public string O3LONG { get; set; }
@@ -87,10 +87,10 @@ namespace PriceSignageSystem.Models.Dto
         public string SizeName { get; set; }
         public string TypeName { get; set; }
         public string CategoryName { get; set; }
-        public Size[] SizeArray {get;set;}
+        public Size[] SizeArray { get; set; }
         public Type[] TypeArray { get; set; }
         public Category[] CategoryArray { get; set; }
-        public string StartDateFormattedDate { get;set; }
+        public string StartDateFormattedDate { get; set; }
         public string EndDateFormattedDate { get; set; }
         public int TypeId { get; set; }
         public int SizeId { get; set; }
@@ -101,6 +101,7 @@ namespace PriceSignageSystem.Models.Dto
         public decimal LatestDate { get; set; }
         public string HasInventory { get; set; }
         public string IsExemp { get; set; }
+        public decimal IBHAND { get; set; }
         public List<STRPRCDto> WithInventoryList { get; set; }
         public List<STRPRCDto> WithoutInventoryList { get; set; }
         public List<STRPRCDto> ExcemptionList { get; set; }
