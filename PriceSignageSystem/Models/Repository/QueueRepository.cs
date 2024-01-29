@@ -157,8 +157,13 @@ namespace PriceSignageSystem.Models.Repository
         {
 
             var data = _db.ItemQueues.Where(a => a.Id == id && a.UserName == username).FirstOrDefault();
-            data.Status = ReportConstants.Status.InQueue;
-            data.DateUpdated = DateTime.Now;
+
+            if (data != null)
+            {
+                data.Status = ReportConstants.Status.InQueue;
+                data.DateUpdated = DateTime.Now;
+            }
+           
             var count = _db.SaveChanges();
 
             return count;

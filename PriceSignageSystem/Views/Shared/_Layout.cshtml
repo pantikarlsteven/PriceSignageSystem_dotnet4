@@ -8,15 +8,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Price Signage</title>
-    <link href="~/Content/bootstrap.min.css" rel="stylesheet" /> 
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">  
-    <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" /> 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"> 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"> 
-    <link rel="stylesheet" href="https://adminlte.io/themes/v3/dist/css/adminlte.min.css?v=3.2.0"> 
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
+    <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://adminlte.io/themes/v3/dist/css/adminlte.min.css?v=3.2.0">
 
     <style>
-   
+
         .navbar {
             background-color: #333;
             color: #fff;
@@ -28,10 +28,10 @@
         }
 
             .navbar-nav li a:hover {
-                color: #f00; 
+                color: #f00;
             }
 
-        
+
 
         body {
             font-family: 'Poppins', sans-serif !important;
@@ -50,10 +50,10 @@
         }
 
         .active {
-            color:black !important;
+            color: black !important;
         }
 
-        
+
 
         .btn-primary {
             background-color: #182042 !important;
@@ -137,10 +137,10 @@
                                 </p>
                             </a>
                         </li>
-                        @if (User.IsInRole("Administrator/Manager"))
-                        {
+                        @*@if (User.IsInRole("Administrator/Manager"))*@
+                        <!--{-->
                             <!-- Registers -->
-                            <li class="nav-item has-treeview">
+                            <!--<li class="nav-item has-treeview">
                                 <a href="#" class="nav-link text-white">
                                     <img style="width: 24px;" src="~/Content/Images/register.png" />
                                     <p>
@@ -156,11 +156,11 @@
                                                 Country
                                             </p>
                                         </a>
-                                    </li>
+                                    </li>-->
                                     <!-- Add more submenu items if needed -->
-                                </ul>
+                                <!--</ul>
                             </li>
-                        }
+                        }-->
                     </ul>
                 </nav>
             </div>

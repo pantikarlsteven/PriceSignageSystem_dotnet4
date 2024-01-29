@@ -1,127 +1,157 @@
-﻿@using PriceSignageSystem.Models.Dto;
-@model List<ItemQueueDto>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-
-</head>
-<body>
-    <div class="container">
-        <div class="accordion accordion-flush" id="accordionFlushExample">
-            <div class="accordion-item">
-                <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                        <b><i>History</i></b>
-                    </button>
-                </h2>
-                <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                    <div class="accordion-body">
-                        <table class="table table-sm table-hover" style="width:100%; text-align: center;">
-                            <thead>
-                                <tr>
-                                    <th>SKU</th>
-                                    <th>Type</th>
-                                    <th>Size</th>
-                                    <th>Category</th>
-                                    <th>Status</th>
-                                    <th>Date Modified</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                                @if (Model.Count() > 0)
-                                {
-                                    foreach (var item in Model)
-                                    {
-                                        <tr>
-                                            <td>@item.O3SKU</td>
-                                            <td>@item.TypeName</td>
-                                            <td>@item.SizeName</td>
-                                            <td>@item.CategoryName</td>
-                                            <td>@item.Status</td>
-                                            <td>@item.DateUpdated</td>
-                                            @if (item.Status == "Printed")
-                                            {
-                                                <td><button type="button" class="qbtn btn btn-primary" onclick="QueueItem(@item.Id)">Queue</button></td>
-                                            }
-                                            else
-                                            {
-                                                <td></td>
-                                            }
-
-                                        </tr>
-
-                                    }
-                                }
-                                else
-                                {
-                                    <tr>
-                                        <td colspan="7"> No history available</td>
-                                    </tr>
-                                }
-
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-
-</body>
-</html>
-<script>
-    function QueueItem(Id) {
-        $.ajax({
-            url: '@Url.Action("RequeueItem", "Queue")',
-            type: 'POST',
-            data: { id: Id },
-            success: function (response) {
-                if (response.success)
+﻿
+<div class="container">
+    <center><h3>Queue History</h3></center>
+    <table id="qHistoryTbl" class="table table-sm table-hover" style="width:100%; text-align: center;">
+        <thead>
+            <tr>
+                <th>SKU</th>
+                <th>Type</th>
+                <th>Size</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th>Date Modified</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="7"> No history available</td>
+            </tr>
+            @*@if (Model.Count() > 0)
                 {
-                    var modalHtml = '<div class="modal fade" id="qsuccessModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">';
-                    modalHtml += '<div class="modal-dialog" role="document">';
-                    modalHtml += '<div class="modal-content">';
-                    modalHtml += '<div class="modal-header">';
-                    modalHtml += '<h5 class="modal-title" id="successModalLabel">Success!</h5>';
-                    modalHtml += '<button type="button" class="close" data-dismiss="modal" aria-label="Close">';
-                    modalHtml += '<span aria-hidden="true">&times;</span>';
-                    modalHtml += '</button>';
-                    modalHtml += '</div>';
-                    modalHtml += '<div class="modal-body">';
-                    modalHtml += 'Item queued successfully!';
-                    modalHtml += '</div>';
-                    modalHtml += '<div class="modal-footer">';
-                    modalHtml += '<button type="button" class="qOkBtn btn btn-primary" data-dismiss="modal">OK</button>';
-                    modalHtml += '</div>';
-                    modalHtml += '</div>';
-                    modalHtml += '</div>';
-                    modalHtml += '</div>';
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.O3SKU</td>
+                            <td>@item.TypeName</td>
+                            <td>@item.SizeName</td>
+                            <td>@item.CategoryName</td>
+                            <td>@item.Status</td>
+                            <td>@item.DateUpdated</td>
+                            @if (item.Status == "Printed")
+                            {
+                                <td><button type="button" class="qbtn btn btn-primary" onclick="QueueItem(@item.Id)">Queue</button></td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
 
-                    $('body').append(modalHtml);
-                    $('#qsuccessModal').modal('show');
+                        </tr>
+
+                    }
                 }
+                else
+                {
+                    <tr>
+                        <td colspan="7"> No history available</td>
+                    </tr>
+                }*@
+
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: '/STRPRC/GetHistoryList',
+            type: "POST",
+            success: function (data) {
+                var qtable = $('#qHistoryTbl').DataTable({
+                    deferRender: true,
+                    lengthMenu: [
+                        [10, 25, 50, -1],
+                        [10, 25, 50, 'All']
+                    ],
+                    pageLength: -1,
+                    data: data,
+                    columnDefs: [],
+                    columns: [
+                        { data: 'O3SKU', name: 'O3SKU' },
+                        { data: 'TypeName', name: 'TypeName' },
+                        { data: 'SizeName', name: 'SizeName' },
+                        { data: 'CategoryName', name: 'CategoryName' },
+                        { data: 'Status', name: 'Status' },
+                        {
+                            data: 'DateUpdated',
+                            name: 'DateUpdated',
+                            render: function (data, type, row) {
+                                if (data != null) {
+                                    var date = new Date(parseInt(data.substr(6)));
+                                    return date.toLocaleDateString();
+                                }
+
+                                return "-";
+                            }
+                        },
+                        {
+                            data: 'Id', render: function (data,type,row) {
+                                if (row.Status === 'Printed') {
+                                    return '<button type="button" class="qbtn btn btn-primary" onclick="QueueItem('+ data +')">Queue</button>';
+                                } else {
+                                    return null;
+                                }
+                            }
+                        },
+                    ],
+                    "dom": '<"top"lfB>rt<"bottom"ip>',
+
+                });
+
             },
-            error: function () {
-
+            error: function (error) {
             }
+        })
+
+    });
+
+    function QueueItem(Id) {
+            $.ajax({
+                url: '@Url.Action("RequeueItem", "Queue")',
+                type: 'POST',
+                data: { id: Id },
+                success: function (response) {
+                    if (response.success)
+                    {
+                        var modalHtml = '<div class="modal fade" id="qsuccessModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">';
+                        modalHtml += '<div class="modal-dialog" role="document">';
+                        modalHtml += '<div class="modal-content">';
+                        modalHtml += '<div class="modal-header">';
+                        modalHtml += '<h5 class="modal-title" id="successModalLabel">Success!</h5>';
+                        modalHtml += '<button type="button" class="close" data-dismiss="modal" aria-label="Close">';
+                        modalHtml += '<span aria-hidden="true">&times;</span>';
+                        modalHtml += '</button>';
+                        modalHtml += '</div>';
+                        modalHtml += '<div class="modal-body">';
+                        modalHtml += 'Item queued successfully!';
+                        modalHtml += '</div>';
+                        modalHtml += '<div class="modal-footer">';
+                        modalHtml += '<button type="button" class="qOkBtn btn btn-primary" data-dismiss="modal">OK</button>';
+                        modalHtml += '</div>';
+                        modalHtml += '</div>';
+                        modalHtml += '</div>';
+                        modalHtml += '</div>';
+
+                        $('body').append(modalHtml);
+                        $('#qsuccessModal').modal('show');
+                    }
+                },
+                error: function () {
+
+                }
+            });
+        }
+
+        $(document).on('click', '#qsuccessModal .close', function () {
+            $('#modalView').modal('hide');
+            window.location.href = '/STRPRC/Index';
         });
-    }
 
-    $(document).on('click', '#qsuccessModal .close', function () {
-        $('#modalView').modal('hide');
-        window.location.href = '/STRPRC/Index';
-    });
+        $(document).on('click', '#qsuccessModal .qOkBtn', function () {
+            $('#modalView').modal('hide');
+            window.location.href = '/STRPRC/Index';
+        });
 
-    $(document).on('click', '#qsuccessModal .qOkBtn', function () {
-        $('#modalView').modal('hide');
-        window.location.href = '/STRPRC/Index';
-    });
+
 </script>

@@ -1,199 +1,199 @@
 ﻿@using PriceSignageSystem.Models.Dto;
 @model STRPRCDto
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-</head>
-<body>
-    <iframe id="reportIframe" src="" style="display: none;"></iframe> @*For printing preview*@
-    @using (Html.BeginForm("AutoPrintOnDemandReport", "Report", FormMethod.Post))
-    {
-        @Html.HiddenFor(m => m.O3SKU)
-        <div class="container">
-            <h2 class="text-center bg-primarydark text-white p-2">Item Details</h2>
 
-            <div class="row">
-                <div class="col-md-6">
-                    <dl class="row">
+<iframe id="reportIframe" src="" style="display: none;"></iframe> @*For printing preview*@
+@using (Html.BeginForm("AutoPrintOnDemandReport", "Report", FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.O3SKU)
+    <div class="container">
+        <h2 class="text-center bg-primarydark text-white p-2">Item Details</h2>
 
-                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3UPC)</dt>
-                        <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3UPC, new { @class = "form-control", @disabled = "disabled" })</dd>
+        <div class="row">
+            <div class="col-md-6">
+                <dl class="row">
 
-                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3SKU)</dt>
-                        <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3SKU, new { @class = "form-control", @disabled = "disabled" })</dd>
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3UPC)</dt>
+                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3UPC, new { @class = "form-control", @disabled = "disabled" })</dd>
 
-                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3IDSC)</dt>
-                        <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3IDSC, new { @class = "form-control", @disabled = "disabled" })</dd>
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3SKU)</dt>
+                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3SKU, new { @class = "form-control", @disabled = "disabled" })</dd>
 
-                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3FNAM)</dt>
-                        <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3FNAM, new { @class = "form-control", @disabled = "disabled" })</dd>
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3IDSC)</dt>
+                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3IDSC, new { @class = "form-control", @disabled = "disabled" })</dd>
 
-                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3MODL)</dt>
-                        <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3MODL, new { @class = "form-control", @disabled = "disabled" })</dd>
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3FNAM)</dt>
+                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3FNAM, new { @class = "form-control", @disabled = "disabled" })</dd>
 
-                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3DEPT)</dt>
-                        <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3DEPT, new { @class = "form-control", @disabled = "disabled" })</dd>
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3MODL)</dt>
+                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3MODL, new { @class = "form-control", @disabled = "disabled" })</dd>
 
-                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3SDPT)</dt>
-                        <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3SDPT, new { @class = "form-control", @disabled = "disabled" })</dd>
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3DEPT)</dt>
+                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3DEPT, new { @class = "form-control", @disabled = "disabled" })</dd>
 
-                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3CLAS)</dt>
-                        <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3CLAS, new { @class = "form-control", @disabled = "disabled" })</dd>
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3SDPT)</dt>
+                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3SDPT, new { @class = "form-control", @disabled = "disabled" })</dd>
 
-                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3SCLS)</dt>
-                        <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3SCLS, new { @class = "form-control", @disabled = "disabled" })</dd>
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3CLAS)</dt>
+                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3CLAS, new { @class = "form-control", @disabled = "disabled" })</dd>
 
-                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3LONG)</dt>
-                        <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3LONG, new { @class = "form-control", @disabled = "disabled" })</dd>
-                    </dl>
-                </div>
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3SCLS)</dt>
+                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3SCLS, new { @class = "form-control", @disabled = "disabled" })</dd>
 
-                <div class="col-md-6">
-                    <dl class="row">
-                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3SCCD)</dt>
-                        <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3SCCD, new { @class = "form-control", @disabled = "disabled" })</dd>
-
-                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3TRB3)</dt>
-                        <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3TRB3, new { @class = "form-control", @disabled = "disabled" })</dd>
-
-                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3REGU)</dt>
-                        <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3REGU, new { @class = "form-control", @disabled = "disabled", @id = "regPrice" })</dd>
-
-                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3POS)</dt>
-                        <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3POS, new { @class = "form-control", @disabled = "disabled", @id = "currPrice" })</dd>
-
-                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3SDT)</dt>
-                        <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3SDT, new { @class = "form-control", @disabled = "disabled" })</dd>
-
-                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3EDT)</dt>
-                        <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3EDT, new { @class = "form-control", @disabled = "disabled" })</dd>
-
-                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3SLUM)</dt>
-                        <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3SLUM, new { @class = "form-control", @disabled = "disabled" })</dd>
-
-                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3TUOM)</dt>
-                        <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3TUOM, new { @class = "form-control", @disabled = "disabled" })</dd>
-
-                        <dt class="col-sm-4">@Html.LabelFor(m => m.O3DIV)</dt>
-                        <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3DIV, new { @class = "form-control", @disabled = "disabled" })</dd>
-                    </dl>
-                </div>
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3LONG)</dt>
+                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3LONG, new { @class = "form-control", @disabled = "disabled" })</dd>
+                </dl>
             </div>
 
-            @if (Model.O3SKU != 0)
-            {
-                <div class="container">
-                    <div class="row mb-3 d-flex justify-content-center">
-                        <div class="col-2">
-                        </div>
-                        <div class="col-8">
-                            <div class="row">
-                                <div class="col-4">
-                                    <div class="form-group ">
-                                        @Html.LabelFor(m => m.SelectedTypeId, htmlAttributes: new { @class = "font-weight-bold" })
-                                        @Html.DropDownListFor(m => m.SelectedTypeId, Model.Types ?? new List<SelectListItem>(), "Select Type", new { @class = "form-control", disabled = true })
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="form-group ">
-                                        @Html.LabelFor(m => m.SelectedSizeId, htmlAttributes: new { @class = "font-weight-bold" })
-                                        @Html.DropDownListFor(m => m.SelectedSizeId, Model.Sizes ?? new List<SelectListItem>(), "Select Size", new { @class = "form-control custom-select" })
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="form-group ">
-                                        @Html.LabelFor(m => m.SelectedCategoryId, htmlAttributes: new { @class = "font-weight-bold" })
-                                        @Html.DropDownListFor(m => m.SelectedCategoryId, Model.Categories ?? new List<SelectListItem>(), "Select Category", new { @class = "form-control", disabled = true })
-                                    </div>
-                                </div>
-                                <div class="d-flex justify-content-center">
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3SCCD)</dt>
+                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3SCCD, new { @class = "form-control", @disabled = "disabled" })</dd>
 
-                                    @if (User.IsInRole("PCA Captain"))
-                                    {
-                                        <button type="button" class="newPrint btn btn-primary mr-1">Print</button>
-                                        <button type="button" class="queuebtn btn btn-warning mr-1">Queue</button>
-                                        <button type="button" class="qListbtn btn btn-success mr-1">Print Queue</button>
-                                    }
-                                    else if (User.IsInRole("Administrator/Manager"))
-                                    {
-                                        <button type="button" class="editBtn btn btn-secondary mr-1">Edit</button>
-                                        <button type="button" class="newPrint btn btn-primary mr-1">Print</button>
-                                        <button type="button" class="queuebtn btn btn-warning mr-1">Queue</button>
-                                        <button type="button" class="qListbtn btn btn-success mr-1">Print Queue</button>
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3TRB3)</dt>
+                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3TRB3, new { @class = "form-control", @disabled = "disabled" })</dd>
 
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-2">
-                        </div>
-                    </div>
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3REGU)</dt>
+                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3REGU, new { @class = "form-control", @disabled = "disabled", @id = "regPrice" })</dd>
 
-                    <div class="row">
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3POS)</dt>
+                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3POS, new { @class = "form-control", @disabled = "disabled", @id = "currPrice" })</dd>
 
-                    </div>
-                </div>
-            }
-            else
-            {
-                <div class="container">
-                    <div class="row mb-3 d-flex justify-content-center">
-                        <div class="col-2">
-                        </div>
-                        <div class="col-8">
-                            <div class="row">
-                                <div class="col-4">
-                                </div>
-                                <div class="col-4">
-                                </div>
-                                <div class="col-4">
-                                </div>
-                                <div class="d-flex justify-content-center">
-                                    @if (User.IsInRole("PCA Captain"))
-                                    {
-                                        <button type="button" class="newPrint btn btn-primary mr-1">Print</button>
-                                        <button type="button" class="queuebtn btn btn-warning mr-1">Queue</button>
-                                        <button type="button" class="qListbtn btn btn-success mr-1">Print Queue</button>
-                                    }
-                                    else if (User.IsInRole("Administrator/Manager"))
-                                    {
-                                        <button type="button" class="editBtn btn btn-secondary mr-1">Edit</button>
-                                        <button type="button" class="newPrint btn btn-primary mr-1">Print</button>
-                                        <button type="button" class="queuebtn btn btn-warning mr-1">Queue</button>
-                                        <button type="button" class="qListbtn btn btn-success mr-1">Print Queue</button>
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3SDT)</dt>
+                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3SDT, new { @class = "form-control", @disabled = "disabled" })</dd>
 
-                                    }
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3EDT)</dt>
+                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3EDT, new { @class = "form-control", @disabled = "disabled" })</dd>
 
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-2">
-                        </div>
-                    </div>
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3SLUM)</dt>
+                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3SLUM, new { @class = "form-control", @disabled = "disabled" })</dd>
 
-                    <div class="row">
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3TUOM)</dt>
+                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3TUOM, new { @class = "form-control", @disabled = "disabled" })</dd>
 
-                    </div>
-                </div>
-            }
-            <hr />
-
-
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.O3DIV)</dt>
+                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3DIV, new { @class = "form-control", @disabled = "disabled" })</dd>
+                </dl>
+            </div>
         </div>
-    }
 
-    @Html.Partial("_HistoryPartialView", Model.Histories)
+        @if (Model.O3SKU != 0)
+        {
+            <div class="container">
+                <div class="row mb-3 d-flex justify-content-center">
+                    <div class="col-2">
+                    </div>
+                    <div class="col-8">
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="form-group ">
+                                    @Html.LabelFor(m => m.SelectedTypeId, htmlAttributes: new { @class = "font-weight-bold" })
+                                    @Html.DropDownListFor(m => m.SelectedTypeId, Model.Types ?? new List<SelectListItem>(), "Select Type", new { @class = "form-control", disabled = true })
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group ">
+                                    @Html.LabelFor(m => m.SelectedSizeId, htmlAttributes: new { @class = "font-weight-bold" })
+                                    @Html.DropDownListFor(m => m.SelectedSizeId, Model.Sizes ?? new List<SelectListItem>(), "Select Size", new { @class = "form-control custom-select" })
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group ">
+                                    @Html.LabelFor(m => m.SelectedCategoryId, htmlAttributes: new { @class = "font-weight-bold" })
+                                    @Html.DropDownListFor(m => m.SelectedCategoryId, Model.Categories ?? new List<SelectListItem>(), "Select Category", new { @class = "form-control", disabled = true })
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-center">
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                                @if (User.IsInRole("PCA Captain"))
+                                {
+                                    <button type="button" class="newPrint btn btn-primary mr-1">Print</button>
+                                    <button type="button" class="queuebtn btn btn-warning mr-1">Queue</button>
+                                    <button type="button" class="qListbtn btn btn-success mr-1">Print Queue</button>
+                                }
+                                else if (User.IsInRole("Administrator/Manager"))
+                                {
+                                    <button type="button" class="editBtn btn btn-secondary mr-1">Edit</button>
+                                    <button type="button" class="newPrint btn btn-primary mr-1">Print</button>
+                                    <button type="button" class="queuebtn btn btn-warning mr-1">Queue</button>
+                                    <button type="button" class="qListbtn btn btn-success mr-1">Print Queue</button>
 
-</body>
-</html>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                    </div>
+                </div>
+
+                <div class="row">
+
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="container">
+                <div class="row mb-3 d-flex justify-content-center">
+                    <div class="col-2">
+                    </div>
+                    <div class="col-8">
+                        <div class="row">
+                            <div class="col-4">
+                            </div>
+                            <div class="col-4">
+                            </div>
+                            <div class="col-4">
+                            </div>
+                            <div class="d-flex justify-content-center">
+                                @if (User.IsInRole("PCA Captain"))
+                                {
+                                    <button type="button" class="newPrint btn btn-primary mr-1">Print</button>
+                                    <button type="button" class="queuebtn btn btn-warning mr-1">Queue</button>
+                                    <button type="button" class="qListbtn btn btn-success mr-1">Print Queue</button>
+                                }
+                                else if (User.IsInRole("Administrator/Manager"))
+                                {
+                                    <button type="button" class="editBtn btn btn-secondary mr-1">Edit</button>
+                                    <button type="button" class="newPrint btn btn-primary mr-1">Print</button>
+                                    <button type="button" class="queuebtn btn btn-warning mr-1">Queue</button>
+                                    <button type="button" class="qListbtn btn btn-success mr-1">Print Queue</button>
+
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                    </div>
+                </div>
+
+                <div class="row">
+
+                </div>
+            </div>
+        }
+        <hr />
+
+
+    </div>
+}
+<button type="button" class="btnCollapse btn btn-link" data-toggle="collapse" data-target="#collapseHistory" aria-expanded="false" aria-controls="collapseHistory">
+    View Queue Logs
+</button>
+
+<div id="collapseHistory" class="collapse">
+    <div class="card card-body">
+        @Html.Partial("_HistoryPartialView", Model.Histories)
+    </div>
+</div>
+
+@*<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>*@
+
+
 
 
 <script>
@@ -209,7 +209,14 @@
     }
 
     $(document).ready(function () {
-        
+
+        $(".btnCollapse").on("click", function () {
+            // Toggle the aria-expanded attribute
+            var isExpanded = $(this).attr("aria-expanded") === "true";
+            $(this).attr("aria-expanded", !isExpanded);
+        });
+
+
         var convertedRegPrice = 0;
         var convertedCurrPrice = 0;
 
@@ -235,7 +242,7 @@
         });
 
         $(".newPrint").click(function () {
-            
+
             var isCurrDisabled = $('#currPrice').prop('disabled');
 
             if (isCurrDisabled) {
@@ -452,6 +459,8 @@
                         });
 
                         $('#printQueueButton').click(function () {
+                            $("#loadingContainer").show();
+
                             var selectedSize = $('#sizeDropdown').val();
                             var url = '@Url.Action("CheckItemQueuesPerUser", "Queue")';
                             $.ajax({
@@ -466,6 +475,8 @@
                                         if (reportIframe) {
                                             reportIframe.onload = function () {
                                                 reportIframe.contentWindow.print();
+                                                $("#loadingContainer").hide();
+
                                             };
                                             reportIframe.src = $("#reportIframe").attr("src");
                                         }

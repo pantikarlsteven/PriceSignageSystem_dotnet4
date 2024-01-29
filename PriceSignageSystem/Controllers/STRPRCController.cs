@@ -44,6 +44,12 @@ namespace PriceSignageSystem.Controllers
             return View();
         }
 
+        public ActionResult GetHistoryList()
+        {
+            var username = User.Identity.Name;
+            var data = _queueRepository.GetHistory(username);
+            return Json(data);
+        }
         public ActionResult Search(string query)
         {
             try
@@ -54,9 +60,7 @@ namespace PriceSignageSystem.Controllers
                 {
                     DateTime startdateTimeValue = DateTime.ParseExact(dto.O3SDT.ToString(), "yyMMdd", CultureInfo.InvariantCulture);
                     dto.StartDateFormattedDate = startdateTimeValue.ToString("yy-MM-dd");
-                    var username = User.Identity.Name;
-                    // get Item Queue history
-                    dto.Histories = _queueRepository.GetHistory(username);
+                    
 
                     if (dto.O3EDT == 999999)
                     {
