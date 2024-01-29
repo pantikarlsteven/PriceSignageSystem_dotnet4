@@ -101,6 +101,7 @@ namespace PriceSignageSystem.Models.Dto
         public decimal LatestDate { get; set; }
         public string HasInventory { get; set; }
         public string IsExemp { get; set; }
+        public decimal IBHAND{ get; set; }
         public List<STRPRCDto> WithInventoryList { get; set; }
         public List<STRPRCDto> WithoutInventoryList { get; set; }
         public List<STRPRCDto> ExcemptionList { get; set; }

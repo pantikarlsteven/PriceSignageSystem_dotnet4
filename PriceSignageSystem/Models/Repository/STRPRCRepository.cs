@@ -295,7 +295,8 @@ namespace PriceSignageSystem.Models.Repository
                         IsReverted = reader["O3FLAG1"].ToString(),
                         HasInventory = reader["INV2"].ToString(),
                         IsExemp = reader["IsExemp"].ToString(),
-                        O3TYPE = reader["O3TYPE"].ToString()
+                        O3TYPE = reader["O3TYPE"].ToString(),
+                        IBHAND = (decimal)reader["IBHAND"],
                     };
 
                     if ((decimal)reader["O3RSDT"] == startDate)
