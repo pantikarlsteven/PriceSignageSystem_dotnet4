@@ -55,6 +55,13 @@ namespace PriceSignageSystem.Models.Dto
         public bool IsSLDescription { get; set; }
         public bool IsBiggerFont { get; set; }
         public string O3SDSC { get; set; }
-        public string Remarks { get; set; }
+        public string qRemarks { get; set; }
+        public string qBrand { get; set; }
+        public string qModel { get; set; }
+        public string qItemDesc { get; set; }
+        public decimal qRegularPrice { get; set; }
+        public decimal qCurrentPrice { get; set; }
+        public string qDivisor { get; set; }
+        public int qTypeId { get; set; }
     }
 }

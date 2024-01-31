@@ -106,6 +106,7 @@ namespace PriceSignageSystem.Models.Dto
         public List<STRPRCDto> WithoutInventoryList { get; set; }
         public List<STRPRCDto> ExcemptionList { get; set; }
         public List<ItemQueueDto> Histories { get; set; } = new List<ItemQueueDto>();
+        public string Remarks { get; set; }
     }
 
 }

@@ -6,10 +6,10 @@
             <tr>
                 <th>SKU</th>
                 <th>Type</th>
-                <th>Size</th>
-                <th>Category</th>
                 <th>Status</th>
-                <th>Date Modified</th>
+                <th>Date Queued</th>
+                <th>Date Printed</th>
+                <th>Remarks</th>
                 <th></th>
             </tr>
         </thead>
@@ -17,37 +17,6 @@
             <tr>
                 <td colspan="7"> No history available</td>
             </tr>
-            @*@if (Model.Count() > 0)
-                {
-                    foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>@item.O3SKU</td>
-                            <td>@item.TypeName</td>
-                            <td>@item.SizeName</td>
-                            <td>@item.CategoryName</td>
-                            <td>@item.Status</td>
-                            <td>@item.DateUpdated</td>
-                            @if (item.Status == "Printed")
-                            {
-                                <td><button type="button" class="qbtn btn btn-primary" onclick="QueueItem(@item.Id)">Queue</button></td>
-                            }
-                            else
-                            {
-                                <td></td>
-                            }
-
-                        </tr>
-
-                    }
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="7"> No history available</td>
-                    </tr>
-                }*@
-
         </tbody>
     </table>
 </div>
@@ -64,15 +33,27 @@
                         [10, 25, 50, -1],
                         [10, 25, 50, 'All']
                     ],
-                    pageLength: -1,
+                    pageLength: 10,
                     data: data,
-                    columnDefs: [],
+                    columnDefs: [
+                        { targets: [0, 1, 2, 3, 4, 5, 6], orderable: false }
+                    ],
                     columns: [
                         { data: 'O3SKU', name: 'O3SKU' },
                         { data: 'TypeName', name: 'TypeName' },
-                        { data: 'SizeName', name: 'SizeName' },
-                        { data: 'CategoryName', name: 'CategoryName' },
                         { data: 'Status', name: 'Status' },
+                        {
+                            data: 'DateCreated',
+                            name: 'DateCreated',
+                            render: function (data, type, row) {
+                                if (data != null) {
+                                    var date = new Date(parseInt(data.substr(6)));
+                                    return date.toLocaleDateString();
+                                }
+
+                                return "-";
+                            }
+                        },
                         {
                             data: 'DateUpdated',
                             name: 'DateUpdated',
@@ -85,6 +66,7 @@
                                 return "-";
                             }
                         },
+                        { data: 'Remarks', name: 'Remarks' },
                         {
                             data: 'Id', render: function (data,type,row) {
                                 if (row.Status === 'Printed') {

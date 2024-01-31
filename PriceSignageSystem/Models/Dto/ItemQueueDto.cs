@@ -21,6 +21,7 @@ namespace PriceSignageSystem.Models.Dto
         public string TypeName { get; set; }
         public string SizeName { get; set; }
         public string CategoryName { get; set; }
+        public string Remarks { get; set; }
 
     }
 }

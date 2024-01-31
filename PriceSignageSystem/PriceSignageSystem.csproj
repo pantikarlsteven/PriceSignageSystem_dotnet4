@@ -391,6 +391,26 @@
     <Compile Include="Migrations\202401240629019_removeIsExempField_StrprcTbl.designer.cs">
       <DependentUpon>202401240629019_removeIsExempField_StrprcTbl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202401310322284_AddFields_invLogtbl.cs" />
+    <Compile Include="Migrations\202401310322284_AddFields_invLogtbl.designer.cs">
+      <DependentUpon>202401310322284_AddFields_invLogtbl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202401310330050_AddDivField_invLogtbl.cs" />
+    <Compile Include="Migrations\202401310330050_AddDivField_invLogtbl.designer.cs">
+      <DependentUpon>202401310330050_AddDivField_invLogtbl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202401310547403_AddFields_ItemQueue.cs" />
+    <Compile Include="Migrations\202401310547403_AddFields_ItemQueue.designer.cs">
+      <DependentUpon>202401310547403_AddFields_ItemQueue.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202401310635494_RemoveFIelds_Itemqueue.cs" />
+    <Compile Include="Migrations\202401310635494_RemoveFIelds_Itemqueue.designer.cs">
+      <DependentUpon>202401310635494_RemoveFIelds_Itemqueue.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202401310646227_addPrice_TblItemqueue.cs" />
+    <Compile Include="Migrations\202401310646227_addPrice_TblItemqueue.designer.cs">
+      <DependentUpon>202401310646227_addPrice_TblItemqueue.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Dto\AutoPrintStatusDto.cs" />
     <Compile Include="Models\Dto\ItemQueueDto.cs" />
@@ -619,6 +639,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202401240629019_removeIsExempField_StrprcTbl.resx">
       <DependentUpon>202401240629019_removeIsExempField_StrprcTbl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202401310322284_AddFields_invLogtbl.resx">
+      <DependentUpon>202401310322284_AddFields_invLogtbl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202401310330050_AddDivField_invLogtbl.resx">
+      <DependentUpon>202401310330050_AddDivField_invLogtbl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202401310547403_AddFields_ItemQueue.resx">
+      <DependentUpon>202401310547403_AddFields_ItemQueue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202401310635494_RemoveFIelds_Itemqueue.resx">
+      <DependentUpon>202401310635494_RemoveFIelds_Itemqueue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202401310646227_addPrice_TblItemqueue.resx">
+      <DependentUpon>202401310646227_addPrice_TblItemqueue.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Dynamic_OneEightReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

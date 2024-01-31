@@ -761,7 +761,11 @@ namespace PriceSignageSystem.Models.Repository
                 DateCreated = DateTime.Now,
                 RegularPrice = model.O3REGU,
                 CurrentPrice = model.O3POS,
-                Remarks = model.Remarks
+                Remarks = model.qRemarks,
+                ItemDesc = model.O3IDSC,
+                Brand = model.O3FNAM,
+                Model = model.O3MODL,
+                Divisor = model.O3DIV
             };
             _db.InventoryPrintingLogs.Add(data);
             _db.SaveChanges();

@@ -22,13 +22,18 @@ namespace PriceSignageSystem.Models.Repository
         {
             var record = new ItemQueue();
             record.O3SKU = model.O3SKU;
-            record.SizeId = model.SelectedSizeId;
-            record.TypeId = model.SelectedTypeId;
-            record.CategoryId = model.SelectedCategoryId;
+            record.TypeId = model.TypeId;
             record.UserName = HttpContext.Current.User.Identity.Name;
             record.Status = ReportConstants.Status.InQueue;
+            record.ItemDesc = model.O3IDSC;
+            record.Brand = model.O3FNAM;
+            record.Model = model.O3MODL;
+            record.Divisor = model.O3DIV;
+            record.Remarks = model.Remarks;
             record.DateCreated = DateTime.Now;
-
+            record.RegularPrice = model.O3REGU;
+            record.CurrentPrice = model.O3POS;
+               
             var data =  _db.ItemQueues.Add(record);
             _db.SaveChanges();
 
@@ -81,13 +86,19 @@ namespace PriceSignageSystem.Models.Repository
                             O3USER = b.O3USER,
                             DateUpdated = b.DateUpdated,
                             UserName = a.UserName,
-                            SizeId = a.SizeId,
                             TypeId = a.TypeId,
-                            CategoryId = a.CategoryId,
                             Status = a.Status,
                             iatrb3 = d.iatrb3,
                             country_img = d.country_img,
-                            ItemQueueId = a.Id
+                            ItemQueueId = a.Id,
+                            qCurrentPrice = a.CurrentPrice,
+                            qRegularPrice = a.RegularPrice,
+                            qBrand = a.Brand,
+                            qModel = a.Model,
+                            qDivisor = a.Divisor,
+                            qItemDesc = a.ItemDesc,
+                            qRemarks = a.Remarks,
+                            qTypeId = a.TypeId
                         }).ToList();
             return data;
         }
@@ -103,7 +114,7 @@ namespace PriceSignageSystem.Models.Repository
             _db.SaveChanges();
         }
 
-        public void QueueMultipleItems(decimal[] skus, int sizeId)
+        public void QueueMultipleItems(decimal[] skus)
         {
             var list = new List<STRPRC>();
            
@@ -117,8 +128,6 @@ namespace PriceSignageSystem.Models.Repository
             {
                 var model = new ItemQueue();
                 model.O3SKU = item.O3SKU;
-                model.SizeId = sizeId;
-                model.CategoryId = item.CategoryId;
                 model.TypeId = item.TypeId;
                 model.UserName = HttpContext.Current.User.Identity.Name;
                 model.Status = ReportConstants.Status.InQueue;
@@ -132,23 +141,19 @@ namespace PriceSignageSystem.Models.Repository
         public List<ItemQueueDto> GetHistory(string username)
         {
             var result = (from a in _db.ItemQueues
-                         join b in _db.Sizes on a.SizeId equals b.Id
                          join c in _db.Types on a.TypeId equals c.Id
-                         join d in _db.Categories on a.CategoryId equals d.Id
                          where a.UserName == username
+                         orderby a.DateCreated descending
                          select new ItemQueueDto
                          {
                              Id = a.Id,
                              O3SKU = a.O3SKU,
-                             SizeName = b.Name,
                              TypeName = c.Name,
-                             CategoryName = d.Name,
                              Status = a.Status,
-                             DateUpdated = a.DateUpdated
-                         })
-                         .OrderByDescending(f => f.Status)
-                         .ThenByDescending(f => f.DateUpdated)
-                         .ToList();
+                             DateCreated = a.DateCreated,
+                             DateUpdated = a.DateUpdated,
+                             Remarks = a.Remarks
+                         }).ToList();
           
 
             return result;

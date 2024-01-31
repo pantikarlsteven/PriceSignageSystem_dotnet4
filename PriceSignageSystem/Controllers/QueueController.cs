@@ -40,19 +40,16 @@ namespace PriceSignageSystem.Controllers
         }
 
         [HttpPost]
-        public ActionResult QueueItem(STRPRCDto strprcDto, int sizeId, int typeId, int categoryId)
+        public ActionResult QueueItem(STRPRCDto dto)
         {
-            strprcDto.SelectedCategoryId = categoryId;
-            strprcDto.SelectedSizeId = sizeId;
-            strprcDto.SelectedTypeId = typeId;
-            var data = _queueRepository.AddItemQueue(strprcDto);
+            _queueRepository.AddItemQueue(dto);
             return Json(new { success = true });
         }
 
         [HttpPost]
-        public ActionResult QueueSelectedItems(int sizeId, decimal[] selectedRows)
+        public ActionResult QueueSelectedItems(decimal[] selectedRows)
         {
-            _queueRepository.QueueMultipleItems(selectedRows, sizeId);
+            _queueRepository.QueueMultipleItems(selectedRows);
             return Json(new { success = true });
         }
 
@@ -102,9 +99,10 @@ namespace PriceSignageSystem.Controllers
             try
             {
                 var username = User.Identity.Name;
-                var data = _queueRepository.GetQueueListPerUser(username).Where(a => a.SizeId == sizeId && a.Status == ReportConstants.Status.InQueue);
+                var data = _queueRepository.GetQueueListPerUser(username).Where(a =>/* a.SizeId == sizeId && */a.Status == ReportConstants.Status.InQueue);
                 foreach (var item in data)
                 {
+                    
                     item.UserName = User.Identity.Name;
                     var textToImage = new TextToImage();
                     textToImage.GetImageWidth(item.O3FNAM, item.O3IDSC, sizeId);
@@ -112,6 +110,13 @@ namespace PriceSignageSystem.Controllers
                     item.IsSLDescription = textToImage.IsSLDescription;
                     item.IsBiggerFont = textToImage.IsBiggerFont;
                     item.O3SDSC = _sTRPRCRepository.GetSubClassDescription(item.O3SKU);
+                    item.O3REGU = item.qRegularPrice != 0 ? item.qRegularPrice : item.O3REGU;
+                    item.O3POS = item.qCurrentPrice != 0 ? item.qCurrentPrice : item.O3POS;
+                    item.O3IDSC = item.qItemDesc != null ? item.qItemDesc : item.O3IDSC;
+                    item.O3FNAM = item.qBrand != null ? item.qBrand : item.O3FNAM;
+                    item.O3MODL = item.qModel != null ? item.qModel : item.O3MODL;
+                    item.O3DIV = item.qDivisor != null ? item.qDivisor : item.O3DIV;
+                    item.TypeId = item.qTypeId != 0 ? item.qTypeId : item.TypeId;
                 }
 
                 var dataTable = ConversionHelper.ConvertListToDataTable(data);
@@ -200,7 +205,7 @@ namespace PriceSignageSystem.Controllers
         public ActionResult CheckItemQueuesPerUser(int sizeId)
         {
             var username = User.Identity.Name;
-            var data = _queueRepository.GetQueueListPerUser(username).Where(a => a.SizeId == sizeId && a.Status == ReportConstants.Status.InQueue);
+            var data = _queueRepository.GetQueueListPerUser(username).Where(a => /*a.SizeId == sizeId && */a.Status == ReportConstants.Status.InQueue);
             if (!data.Any())
             {
                 //Return an error message
