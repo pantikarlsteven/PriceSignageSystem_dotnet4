@@ -411,10 +411,16 @@
     <Compile Include="Migrations\202401310646227_addPrice_TblItemqueue.designer.cs">
       <DependentUpon>202401310646227_addPrice_TblItemqueue.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202401310935265_addTbl_EditReasons.cs" />
+    <Compile Include="Migrations\202401310935265_addTbl_EditReasons.designer.cs">
+      <DependentUpon>202401310935265_addTbl_EditReasons.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Dto\AutoPrintStatusDto.cs" />
     <Compile Include="Models\Dto\ItemQueueDto.cs" />
+    <Compile Include="Models\EditReason.cs" />
     <Compile Include="Models\Interface\IRegistersRepository.cs" />
+    <Compile Include="Models\Interface\IEditReasonRepository.cs" />
     <Compile Include="Models\InventoryPrintingLog.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Constants\ReportConstants.cs" />
@@ -437,6 +443,7 @@
     <Compile Include="Models\Repository\CategoryRepository.cs" />
     <Compile Include="Models\Repository\QueueRepository.cs" />
     <Compile Include="Models\Repository\RegistersRepository.cs" />
+    <Compile Include="Models\Repository\EditReasonRepository.cs" />
     <Compile Include="Models\Repository\SizeRepository.cs" />
     <Compile Include="Models\Repository\STRPRCRepository.cs" />
     <Compile Include="Models\Repository\TypeRepository.cs" />
@@ -654,6 +661,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202401310646227_addPrice_TblItemqueue.resx">
       <DependentUpon>202401310646227_addPrice_TblItemqueue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202401310935265_addTbl_EditReasons.resx">
+      <DependentUpon>202401310935265_addTbl_EditReasons.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Dynamic_OneEightReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

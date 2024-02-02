@@ -28,15 +28,16 @@ namespace PriceSignageSystem.Controllers
         private readonly ISizeRepository _sizeRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IQueueRepository _queueRepository;
+        private readonly IEditReasonRepository _reasonRepository;
 
-
-        public STRPRCController(ISTRPRCRepository sTRPRCRepository, ITypeRepository typeRepository, ISizeRepository sizeRepository, ICategoryRepository categoryRepository, IQueueRepository queueRepository)
+        public STRPRCController(ISTRPRCRepository sTRPRCRepository, ITypeRepository typeRepository, ISizeRepository sizeRepository, ICategoryRepository categoryRepository, IQueueRepository queueRepository, IEditReasonRepository reasonRepository)
         {
             _sTRPRCRepository = sTRPRCRepository;
             _typeRepository = typeRepository;
             _sizeRepository = sizeRepository;
             _categoryRepository = categoryRepository;
             _queueRepository = queueRepository;
+            _reasonRepository = reasonRepository;
         }
 
         public ActionResult Index()
@@ -255,6 +256,14 @@ namespace PriceSignageSystem.Controllers
             var sizes = _sizeRepository.GetAllSizes().ToArray();
 
             return Json(sizes);
+        }
+
+        [HttpPost]
+        public JsonResult GetAllReasons()
+        {
+            var reasons = _reasonRepository.GetAllReasons().ToArray();
+
+            return Json(reasons);
         }
 
         [HttpGet]

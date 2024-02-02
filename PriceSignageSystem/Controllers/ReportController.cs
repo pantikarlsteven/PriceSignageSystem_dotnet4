@@ -208,10 +208,10 @@ namespace PriceSignageSystem.Controllers
                 skuModel.O3SDSC = _sTRPRCRepository.GetSubClassDescription(model.O3SKU);
                 skuModel.O3REGU = model.O3REGU != 0 ? model.O3REGU: skuModel.O3REGU;
                 skuModel.O3POS = model.O3POS != 0 ? model.O3POS : skuModel.O3POS;
-                skuModel.O3IDSC = model.O3IDSC != null ? model.O3IDSC : skuModel.O3IDSC;
-                skuModel.O3FNAM = model.O3FNAM != null ? model.O3FNAM : skuModel.O3FNAM;
-                skuModel.O3MODL = model.O3MODL != null ? model.O3MODL : skuModel.O3MODL;
-                skuModel.O3DIV = model.O3DIV != null ? model.O3DIV : skuModel.O3DIV;
+                skuModel.O3IDSC = !string.IsNullOrEmpty(model.O3IDSC) ? model.O3IDSC : skuModel.O3IDSC;
+                skuModel.O3FNAM = !string.IsNullOrEmpty(model.O3FNAM) ? model.O3FNAM : skuModel.O3FNAM;
+                skuModel.O3MODL = !string.IsNullOrEmpty(model.O3MODL) ? model.O3MODL : skuModel.O3MODL;
+                skuModel.O3DIV = !string.IsNullOrEmpty(model.O3DIV) ? model.O3DIV : skuModel.O3DIV;
 
                 var textToImage = new TextToImage();
                 textToImage.GetImageWidth(skuModel.O3FNAM, skuModel.O3IDSC, model.SizeId);

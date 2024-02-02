@@ -32,6 +32,7 @@ namespace PriceSignageSystem
             builder.RegisterType<CategoryRepository>().As<ICategoryRepository>();
             builder.RegisterType<QueueRepository>().As<IQueueRepository>();
             builder.RegisterType<RegistersRepository>().As<IRegistersRepository>();
+            builder.RegisterType<EditReasonRepository>().As<IEditReasonRepository>();
 
             // Register the MVC controllers
             builder.RegisterControllers(typeof(MvcApplication).Assembly);
