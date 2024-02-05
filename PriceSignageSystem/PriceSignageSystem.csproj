@@ -417,7 +417,14 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Dto\AutoPrintStatusDto.cs" />
+    <Compile Include="Models\Dto\CountryDto.cs" />
+    <Compile Include="Models\Dto\ExportPCADto.cs" />
     <Compile Include="Models\Dto\ItemQueueDto.cs" />
+    <Compile Include="Models\Dto\ReportDto.cs" />
+    <Compile Include="Models\Dto\STRPRCDto.cs" />
+    <Compile Include="Models\Dto\STRPRCLogDto.cs" />
+    <Compile Include="Models\Dto\UserDto.cs" />
+    <Compile Include="Models\Dto\UserStoreDto.cs" />
     <Compile Include="Models\EditReason.cs" />
     <Compile Include="Models\Interface\IRegistersRepository.cs" />
     <Compile Include="Models\Interface\IEditReasonRepository.cs" />
@@ -427,12 +434,6 @@
     <Compile Include="Models\Constants\UserStatusConstants.cs" />
     <Compile Include="Models\Country.cs" />
     <Compile Include="Models\DatabaseContext\ApplicationDbContext.cs" />
-    <Compile Include="Models\Dto\CountryDto.cs" />
-    <Compile Include="Models\Dto\ExportPCADto.cs" />
-    <Compile Include="Models\Dto\ReportDto.cs" />
-    <Compile Include="Models\Dto\STRPRCDto.cs" />
-    <Compile Include="Models\Dto\STRPRCLogDto.cs" />
-    <Compile Include="Models\Dto\UserStoreDto.cs" />
     <Compile Include="Models\Interface\ICategoryRepository.cs" />
     <Compile Include="Models\Interface\IQueueRepository.cs" />
     <Compile Include="Models\Interface\ISizeRepository.cs" />

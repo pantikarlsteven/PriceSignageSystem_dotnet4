@@ -21,13 +21,13 @@
                     <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3SKU, new { @class = "form-control clear", @disabled = "disabled" })</dd>
 
                     <dt class="col-sm-4">@Html.LabelFor(m => m.O3IDSC)</dt>
-                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3IDSC, new { @class = "form-control clear", @disabled = "disabled", @id= "shortDesc" })</dd>
+                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3IDSC, new { @class = "form-control clear", @disabled = "disabled", @id = "shortDesc" })</dd>
 
                     <dt class="col-sm-4">@Html.LabelFor(m => m.O3FNAM)</dt>
-                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3FNAM, new { @class = "form-control clear", @disabled = "disabled" , @id= "brand" })</dd>
+                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3FNAM, new { @class = "form-control clear", @disabled = "disabled", @id = "brand" })</dd>
 
                     <dt class="col-sm-4">@Html.LabelFor(m => m.O3MODL)</dt>
-                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3MODL, new { @class = "form-control clear", @disabled = "disabled", @id= "model" })</dd>
+                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3MODL, new { @class = "form-control clear", @disabled = "disabled", @id = "model" })</dd>
 
                     <dt class="col-sm-4">@Html.LabelFor(m => m.O3DEPT)</dt>
                     <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3DEPT, new { @class = "form-control clear", @disabled = "disabled" })</dd>
@@ -55,10 +55,10 @@
                     <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3TRB3, new { @class = "form-control clear", @disabled = "disabled" })</dd>
 
                     <dt class="col-sm-4">@Html.LabelFor(m => m.O3REGU)</dt>
-                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3REGU, new { @class = "form-control clear", @disabled = "disabled", @id= "regPrice" })</dd>
+                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3REGU, new { @class = "form-control clear", @disabled = "disabled", @id = "regPrice" })</dd>
 
                     <dt class="col-sm-4">@Html.LabelFor(m => m.O3POS)</dt>
-                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3POS, new { @class = "form-control clear", @disabled = "disabled", @id= "currPrice" })</dd>
+                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3POS, new { @class = "form-control clear", @disabled = "disabled", @id = "currPrice" })</dd>
 
                     <dt class="col-sm-4">@Html.LabelFor(m => m.O3SDT)</dt>
                     <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3SDT, new { @class = "form-control clear", @disabled = "disabled" })</dd>
@@ -73,7 +73,7 @@
                     <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3TUOM, new { @class = "form-control clear", @disabled = "disabled" })</dd>
 
                     <dt class="col-sm-4">@Html.LabelFor(m => m.O3DIV)</dt>
-                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3DIV, new { @class = "form-control clear", @disabled = "disabled", @id= "divisor"})</dd>
+                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3DIV, new { @class = "form-control clear", @disabled = "disabled", @id = "divisor" })</dd>
                 </dl>
             </div>
         </div>
@@ -287,107 +287,125 @@
             }else {
 
                 // Build the HTML for the dropdowns
-                var dropdownHtml = '<div class="form-row">' +
-                    '<div class="form-group row col-12">' +
-                    '<label class="col-sm-2 col-form-label" for="remarksDropdown"  style="color: red;">Remarks:</label>' +
-                    '<select class="col-sm-9  ml-3 form-control custom-select" id="remarksDropdown" required>' +
-                    '<option value="0"></option>' +
-                    '<option value="CER">CER</option>' +
-                    '<option value="Wrong Price">Wrong Price</option>' +
-                    '</select>' +
-                    '</div>';
+                //var dropdownHtml = '<div class="form-row">' +
+                //    '<div class="form-group row col-12">' +
+                //    '<label class="col-sm-2 col-form-label" for="remarksDropdown"  style="color: red;">Remarks:</label>' +
+                //    '<select class="col-sm-9  ml-3 form-control custom-select" id="remarksDropdown" required>' +
+                //    '<option value="0"></option>' +
+                //    '<option value="CER">CER</option>' +
+                //    '<option value="Wrong Price">Wrong Price</option>' +
+                //    '</select>' +
+                //    '</div>';
+                $.ajax({
+                    url: '@Url.Action("GetAllReasons", "STRPRC")',
+                    type: 'POST',
+                    success: function (response) {
+                        var remarksOptions = '';
 
-
-                // Build the HTML for the print button
-                var printButtonHtml = '<button id="editPrintBtn" class="btn btn-primary">Print</button>' +
-                    '<button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancel</button>';
-;
-
-                // Create the modal content
-                var modalContent = '<div class="modal-dialog modal-dialog-centered">' +
-                    '<div class="modal-content">' +
-                    '<div class="modal-header">' +
-                    '<h5 class="modal-title">Edit Sku # ' + @Model.O3SKU + '</h5>' +
-                    '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
-                    '<span aria-hidden="true">&times;</span>' +
-                    '</button>' +
-                    '</div>' +
-                    '<div class="modal-body">' +
-                    dropdownHtml +
-                    '</div>' +
-                    '<div class="modal-footer">' +
-                    printButtonHtml +
-                    '</div>' +
-                    '</div>' +
-                    '</div>';
-
-                // Remove any existing modals
-                $('#modalView').remove();
-
-                // Append the modal to the body
-                $('body').append('<div id="modalView" class="modal">' + modalContent + '</div>');
-
-                // Show the modal with fade-in effect from top
-                $('#modalView').modal({
-                    show: true,
-                    backdrop: false,
-                    keyboard: false
-                });
-
-                $('#editPrintBtn').click(function () {
-                    var selectedRemarks= $('#remarksDropdown').val();
-                    var newShortDesc = $('#shortDesc').val();
-                    var newBrand = $('#brand').val();
-                    var newModel = $('#model').val();
-                    var newDivisor = $('#divisor').val();
-
-                    if (selectedRemarks === '0') {
-                        alert('Please select a valid option for Remarks.');
-                        return false;
-                    }
-
-                    $("#loadingContainer").show();
-                    var newtypeId = $('#SelectedTypeId').val();
-
-                    if (selectedRemarks !== '0') {
-
-                        var reportDto = {
-                            O3SKU: @Model.O3SKU,
-                            SizeId: 0,
-                            TypeId: newtypeId,
-                            CategoryId: 0,
-                            O3REGU: convertedRegPrice,
-                            O3POS: convertedCurrPrice,
-                            Remarks: selectedRemarks,
-                            O3IDSC: newShortDesc != origShortDesc ? newShortDesc : origShortDesc,
-                            O3FNAM: newBrand != origBrand ? newBrand : origBrand,
-                            O3MODL: newModel != origModel ? newModel : origModel,
-                            O3DIV: newDivisor != origDivisor ? newDivisor : origDivisor
-                        };
-
-                        reportDto.TypeId = $('#SelectedTypeId').val();
-                        reportDto.CategoryId = $('#SelectedCategoryId').val();
-                        reportDto.SizeId = $('#SelectedSizeId').val();
-                        $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(reportDto));
-
-                        var reportIframe = document.getElementById("reportIframe");
-                        if (reportIframe) {
-                            reportIframe.onload = function () {
-                                $("#loadingContainer").hide();
-                                reportIframe.contentWindow.print();
-                            };
-                            reportIframe.src = $("#reportIframe").attr("src");
+                        for (var i = 0; i < response.length; i++) {
+                            var option = response[i];
+                            remarksOptions += '<option value="' + option.Description + '">' + option.Description + '</option>';
                         }
-                        $('.clear').val('');
-                        $('#modalView').modal('hide');
 
-                    } else {
-                        alert('Please input remarks!');
-                        $("#loadingContainer").hide();
-                    }
+                        var dropdownHtml = '<div class="form-row">' +
+                            '<div class="form-group row col-12">' +
+                            '<label class="col-sm-2 col-form-label" for="remarksDropdown" style="color: red;">Remarks:</label>' +
+                            '<select class="col-sm-9  ml-3 form-control custom-select" id="remarksDropdown" >' +
+                            remarksOptions +
+                            '</select>' +
+                            '</div>';
+
+                        var printButtonHtml = '<button id="editPrintBtn" class="btn btn-primary">Print</button>' +
+                            '<button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancel</button>';
+
+                        var modalContent = '<div class="modal-dialog modal-dialog-centered">' +
+                            '<div class="modal-content">' +
+                            '<div class="modal-header">' +
+                            '<h5 class="modal-title">Edit Sku # ' + @Model.O3SKU + '</h5>' +
+                            '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
+                            '<span aria-hidden="true">&times;</span>' +
+                            '</button>' +
+                            '</div>' +
+                            '<div class="modal-body">' +
+                            dropdownHtml +
+                            '</div>' +
+                            '<div class="modal-footer">' +
+                            printButtonHtml +
+                            '</div>' +
+                            '</div>' +
+                            '</div>';
+
+                        // Remove any existing modals
+                        $('#modalView').remove();
+
+                        // Append the modal to the body
+                        $('body').append('<div id="modalView" class="modal">' + modalContent + '</div>');
+
+                        // Show the modal with fade-in effect from top
+                        $('#modalView').modal({
+                            show: true,
+                            backdrop: false,
+                            keyboard: false
+                        });
+
+                        $('#editPrintBtn').click(function () {
+                            var selectedRemarks= $('#remarksDropdown').val();
+                            var newShortDesc = $('#shortDesc').val();
+                            var newBrand = $('#brand').val();
+                            var newModel = $('#model').val();
+                            var newDivisor = $('#divisor').val();
+
+                            if (selectedRemarks === '') {
+                                alert('Please select a valid option for Remarks.');
+                                return false;
+                            }
+
+                            $("#loadingContainer").show();
+                            var newtypeId = $('#SelectedTypeId').val();
+
+                            if (selectedRemarks !== '') {
+
+                                var reportDto = {
+                                    O3SKU: @Model.O3SKU,
+                                    SizeId: 0,
+                                    TypeId: newtypeId,
+                                    CategoryId: 0,
+                                    O3REGU: convertedRegPrice,
+                                    O3POS: convertedCurrPrice,
+                                    qRemarks: selectedRemarks,
+                                    O3IDSC: newShortDesc != origShortDesc ? newShortDesc : origShortDesc,
+                                    O3FNAM: newBrand != origBrand ? newBrand : origBrand,
+                                    O3MODL: newModel != origModel ? newModel : origModel,
+                                    O3DIV: newDivisor != origDivisor ? newDivisor : origDivisor
+                                };
+
+                                reportDto.TypeId = $('#SelectedTypeId').val();
+                                reportDto.CategoryId = $('#SelectedCategoryId').val();
+                                reportDto.SizeId = $('#SelectedSizeId').val();
+                                $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(reportDto));
+
+                                var reportIframe = document.getElementById("reportIframe");
+                                if (reportIframe) {
+                                    reportIframe.onload = function () {
+                                        $("#loadingContainer").hide();
+                                        reportIframe.contentWindow.print();
+                                    };
+                                    reportIframe.src = $("#reportIframe").attr("src");
+                                }
+                                $('.clear').val('');
+                                $('#modalView').modal('hide');
+
+                            } else {
+                                alert('Please input remarks!');
+                                $("#loadingContainer").hide();
+                            }
 
 
-                });
+                        });
+                            },
+                            error: function () {}
+                        });
+
             }
 
         });
@@ -441,109 +459,119 @@
                     }
                 });
             } else {
-                // Build the HTML for the dropdowns
-                var dropdownHtml = '<div class="form-row">' +
-                    '<div class="form-group row col-12">' +
-                    '<label class="col-sm-2 col-form-label" for="qremarksDropdown"  style="color: red;">Remarks:</label>' +
-                    '<select class="col-sm-9  ml-3 form-control custom-select" id="qremarksDropdown" required>' +
-                    '<option value="0"></option>' +
-                    '<option value="CER">CER</option>' +
-                    '<option value="Wrong Price">Wrong Price</option>' +
-                    '</select>' +
-                    '</div>';
+                $.ajax({
+                    url: '@Url.Action("GetAllReasons", "STRPRC")',
+                    type: 'POST',
+                    success: function (response) {
+                        var remarksOptions = '';
 
-
-                // Build the HTML for the print button
-                var printButtonHtml = '<button id="queuePrintBtn" class="btn btn-primary">Queue</button>' +
-                    '<button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancel</button>';
-;
-
-                // Create the modal content
-                var modalContent = '<div class="modal-dialog modal-dialog-centered">' +
-                    '<div class="modal-content">' +
-                    '<div class="modal-header">' +
-                    '<h5 class="modal-title">Edit Sku # ' + @Model.O3SKU + '</h5>' +
-                    '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
-                    '<span aria-hidden="true">&times;</span>' +
-                    '</button>' +
-                    '</div>' +
-                    '<div class="modal-body">' +
-                    dropdownHtml +
-                    '</div>' +
-                    '<div class="modal-footer">' +
-                    printButtonHtml +
-                    '</div>' +
-                    '</div>' +
-                    '</div>';
-
-                // Remove any existing modals
-                $('#modalView').remove();
-
-                // Append the modal to the body
-                $('body').append('<div id="modalView" class="modal qmodal">' + modalContent + '</div>');
-
-                // Show the modal with fade-in effect from top
-                $('#modalView').modal({
-                    show: true,
-                    backdrop: false,
-                    keyboard: false
-                });
-
-                $('#queuePrintBtn').click(function () {
-
-                    var selectedRemarks = $('#qremarksDropdown').val();
-               
-                    if (selectedRemarks === '0') {
-                        alert('Please select a valid option for Remarks.');
-                        return false;
-                    }
-
-                    dto = {
-                        O3SKU: @Model.O3SKU,
-                        TypeId: typeId,
-                        O3REGU: convertedRegPrice,
-                        O3POS: convertedCurrPrice,
-                        Remarks: selectedRemarks,
-                        O3IDSC: newShortDesc != origShortDesc ? newShortDesc : origShortDesc,
-                        O3FNAM: newBrand != origBrand ? newBrand : origBrand,
-                        O3MODL: newModel != origModel ? newModel : origModel,
-                        O3DIV: newDivisor != origDivisor ? newDivisor : origDivisor
-                    };
-
-                    $.ajax({
-                        url: "/Queue/QueueItem",
-                        type: "POST",
-                        contentType: "application/json",
-                        data: JSON.stringify({ dto: dto }),
-                        success: function (result) {
-                            $('.qmodal').modal('hide');
-                            // Show success modal
-                            var modalHtml = '<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">';
-                            modalHtml += '<div class="modal-dialog" role="document">';
-                            modalHtml += '<div class="modal-content">';
-                            modalHtml += '<div class="modal-header">';
-                            modalHtml += '<h5 class="modal-title" id="successModalLabel">Success!</h5>';
-                            modalHtml += '<button type="button" class="close" data-dismiss="modal" aria-label="Close">';
-                            modalHtml += '<span aria-hidden="true">&times;</span>';
-                            modalHtml += '</button>';
-                            modalHtml += '</div>';
-                            modalHtml += '<div class="modal-body">';
-                            modalHtml += 'Item queued successfully!';
-                            modalHtml += '</div>';
-                            modalHtml += '<div class="modal-footer">';
-                            modalHtml += '<button type="button" class="qOkBtn btn btn-primary" data-dismiss="modal">OK</button>';
-                            modalHtml += '</div>';
-                            modalHtml += '</div>';
-                            modalHtml += '</div>';
-                            modalHtml += '</div>';
-
-                            $('body').append(modalHtml);
-                            $('#successModal').modal('show');
-                        },
-                        error: function (xhr, status, error) {
-                            console.error("Error queuing item: " + error);
+                        for (var i = 0; i < response.length; i++) {
+                            var option = response[i];
+                            remarksOptions += '<option value="' + option.Description + '">' + option.Description + '</option>';
                         }
-                    });
+
+                        var dropdownHtml = '<div class="form-row">' +
+                            '<div class="form-group row col-12">' +
+                            '<label class="col-sm-2 col-form-label" for="qremarksDropdown" style="color: red;">Remarks:</label>' +
+                            '<select class="col-sm-9  ml-3 form-control custom-select" id="qremarksDropdown" >' +
+                            remarksOptions +
+                            '</select>' +
+                            '</div>';
+
+                         // Build the HTML for the print button
+                        var printButtonHtml = '<button id="queuePrintBtn" class="btn btn-primary">Queue</button>' +
+                            '<button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancel</button>';
+        
+
+                        // Create the modal content
+                        var modalContent = '<div class="modal-dialog modal-dialog-centered">' +
+                            '<div class="modal-content">' +
+                            '<div class="modal-header">' +
+                            '<h5 class="modal-title">Edit Sku # ' + @Model.O3SKU + '</h5>' +
+                            '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
+                            '<span aria-hidden="true">&times;</span>' +
+                            '</button>' +
+                            '</div>' +
+                            '<div class="modal-body">' +
+                            dropdownHtml +
+                            '</div>' +
+                            '<div class="modal-footer">' +
+                            printButtonHtml +
+                            '</div>' +
+                            '</div>' +
+                            '</div>';
+
+                        // Remove any existing modals
+                        $('#modalView').remove();
+
+                        // Append the modal to the body
+                        $('body').append('<div id="modalView" class="modal qmodal">' + modalContent + '</div>');
+
+                        // Show the modal with fade-in effect from top
+                        $('#modalView').modal({
+                            show: true,
+                            backdrop: false,
+                            keyboard: false
+                        });
+
+                        $('#queuePrintBtn').click(function () {
+
+                            var selectedRemarks = $('#qremarksDropdown').val();
+
+                            if (selectedRemarks === '0') {
+                                alert('Please select a valid option for Remarks.');
+                                return false;
+                            }
+
+                            dto = {
+                                O3SKU: @Model.O3SKU,
+                                TypeId: typeId,
+                                O3REGU: convertedRegPrice,
+                                O3POS: convertedCurrPrice,
+                                Remarks: selectedRemarks,
+                                O3IDSC: newShortDesc != origShortDesc ? newShortDesc : origShortDesc,
+                                O3FNAM: newBrand != origBrand ? newBrand : origBrand,
+                                O3MODL: newModel != origModel ? newModel : origModel,
+                                O3DIV: newDivisor != origDivisor ? newDivisor : origDivisor
+                            };
+
+                            $.ajax({
+                                url: "/Queue/QueueItem",
+                                type: "POST",
+                                contentType: "application/json",
+                                data: JSON.stringify({ dto: dto }),
+                                success: function (result) {
+                                    $('.qmodal').modal('hide');
+                                    // Show success modal
+                                    var modalHtml = '<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">';
+                                    modalHtml += '<div class="modal-dialog" role="document">';
+                                    modalHtml += '<div class="modal-content">';
+                                    modalHtml += '<div class="modal-header">';
+                                    modalHtml += '<h5 class="modal-title" id="successModalLabel">Success!</h5>';
+                                    modalHtml += '<button type="button" class="close" data-dismiss="modal" aria-label="Close">';
+                                    modalHtml += '<span aria-hidden="true">&times;</span>';
+                                    modalHtml += '</button>';
+                                    modalHtml += '</div>';
+                                    modalHtml += '<div class="modal-body">';
+                                    modalHtml += 'Item queued successfully!';
+                                    modalHtml += '</div>';
+                                    modalHtml += '<div class="modal-footer">';
+                                    modalHtml += '<button type="button" class="qOkBtn btn btn-primary" data-dismiss="modal">OK</button>';
+                                    modalHtml += '</div>';
+                                    modalHtml += '</div>';
+                                    modalHtml += '</div>';
+                                    modalHtml += '</div>';
+
+                                    $('body').append(modalHtml);
+                                    $('#successModal').modal('show');
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error("Error queuing item: " + error);
+                                }
+                            });
+                        });
+                    },
+                    error: function (error) { }
                 });
             }
 

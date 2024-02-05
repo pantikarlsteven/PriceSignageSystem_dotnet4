@@ -90,19 +90,25 @@ namespace PriceSignageSystem.Controllers
 
         public ActionResult Register()
         {
-            var user = new User();
-            var roles = _userRepository.GetRoles().Select(a => new SelectListItem 
+            var user = new UserDto();
+            user.RoleList = _userRepository.GetRoles().Select(a => new SelectListItem 
                         {
                             Value = a.Id.ToString(),
                             Text = a.Name.ToString()
-                        });
-            ViewBag.Roles = roles;
+                        }).ToList();
+
             return View(user);
         }
 
         [HttpPost]
-        public ActionResult Register(User user)
+        public ActionResult Register(UserDto user)
         {
+            user.RoleList = _userRepository.GetRoles().Select(a => new SelectListItem
+            {
+                Value = a.Id.ToString(),
+                Text = a.Name.ToString()
+            }).ToList();
+
             if (ModelState.IsValid)
             {
                 var existingUser = _userRepository.GetAll().FirstOrDefault(a => a.UserName == user.UserName);
@@ -114,9 +120,16 @@ namespace PriceSignageSystem.Controllers
                 }
 
                 var encryptedPassword = EncryptionHelper.Encrypt(user.Password);
-                user.Password = encryptedPassword;
-                user.IsActive = 1;
-                var data = _userRepository.AddUser(user);
+                var newUser = new User();
+                newUser.UserName = user.UserName;
+                newUser.Password = encryptedPassword;
+                newUser.IsActive = 1;
+                newUser.RoleId = Convert.ToInt32(user.SelectedRoleId);
+
+                //user.Password = encryptedPassword;
+                //user.IsActive = 1;
+
+                var data = _userRepository.AddUser(newUser);
 
                 TempData["RegistrationSuccessMessage"] = "Registration successful!";
                 return RedirectToAction("PCA", "STRPRC");
