@@ -516,9 +516,37 @@ namespace PriceSignageSystem.Models.Repository
             return data;
         }
 
-        public decimal UpdateSTRPRCTable(int storeId)
+        public decimal CheckSTRPRCUpdates(int storeId)
         {
             decimal date = 0;
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString151))
+                {
+                    using (SqlCommand command = new SqlCommand("sp_GetLatestUpdate", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.CommandTimeout = commandTimeoutInSeconds;
+                        // Add any required parameters to the command if needed
+                        command.Parameters.AddWithValue("@Store", storeId);
+
+                        connection.Open();
+
+                        // Execute the command and retrieve the result count
+                        date = (decimal)command.ExecuteScalar();
+                        connection.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error executing stored procedure: " + ex.Message);
+            }
+            return date;
+        }
+
+        public async Task UpdateSTRPRC151(int storeId)
+        {
             try
             {
                 using (SqlConnection connection = new SqlConnection(connectionString151))
@@ -533,10 +561,38 @@ namespace PriceSignageSystem.Models.Repository
                         connection.Open();
 
                         // Execute the command and retrieve the result count
-                        command.ExecuteNonQuery();
+                        await command.ExecuteNonQueryAsync();
                         connection.Close();
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error executing stored procedure: " + ex.Message);
+            }
+        }
+
+        public decimal UpdateSTRPRCTable(int storeId)
+        {
+            decimal date = 0;
+            try
+            {
+                //using (SqlConnection connection = new SqlConnection(connectionString151))
+                //{
+                //    using (SqlCommand command = new SqlCommand("sp_GetSTRPRC", connection))
+                //    {
+                //        command.CommandType = CommandType.StoredProcedure;
+                //        command.CommandTimeout = commandTimeoutInSeconds;
+                //        // Add any required parameters to the command if needed
+                //        command.Parameters.AddWithValue("@Store", storeId);
+
+                //        connection.Open();
+
+                //        // Execute the command and retrieve the result count
+                //        command.ExecuteNonQuery();
+                //        connection.Close();
+                //    }
+                //}
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -854,9 +910,65 @@ namespace PriceSignageSystem.Models.Repository
 
         }
 
+        public List<ExportPCAExemptionDto> PCAToExportExemption()
+        {
+            var sp = "sp_NewExportPCAData";
+
+            var data = new List<ExportPCAExemptionDto>();
+            // Set up the connection and command
+            using (var connection = new SqlConnection(connectionString))
+            using (var command = new SqlCommand(sp, connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandTimeout = commandTimeoutInSeconds;
+
+                // Add parameters if required
+                //command.Parameters.AddWithValue("@SearchDate", date);
+
+                // Open the connection and execute the command
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                // Process the result set
+                while (reader.Read())
+                {
+                    var record = new ExportPCAExemptionDto
+                    {
+                        SKU = (decimal)reader["O3SKU"],
+                        UPC = (decimal)reader["O3UPC"],
+                        CurrentPrice = (decimal)reader["O3POS"],
+                        RegularPrice = (decimal)reader["O3REGU"],
+                        StartDate = (decimal)reader["O3SDT"],
+                        EndDate = (decimal)reader["O3EDT"],
+                        Brand = reader["O3FNAM"].ToString(),
+                        Model = reader["O3MODL"].ToString(),
+                        LongDesc = reader["O3LONG"].ToString(),
+                        ItemDesc = reader["O3IDSC"].ToString(),
+                        Type = reader["Type"].ToString(),
+                        Size = reader["Size"].ToString(),
+                        Category = reader["Category"].ToString(),
+                        DepartmentName = reader["DPTNAM"].ToString(),
+                        IsPrinted = reader["IsPrintedYN"].ToString(),
+                        WithInventory = reader["INVYN"].ToString(),
+                        IsExemption = reader["IsExemp"].ToString(),
+                        ExemptionType = reader["ExemptionType"].ToString(),
+
+                    };
+
+                    data.Add(record);
+                }
+
+                // Close the reader and connection
+                reader.Close();
+                connection.Close();
+            }
+
+            return data;
+        }
+
         public List<ExportPCADto> PCAToExport()
         {
-            var sp = "sp_ExportPCAData";
+            var sp = "sp_NewExportPCAData";
 
             var data = new List<ExportPCADto>();
             // Set up the connection and command
@@ -908,6 +1020,8 @@ namespace PriceSignageSystem.Models.Repository
 
             return data;
         }
+
+
 
         public string GetSubClassDescription(decimal O3SKU)
         {

@@ -98,7 +98,7 @@
                     if (!isUpdated) {
                         $("#loadingSTRPRCUpdate").show();
                         $.ajax({
-                            url: '/STRPRC/LoadPCA',
+                            url: '/STRPRC/UpdatePCA',
                             type: "POST",
                             dataType: 'json',
                             beforeSend: function (xhr) {
@@ -106,7 +106,7 @@
                                 xhr.setRequestHeader('Accept-Encoding', 'gzip');
                             },
                             success: function (data) {
-                                window.location.href = "/strprc/pca";
+                                //window.location.href = "/strprc/pca";
                                 $("#loadingSTRPRCUpdate").hide();
                             },
                             error: function (error) {

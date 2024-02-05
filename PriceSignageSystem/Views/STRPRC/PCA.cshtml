@@ -150,7 +150,7 @@
                                     <th>Printed?</th>
                                     <th>SKU</th>
                                     <th>IsExemp</th>
-                                    <th>IBHAND</th>
+                                    <th style="width: 150px;">On Hand</th>
                                     <th>UPC</th>
                                     <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
                                     <th>Reg Price</th>
@@ -605,7 +605,8 @@
                 pageLength: -1,
                 data: data,
                 columnDefs: [
-                    { targets: [4,5], visible: false },
+                    { targets: [4], visible: false },
+                    //{ targets: [4,5], visible: false },
                     { targets: [0, 1, 11, 12, 13], orderable: false },
                 ],
                 columns: [
@@ -636,6 +637,15 @@
                     { data: 'O3SKU', name: 'O3SKU' },
                     { data: 'IsExemp', name: 'IsExemp' },
                     { data: 'IBHAND', name: 'IBHAND' },
+                    //{
+                    //    data: 'IBHAND', name: 'IBHAND', render: function (data) {
+                    //        if (data === 0) {
+                    //            return '-';
+                    //        } else {
+                    //            return data;
+                    //        }
+                    //    } 
+                    //},
                     { data: 'O3UPC', name: 'O3UPC' },
                     { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap' },
                     { data: 'O3REG', name: 'O3REG' },
@@ -1908,7 +1918,7 @@
         $('#new-exemption-table thead').on('click', '.filter-icon', function (event) {
             event.stopPropagation(); // Prevent event propagation
 
-            var columnIndex = $(this).closest('th').index() + 2;
+            var columnIndex = $(this).closest('th').index() + 1;
             var column = tableNewExemption.column(columnIndex);
 
             // Clear existing filter input

@@ -417,6 +417,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Dto\AutoPrintStatusDto.cs" />
+    <Compile Include="Models\Dto\ExportPCAExemptionDto.cs" />
     <Compile Include="Models\Dto\ItemQueueDto.cs" />
     <Compile Include="Models\EditReason.cs" />
     <Compile Include="Models\Interface\IRegistersRepository.cs" />

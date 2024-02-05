@@ -98,7 +98,8 @@ namespace PriceSignageSystem.Models.Repository
                             qDivisor = a.Divisor,
                             qItemDesc = a.ItemDesc,
                             qRemarks = a.Remarks,
-                            qTypeId = a.TypeId
+                            qTypeId = a.TypeId,
+                            CategoryId = b.CategoryId
                         }).ToList();
             return data;
         }

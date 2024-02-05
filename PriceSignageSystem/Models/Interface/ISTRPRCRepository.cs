@@ -19,6 +19,9 @@ namespace PriceSignageSystem.Models.Interface
         List<STRPRCLogDto> GetUpdatedData(decimal sku = 0);
         STRPRCDto GetDataBySKU(decimal O3SKU);
         STRPRCDto GetLatestUpdate();
+        Task UpdateSTRPRC151(int storeId);
+        decimal CheckSTRPRCUpdates(int storeId);
+
         decimal UpdateSTRPRCTable(int storeId);
         CountryDto GetCountryImg(string country);
         ReportDto GetReportData(decimal O3SKU);
@@ -29,6 +32,7 @@ namespace PriceSignageSystem.Models.Interface
         void UpdateSingleStatus(decimal O3SKU);
         void AddInventoryPrintingLog(ReportDto model, string user);
         List<STRPRCDto> GetLatestPCAData();
+        List<ExportPCAExemptionDto> PCAToExportExemption();
         List<ExportPCADto> PCAToExport();
         string GetSubClassDescription(decimal O3SKU);
     }

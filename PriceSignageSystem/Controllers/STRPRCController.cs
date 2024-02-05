@@ -57,7 +57,7 @@ namespace PriceSignageSystem.Controllers
             {
                 var dto = _sTRPRCRepository.SearchString(query);
                 
-                if (dto != null && dto.IsExemp == "N")
+                if (dto != null/* && dto.IsExemp == "N"*/)
                 {
                     DateTime startdateTimeValue = DateTime.ParseExact(dto.O3SDT.ToString(), "yyMMdd", CultureInfo.InvariantCulture);
                     dto.StartDateFormattedDate = startdateTimeValue.ToString("yy-MM-dd");
@@ -366,14 +366,26 @@ namespace PriceSignageSystem.Controllers
         [HttpGet]
         public JsonResult CheckSTRPRCUpdates()
         {
-            var date = _sTRPRCRepository.GetLatestUpdate();
-            if (date.DateUpdated.Date != DateTime.Now.Date)
-                return Json(false, JsonRequestBehavior.AllowGet);
+            var data151 = _sTRPRCRepository.CheckSTRPRCUpdates(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
+
+            if (DateTime.TryParseExact(data151.ToString(), "yyMMdd", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
+            {
+                // Now you can format the parsed date as needed
+                if (parsedDate.Date != DateTime.Now.Date)
+                    return Json(false, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                Console.WriteLine("Invalid date format");
+            }
+
+            //if (date.DateUpdated.Date != DateTime.Now.Date)
+            //    return Json(false, JsonRequestBehavior.AllowGet);
 
             return Json(true, JsonRequestBehavior.AllowGet);
         }
 
-            [HttpGet]
+        [HttpGet]
         public JsonResult GetSKUDetails(decimal O3SKU)
         {
             var data = _sTRPRCRepository.GetSKUDetails(O3SKU);
@@ -382,12 +394,43 @@ namespace PriceSignageSystem.Controllers
 
         [AllowAnonymous]
         [HttpPost]
+        public async Task<ActionResult> UpdatePCA()
+        {
+            var result = _sTRPRCRepository.GetLatestUpdate();
+            var data151 = _sTRPRCRepository.CheckSTRPRCUpdates(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
+
+            if (DateTime.TryParseExact(data151.ToString(), "yyMMdd", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
+            {
+                // Now you can format the parsed date as needed
+                if (parsedDate.Date != DateTime.Now.Date)
+                {
+                    await _sTRPRCRepository.UpdateSTRPRC151(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
+                    data151 = _sTRPRCRepository.CheckSTRPRCUpdates(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
+                    if (DateTime.TryParseExact(data151.ToString(), "yyMMdd", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate1))
+                    {
+                        if (parsedDate1.Date != result.DateUpdated.Date)
+                        {
+                            _sTRPRCRepository.UpdateSTRPRCTable(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid date format");
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid date format");
+            }
+            return Json(true, JsonRequestBehavior.AllowGet);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
         public async Task<ActionResult> LoadPCA()
         {
             var result = _sTRPRCRepository.GetLatestUpdate();
-            if (result.DateUpdated.Date != DateTime.Now.Date)
-                _sTRPRCRepository.UpdateSTRPRCTable(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
-
             var data = new STRPRCDto();
             var rawData = await _sTRPRCRepository.GetDataByStartDate(result.LatestDate);
 
@@ -488,23 +531,42 @@ namespace PriceSignageSystem.Controllers
         public FileResult ExportDataTableToExcel(string tab, DateTime date)
         {
             var decimalDate = ConversionHelper.ToDecimal(date);
-            var toExportRawData = _sTRPRCRepository.PCAToExport().ToList();
+            var dataTable = new DataTable();
+            if (tab == "NewExemptionInventory") { 
+               var toExportRawData = _sTRPRCRepository.PCAToExportExemption().ToList();
+                if (tab == "WithInventory")
+                {
+                    toExportRawData = toExportRawData.Where(a => a.WithInventory == "Yes" && a.IsExemption == "No").ToList();
+                }
+                else
+                {
+                    toExportRawData = toExportRawData.Where(a => a.IsExemption == "Yes" || a.WithInventory == "No").ToList();
 
-            if (tab == "WithInventory")
-            {
-                toExportRawData = toExportRawData.Where(a => a.WithInventory == "Yes" && a.IsExemption == "No").ToList();
+                }
+
+                dataTable = ConversionHelper.ConvertListToDataTable(toExportRawData);
             }
-            //else if (tab == "WithoutInventory")
-            //{
-            //    toExportRawData = toExportRawData.Where(a => a.WithInventory == "No" && a.IsExemption == "No").ToList();
-            //}
             else
             {
-                toExportRawData = toExportRawData.Where(a => a.IsExemption == "Yes" || a.WithInventory == "No").ToList();
+                var toExportRawData = _sTRPRCRepository.PCAToExport().ToList();
+                if (tab == "WithInventory")
+                {
+                    toExportRawData = toExportRawData.Where(a => a.WithInventory == "Yes" && a.IsExemption == "No").ToList();
+                }
+                //else if (tab == "WithoutInventory")
+                //{
+                //    toExportRawData = toExportRawData.Where(a => a.WithInventory == "No" && a.IsExemption == "No").ToList();
+                //}
+                else
+                {
+                    toExportRawData = toExportRawData.Where(a => a.IsExemption == "Yes" || a.WithInventory == "No").ToList();
 
+                }
+
+                dataTable = ConversionHelper.ConvertListToDataTable(toExportRawData);
             }
 
-            var dataTable = ConversionHelper.ConvertListToDataTable(toExportRawData);
+           
             using (XLWorkbook workbook = new XLWorkbook())
             {
                 var worksheet = workbook.Worksheets.Add("Sheet1");
