@@ -104,19 +104,25 @@
                                     @Html.DropDownListFor(m => m.SelectedCategoryId, Model.Categories ?? new List<SelectListItem>(), "Select Category", new { @class = "form-control", disabled = true })
                                 </div>
                             </div>
+                            @if (Model.IsExemp == "Y")
+                            {
+                                <div class="d-flex justify-content-center">
+                                    <label style="color: red">THIS SKU/UPC HAS AN EXEMPTION</label>
+                                </div>
+                            }
                             <div class="d-flex justify-content-center">
-
+                                <br/>
                                 @if (User.IsInRole("PCA Captain"))
                                 {
-                                    <button type="button" class="newPrint btn btn-primary mr-1">Print</button>
-                                    <button type="button" class="queuebtn btn btn-warning mr-1">Queue</button>
+                                    <button type="button" class="newPrint btn btn-primary mr-1" @(Model.IsExemp == "Y" ? "disabled" : "")>Print</button>
+                                    <button type="button" class="queuebtn btn btn-warning mr-1" @(Model.IsExemp == "Y" ? "disabled" : "")>Queue</button>
                                     <button type="button" class="qListbtn btn btn-success mr-1">Print Queue</button>
                                 }
                                 else if (User.IsInRole("Administrator/Manager"))
                                 {
-                                    <button type="button" class="editBtn btn btn-secondary mr-1">Edit</button>
-                                    <button type="button" class="newPrint btn btn-primary mr-1">Print</button>
-                                    <button type="button" class="queuebtn btn btn-warning mr-1">Queue</button>
+                                    <button type="button" class="editBtn btn btn-secondary mr-1" @(Model.IsExemp == "Y" ? "disabled" : "")>Edit</button>
+                                    <button type="button" class="newPrint btn btn-primary mr-1" @(Model.IsExemp == "Y" ? "disabled" : "")>Print</button>
+                                    <button type="button" class="queuebtn btn btn-warning mr-1" @(Model.IsExemp == "Y" ? "disabled" : "")>Queue</button>
                                     <button type="button" class="qListbtn btn btn-success mr-1">Print Queue</button>
 
                                 }
