@@ -32,7 +32,11 @@
     <div class="wrapper">
         <div class="row align-items-center justify-content-center">
             <div class="col-auto">
-                <label for="searchInput" class="form-label fw-bold">Enter SKU/UPC:</label>
+                @*<label for="searchInput" class="form-label fw-bold">Enter SKU/UPC:</label>*@
+                <select name="SearchFilter" id="searchFilter" class="form-control custom-select">
+                    <option value="SKU">SKU</option>
+                    <option value="UPC">UPC</option>
+                </select>
             </div>
             <div class="col-auto">
                 <input type="text" id="searchInput" class="form-control" style="max-width: 200px; background-color: #fff;" placeholder="Search...">
@@ -53,7 +57,7 @@
         var timeoutId;
         $('#searchInput').on('input', function () {
             var searchQuery = $(this).val();
-
+            var filter = $('#searchFilter').val();
             // Clear any previously scheduled request
             clearTimeout(timeoutId);
 
@@ -62,7 +66,7 @@
                 $.ajax({
                     url: '@Url.Action("Search", "STRPRC")',
                     type: 'POST',
-                    data: { query: searchQuery },
+                    data: { query: searchQuery, searchFilter: filter},
                     success: function (result) {
                         $('#searchResults').html(result);
                     },

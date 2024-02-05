@@ -51,15 +51,23 @@ namespace PriceSignageSystem.Controllers
             var data = _queueRepository.GetHistory(username);
             return Json(data);
         }
-        public ActionResult Search(string query)
+        public ActionResult Search(string query, string searchFilter)
         {
             try
             {
-                var dto = _sTRPRCRepository.SearchString(query);
+                var dto = _sTRPRCRepository.SearchString(query, searchFilter);
                 
                 if (dto != null/* && dto.IsExemp == "N"*/)
                 {
-                    DateTime startdateTimeValue = DateTime.ParseExact(dto.O3SDT.ToString(), "yyMMdd", CultureInfo.InvariantCulture);
+
+                    var dateString = dto.O3SDT.ToString();
+                    if (dateString.Length == 5) 
+                    {
+                        dateString = "0" + dateString;
+                    }
+
+
+                    DateTime startdateTimeValue = DateTime.ParseExact(dateString, "yyMMdd", CultureInfo.InvariantCulture);
                     dto.StartDateFormattedDate = startdateTimeValue.ToString("yy-MM-dd");
                     
 
