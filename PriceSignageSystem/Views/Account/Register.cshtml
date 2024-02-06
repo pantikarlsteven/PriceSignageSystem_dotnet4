@@ -25,42 +25,54 @@
 
 </head>
 <body class="hold-transition login-page">
+    @if (TempData["UpdateSuccessMessage"] != null)
+    {
+        <div class="modal" tabindex="-1" role="dialog" id="passwordUpdateSuccessModal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Password Update</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-success">
+                            @TempData["UpdateSuccessMessage"]
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 
     @using (Html.BeginForm("Register", "Account", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         <div class="login-box">
             <div class="text-center mb-2">
-                <img class="img-fluid w-75" src="~/Content/Images/snrlogo_blue.png" alt="Logo"/>
+                <img class="img-fluid w-75" src="~/Content/Images/snrlogo_blue.png" alt="Logo" />
             </div>
             <div class="card text-white card-outline shadow-lg">
                 <div class="card-body">
                     <h4 class="text-center mb-4">Register</h4>
                     <hr class="bg-white">
-                    @if (TempData["ErrorMessage"] != null)
-                    {
-                        <div class="alert alert-danger">
-                            @TempData["ErrorMessage"]
-                        </div>
-                    }
-                    <div class="form-group">
+                    <div class="form-group username">
                         @Html.LabelFor(m => m.UserName)
-                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", @id = "userName" })
+                        @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger userNameValidation" })
                     </div>
-                    <div class="form-group">
+                    <div class="form-group password">
                         @Html.LabelFor(m => m.Password)
                         @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
                         @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
                     </div>
-                    <div class="form-group">
+                    <div class="form-group role">
                         @Html.LabelFor(m => m.RoleId)
                         @Html.DropDownListFor(m => m.SelectedRoleId, Model.RoleList, new { @class = "form-control" })
                         @Html.ValidationMessageFor(m => m.RoleId, "", new { @class = "text-danger" })
                     </div>
-                    <div class="row">
+                    <div class="row regBtn">
                         <div class="col">
-                            <button type="submit" class="btn btn-default btn-block text-bold btn-block">Register</button>
+                            <button type="submit" class="btn btn-default btn-block text-bold btn-block regBtn">Register</button>
+                            <button class="btn btn-default btn-block text-bold btn-secondary" id="homeBtn">Home</button>
                         </div>
                     </div>
                 </div>
@@ -72,4 +84,33 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
+<script>
+    $(document).ready(function () {
+        $('#passwordUpdateSuccessModal').modal('show');
+        setTimeout(function () {
+            $('#passwordUpdateSuccessModal').modal('hide');
+            setTimeout(function () {
+                $('#passwordUpdateSuccessModal').remove();
+            }, 500);
+        }, 2000);
+
+        var spanElement = $('.field-validation-error.text-danger.userNameValidation');
+
+        if (spanElement.text().trim() == "Username must be unique.") {
+
+            var buttonElement = $('<br/><button type="button" class="btn btn-secondary form-control" id="UpdatePw">Update Password?</button>');
+            spanElement.append(buttonElement);
+        }
+        var username = $('#userName').val();
+
+        $('#UpdatePw').click(function () {
+            window.location.href = '/Account/UpdatePassword?username=' + username;
+        });
+
+        $('#homeBtn').click(function (event) {
+            event.preventDefault();
+            window.location.href = '/STRPRC/PCA';
+        });
+    });
+</script>
 

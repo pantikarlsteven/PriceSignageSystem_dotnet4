@@ -53,6 +53,12 @@
                 <div class="card-body">
                     <h4 class="text-center mb-4">Login</h4>
                     <hr class="bg-white">
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            @TempData["ErrorMessage"]
+                        </div>
+                    }
                     @if (TempData["TimeoutErrorMessage"] != null)
                     {
                         <div class="alert alert-danger">

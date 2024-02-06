@@ -136,5 +136,26 @@ namespace PriceSignageSystem.Controllers
             }
             return View(user);
         }
+
+        public ActionResult UpdatePassword(string username)
+        {
+            new UserDto();
+            ViewBag.Username = username;
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult UpdatePassword(string username, string newPassword)
+        {
+            var result = _userRepository.UpdatePassword(username, newPassword);
+           
+            if(result == 1)
+            {
+                return Json(new { success = true });
+
+            }
+
+            return Json(new{success = false });
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PriceSignageSystem.Models.Dto;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,7 @@ namespace PriceSignageSystem.Models.Interface
         IQueryable<User> GetAll();
         List<User> GetUsers();
         User AddUser(User user);
-
         List<Role> GetRoles();
+        int UpdatePassword(string username, string newPassword);
     }
 }

@@ -557,6 +557,7 @@
     <Content Include="Views\STRPRC\Scan.cshtml" />
     <Content Include="Views\STRPRC\_HistoryPartialView.cshtml" />
     <Content Include="Views\Registers\CountryIndex.cshtml" />
+    <Content Include="Views\Account\UpdatePassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

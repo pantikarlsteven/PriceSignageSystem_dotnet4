@@ -536,7 +536,7 @@ namespace PriceSignageSystem.Controllers
         }
 
         [HttpGet]
-        public FileResult ExportDataTableToExcel(string tab, DateTime date)
+        public FileResult ExportDataTableToExcel(string tab, DateTime date, string filter)
         {
             var decimalDate = ConversionHelper.ToDecimal(date);
             var dataTable = new DataTable();
@@ -548,8 +548,15 @@ namespace PriceSignageSystem.Controllers
                 }
                 else
                 {
-                    toExportRawData = toExportRawData.Where(a => a.IsExemption == "Yes" || a.WithInventory == "No").ToList();
-
+                    //toExportRawData = toExportRawData.Where(a => a.IsExemption == "Yes" || a.WithInventory == "No").ToList();
+                    if(filter == "all")
+                        toExportRawData = toExportRawData.Where(a => a.IsExemption == "Yes" || a.WithInventory == "No").ToList();
+                    else if (filter == "saveZero")
+                        toExportRawData = toExportRawData.Where(a => (a.IsExemption == "Yes" || a.WithInventory == "No") && a.ExemptionType == "Save Zero").ToList();
+                    else if(filter == "negative")
+                        toExportRawData = toExportRawData.Where(a => (a.IsExemption == "Yes" || a.WithInventory == "No") && a.ExemptionType == "Negative Inventory").ToList();
+                    else if(filter == "zero")
+                        toExportRawData = toExportRawData.Where(a => (a.IsExemption == "Yes" || a.WithInventory == "No") && a.ExemptionType == "Zero Inventory").ToList();
                 }
 
                 dataTable = ConversionHelper.ConvertListToDataTable(toExportRawData);

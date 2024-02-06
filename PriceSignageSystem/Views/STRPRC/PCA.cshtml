@@ -684,7 +684,7 @@
                         .addClass('custom-button')
                         .text('Export')
                         .on('click', function () {
-                            window.location.href = '/STRPRC/ExportDataTableToExcel?tab=NewExemptionInventory&date=' + date;
+                            window.location.href = '/STRPRC/ExportDataTableToExcel?tab=NewExemptionInventory&date=' + date + '&filter=' + $select.val();
                         });
 
 

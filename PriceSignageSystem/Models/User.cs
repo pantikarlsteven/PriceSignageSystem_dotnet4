@@ -18,7 +18,6 @@ namespace PriceSignageSystem.Models
         public int RoleId { get; set; }
         [Display(Name = "Username")]
         [Required(ErrorMessage = "Username is required.")]
-        [UniqueUsername(ErrorMessage = "Username must be unique.")]
         public string UserName { get; set; }
         [Display(Name = "Password")]
         [Required(ErrorMessage = "Password is required.")]
