@@ -1274,10 +1274,10 @@
                         var typeOptions = '';
                         var categoryOptions = '';
 
-                        if (response.CategoryId == 1) { // if appliance, remove jewelry size
+                        if (response.CategoryId == 1 || response.TypeId == 2) { // if appliance, remove jewelry size
                             response.SizeArray.length = 2;
                         }
-
+                        
                         // Populate dropdown options from the server response
                         for (var i = 0; i < response.SizeArray.length; i++) {
                             var option = response.SizeArray[i];

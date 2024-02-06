@@ -5,6 +5,7 @@ using PriceSignageSystem.Models.Interface;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 
@@ -141,21 +142,21 @@ namespace PriceSignageSystem.Models.Repository
 
         public List<ItemQueueDto> GetHistory(string username)
         {
+            var dateToday = DateTime.Today;
             var result = (from a in _db.ItemQueues
-                         join c in _db.Types on a.TypeId equals c.Id
-                         where a.UserName == username
-                         orderby a.DateCreated descending
-                         select new ItemQueueDto
-                         {
-                             Id = a.Id,
-                             O3SKU = a.O3SKU,
-                             TypeName = c.Name,
-                             Status = a.Status,
-                             DateCreated = a.DateCreated,
-                             DateUpdated = a.DateUpdated,
-                             Remarks = a.Remarks
-                         }).ToList();
-          
+                          join c in _db.Types on a.TypeId equals c.Id
+                          where a.UserName == username && DbFunctions.TruncateTime(a.DateCreated) == dateToday
+                          orderby a.DateCreated descending
+                          select new ItemQueueDto
+                          {
+                              Id = a.Id,
+                              O3SKU = a.O3SKU,
+                              TypeName = c.Name,
+                              Status = a.Status,
+                              DateCreated = a.DateCreated,
+                              DateUpdated = a.DateUpdated,
+                              Remarks = a.Remarks
+                          }).ToList();
 
             return result;
         }
