@@ -372,10 +372,9 @@ namespace PriceSignageSystem.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public JsonResult CheckSTRPRCUpdates()
+        public async Task<JsonResult> CheckSTRPRCUpdates()
         {
             var data151 = _sTRPRCRepository.CheckSTRPRCUpdates(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
-
             if (DateTime.TryParseExact(data151.ToString(), "yyMMdd", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
             {
                 // Now you can format the parsed date as needed
@@ -385,6 +384,8 @@ namespace PriceSignageSystem.Controllers
             else
             {
                 Console.WriteLine("Invalid date format");
+                await _sTRPRCRepository.UpdateSTRPRC151(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
+                return Json(false, JsonRequestBehavior.AllowGet);
             }
 
             //if (date.DateUpdated.Date != DateTime.Now.Date)
