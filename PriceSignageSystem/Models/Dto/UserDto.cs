@@ -26,8 +26,5 @@ namespace PriceSignageSystem.Models.Dto
         public int IsActive { get; set; }
         public List<SelectListItem> RoleList { get; set; }
         public string SelectedRoleId { get; set; }
-        [Display(Name = "New Password")]
-        [Required(ErrorMessage = "New Password is required.")]
-        public string NewPassword { get; set; }
     }
 }
