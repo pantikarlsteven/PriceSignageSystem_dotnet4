@@ -269,12 +269,23 @@
             var isCurrDisabled = $('#currPrice').prop('disabled');
 
             if (isCurrDisabled) {
+                var regPrice = $("#regPrice");
+                var currPrice = $("#currPrice");
+                convertedRegPrice = Number(regPrice.val());
+                convertedCurrPrice = Number(currPrice.val());
+                var typeId = $('#SelectedTypeId');
+
+                if (convertedCurrPrice >= convertedRegPrice) {
+                    regPrice.val(currPrice.val());
+                    typeId.val(1); //Regular
+                }
 
                 var reportDto = {
                     O3SKU: @Model.O3SKU,
                     SizeId: 0,
-                    TypeId: 0,
-                    CategoryId: 0
+                    TypeId: typeId.val(),
+                    CategoryId: 0,
+                    O3REGU: regPrice.val()
                 };
 
                 reportDto.TypeId = $('#SelectedTypeId').val();
