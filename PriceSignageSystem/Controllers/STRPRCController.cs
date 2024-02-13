@@ -419,6 +419,7 @@ namespace PriceSignageSystem.Controllers
                     {
                         if (parsedDate1.Date != result.DateUpdated.Date)
                         {
+                            _sTRPRCRepository.GetLatestInventory(ConfigurationManager.AppSettings["StoreID"].ToString());
                             _sTRPRCRepository.UpdateSTRPRCTable(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
                         }
                     }
@@ -433,6 +434,14 @@ namespace PriceSignageSystem.Controllers
                 Console.WriteLine("Invalid date format");
             }
             return Json(true, JsonRequestBehavior.AllowGet);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public ActionResult GetLatestInventory()
+        {
+            var result = _sTRPRCRepository.GetLatestInventory(ConfigurationManager.AppSettings["StoreID"].ToString());
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         [AllowAnonymous]

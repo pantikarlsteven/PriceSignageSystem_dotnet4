@@ -570,6 +570,33 @@ namespace PriceSignageSystem.Models.Repository
             return data;
         }
 
+        public bool GetLatestInventory(string storeId)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand("sp_GetLatestInventory", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.CommandTimeout = commandTimeoutInSeconds;
+                        // Add any required parameters to the command if needed
+                        command.Parameters.AddWithValue("@Store", storeId);
+
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                        connection.Close();
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error executing stored procedure: " + ex.Message);
+                return false;
+            }
+        }
+
         public decimal CheckSTRPRCUpdates(int storeId)
         {
             decimal date = 0;

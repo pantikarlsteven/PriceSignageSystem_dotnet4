@@ -58,6 +58,13 @@
                     <img class="" src="~/Content/Images/loading.gif" alt="Loading" style="max-width:350px;" />
                 </div>
             </div>
+
+            <div class="overlay-wrapper" id="inventoryUpdateLoadingContainer" style="display:none;">
+                <div class="overlay" style="background-color: rgba(0, 0, 0, 0.59); z-index: 999999;">
+                    <img class="" src="~/Content/Images/loading.gif" alt="Loading" style="max-width:350px;" />
+                    <p style="position: absolute; margin-top: 250px; background-color: #dee2e6; padding: 10px;">Updating Inventory. Please Wait...</p>
+                </div>
+            </div>
         </div>
         <center>
             @if (TempData["RegistrationSuccessMessage"] != null)
@@ -87,8 +94,10 @@
                 </div>
             </div>
             <div class="col-md-2">
-                <label class="text-white d-sm-none d-lg-block">Search</label>
-                @*<button id="searchBtn" class="btn btn-primary btn-block">Search</button>*@
+                <div class="form-group">
+                    <label class="text-white d-sm-none d-lg-block">_</label>
+                    <button class="btn btn-primary" id="updateInventory">Update Inventory</button>
+                </div>
             </div>
         </div>
         <div class="row">
@@ -225,8 +234,8 @@
             $('#registrationSuccessModal').modal('hide');
             setTimeout(function () {
                 $('#registrationSuccessModal').remove();
-            }, 500); 
-        }, 2000); 
+            }, 500);
+        }, 2000);
 
         var tableWith = null;
         var tableNewExemption = null;
@@ -287,6 +296,28 @@
                 }
             });
         }
+
+        $("#updateInventory").on("click", function () {
+            $("#inventoryUpdateLoadingContainer").show();
+
+            $.ajax({
+                url: '/STRPRC/GetLatestInventory',
+                type: "POST",
+                dataType: 'json',
+                success: function (data) {
+                    if (!data)
+                        alert("Updating inventory has been failed");
+                    else
+                        location.reload();
+
+                    $("#inventoryUpdateLoadingContainer").hide();
+                },
+                error: function (error) {
+                    alert(error);
+                    $("#inventoryUpdateLoadingContainer").hide();
+                }
+            });
+        });
 
         function RenderDatatableWithInv(data) {
             tableWith = $('#with-inventory-table').DataTable({
@@ -652,7 +683,7 @@
                     //        } else {
                     //            return data;
                     //        }
-                    //    } 
+                    //    }
                     //},
                     { data: 'O3UPC', name: 'O3UPC' },
                     { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap' },
@@ -1277,7 +1308,7 @@
                         if (response.CategoryId == 1 || response.TypeId == 2) { // if appliance, remove jewelry size
                             response.SizeArray.length = 2;
                         }
-                        
+
                         // Populate dropdown options from the server response
                         for (var i = 0; i < response.SizeArray.length; i++) {
                             var option = response.SizeArray[i];

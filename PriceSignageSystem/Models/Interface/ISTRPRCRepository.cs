@@ -19,6 +19,7 @@ namespace PriceSignageSystem.Models.Interface
         List<STRPRCLogDto> GetUpdatedData(decimal sku = 0);
         STRPRCDto GetDataBySKU(decimal O3SKU);
         STRPRCDto GetLatestUpdate();
+        bool GetLatestInventory(string storeId);
         Task UpdateSTRPRC151(int storeId);
         decimal CheckSTRPRCUpdates(int storeId);
 
