@@ -171,6 +171,7 @@
                                     <th>Category</th>
                                     <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
                                     <th>Reverted?</th>
+                                    <th>Negative Save</th>
                                     @*<th><button class="printAllBtnNewExemption btn btn-secondary px-3">Print Selected</button></th>*@
                                 </tr>
                             </thead>
@@ -644,7 +645,7 @@
                 pageLength: -1,
                 data: data,
                 columnDefs: [
-                    { targets: [4], visible: false },
+                    { targets: [4,17], visible: false },
                     //{ targets: [4,5], visible: false },
                     { targets: [0, 1, 11, 12, 13], orderable: false },
                 ],
@@ -696,6 +697,7 @@
                     { data: 'CategoryName', name: 'CategoryName' },
                     { data: 'DepartmentName', name: 'DepartmentName' },
                     { data: 'IsReverted', name: 'IsReverted' },
+                    { data: 'NegativeSave', name: 'NegativeSave' },
                     //{
                     //    data: null,
                     //    render: function (data, type, row) {
@@ -727,27 +729,38 @@
                     var $negativeInventory = $('<option>').text('Negative Inventory').val('negative');
                     var $zeroInventory = $('<option>').text('Zero Inventory').val('zero');
                     var $saveZero = $('<option>').text('Save Zero').val('saveZero');
+                    var $negativeSave = $('<option>').text('Negative Save').val('negativeSave');
 
                     // Append options to the select element
-                    $select.append($All, $negativeInventory, $zeroInventory, $saveZero);
+                    $select.append($All, $negativeInventory, $zeroInventory, $saveZero, $negativeSave);
 
                     $select.on('change', function () {
                         // Log the selected value to the console
                         if ($select.val() == "negative") {
                             tableNewExemption.column(5).search("^-\\d", true, false).draw();
                             tableNewExemption.column(4).search("").draw();
+                            tableNewExemption.column(17).search("N", true, false).draw();
                         }
                         else if ($select.val() == "zero") {
                             tableNewExemption.column(5).search("^0$",true,false).draw();
                             tableNewExemption.column(4).search("").draw();
+                            tableNewExemption.column(17).search("N", true, false).draw();
                         }
                         else if ($select.val() == "saveZero") {
                             tableNewExemption.column(5).search("").draw();
                             tableNewExemption.column(4).search("Y", true, false).draw();
+                            tableNewExemption.column(17).search("N", true, false).draw();
+                        }
+                        else if ($select.val() == "negativeSave") {
+                            tableNewExemption.column(5).search("").draw();
+                            tableNewExemption.column(4).search("Y", true, false).draw();
+                            tableNewExemption.column(17).search("Y", true, false).draw();
+
                         }
                         else {
                             tableNewExemption.column(5).search("").draw();
                             tableNewExemption.column(4).search("").draw();
+                            tableNewExemption.column(17).search("").draw();
                         }
 
                         //console.log(data);

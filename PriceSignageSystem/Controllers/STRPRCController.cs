@@ -567,6 +567,8 @@ namespace PriceSignageSystem.Controllers
                         toExportRawData = toExportRawData.Where(a => (a.IsExemption == "Yes" || a.WithInventory == "No") && a.ExemptionType == "Negative Inventory").ToList();
                     else if(filter == "zero")
                         toExportRawData = toExportRawData.Where(a => (a.IsExemption == "Yes" || a.WithInventory == "No") && a.ExemptionType == "Zero Inventory").ToList();
+                    else if (filter == "negativeSave")
+                        toExportRawData = toExportRawData.Where(a => (a.IsExemption == "Yes" || a.WithInventory == "No") && a.ExemptionType == "Negative Save").ToList();
                 }
 
                 dataTable = ConversionHelper.ConvertListToDataTable(toExportRawData);
