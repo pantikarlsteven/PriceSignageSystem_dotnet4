@@ -20,6 +20,7 @@ namespace PriceSignageSystem.Models
         public string Brand { get; set; }
         public string Model { get; set; }
         public string Divisor { get; set; }
+        public string Tuom { get; set; } 
         public decimal RegularPrice { get; set; }
         public decimal CurrentPrice { get; set; }
         public string Remarks { get; set; }

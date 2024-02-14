@@ -441,7 +441,19 @@
             var newBrand = $('#brand').val();
             var newModel = $('#model').val();
             var newDivisor = $('#divisor').val();
+            var newTuom = $('#tuom').val();
+            var regPrice = $("#regPrice").val();
+            var currPrice = $("#currPrice").val();
+            convertedRegPrice = Number(regPrice);
+            convertedCurrPrice = Number(currPrice);
+
             var typeId = $('#SelectedTypeId').val();
+
+            
+            if (convertedRegPrice == convertedCurrPrice) {
+                typeId = 1; // Validation for Negative Save (Curr > Reg)
+            }
+
             var dto = {};
 
             if (isCurrDisabled) {
@@ -557,7 +569,8 @@
                                 O3IDSC: newShortDesc != origShortDesc ? newShortDesc : origShortDesc,
                                 O3FNAM: newBrand != origBrand ? newBrand : origBrand,
                                 O3MODL: newModel != origModel ? newModel : origModel,
-                                O3DIV: newDivisor != origDivisor ? newDivisor : origDivisor
+                                O3DIV: newDivisor != origDivisor ? newDivisor : origDivisor,
+                                O3TUOM: newTuom != origTuom ? newTuom : origTuom
                             };
 
                             $.ajax({

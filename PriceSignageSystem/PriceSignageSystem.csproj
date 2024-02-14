@@ -415,6 +415,10 @@
     <Compile Include="Migrations\202401310935265_addTbl_EditReasons.designer.cs">
       <DependentUpon>202401310935265_addTbl_EditReasons.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202402140723359_AddTuom_QueueTbl.cs" />
+    <Compile Include="Migrations\202402140723359_AddTuom_QueueTbl.designer.cs">
+      <DependentUpon>202402140723359_AddTuom_QueueTbl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Dto\AutoPrintStatusDto.cs" />
     <Compile Include="Models\Dto\CountryDto.cs" />
@@ -667,6 +671,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202401310935265_addTbl_EditReasons.resx">
       <DependentUpon>202401310935265_addTbl_EditReasons.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202402140723359_AddTuom_QueueTbl.resx">
+      <DependentUpon>202402140723359_AddTuom_QueueTbl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Dynamic_OneEightReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

@@ -34,6 +34,7 @@ namespace PriceSignageSystem.Models.Repository
             record.DateCreated = DateTime.Now;
             record.RegularPrice = model.O3REGU;
             record.CurrentPrice = model.O3POS;
+            record.Tuom = model.O3TUOM;
                
             var data =  _db.ItemQueues.Add(record);
             _db.SaveChanges();
@@ -100,7 +101,8 @@ namespace PriceSignageSystem.Models.Repository
                             qItemDesc = a.ItemDesc,
                             qRemarks = a.Remarks,
                             qTypeId = a.TypeId,
-                            CategoryId = b.CategoryId
+                            CategoryId = b.CategoryId,
+                            qTuom = a.Tuom
                         }).ToList();
             return data;
         }

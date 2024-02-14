@@ -63,5 +63,6 @@ namespace PriceSignageSystem.Models.Dto
         public decimal qCurrentPrice { get; set; }
         public string qDivisor { get; set; }
         public int qTypeId { get; set; }
+        public string qTuom { get; set; }
     }
 }
