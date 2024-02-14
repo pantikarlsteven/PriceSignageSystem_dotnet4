@@ -70,7 +70,7 @@
                     <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3SLUM, new { @class = "form-control clear", @disabled = "disabled" })</dd>
 
                     <dt class="col-sm-4">@Html.LabelFor(m => m.O3TUOM)</dt>
-                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3TUOM, new { @class = "form-control clear", @disabled = "disabled" })</dd>
+                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3TUOM, new { @class = "form-control clear", @disabled = "disabled", @id = "tuom", @oninput = "validateInput(event)" })</dd>
 
                     <dt class="col-sm-4">@Html.LabelFor(m => m.O3DIV)</dt>
                     <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3DIV, new { @class = "form-control clear", @disabled = "disabled", @id = "divisor" })</dd>
@@ -120,9 +120,9 @@
                                 }
                                 else if (User.IsInRole("Administrator/Manager"))
                                 {
-                                    <button type="button" class="editBtn btn btn-secondary mr-1" @(Model.IsExemp == "Y" ? "disabled" : "")>Edit</button>
-                                    <button type="button" class="newPrint btn btn-primary mr-1" @(Model.IsExemp == "Y" ? "disabled" : "")>Print</button>
-                                    <button type="button" class="queuebtn btn btn-warning mr-1" @(Model.IsExemp == "Y" ? "disabled" : "")>Queue</button>
+                                    <button type="button" class="editBtn btn btn-secondary mr-1">Edit</button>
+                                    <button type="button" class="newPrint btn btn-primary mr-1">Print</button>
+                                    <button type="button" class="queuebtn btn btn-warning mr-1">Queue</button>
                                     <button type="button" class="qListbtn btn btn-success mr-1">Print Queue</button>
 
                                 }
@@ -214,19 +214,29 @@
         window.open(url, '_blank');
     }
 
+    function validateInput(event) {
+        var inputValue = event.target.value;
+        var regex = /^[A-Za-z]+$/; // Regular expression to match only letters
+
+        if (!regex.test(inputValue)) {
+            // If the input contains anything other than letters, remove those characters
+            event.target.value = inputValue.replace(/[^A-Za-z]/g, '');
+        }
+    }
+
     $(document).ready(function () {
 
         var origShortDesc = "";
         var origBrand = "";
         var origModel = "";
         var origDivisor = "";
+        var origTuom = "";
 
         $(".btnCollapse").on("click", function () {
             // Toggle the aria-expanded attribute
             var isExpanded = $(this).attr("aria-expanded") === "true";
             $(this).attr("aria-expanded", !isExpanded);
         });
-
 
         var convertedRegPrice = 0;
         var convertedCurrPrice = 0;
@@ -236,16 +246,18 @@
             origBrand = $("#brand").val();
             origModel = $("#model").val();
             origDivisor = $("#divisor").val();
-
+            origTuom = $("#tuom").val();
 
             $("#currPrice").prop("disabled", false);
             $("#shortDesc").prop("disabled", false);
             $("#brand").prop("disabled", false);
             $("#model").prop("disabled", false);
             $("#divisor").prop("disabled", false);
-
+            $('#tuom').prop("disabled", false);
 
         });
+
+        
 
         $("#currPrice").on("change", function () {
             var regPrice = $("#regPrice");
@@ -303,16 +315,6 @@
 
             }else {
 
-                // Build the HTML for the dropdowns
-                //var dropdownHtml = '<div class="form-row">' +
-                //    '<div class="form-group row col-12">' +
-                //    '<label class="col-sm-2 col-form-label" for="remarksDropdown"  style="color: red;">Remarks:</label>' +
-                //    '<select class="col-sm-9  ml-3 form-control custom-select" id="remarksDropdown" required>' +
-                //    '<option value="0"></option>' +
-                //    '<option value="CER">CER</option>' +
-                //    '<option value="Wrong Price">Wrong Price</option>' +
-                //    '</select>' +
-                //    '</div>';
                 $.ajax({
                     url: '@Url.Action("GetAllReasons", "STRPRC")',
                     type: 'POST',
@@ -366,11 +368,13 @@
                         });
 
                         $('#editPrintBtn').click(function () {
+                            
                             var selectedRemarks= $('#remarksDropdown').val();
                             var newShortDesc = $('#shortDesc').val();
                             var newBrand = $('#brand').val();
                             var newModel = $('#model').val();
                             var newDivisor = $('#divisor').val();
+                            var newTuom = $('#tuom').val();
 
                             if (selectedRemarks === '') {
                                 alert('Please select a valid option for Remarks.');
@@ -393,10 +397,14 @@
                                     O3IDSC: newShortDesc != origShortDesc ? newShortDesc : origShortDesc,
                                     O3FNAM: newBrand != origBrand ? newBrand : origBrand,
                                     O3MODL: newModel != origModel ? newModel : origModel,
-                                    O3DIV: newDivisor != origDivisor ? newDivisor : origDivisor
+                                    O3DIV: newDivisor != origDivisor ? newDivisor : origDivisor,
+                                    O3TUOM: newTuom != origTuom ? newTuom : origTuom
                                 };
 
                                 reportDto.TypeId = $('#SelectedTypeId').val();
+                                if (convertedRegPrice == convertedCurrPrice) {
+                                    reportDto.TypeId = 1; // Validation for Negative Save (Curr > Reg)
+                                }
                                 reportDto.CategoryId = $('#SelectedCategoryId').val();
                                 reportDto.SizeId = $('#SelectedSizeId').val();
                                 $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(reportDto));

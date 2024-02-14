@@ -212,6 +212,7 @@ namespace PriceSignageSystem.Controllers
                 skuModel.O3FNAM = !string.IsNullOrEmpty(model.O3FNAM) ? model.O3FNAM : skuModel.O3FNAM;
                 skuModel.O3MODL = !string.IsNullOrEmpty(model.O3MODL) ? model.O3MODL : skuModel.O3MODL;
                 skuModel.O3DIV = !string.IsNullOrEmpty(model.O3DIV) ? model.O3DIV : skuModel.O3DIV;
+                skuModel.O3TUOM = !string.IsNullOrEmpty(model.O3TUOM) ? model.O3TUOM : skuModel.O3TUOM;
 
                 var textToImage = new TextToImage();
                 textToImage.GetImageWidth(skuModel.O3FNAM, skuModel.O3IDSC, model.SizeId);

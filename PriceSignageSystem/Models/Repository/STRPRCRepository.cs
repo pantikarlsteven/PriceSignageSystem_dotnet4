@@ -172,7 +172,7 @@ namespace PriceSignageSystem.Models.Repository
                             O3CURD = a.O3CURD,
                             O3USER = a.O3USER,
                             DateUpdated = a.DateUpdated,
-                            SelectedTypeId = a.O3REGU == a.O3POS ? 1 : 2,
+                            SelectedTypeId = a.O3REGU == a.O3POS && a.O3EDT == 999999 ? 1 : 2,
                             SelectedCategoryId = (a.O3DEPT == 150 && (a.O3SDPT == 10 || a.O3SDPT == 12 || a.O3SDPT == 13 || a.O3SDPT == 14)) ||
                             (a.O3DEPT == 401 || a.O3DEPT == 402 || a.O3DEPT == 403 || a.O3DEPT == 404) ? 1 : 2,
                             IsExemp = (a.O3REG == a.O3POS && a.O3EDT != 999999) || (a.O3REG < a.O3POS && a.TypeId == 2) ? "Y" : "N",
@@ -220,7 +220,7 @@ namespace PriceSignageSystem.Models.Repository
                             O3CURD = a.O3CURD,
                             O3USER = a.O3USER,
                             DateUpdated = a.DateUpdated,
-                            SelectedTypeId = a.O3REGU == a.O3POS ? 1 : 2,
+                            SelectedTypeId = a.O3REGU == a.O3POS && a.O3EDT == 999999 ? 1 : 2,
                             SelectedCategoryId = (a.O3DEPT == 150 && (a.O3SDPT == 10 || a.O3SDPT == 12 || a.O3SDPT == 13 || a.O3SDPT == 14)) ||
                             (a.O3DEPT == 401 || a.O3DEPT == 402 || a.O3DEPT == 403 || a.O3DEPT == 404) ? 1 : 2,
                             IsExemp = (a.O3REG == a.O3POS && a.O3EDT != 999999) || (a.O3REG < a.O3POS && a.TypeId == 2) ? "Y" : "N",
