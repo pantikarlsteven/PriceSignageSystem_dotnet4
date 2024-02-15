@@ -132,7 +132,7 @@ namespace PriceSignageSystem.Models.Repository
             {
                 var model = new ItemQueue();
                 model.O3SKU = item.O3SKU;
-                model.TypeId = item.TypeId;
+                model.TypeId = item.O3REG < item.O3POS ? ReportConstants.Type.Regular : item.TypeId; // Validation for Negative Save
                 model.UserName = HttpContext.Current.User.Identity.Name;
                 model.Status = ReportConstants.Status.InQueue;
                 model.DateCreated = DateTime.Now;

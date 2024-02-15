@@ -118,6 +118,9 @@ namespace PriceSignageSystem.Controllers
                     item.O3DIV = item.qDivisor != null ? item.qDivisor : item.O3DIV;
                     item.TypeId = item.qTypeId != 0 ? item.qTypeId : item.TypeId;
                     item.O3TUOM = !string.IsNullOrEmpty(item.qTuom) ? item.qTuom : item.O3TUOM;
+
+                    if (item.O3REGU < item.O3POS) // Validation for Negative Save
+                        item.O3REGU = item.O3POS;
                 }
 
                 var dataTable = ConversionHelper.ConvertListToDataTable(data);

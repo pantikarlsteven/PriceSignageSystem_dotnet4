@@ -160,6 +160,8 @@
                                     <th>SKU</th>
                                     <th>IsExemp</th>
                                     <th style="width: 150px;">On Hand</th>
+                                    <th>DC Onhand</th>
+                                    <th>In Transit</th>
                                     <th>UPC</th>
                                     <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
                                     <th>Reg Price</th>
@@ -177,7 +179,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="17" style="text-align: center;">Please enter start date</td>
+                                    <td colspan="19" style="text-align: center;">Please enter start date</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -334,6 +336,28 @@
                 data: data,
                 columnDefs: [
                     { targets: [0, 1, 13, 15], orderable: false },
+                    {
+                        "targets": 6, // column "O3REG"
+                        "render": function (data, type, row, meta) {
+                            // Check if O3REG < O3POS, then update O3REG
+                            if (row['O3REG'] < row['O3POS']) {
+                                return row['O3POS'];
+                            } else {
+                                return data; // Return original value if condition is not met
+                            }
+                        }
+                    },
+                    {
+                        "targets": 10, // TYPE COLUMN
+                        "render": function (data, type, row, meta) {
+                            
+                            if (row['O3REG'] < row['O3POS']) {
+                                return 'Regular';
+                            } else {
+                                return data; 
+                            }
+                        }
+                    }
                 ],
                 columns: [
                     {
@@ -645,9 +669,9 @@
                 pageLength: -1,
                 data: data,
                 columnDefs: [
-                    { targets: [4,17], visible: false },
+                    { targets: [4,6,7,19], visible: false },
                     //{ targets: [4,5], visible: false },
-                    { targets: [0, 1, 11, 12, 13], orderable: false },
+                    { targets: [0, 1, 13, 14, 15, 17], orderable: false },
                 ],
                 columns: [
                     {
@@ -677,6 +701,8 @@
                     { data: 'O3SKU', name: 'O3SKU' },
                     { data: 'IsExemp', name: 'IsExemp' },
                     { data: 'IBHAND', name: 'IBHAND' },
+                    { data: 'ZeroInvDCOnHand', name: 'ZeroInvDCOnHand' },
+                    { data: 'ZeroInvInTransit', name: 'ZeroInvInTransit' },
                     //{
                     //    data: 'IBHAND', name: 'IBHAND', render: function (data) {
                     //        if (data === 0) {
@@ -698,6 +724,8 @@
                     { data: 'DepartmentName', name: 'DepartmentName' },
                     { data: 'IsReverted', name: 'IsReverted' },
                     { data: 'NegativeSave', name: 'NegativeSave' },
+         
+
                     //{
                     //    data: null,
                     //    render: function (data, type, row) {
@@ -735,32 +763,42 @@
                     $select.append($All, $negativeInventory, $zeroInventory, $saveZero, $negativeSave);
 
                     $select.on('change', function () {
+
+                        tableNewExemption.column(5).visible(true); // ON HAND
+                        tableNewExemption.column(6).visible(false); // DC ONHAND FOR ZERO INV
+                        tableNewExemption.column(7).visible(false); // IN TRANSIT FOR ZERO INV
+
                         // Log the selected value to the console
                         if ($select.val() == "negative") {
                             tableNewExemption.column(5).search("^-\\d", true, false).draw();
                             tableNewExemption.column(4).search("").draw();
-                            tableNewExemption.column(17).search("N", true, false).draw();
+                            tableNewExemption.column(19).search("N", true, false).draw();
+
                         }
                         else if ($select.val() == "zero") {
                             tableNewExemption.column(5).search("^0$",true,false).draw();
                             tableNewExemption.column(4).search("").draw();
-                            tableNewExemption.column(17).search("N", true, false).draw();
+                            tableNewExemption.column(19).search("N", true, false).draw();
+
+                            tableNewExemption.column(5).visible(false);
+                            tableNewExemption.column(6).visible(true);
+                            tableNewExemption.column(7).visible(true);
                         }
                         else if ($select.val() == "saveZero") {
                             tableNewExemption.column(5).search("").draw();
                             tableNewExemption.column(4).search("Y", true, false).draw();
-                            tableNewExemption.column(17).search("N", true, false).draw();
+                            tableNewExemption.column(19).search("N", true, false).draw();
                         }
                         else if ($select.val() == "negativeSave") {
                             tableNewExemption.column(5).search("").draw();
                             tableNewExemption.column(4).search("Y", true, false).draw();
-                            tableNewExemption.column(17).search("Y", true, false).draw();
+                            tableNewExemption.column(19).search("Y", true, false).draw();
 
                         }
                         else {
                             tableNewExemption.column(5).search("").draw();
                             tableNewExemption.column(4).search("").draw();
-                            tableNewExemption.column(17).search("").draw();
+                            tableNewExemption.column(19).search("").draw();
                         }
 
                         //console.log(data);
@@ -1320,6 +1358,10 @@
 
                         if (response.CategoryId == 1 || response.TypeId == 2) { // if appliance, remove jewelry size
                             response.SizeArray.length = 2;
+                        }
+
+                        if (response.O3REG < response.O3POS) { // Validation for Negative Save
+                            response.TypeId = 1;
                         }
 
                         // Populate dropdown options from the server response
@@ -1968,9 +2010,16 @@
             }
         });
         $('#new-exemption-table thead').on('click', '.filter-icon', function (event) {
+            
             event.stopPropagation(); // Prevent event propagation
 
-            var columnIndex = $(this).closest('th').index() + 1;
+            var columnName = "Dept";
+            var table = $('#new-exemption-table').DataTable();
+            var columnIndex = table.column(function (idx, data, node) {
+                return table.column(idx).header().textContent.trim() === columnName ? true : false;
+            }).index();
+
+            //var columnIndex = $(this).closest('th').index() + 2;
             var column = tableNewExemption.column(columnIndex);
 
             // Clear existing filter input

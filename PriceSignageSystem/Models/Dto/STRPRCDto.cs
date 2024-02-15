@@ -108,6 +108,8 @@ namespace PriceSignageSystem.Models.Dto
         public List<STRPRCDto> ExcemptionList { get; set; }
         public List<ItemQueueDto> Histories { get; set; } = new List<ItemQueueDto>();
         public string Remarks { get; set; }
+        public decimal ZeroInvDCOnHand { get; set; }
+        public decimal ZeroInvInTransit { get; set; }
     }
 
 }

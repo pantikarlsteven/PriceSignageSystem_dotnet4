@@ -454,6 +454,19 @@ namespace PriceSignageSystem.Controllers
 
             data.LatestDate = result.LatestDate;
             data.WithInventoryList = rawData.Where(a => a.HasInventory == "Y" && a.IsExemp == "N").ToList();
+
+            var NegativeSaveList = rawData.Where(a => a.NegativeSave == "Y" && a.IBHAND > 0).ToList(); // Negative save with positive onhand
+
+            //foreach(var item in NegativeSaveList)
+            //{
+            //    if(item.O3REG < item.O3POS)
+            //    {
+            //        item.O3REG = item.O3POS;
+            //        item.TypeId = ReportConstants.Type.Regular;
+            //    }
+            //}
+
+            data.WithInventoryList.AddRange(NegativeSaveList);
             //data.WithoutInventoryList = rawData.Where(a => a.HasInventory == "" || a.IsExemp == "Y").ToList();
             data.ExcemptionList = rawData.Where(a => a.HasInventory == "" || a.IsExemp == "Y").ToList();
 

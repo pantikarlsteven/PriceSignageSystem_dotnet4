@@ -352,6 +352,8 @@ namespace PriceSignageSystem.Models.Repository
                         NegativeSave = reader["NegativeSave"].ToString(),
                         O3TYPE = reader["O3TYPE"].ToString(),
                         IBHAND = (decimal)reader["IBHAND"],
+                        ZeroInvDCOnHand = (decimal)reader["ZeroInvDCOnHand"],
+                        ZeroInvInTransit = (decimal)reader["ZeroInvInTransit"]
                     };
 
                     if ((decimal)reader["O3RSDT"] == startDate)
@@ -1033,8 +1035,7 @@ namespace PriceSignageSystem.Models.Repository
                         IsPrinted = reader["IsPrintedYN"].ToString(),
                         WithInventory = reader["INVYN"].ToString(),
                         IsExemption = reader["IsExemp"].ToString(),
-                        ExemptionType = reader["ExemptionType"].ToString(),
-
+                        ExemptionType = reader["ExemptionType"].ToString()
                     };
 
                     data.Add(record);
