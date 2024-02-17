@@ -9,6 +9,7 @@ namespace PriceSignageSystem.Models.Dto
 {
     public class STRPRCDto
     {
+        public int Id { get; set; }
         [DisplayFormat(DataFormatString = "{0:0}")]
         public decimal O3LOC { get; set; }
         [Display(Name = "SKU")]
@@ -103,6 +104,8 @@ namespace PriceSignageSystem.Models.Dto
         public string IsExemp { get; set; }
         public string NegativeSave { get; set; }
         public decimal IBHAND { get; set; }
+        public int StoreID { get; set; }
+        public string StoreIDs { get; set; }
         public List<STRPRCDto> WithInventoryList { get; set; }
         public List<STRPRCDto> WithoutInventoryList { get; set; }
         public List<STRPRCDto> ExcemptionList { get; set; }

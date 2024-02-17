@@ -70,16 +70,7 @@ namespace PriceSignageSystem.Controllers
 
             var test = _sTRPRCRepository.GetReportData(11656);
             data.country_img = test.country_img;
-            //data.O3FNAM = data.O3FNAM + " TESTING ONLY TESTING ONLY";
-            //data.O3IDSC = data.O3IDSC + " TESTING ONLY TESTING ONLY";
-            //data.O3MODL = test1.O3MODL;
-            //data.O3LONG = test1.O3LONG;
             data.O3SDSC = _sTRPRCRepository.GetSubClassDescription(o3sku);
-            //data.O3IDSC  = "ELECTRIC KETTLE 2L";
-            //data.O3MODL = "KJK2-1";
-            //data.TypeId = 1;
-            //data.CategoryId = 1;
-            //data.O3POS = 110000;
             var dataTable = ConversionHelper.ConvertObjectToDataTable(data);
 
             ReportDocument report = new ReportDocument();

@@ -372,25 +372,8 @@ namespace PriceSignageSystem.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<JsonResult> CheckSTRPRCUpdates()
+        public JsonResult CheckSTRPRCUpdates()
         {
-            var data151 = _sTRPRCRepository.CheckSTRPRCUpdates(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
-            if (DateTime.TryParseExact(data151.ToString(), "yyMMdd", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
-            {
-                // Now you can format the parsed date as needed
-                if (parsedDate.Date != DateTime.Now.Date)
-                    return Json(false, JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                Console.WriteLine("Invalid date format");
-                await _sTRPRCRepository.UpdateSTRPRC151(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
-                return Json(false, JsonRequestBehavior.AllowGet);
-            }
-
-            //if (date.DateUpdated.Date != DateTime.Now.Date)
-            //    return Json(false, JsonRequestBehavior.AllowGet);
-
             return Json(true, JsonRequestBehavior.AllowGet);
         }
 
@@ -448,11 +431,11 @@ namespace PriceSignageSystem.Controllers
         [HttpPost]
         public async Task<ActionResult> LoadPCA()
         {
-            var result = _sTRPRCRepository.GetLatestUpdate();
+            var latestDate = DateTime.Now;
             var data = new STRPRCDto();
-            var rawData = await _sTRPRCRepository.GetDataByStartDate(result.LatestDate);
+            var rawData = await _sTRPRCRepository.GetDataByStartDate(decimal.Parse(latestDate.ToString("yyMMdd")));
 
-            data.LatestDate = result.LatestDate;
+            data.LatestDate = decimal.Parse(latestDate.ToString("yyMMdd"));
             data.WithInventoryList = rawData.Where(a => a.HasInventory == "Y" && a.IsExemp == "N").ToList();
             //data.WithoutInventoryList = rawData.Where(a => a.HasInventory == "" || a.IsExemp == "Y").ToList();
             data.ExcemptionList = rawData.Where(a => a.HasInventory == "" || a.IsExemp == "Y").ToList();

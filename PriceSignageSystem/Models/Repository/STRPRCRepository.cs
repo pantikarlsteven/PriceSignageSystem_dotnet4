@@ -309,7 +309,7 @@ namespace PriceSignageSystem.Models.Repository
 
         public async Task<List<STRPRCDto>> GetDataByStartDate(decimal startDate)
         {
-            var sp = "sp_GettmpData";
+            var sp = "sp_GetExemptions";
             var data = new List<STRPRCDto>();
             var store = int.Parse(ConfigurationManager.AppSettings["StoreID"]);
             // Set up the connection and command
@@ -320,9 +320,6 @@ namespace PriceSignageSystem.Models.Repository
                 command.CommandTimeout = commandTimeoutInSeconds;
 
                 // Add parameters if required
-                command.Parameters.AddWithValue("@O3SDT", startDate);
-                command.Parameters.AddWithValue("@O3LOC", store);
-
                 // Open the connection and execute the command
                 connection.Open();
                 SqlDataReader reader = await command.ExecuteReaderAsync();
@@ -332,7 +329,8 @@ namespace PriceSignageSystem.Models.Repository
                 {
                     var record = new STRPRCDto
                     {
-                        IsPrinted = reader["IsPrinted"].ToString(),
+                        Id = (int)reader["Id"],
+                        IsPrinted = "0",
                         O3SKU = (decimal)reader["O3SKU"],
                         O3UPC = (decimal)reader["O3UPC"],
                         O3IDSC = reader["O3IDSC"].ToString(),
@@ -352,6 +350,7 @@ namespace PriceSignageSystem.Models.Repository
                         NegativeSave = reader["NegativeSave"].ToString(),
                         O3TYPE = reader["O3TYPE"].ToString(),
                         IBHAND = (decimal)reader["IBHAND"],
+                        StoreIDs = reader["StoreIDs"].ToString(),
                     };
 
                     if ((decimal)reader["O3RSDT"] == startDate)

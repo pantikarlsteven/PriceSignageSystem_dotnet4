@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
@@ -48,8 +49,6 @@
     </style>
 </head>
 <body>
-    <iframe id="reportIframe" src="" style="display: none;"></iframe>
-
     <div class="content-wrapper bg-white px-3">
         <br />
         <div class="content">
@@ -58,33 +57,7 @@
                     <img class="" src="~/Content/Images/loading.gif" alt="Loading" style="max-width:350px;" />
                 </div>
             </div>
-
-            <div class="overlay-wrapper" id="inventoryUpdateLoadingContainer" style="display:none;">
-                <div class="overlay" style="background-color: rgba(0, 0, 0, 0.59); z-index: 999999;">
-                    <img class="" src="~/Content/Images/loading.gif" alt="Loading" style="max-width:350px;" />
-                    <p style="position: absolute; margin-top: 250px; background-color: #dee2e6; padding: 10px;">Updating Inventory. Please Wait...</p>
-                </div>
-            </div>
         </div>
-        <center>
-            @if (TempData["RegistrationSuccessMessage"] != null)
-            {
-                <div class="modal" tabindex="-1" role="dialog" id="registrationSuccessModal">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Registration Successful</h5>
-                            </div>
-                            <div class="modal-body">
-                                <div class="alert alert-success">
-                                    @TempData["RegistrationSuccessMessage"]
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
-        </center>
         <br />
         <div class="row d-flex justify-content-center">
             <div class="col-md-2">
@@ -93,125 +66,42 @@
                     <input type="text" id="startDate" name="startDate" class="form-control" disabled />
                 </div>
             </div>
-            <div class="col-md-2">
-                <div class="form-group">
-                    <label class="text-white d-sm-none d-lg-block">_</label>
-                    <button class="btn btn-primary" id="updateInventory">Update Inventory</button>
-                </div>
-            </div>
         </div>
         <div class="row">
             <div class="card elevation-3  px-0 ">
-
-                <!-- Nav tabs -->
-                <ul class="nav nav-tabs bg-primary1 px-2 pt-2">
-                    <li class="nav-item">
-                        <a class="nav-link nav-link-tab active" style="color:white;" data-toggle="tab" href="#with-inventory">With Inventory</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link nav-link-tab" style="color:white;" data-toggle="tab" href="#new-exemption">Exemption</a>
-                    </li>
-                    @*<li class="nav-item">
-                            <a class="nav-link" style="color:white;" data-toggle="tab" href="#excemption">Exemption</a>
-                        </li>*@
-                </ul>
-
-                <!-- Tab panes -->
-                <div class="tab-content">
-                    <div id="with-inventory" class="tab-pane active mx-2">
-                        <h3 class="text-center mt-2">With Inventory</h3>
-                        <table id="with-inventory-table" class="table table-sm table-hover" style="width: 100%; text-align: center;">
-                            <thead style="background-color: #1C3766;" class="text-white">
-                                <tr>
-                                    <th><input type="checkbox" id="selectAllWith" /></th>
-                                    <th>-</th>
-                                    <th>Printed?</th>
-                                    <th>SKU</th>
-                                    <th>UPC</th>
-                                    <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
-                                    <th>Reg Price</th>
-                                    <th>Current Price</th>
-                                    <th>Date Start</th>
-                                    <th>Date End</th>
-                                    <th>Type</th>
-                                    <th>Size</th>
-                                    <th>Category</th>
-                                    <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
-                                    <th>Type</th>
-                                    <th>Reverted?</th>
-                                    <th><button class="printAllBtnWith btn btn-secondary px-3">Print Selected</button></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="17" style="text-align: center;">Please enter start date</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div id="new-exemption" class="tab-pane fade mx-2">
-                        <h3 class="text-center mt-2">Exemption</h3>
-                        <table id="new-exemption-table" class="table table-sm table-hover" style="width: 100%; text-align: center;">
-                            <thead style="background-color: #1C3766;" class="text-white">
-                                <tr>
-                                    <th><input type="checkbox" id="selectAllNewExemption" /></th>
-                                    <th>-</th>
-                                    <th>Printed?</th>
-                                    <th>SKU</th>
-                                    <th>IsExemp</th>
-                                    <th style="width: 150px;">On Hand</th>
-                                    <th>UPC</th>
-                                    <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
-                                    <th>Reg Price</th>
-                                    <th>Current Price</th>
-                                    <th>Date Start</th>
-                                    <th>Date End</th>
-                                    <th>Type</th>
-                                    <th>Size</th>
-                                    <th>Category</th>
-                                    <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
-                                    <th>Reverted?</th>
-                                    <th>Negative Save</th>
-                                    @*<th><button class="printAllBtnNewExemption btn btn-secondary px-3">Print Selected</button></th>*@
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="17" style="text-align: center;">Please enter start date</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div id="excemption" class="tab-pane fade mx-2">
-                        <h3 class="text-center mt-2">Exemption</h3>
-                        <table id="excemption-table" class="table table-sm table-hover" style="width: 100%; text-align: center;">
-                            <thead style="background-color: #1C3766;" class="text-white">
-                                <tr>
-                                    <th><input type="checkbox" id="selectAllExcemption" /></th>
-                                    <th>-</th>
-                                    @*<th>Printed?</th>*@
-                                    <th>SKU</th>
-                                    <th>UPC</th>
-                                    <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
-                                    <th>Reg Price</th>
-                                    <th>Current Price</th>
-                                    <th>Date Start</th>
-                                    <th>Date End</th>
-                                    <th>Type</th>
-                                    <th>Size</th>
-                                    <th>Category</th>
-                                    <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
-                                    <th>Reverted?</th>
-                                    @*<th><button class="printAllBtnExcemption btn btn-secondary px-3">Print Selected</button></th>*@
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="14" style="text-align: center;">Please enter start date</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div id="new-exemption" class="tab-pane active mx-2">
+                    <h3 class="text-center mt-2">Exemptions</h3>
+                    <table id="new-exemption-table" class="table table-sm table-hover" style="width: 100%; text-align: center;">
+                        <thead style="background-color: #1C3766;" class="text-white">
+                            <tr>
+                                <th><input type="checkbox" id="selectAllNewExemption" /></th>
+                                <th>-</th>
+                                <th>Printed?</th>
+                                <th>SKU</th>
+                                <th>IsExemp</th>
+                                <th style="width: 150px;">On Hand</th>
+                                <th>UPC</th>
+                                <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
+                                <th>Reg Price</th>
+                                <th>Current Price</th>
+                                <th>Date Start</th>
+                                <th>Date End</th>
+                                <th>Type</th>
+                                <th>Size</th>
+                                <th>Category</th>
+                                <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
+                                <th>Reverted?</th>
+                                <th>Negative Save</th>
+                                <th>Store IDs</th>
+                                @*<th><button class="printAllBtnNewExemption btn btn-secondary px-3">Print Selected</button></th>*@
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="19" style="text-align: center;">--No Data--</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -227,20 +117,9 @@
 <script>
     $(document).ready(function () {
 
-
         InitLoad();
 
-        $('#registrationSuccessModal').modal('show');
-        setTimeout(function () {
-            $('#registrationSuccessModal').modal('hide');
-            setTimeout(function () {
-                $('#registrationSuccessModal').remove();
-            }, 500);
-        }, 2000);
-
-        var tableWith = null;
         var tableNewExemption = null;
-        var tableExcemption = null;
 
         function InitLoad() {
             $("#loadingContainer").show();
@@ -262,33 +141,11 @@
                     const formattedDate = `20${year}-${month}-${day}`;
                     $('#startDate').val(formattedDate);
 
-                    if (tableWith !== null) {
-                        tableWith.destroy();
-                    }
                     if (tableNewExemption !== null) {
                         tableNewExemption.destroy();
                     }
-                    if (tableExcemption !== null) {
-                        tableExcemption.destroy();
-                    }
 
-                    RenderDatatableWithInv(data.WithInventoryList);
                     RenderDatatableNewExemptionInv(data.ExcemptionList);
-                    //RenderDatatableExcemption(data.ExcemptionList);
-
-                    if ('@User.IsInRole("Merchandiser")' == 'True') {
-
-                        // DISABLED BUTTONS IF ROLE = MERCHANDISER
-                        var buttonsprintAll = document.querySelectorAll(".printAllBtnWith, .printAllBtnNewExemption, .printAllBtnExcemption");
-                        buttonsprintAll.forEach(function (button) {
-                            button.disabled = true;
-                        });
-
-                        var buttonsEachRow = document.querySelectorAll('.printBtn');
-                        buttonsEachRow.forEach(function (button) {
-                            button.disabled = true;
-                        });
-                    }
 
                     $("#loadingContainer").hide();
                 },
@@ -298,340 +155,6 @@
             });
         }
 
-        $("#updateInventory").on("click", function () {
-            $("#inventoryUpdateLoadingContainer").show();
-
-            $.ajax({
-                url: '/STRPRC/GetLatestInventory',
-                type: "POST",
-                dataType: 'json',
-                success: function (data) {
-                    if (!data)
-                        alert("Updating inventory has been failed");
-                    else
-                        location.reload();
-
-                    $("#inventoryUpdateLoadingContainer").hide();
-                },
-                error: function (error) {
-                    alert(error);
-                    $("#inventoryUpdateLoadingContainer").hide();
-                }
-            });
-        });
-
-        function RenderDatatableWithInv(data) {
-            tableWith = $('#with-inventory-table').DataTable({
-                scrollY: 500,
-                scrollX: true,
-                scroller: true,
-                deferRender: true,
-                lengthMenu: [
-                    [10, 25, 50, -1],
-                    [10, 25, 50, 'All']
-                ],
-                pageLength: -1,
-                data: data,
-                columnDefs: [
-                    { targets: [0, 1, 13, 15], orderable: false },
-                ],
-                columns: [
-                    {
-                        data: null, orderable: false, searchable: false, render: function (data) {
-                            return '<input type="checkbox" class="rowCheckboxWith" data-id="' + data.O3SKU + '">';
-                        }
-                    },
-                    {
-                        "className": 'details-control',
-                        "orderable": false,
-                        "data": null,
-                        "defaultContent": '',
-                        "render": function () {
-                            return '<i class="fa-solid fa-square-caret-down"></i>';
-                        },
-                        width: "15px"
-                    },
-                    {
-                        data: 'IsPrinted', name: 'IsPrinted', render: function (data) {
-                            if (data === 'Yes') {
-                                return '<span style="color: green;">' + data + '</span>';
-                            } else {
-                                return '<span style="color: red;">' + data + '</span>';
-                            }
-                        }
-                    },
-                    { data: 'O3SKU', name: 'O3SKU' },
-                    { data: 'O3UPC', name: 'O3UPC' },
-                    { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap' },
-                    { data: 'O3REG', name: 'O3REG' },
-                    { data: 'O3POS', name: 'O3POS' },
-                    { data: 'O3SDT', name: 'O3SDT' },
-                    { data: 'O3EDT', name: 'O3EDT' },
-                    { data: 'TypeName', name: 'TypeName' },
-                    { data: 'SizeName', name: 'SizeName' },
-                    { data: 'CategoryName', name: 'CategoryName' },
-                    { data: 'DepartmentName', name: 'DepartmentName' },
-                    { data: 'O3TYPE', name: 'O3TYPE' },
-                    { data: 'IsReverted', name: 'IsReverted' },
-                    {
-                        data: null,
-                        render: function (data, type, row) {
-                            return '<button class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '">Print</button>';
-                        }
-                    }
-                ],
-                "dom": '<"top"lfB>rt<"bottom"ip>',
-
-                initComplete: function () {
-                    var date = $('#startDate').val();
-                    // Create the button element
-                    var $button = $('<button>')
-                        .addClass('custom-button')
-                        .text('Export')
-                        .on('click', function () {
-                            window.location.href = '/STRPRC/ExportDataTableToExcel?tab=WithInventory&date=' + date;
-                        });
-
-                    var $queueButton = $('<button>')
-                        .addClass('queueBtnWith btn btn-warning')
-                        .text('Queue Selected')
-                        .on('click', function () {
-
-                        });
-
-                    var dataTableWrapper = $('#with-inventory-table').closest('.dataTables_wrapper');
-                    dataTableWrapper.find('.dataTables_filter').before($button);
-                    dataTableWrapper.find('.dataTables_filter').before($queueButton);
-
-                }
-            });
-
-            $('.queueBtnWith').click(function () {
-                var selectedRows = [];
-                $('.rowCheckboxWith:checked').each(function () {
-                    var rowId = $(this).data('id');
-                    selectedRows.push(rowId);
-                });
-
-                if (selectedRows.length > 0) {
-                    console.log('Selected Row IDs:', selectedRows);
-
-                    //// Build the HTML for the dropdowns
-                    //var dropdownHtml = '<div class="form-row">' +
-                    //    '<div class="form-group row col-12">' +
-                    //    '<label class="col-sm-2 col-form-label" for="sizeDropdown">Size:</label>' +
-                    //    '<select class="col-sm-9  ml-3 form-control" id="sizeDropdown">' +
-                    //    '<option value="1">Whole</option>' +
-                    //    '<option value="2">1/8</option>' +
-                    //    '<option value="3">Jewelry</option>' +
-                    //    '</select>' +
-                    //    '</div>' +
-                    //    '</div>';
-                    //// Build the HTML for the print button
-                    //var buttonHtml = '<button id="queueSelectedButtonWith" class="btn btn-primary">Queue</button>' +
-                    //    '<button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancel</button>';
-                    //// Create the modal content
-                    //var modalContent = '<div class="modal-dialog modal-sm modal-dialog-centered">' +
-                    //    '<div class="modal-content">' +
-                    //    '<div class="modal-header">' +
-                    //    '<h5 class="modal-title">Queue</h5>' +
-                    //    '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
-                    //    '<span aria-hidden="true">&times;</span>' +
-                    //    '</button>' +
-                    //    '</div>' +
-                    //    '<div class="modal-body">' +
-                    //    dropdownHtml +
-                    //    '</div>' +
-                    //    '<div class="modal-footer">' +
-                    //    buttonHtml +
-                    //    '</div>' +
-                    //    '</div>' +
-                    //    '</div>';
-                    //// Remove any existing modals
-                    //$('#modalView').remove();
-
-                    //// Append the modal to the body
-                    //$('body').append('<div id="modalView" class="modal">' + modalContent + '</div>');
-
-                    //// Show the modal with fade-in effect from top
-                    //$('#modalView').modal({
-                    //    show: true,
-                    //    backdrop: false,
-                    //    keyboard: false
-                    //});
-
-                    //// Set default values for the dropdowns
-                    //$('#sizeDropdown').val(2); // 1/8
-
-                    $("#loadingContainer").show();
-                    $.ajax({
-                        url: '/Queue/QueueSelectedItems',
-                        type: "POST",
-                        data: { /*sizeId: sizeId,*/ selectedRows: selectedRows },
-                        success: function (data) {
-                            $("#loadingContainer").hide();
-                            // Show success modal
-                            var modalHtml = '<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">';
-                            modalHtml += '<div class="modal-dialog" role="document">';
-                            modalHtml += '<div class="modal-content">';
-                            modalHtml += '<div class="modal-header">';
-                            modalHtml += '<h5 class="modal-title" id="successModalLabel">Success!</h5>';
-                            modalHtml += '<button type="button" class="close" data-dismiss="modal" aria-label="Close">';
-                            modalHtml += '<span aria-hidden="true">&times;</span>';
-                            modalHtml += '</button>';
-                            modalHtml += '</div>';
-                            modalHtml += '<div class="modal-body">';
-                            modalHtml += 'Item queued successfully!';
-                            modalHtml += '</div>';
-                            modalHtml += '<div class="modal-footer">';
-                            modalHtml += '<button type="button" class="qOkBtn btn btn-primary" data-dismiss="modal">OK</button>';
-                            modalHtml += '</div>';
-                            modalHtml += '</div>';
-                            modalHtml += '</div>';
-                            modalHtml += '</div>';
-
-                            $('body').append(modalHtml);
-                            $('#successModal').modal('show');
-                        },
-                        error: function (error) {
-
-                        }
-                    })
-
-                    $('#modalView').modal('hide');
-                    $('input[type="checkbox"]').prop('checked', false);
-
-                } else {
-                    alert('Please select items to queue.');
-                }
-            });
-
-            $('#selectAllWith').on('change', function () {
-                var isChecked = $(this).is(':checked');
-                $('.rowCheckboxWith').prop('checked', isChecked);
-            });
-
-
-            $('.printAllBtnWith').on('click', function () {
-
-                var selectedRows = [];
-                $('.rowCheckboxWith:checked').each(function () {
-                    var rowId = $(this).data('id');
-                    selectedRows.push(rowId);
-                });
-
-                if (selectedRows.length > 0) {
-                    console.log('Selected Row IDs:', selectedRows);
-
-                    // Build the HTML for the dropdowns
-                    var dropdownHtml = '<div class="form-row">' +
-                        '<div class="form-group row col-12">' +
-                        '<label class="col-sm-2 col-form-label" for="sizeDropdown">Size:</label>' +
-                        '<select class="col-sm-9  ml-3 form-control" id="sizeDropdown">' +
-                        '<option value="1">Whole</option>' +
-                        '<option value="2">1/8</option>' +
-                        '<option value="3">Jewelry</option>' +
-                        '</select>' +
-                        '</div>' +
-                        '</div>';
-                    // Build the HTML for the print button
-                    var buttonHtml = '<button id="printSelectedButtonWith" class="btn btn-primary">Print</button>' +
-                        '<button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancel</button>';
-                    // Create the modal content
-                    var modalContent = '<div class="modal-dialog modal-sm modal-dialog-centered">' +
-                        '<div class="modal-content">' +
-                        '<div class="modal-header">' +
-                        '<h5 class="modal-title">Print Report</h5>' +
-                        '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
-                        '<span aria-hidden="true">&times;</span>' +
-                        '</button>' +
-                        '</div>' +
-                        '<div class="modal-body">' +
-                        dropdownHtml +
-                        '</div>' +
-                        '<div class="modal-footer">' +
-                        buttonHtml +
-                        '</div>' +
-                        '</div>' +
-                        '</div>';
-                    // Remove any existing modals
-                    $('#modalView').remove();
-
-                    // Append the modal to the body
-                    $('body').append('<div id="modalView" class="modal">' + modalContent + '</div>');
-
-                    // Show the modal with fade-in effect from top
-                    $('#modalView').modal({
-                        show: true,
-                        backdrop: false,
-                        keyboard: false
-                    });
-
-                    // Set default values for the dropdowns
-                    $('#sizeDropdown').val(2); // 1/8
-
-
-                    //Start for print preview multiple report
-                    // PRINT MULTIPLE
-                    $('#printSelectedButtonWith').click(function () {
-                        $("#loadingContainer").show();
-                        var sizeId = $('#sizeDropdown').val();
-
-                        $("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "");
-                        var reportIframe = document.getElementById("reportIframe");
-                        if (reportIframe) {
-                            $('.rowCheckboxWith:checked').each(function () {
-                                var row = $(this).closest('tr');
-                                var table = row.closest('table');
-                                var rowIndex = table.DataTable().row(row).index();
-                                var specificRow = $('#with-inventory-table tbody tr:eq(' + rowIndex + ')');
-                                specificRow.find('td:eq(2)').text("Yes");
-                                specificRow.find('td:eq(2)').css('color', 'green');
-
-                            });
-                            reportIframe.onload = function () {
-                                $("#loadingContainer").hide();
-
-                                reportIframe.contentWindow.print();
-                            };
-                            reportIframe.src = $("#reportIframe").attr("src");
-                        }
-                        $('#modalView').modal('hide');
-                        $('input[type="checkbox"]').prop('checked', false);
-
-                        //var url = "/Report/PrintPreviewMultipleReport?selectedIds=" + encodeURIComponent(selectedRows.join(',')) + "&sizeId=" + sizeId + "";
-                        //$.ajax({
-                        //    url: url,
-                        //    type: 'GET',
-                        //    data: { selectedIds: selectedRows, sizeId: sizeId },
-                        //    success: function (data) {
-                        //        if (!data)
-                        //            alert("Error in printing.");
-                        //        else {
-                        //            $('.rowCheckboxWith:checked').each(function () {
-                        //                var row = $(this).closest('tr');
-                        //                var table = row.closest('table');
-                        //                var rowIndex = table.DataTable().row(row).index();
-                        //                var specificRow = $('#with-inventory-table tbody tr:eq(' + rowIndex + ')');
-                        //                specificRow.find('td:eq(2)').text("Yes");
-                        //                specificRow.find('td:eq(2)').css('color', 'green');
-
-                        //            });
-                        //        }
-
-                        //    }
-                        //});
-
-                        //$("#loadingContainer").hide();
-                        //$('#modalView').modal('hide');
-                        //$('input[type="checkbox"]').prop('checked', false);
-                    });
-
-                } else {
-                    alert('Please select items to print.');
-                }
-            });
-        }
         function RenderDatatableNewExemptionInv(data) {
             tableNewExemption = $('#new-exemption-table').DataTable({
                 scrollY: 500,
@@ -645,9 +168,9 @@
                 pageLength: -1,
                 data: data,
                 columnDefs: [
-                    { targets: [4,17], visible: false },
+                    { targets: [2,4,17], visible: false },
                     //{ targets: [4,5], visible: false },
-                    { targets: [0, 1, 11, 12, 13], orderable: false },
+                    { targets: [0, 1], orderable: false },
                 ],
                 columns: [
                     {
@@ -698,6 +221,7 @@
                     { data: 'DepartmentName', name: 'DepartmentName' },
                     { data: 'IsReverted', name: 'IsReverted' },
                     { data: 'NegativeSave', name: 'NegativeSave' },
+                    { data: 'StoreIDs', name: 'StoreIDs' },
                     //{
                     //    data: null,
                     //    render: function (data, type, row) {
@@ -726,27 +250,15 @@
 
                     // Add options to the select element
                     var $All = $('<option>').text('All').val('all');
-                    var $negativeInventory = $('<option>').text('Negative Inventory').val('negative');
-                    var $zeroInventory = $('<option>').text('Zero Inventory').val('zero');
                     var $saveZero = $('<option>').text('Save Zero').val('saveZero');
                     var $negativeSave = $('<option>').text('Negative Save').val('negativeSave');
 
                     // Append options to the select element
-                    $select.append($All, $negativeInventory, $zeroInventory, $saveZero, $negativeSave);
+                    $select.append($All, $saveZero, $negativeSave);
 
                     $select.on('change', function () {
                         // Log the selected value to the console
-                        if ($select.val() == "negative") {
-                            tableNewExemption.column(5).search("^-\\d", true, false).draw();
-                            tableNewExemption.column(4).search("").draw();
-                            tableNewExemption.column(17).search("N", true, false).draw();
-                        }
-                        else if ($select.val() == "zero") {
-                            tableNewExemption.column(5).search("^0$",true,false).draw();
-                            tableNewExemption.column(4).search("").draw();
-                            tableNewExemption.column(17).search("N", true, false).draw();
-                        }
-                        else if ($select.val() == "saveZero") {
+                        if ($select.val() == "saveZero") {
                             tableNewExemption.column(5).search("").draw();
                             tableNewExemption.column(4).search("Y", true, false).draw();
                             tableNewExemption.column(17).search("N", true, false).draw();
@@ -1004,209 +516,6 @@
                 }
             });
         }
-        function RenderDatatableExcemption(data) {
-            tableExcemption = $('#excemption-table').DataTable({
-                scrollY: 500,
-                scrollX: true,
-                scroller: true,
-                deferRender: true,
-                lengthMenu: [
-                    [10, 25, 50, -1],
-                    [10, 25, 50, 'All']
-                ],
-                pageLength: -1,
-                data: data,
-                columnDefs: [
-                    { targets: [0, 1, 11, 12, 13], orderable: false },
-                ],
-                columns: [
-                    {
-                        data: null, orderable: false, searchable: false, render: function (data) {
-                            return '<input type="checkbox" class="rowCheckboxExcemption" data-id="' + data.O3SKU + '">';
-                        }
-                    },
-                    {
-                        "className": 'details-control',
-                        "orderable": false,
-                        "data": null,
-                        "defaultContent": '',
-                        "render": function () {
-                            return '<i class="fa-solid fa-square-caret-down"></i>';
-                        },
-                        width: "15px"
-                    },
-                    //{
-                    //    data: 'IsPrinted', name: 'IsPrinted', render: function (data) {
-                    //        if (data === 'Yes') {
-                    //            return '<span style="color: green;">' + data + '</span>';
-                    //        } else {
-                    //            return '<span style="color: red;">' + data + '</span>';
-                    //        }
-                    //    }
-                    //},
-                    { data: 'O3SKU', name: 'O3SKU' },
-                    { data: 'O3UPC', name: 'O3UPC' },
-                    { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap' },
-                    { data: 'O3REG', name: 'O3REG' },
-                    { data: 'O3POS', name: 'O3POS' },
-                    { data: 'O3SDT', name: 'O3SDT' },
-                    { data: 'O3EDT', name: 'O3EDT' },
-                    { data: 'TypeName', name: 'TypeName' },
-                    { data: 'SizeName', name: 'SizeName' },
-                    { data: 'CategoryName', name: 'CategoryName' },
-                    { data: 'DepartmentName', name: 'DepartmentName' },
-                    { data: 'IsReverted', name: 'IsReverted' }
-                    //{
-                    //    data: null,
-                    //    render: function (data, type, row) {
-                    //        return '<button class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '">Print</button>';
-                    //    }
-                    //}
-                ],
-                "dom": '<"top"lfB>rt<"bottom"ip>',
-
-                initComplete: function () {
-                    var date = $('#startDate').val();
-                    // Create the button element
-                    var $button = $('<button>')
-                        .addClass('custom-button')
-                        .text('Export')
-                        .on('click', function () {
-                            window.location.href = '/STRPRC/ExportDataTableToExcel?tab=Exemption&date=' + date;
-                        });
-
-                    var dataTableWrapper = $('#excemption-table').closest('.dataTables_wrapper');
-                    dataTableWrapper.find('.dataTables_filter').before($button);
-                }
-            });
-
-
-            $('#selectAllExcemption').on('change', function () {
-                var isChecked = $(this).is(':checked');
-                $('.rowCheckboxExcemption').prop('checked', isChecked);
-            });
-
-            $('.printAllBtnExcemption').on('click', function () {
-
-                var selectedRows = [];
-                $('.rowCheckboxExcemption:checked').each(function () {
-                    var rowId = $(this).data('id');
-                    selectedRows.push(rowId);
-                });
-
-                if (selectedRows.length > 0) {
-                    console.log('Selected Row IDs:', selectedRows);
-
-                    // Build the HTML for the dropdowns
-                    var dropdownHtml = '<div class="form-row">' +
-                        '<div class="form-group row col-12">' +
-                        '<label class="col-sm-2 col-form-label" for="sizeDropdown">Size:</label>' +
-                        '<select class="col-sm-9  ml-3 form-control" id="sizeDropdown">' +
-                        '<option value="1">Whole</option>' +
-                        '<option value="2">1/8</option>' +
-                        '<option value="3">Jewelry</option>' +
-                        '</select>' +
-                        '</div>' +
-                        '</div>';
-                    // Build the HTML for the print button
-                    var buttonHtml = '<button id="printSelectedButtonExcemption" class="btn btn-primary">Print</button>' +
-                        '<button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancel</button>';
-                    // Create the modal content
-                    var modalContent = '<div class="modal-dialog modal-sm modal-dialog-centered">' +
-                        '<div class="modal-content">' +
-                        '<div class="modal-header">' +
-                        '<h5 class="modal-title">Print Report</h5>' +
-                        '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
-                        '<span aria-hidden="true">&times;</span>' +
-                        '</button>' +
-                        '</div>' +
-                        '<div class="modal-body">' +
-                        dropdownHtml +
-                        '</div>' +
-                        '<div class="modal-footer">' +
-                        buttonHtml +
-                        '</div>' +
-                        '</div>' +
-                        '</div>';
-                    // Remove any existing modals
-                    $('#modalView').remove();
-
-                    // Append the modal to the body
-                    $('body').append('<div id="modalView" class="modal">' + modalContent + '</div>');
-
-                    // Show the modal with fade-in effect from top
-                    $('#modalView').modal({
-                        show: true,
-                        backdrop: false,
-                        keyboard: false
-                    });
-
-                    // Set default values for the dropdowns
-                    $('#sizeDropdown').val(2); // 1/8
-
-
-                    //Start for print preview multiple report
-                    // PRINT MULTIPLE
-                    $('#printSelectedButtonExcemption').click(function () {
-                        $("#loadingContainer").show();
-                        var sizeId = $('#sizeDropdown').val();
-
-                        $("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "");
-
-                        var reportIframe = document.getElementById("reportIframe");
-                        if (reportIframe) {
-                            $('.rowCheckboxWith:checked').each(function () {
-                                var row = $(this).closest('tr');
-                                var table = row.closest('table');
-                                var rowIndex = table.DataTable().row(row).index();
-                                var specificRow = $('#with-inventory-table tbody tr:eq(' + rowIndex + ')');
-                                specificRow.find('td:eq(2)').text("Yes");
-                                specificRow.find('td:eq(2)').css('color', 'green');
-
-                            });
-                            reportIframe.onload = function () {
-                                $("#loadingContainer").hide();
-                                reportIframe.contentWindow.print();
-                            };
-                            reportIframe.src = $("#reportIframe").attr("src");
-                        }
-                        $('#modalView').modal('hide');
-                        $('input[type="checkbox"]').prop('checked', false);
-
-                        //var url = "/Report/PrintPreviewMultipleReport?selectedIds=" + encodeURIComponent(selectedRows.join(',')) + "&sizeId=" + sizeId + "";
-                        //$.ajax({
-                        //    url: url,
-                        //    type: 'GET',
-                        //    data: { selectedIds: selectedRows, sizeId: sizeId },
-                        //    success: function (data) {
-                        //        if (!data)
-                        //            alert("Error in printing.");
-                        //        else {
-                        //            $('.rowCheckboxExcemption:checked').each(function () {
-                        //                var row = $(this).closest('tr');
-                        //                var table = row.closest('table');
-                        //                var rowIndex = table.DataTable().row(row).index();
-                        //                var specificRow = $('#excemption-table tbody tr:eq(' + rowIndex + ')');
-                        //                specificRow.find('td:eq(2)').text("Yes");
-                        //                specificRow.find('td:eq(2)').css('color', 'green');
-
-                        //            });
-                        //        }
-
-
-                        //    }
-                        //});
-                        //$("#loadingContainer").hide();
-                        //$('#modalView').modal('hide');
-                        //$('input[type="checkbox"]').prop('checked', false);
-
-                    });
-
-                } else {
-                    alert('Please select items to print.');
-                }
-            });
-        }
         function format(d) {
             // `d` is the original data object for the row
             return '<div class="row">' +
@@ -1266,188 +575,6 @@
                 '</div>'
                 '</div>';
         }
-
-        $("#searchBtn").click(function () {
-            $("#loadingContainer").show();
-            var startDate = $("#startDate").val();
-
-                $.ajax({
-                    url: '/STRPRC/GetPCAByDate',
-                    type: "POST",
-                    dataType: 'json',
-                    beforeSend: function (xhr) {
-                        // Add the 'Accept-Encoding' header to let the server know that we can handle Gzip compression
-                        xhr.setRequestHeader('Accept-Encoding', 'gzip');
-                    },
-                    data: {startDate : startDate},
-                    success: function (data) {
-
-                        if (tableWith !== null) {
-                            tableWith.destroy();
-                        }
-                        if (tableNewExemption !== null) {
-                            tableNewExemption.destroy();
-                        }
-                        if (tableExcemption !== null) {
-                            tableExcemption.destroy();
-                        }
-
-                        RenderDatatableWithInv(data.WithInventoryList);
-                        RenderDatatableNewExemptionInv(data.ExcemptionList);
-                        //RenderDatatableExcemption(data.ExcemptionList);
-
-                        $("#loadingContainer").hide();
-                    },
-                    error: function (error) {
-                        $("#loadingContainer").hide();
-                    }
-                });
-        });
-
-        $('#with-inventory-table').on('click', '.printBtn', function () {
-            var rowId = $(this).data('id');
-
-            $.ajax({
-                url: '@Url.Action("GetDataBySKU", "STRPRC")' ,
-                type: 'POST',
-                data: { id: rowId },
-                success: function (response) {
-
-                        // Create the dropdown options
-                        var sizeOptions = '';
-                        var typeOptions = '';
-                        var categoryOptions = '';
-
-                        if (response.CategoryId == 1 || response.TypeId == 2) { // if appliance, remove jewelry size
-                            response.SizeArray.length = 2;
-                        }
-
-                        // Populate dropdown options from the server response
-                        for (var i = 0; i < response.SizeArray.length; i++) {
-                            var option = response.SizeArray[i];
-                            sizeOptions += '<option value="' + option.Id + '">' + option.Name + '</option>';
-                        }
-                        for (var i = 0; i < response.TypeArray.length; i++) {
-                            var option = response.TypeArray[i];
-                            typeOptions += '<option value="' + option.Id + '">' + option.Name + '</option>';
-                        }
-                        for (var i = 0; i < response.CategoryArray.length; i++) {
-                            var option = response.CategoryArray[i];
-                            categoryOptions += '<option value="' + option.Id + '">' + option.Name + '</option>';
-                        }
-
-                        // Build the HTML for the dropdowns
-                        var dropdownHtml = '<div class="form-row">' +
-                            '<div class="form-group row col-12">' +
-                            '<label class="col-sm-2 col-form-label" for="sizeDropdown">Size:</label>' +
-                            '<select class="col-sm-9  ml-3 form-control" id="sizeDropdown" >' +
-                            sizeOptions +
-                            '</select>' +
-                            '</div>' +
-                            '<div class="form-group row col-md-12">' +
-                            '<label class="col-sm-2 col-form-label" for="typeDropdown">Type:</label>' +
-                            '<select class="col-sm-9  ml-3 form-control" id="typeDropdown" disabled>' +
-                            typeOptions +
-                            '</select>' +
-                            '</div>' +
-                            '</div>' +
-                            '<div class="form-row">' +
-                            '<div class="form-group row col-md-12">' +
-                            '<label class="col-sm-2 col-form-label" for="categoryDropdown">Category:</label>' +
-                            '<select class="col-sm-9  ml-3 form-control" id="categoryDropdown" disabled>' +
-                            categoryOptions +
-                            '</select>' +
-                            '</div>' +
-                            '</div>';
-
-                        // Build the HTML for the print button
-                        var buttonHtml = '<button id="printButton" class="btn btn-primary">Print</button>' +
-                                         '<button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancel</button>';
-
-
-                        // Create the modal content
-                        var modalContent = '<div class="modal-dialog modal-dialog-centered">' +
-                            '<div class="modal-content">' +
-                            '<div class="modal-header">' +
-                            '<h5 class="modal-title">Print Report</h5>' +
-                            '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
-                            '<span aria-hidden="true">&times;</span>' +
-                            '</button>' +
-                            '</div>' +
-                            '<div class="modal-body">' +
-                            dropdownHtml +
-                            '</div>' +
-                            '<div class="modal-footer">' +
-                            buttonHtml +
-                            '</div>' +
-                            '</div>' +
-                            '</div>';
-
-                        // Remove any existing modals
-                        $('#modalView').remove();
-
-                        // Append the modal to the body
-                        $('body').append('<div id="modalView" class="modal">' + modalContent + '</div>');
-
-                        // Show the modal with fade-in effect from top
-                        $('#modalView').modal({
-                            show: true,
-                            backdrop: false,
-                            keyboard: false
-                        });
-
-                        // Set default values for the dropdowns
-                        $('#sizeDropdown').val(response.SizeId);
-                        $('#typeDropdown').val(response.TypeId);
-                        $('#categoryDropdown').val(response.CategoryId);
-
-                        //Start for print preview single report
-                        // Print button click event handler
-                    $('#printButton').click(function () {
-                            $("#loadingContainer").show();
-                            response.SizeId = $('#sizeDropdown').val();
-                            response.TypeId = $('#typeDropdown').val();
-                            response.CategoryId = $('#categoryDropdown').val();
-                            response.O3IDSC = "";
-                            response.O3LONG = "";
-                            response.O3FNAM = "";
-                            response.O3MODL = "";
-                            $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(response));
-                            var reportIframe = document.getElementById("reportIframe");
-                            if (reportIframe) {
-                                reportIframe.onload = function () {
-                                    $("#loadingContainer").hide();
-                                    reportIframe.contentWindow.print();
-                                };
-                                reportIframe.src = $("#reportIframe").attr("src");
-                            }
-                            $('#modalView').modal('hide');
-                            var cell = tableWith.cell({ row: 0, column: 2 });
-                            cell.data('Yes');
-                            tableWith.draw();
-
-                            @*$.ajax({
-                                url: '@Url.Action("PrintPreviewSingleReport", "Report")',
-                                type: 'GET',
-                                data: { response: JSON.stringify(response)},
-                                success: function (data) {
-                                    if (!data)
-                                        alert("Error in printing.");
-                                    else {
-                                        var specificRow = $('#with-inventory-table tbody tr:eq(' + rowIndex + ')');
-                                        specificRow.find('td:eq(2)').text("Yes");
-                                        specificRow.find('td:eq(2)').css('color', 'green');
-                                    }
-
-                                }
-                            });
-                        $("#loadingContainer").hide();
-                        $('#modalView').modal('hide');*@
-                        });
-                        //End for print preview single report
-                }
-            });
-        });
 
         $('#new-exemption-table').on('click', '.printBtn', function () {
             var rowId = $(this).data('id');
@@ -1589,147 +716,6 @@
             });
         });
 
-        $('#excemption-table').on('click', '.printBtn', function () {
-            var rowId = $(this).data('id');
-
-            $.ajax({
-                url: '@Url.Action("GetDataBySKU", "STRPRC")' ,
-                type: 'POST',
-                data: { id: rowId },
-                success: function (response) {
-
-                        // Create the dropdown options
-                        var sizeOptions = '';
-                        var typeOptions = '';
-                        var categoryOptions = '';
-
-                        // Populate dropdown options from the server response
-                        for (var i = 0; i < response.SizeArray.length; i++) {
-                            var option = response.SizeArray[i];
-                            sizeOptions += '<option value="' + option.Id + '">' + option.Name + '</option>';
-                        }
-                        for (var i = 0; i < response.TypeArray.length; i++) {
-                            var option = response.TypeArray[i];
-                            typeOptions += '<option value="' + option.Id + '">' + option.Name + '</option>';
-                        }
-                        for (var i = 0; i < response.CategoryArray.length; i++) {
-                            var option = response.CategoryArray[i];
-                            categoryOptions += '<option value="' + option.Id + '">' + option.Name + '</option>';
-                        }
-
-                        // Build the HTML for the dropdowns
-                        var dropdownHtml = '<div class="form-row">' +
-                            '<div class="form-group row col-12">' +
-                            '<label class="col-sm-2 col-form-label" for="sizeDropdown">Size:</label>' +
-                            '<select class="col-sm-9  ml-3 form-control" id="sizeDropdown" >' +
-                            sizeOptions +
-                            '</select>' +
-                            '</div>' +
-                            '<div class="form-group row col-md-12">' +
-                            '<label class="col-sm-2 col-form-label" for="typeDropdown">Type:</label>' +
-                            '<select class="col-sm-9  ml-3 form-control" id="typeDropdown">' +
-                            typeOptions +
-                            '</select>' +
-                            '</div>' +
-                            '</div>' +
-                            '<div class="form-row">' +
-                            '<div class="form-group row col-md-12">' +
-                            '<label class="col-sm-2 col-form-label" for="categoryDropdown">Category:</label>' +
-                            '<select class="col-sm-9  ml-3 form-control" id="categoryDropdown">' +
-                            categoryOptions +
-                            '</select>' +
-                            '</div>' +
-                            '</div>';
-
-                        // Build the HTML for the print button
-                        var buttonHtml = '<button id="printButton" class="btn btn-primary">Print</button>' +
-                        '<button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancel</button>';
-
-                        // Create the modal content
-                        var modalContent = '<div class="modal-dialog modal-dialog-centered">' +
-                            '<div class="modal-content">' +
-                            '<div class="modal-header">' +
-                            '<h5 class="modal-title">Print Report</h5>' +
-                            '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
-                            '<span aria-hidden="true">&times;</span>' +
-                            '</button>' +
-                            '</div>' +
-                            '<div class="modal-body">' +
-                            dropdownHtml +
-                            '</div>' +
-                            '<div class="modal-footer">' +
-                            buttonHtml +
-                            '</div>' +
-                            '</div>' +
-                            '</div>';
-
-                        // Remove any existing modals
-                        $('#modalView').remove();
-
-                        // Append the modal to the body
-                        $('body').append('<div id="modalView" class="modal">' + modalContent + '</div>');
-
-                        // Show the modal with fade-in effect from top
-                        $('#modalView').modal({
-                            show: true,
-                            backdrop: false,
-                            keyboard: false
-                        });
-
-                        // Set default values for the dropdowns
-                        $('#sizeDropdown').val(response.SizeId);
-                        $('#typeDropdown').val(response.TypeId);
-                        $('#categoryDropdown').val(response.CategoryId);
-
-                        //Start for print preview single report
-                        // Print button click event handler
-                    $('#printButton').click(function () {
-                            $("#loadingContainer").show();
-
-                            response.SizeId = $('#sizeDropdown').val();
-                            response.TypeId = $('#typeDropdown').val();
-                            response.CategoryId = $('#categoryDropdown').val();
-                            response.O3IDSC = "";
-                            response.O3LONG = "";
-                            response.O3FNAM = "";
-                            response.O3MODL = "";
-                            $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(response));
-                            var reportIframe = document.getElementById("reportIframe");
-                            if (reportIframe) {
-                                reportIframe.onload = function () {
-                                    $("#loadingContainer").hide();
-                                    reportIframe.contentWindow.print();
-                                };
-                                reportIframe.src = $("#reportIframe").attr("src");
-                            }
-                            $('#modalView').modal('hide');
-                            var cell = tableExcemption.cell({ row: 0, column: 2 });
-                            cell.data('Yes');
-                            tableExcemption.draw();
-
-                             @*$.ajax({
-                                url: '@Url.Action("PrintPreviewSingleReport", "Report")',
-                                type: 'GET',
-                                data: { response: JSON.stringify(response)},
-                                success: function (data) {
-                                    if (!data)
-                                        alert("Error in printing.");
-                                    else {
-                                        var specificRow = $('#excemption-table tbody tr:eq(' + rowIndex + ')');
-                                        specificRow.find('td:eq(2)').text("Yes");
-                                        specificRow.find('td:eq(2)').css('color', 'green');
-                                    }
-
-                                }
-                            });
-                        $("#loadingContainer").hide();
-                        $('#modalView').modal('hide');*@
-                        });
-                        //End for print preview single report
-                }
-            });
-        });
-
         // Close the modal
         $(document).on('click', '.modal .close', function () {
             $('#modalView').modal('hide');
@@ -1738,39 +724,6 @@
         // Remove the modal from the DOM when it is hidden
         $(document).on('hidden.bs.modal', '.modal', function () {
             $(this).remove();
-        });
-
-        // collapsible for with inv
-        $('#with-inventory-table tbody').on('click', 'td.details-control', function () {
-
-            var tr = $(this).closest('tr');
-            var tdi = tr.find("i.fa-solid");
-            var row = tableWith.row(tr);
-
-            if (row.child.isShown()) {
-                // This row is already open - close it
-                row.child.hide();
-                tr.removeClass('shown');
-                tdi.first().removeClass('fa-solid fa-square-caret-up');
-                tdi.first().addClass('fa-solid fa-square-caret-down');
-            }
-            else {
-                // Open this row
-                $.ajax({
-                    url: '/STRPRC/GetSKUDetails',
-                    type: "GET",
-                    data: { O3SKU: row.data().O3SKU },
-                    success: function (response)
-                    {
-                        row.child(format(response)).show();
-                        tr.addClass('shown');
-                        tdi.first().removeClass('fa-solid fa-square-caret-down');
-                        tdi.first().addClass('fa-solid fa-square-caret-up');
-                    }
-                });
-
-
-            }
         });
 
         // collapsible for NewExemption inv
@@ -1804,153 +757,6 @@
             }
         });
 
-        // collapsible for excemption
-        $('#excemption-table tbody').on('click', 'td.details-control', function () {
-
-            var tr = $(this).closest('tr');
-            var tdi = tr.find("i.fa-solid");
-            var row = tableExcemption.row(tr);
-
-            if (row.child.isShown()) {
-                // This row is already open - close it
-                row.child.hide();
-                tr.removeClass('shown');
-                tdi.first().removeClass('fa-solid fa-square-caret-up');
-                tdi.first().addClass('fa-solid fa-square-caret-down');
-            }
-            else {
-                // Open this row
-                $.ajax({
-                    url: '/STRPRC/GetSKUDetails',
-                    type: "GET",
-                    data: { O3SKU: row.data().O3SKU },
-                    success: function (response) {
-                        row.child(format(response)).show();
-                        tr.addClass('shown');
-                        tdi.first().removeClass('fa-solid fa-square-caret-down');
-                        tdi.first().addClass('fa-solid fa-square-caret-up');
-                    }
-                });
-            }
-        });
-
-        // FILTER DEPT FOR WITH TAB
-        var dialog = $('<div>').dialog({
-            autoOpen: false,
-            modal: true,
-            resizable: false,
-            width: 300,
-            position: { my: 'center', at: 'center', of: window },
-            open: function (event, ui) {
-                $('.ui-widget-overlay').bind('click', function () {
-                    dialog.dialog('close');
-                });
-            },
-            close: function (event, ui) {
-                $('.ui-widget-overlay').unbind('click');
-            }
-        });
-        $('#with-inventory-table thead').on('click', '.filter-icon', function (event) {
-            event.stopPropagation(); // Prevent event propagation
-
-            var columnIndex = $(this).closest('th').index();
-            var column = tableWith.column(columnIndex);
-
-            // Clear existing filter input
-            dialog.dialog('option', 'title', 'Filter Dept').html('');
-
-            // Get distinct values of the column
-            var distinctValues = column.data().unique().toArray();
-
-            // Retrieve previously selected values (if any)
-
-            var selectedValues = column.search().split('|').map(function (value) {
-                return value.trim();
-            });
-
-            if (selectedValues.length > 0) {
-                selectedValues[0] = selectedValues[0].replace(/^\^\(/, '');
-                var lastIndex = selectedValues.length - 1;
-                selectedValues[lastIndex] = selectedValues[lastIndex].replace(/\)\$$/, '');
-            }
-
-
-            // Create checkboxes for each distinct value
-            var scrollableDiv = $('<div>').css({
-                'max-height': '200px', // Set a maximum height for scrolling
-                'overflow-y': 'scroll' // Enable vertical scrolling
-            });
-
-            var checkboxContainer = $('<div>').css({
-                'display': 'flex',
-                'flex-direction': 'column', // Align checkboxes vertically
-                'gap': '5px' // Add spacing between checkboxes
-            });
-
-            // Add "Select All" checkbox
-            var selectAllCheckbox = $('<input type="checkbox">').addClass('filter-checkbox select-all-checkbox');
-            var selectAllLabel = $('<label>').text('Select All').prepend(selectAllCheckbox);
-            checkboxContainer.prepend(selectAllLabel);
-
-            for (var i = 0; i < distinctValues.length; i++) {
-                var checkbox = $('<input type="checkbox">').addClass('filter-checkbox').val(distinctValues[i]);
-                if (selectedValues.includes(distinctValues[i])) {
-                    checkbox.prop('checked', true);
-                }
-                var label = $('<label>').text(distinctValues[i]).prepend(checkbox);
-                checkboxContainer.append(label);
-            }
-
-            scrollableDiv.append(checkboxContainer);
-            dialog.append(scrollableDiv);
-
-            // Create button container for the "OK" and "Clear All Checkboxes" buttons
-            var buttonContainer = $('<div>').css('display', 'flex');
-            dialog.append(buttonContainer);
-
-            // Create "Clear All Checkboxes" button
-            var clearButton = $('<button>').text('Clear All').addClass('btn btn-secondary btn-sm').css('background-color', 'gray').click(function () {
-                $('.filter-checkbox').prop('checked', false);
-                applyFilter();
-            });
-            buttonContainer.append(clearButton);
-
-            // Create "OK" button
-            var okButton = $('<button>').text('OK').addClass('btn btn-secondary btn-sm ml-2').css('background-color', 'orange').click(function () {
-                applyFilter();
-                dialog.dialog('close');
-            });
-            buttonContainer.append(okButton);
-
-            // Apply filter when checkbox state changes
-            $('.filter-checkbox').on('change', applyFilter);
-
-            // Toggle state of all checkboxes when "Select All" checkbox changes
-            selectAllCheckbox.click(function () {
-                $('.filter-checkbox').not('.select-all-checkbox').prop('checked', $(this).prop('checked'));
-            });
-
-            // Open the filter dialog
-            dialog.dialog('open');
-
-            function applyFilter() {
-                var selectedValues = $('.filter-checkbox:checked').map(function () {
-                    return $(this).val();
-                }).get();
-
-                if (selectedValues.length === 0) {
-                    column.search('').draw();
-                } else {
-                    // Use a regular expression to match exact values
-                    var regex = '^(' + selectedValues.map(function (value) {
-                        return $.fn.dataTable.util.escapeRegex(value);
-                    }).join('|') + ')$';
-
-                    column.search(regex, true, false).draw();
-                }
-            }
-        });
-
         // FOR NewExemption TAB
         var dialog2 = $('<div>').dialog({
             autoOpen: false,
@@ -1970,7 +776,7 @@
         $('#new-exemption-table thead').on('click', '.filter-icon', function (event) {
             event.stopPropagation(); // Prevent event propagation
 
-            var columnIndex = $(this).closest('th').index() + 1;
+            var columnIndex = $(this).closest('th').index() + 2;
             var column = tableNewExemption.column(columnIndex);
 
             // Clear existing filter input
@@ -2066,159 +872,6 @@
                     column.search(regex, true, false).draw();
                 }
             }
-        });
-
-        // FOR EXCEMPTION TAB
-        var dialog3 = $('<div>').dialog({
-            autoOpen: false,
-            modal: true,
-            resizable: false,
-            width: 300,
-            position: { my: 'center', at: 'center', of: window },
-            open: function (event, ui) {
-                $('.ui-widget-overlay').bind('click', function () {
-                    dialog3.dialog('close');
-                });
-            },
-            close: function (event, ui) {
-                $('.ui-widget-overlay').unbind('click');
-            }
-        });
-        $('#excemption-table thead').on('click', '.filter-icon', function (event) {
-            event.stopPropagation(); // Prevent event propagation
-
-            var columnIndex = $(this).closest('th').index();
-            var column = tableExcemption.column(columnIndex);
-
-            // Clear existing filter input
-            dialog3.dialog('option', 'title', 'Filter Dept').html('');
-
-            // Get distinct values of the column
-            var distinctValues = column.data().unique().toArray();
-
-            // Retrieve previously selected values (if any)
-
-            var selectedValues = column.search().split('|').map(function (value) {
-                return value.trim();
-            });
-
-            if (selectedValues.length > 0) {
-                selectedValues[0] = selectedValues[0].replace(/^\^\(/, '');
-                var lastIndex = selectedValues.length - 1;
-                selectedValues[lastIndex] = selectedValues[lastIndex].replace(/\)\$$/, '');
-            }
-
-
-            // Create checkboxes for each distinct value
-            var scrollableDiv = $('<div>').css({
-                'max-height': '200px', // Set a maximum height for scrolling
-                'overflow-y': 'scroll' // Enable vertical scrolling
-            });
-
-            var checkboxContainer = $('<div>').css({
-                'display': 'flex',
-                'flex-direction': 'column', // Align checkboxes vertically
-                'gap': '5px' // Add spacing between checkboxes
-            });
-
-            // Add "Select All" checkbox
-            var selectAllCheckbox = $('<input type="checkbox">').addClass('filter-checkbox select-all-checkbox');
-            var selectAllLabel = $('<label>').text('Select All').prepend(selectAllCheckbox);
-            checkboxContainer.prepend(selectAllLabel);
-
-            for (var i = 0; i < distinctValues.length; i++) {
-                var checkbox = $('<input type="checkbox">').addClass('filter-checkbox').val(distinctValues[i]);
-                if (selectedValues.includes(distinctValues[i])) {
-                    checkbox.prop('checked', true);
-                }
-                var label = $('<label>').text(distinctValues[i]).prepend(checkbox);
-                checkboxContainer.append(label);
-            }
-
-            scrollableDiv.append(checkboxContainer);
-            dialog3.append(scrollableDiv);
-
-            // Create button container for the "OK" and "Clear All Checkboxes" buttons
-            var buttonContainer = $('<div>').css('display', 'flex');
-            dialog3.append(buttonContainer);
-
-            // Create "Clear All Checkboxes" button
-            var clearButton = $('<button>').text('Clear All').addClass('btn btn-secondary btn-sm').css('background-color', 'gray').click(function () {
-                $('.filter-checkbox').prop('checked', false);
-                applyFilter();
-            });
-            buttonContainer.append(clearButton);
-
-            // Create "OK" button
-            var okButton = $('<button>').text('OK').addClass('btn btn-secondary btn-sm ml-2').css('background-color', 'orange').click(function () {
-                applyFilter();
-                dialog3.dialog('close');
-            });
-            buttonContainer.append(okButton);
-
-            // Apply filter when checkbox state changes
-            $('.filter-checkbox').on('change', applyFilter);
-
-            // Toggle state of all checkboxes when "Select All" checkbox changes
-            selectAllCheckbox.click(function () {
-                $('.filter-checkbox').not('.select-all-checkbox').prop('checked', $(this).prop('checked'));
-            });
-
-            // Open the filter dialog
-            dialog3.dialog('open');
-
-            function applyFilter() {
-                var selectedValues = $('.filter-checkbox:checked').map(function () {
-                    return $(this).val();
-                }).get();
-
-                if (selectedValues.length === 0) {
-                    column.search('').draw();
-                } else {
-                    // Use a regular expression to match exact values
-                    var regex = '^(' + selectedValues.map(function (value) {
-                        return $.fn.dataTable.util.escapeRegex(value);
-                    }).join('|') + ')$';
-
-                    column.search(regex, true, false).draw();
-                }
-            }
-        });
-
-        // FIX DT HEADER MISALIGNMENT FOR NewExemption INV TAB
-        $('.nav-link-tab').click(function () {
-            // Remove 'active' class from all tabs
-            $('.nav-link-tab').removeClass('active');
-
-            // Add 'active' class to the clicked tab
-            $(this).addClass('active');
-
-            // Get the href value of the clicked tab
-            var tabId = $(this).attr('href');
-
-            // Show the corresponding tab content
-            $('.tab-pane').removeClass('show active');
-            $(tabId).addClass('show active');
-
-            // Get the current active tab
-            var currentActiveTab = $('.nav-link-tab.active').attr('href');
-            if (currentActiveTab == "#new-exemption") {
-                tableNewExemption.draw();
-            }
-            else if (currentActiveTab == "#with-inventory") {
-                tableWith.draw();
-            }
-            else if (currentActiveTab == "#excemption") {
-                tableExcemption.draw();
-            }
-
-        });
-
-        // FIX DT HEADER MISALIGNMENT FOR NewExemption INV TAB
-        $('.nav-link-burger').click(function () {
-            setTimeout(function () {
-                $("a.nav-link-tab.active").trigger("click");
-            }, 300);
         });
 
         $("#startDate").datepicker({

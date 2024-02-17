@@ -88,42 +88,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    <script>
-        InitLoad();
-
-        function InitLoad() {
-            //Check strprc updates
-            $("#loadingCheckingSTRPRCUpdate").show();
-            $.ajax({
-                url: '/STRPRC/CheckSTRPRCUpdates',
-                type: "GET",
-                success: function (isUpdated) {
-                    console.log(isUpdated);
-                    $("#loadingCheckingSTRPRCUpdate").hide();
-                    if (!isUpdated) {
-                        $("#loadingSTRPRCUpdate").show();
-                        $.ajax({
-                            url: '/STRPRC/UpdatePCA',
-                            type: "POST",
-                            dataType: 'json',
-                            beforeSend: function (xhr) {
-                                // Add the 'Accept-Encoding' header to let the server know that we can handle Gzip compression
-                                xhr.setRequestHeader('Accept-Encoding', 'gzip');
-                            },
-                            success: function (data) {
-                                //window.location.href = "/strprc/pca";
-                                $("#loadingSTRPRCUpdate").hide();
-                            },
-                            error: function (error) {
-                                $("#loadingSTRPRCUpdate").hide();
-                            }
-                        });
-                    }
-                }
-            });
-        }
-    </script>
 </body>
 </html>
 
