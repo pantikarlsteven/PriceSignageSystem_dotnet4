@@ -137,30 +137,38 @@
                                 </p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="@Url.Action("Index","Scan")" id="scanLink" class="nav-link text-white">
+                                <img style="width: 22px;" src="~/Content/Images/printer.png" />
+                                <p>
+                                    QR Scan
+                                </p>
+                            </a>
+                        </li>
                         @*@if (User.IsInRole("Administrator/Manager"))*@
                         <!--{-->
-                            <!-- Registers -->
-                            <!--<li class="nav-item has-treeview">
-                                <a href="#" class="nav-link text-white">
-                                    <img style="width: 24px;" src="~/Content/Images/register.png" />
-                                    <p>
-                                        Registers
-                                        <i class="right fas fa-angle-left"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item">
-                                        <a href="@Url.Action("CountryIndex", "Registers")" id="countryLink" class="nav-link text-white">
-                                            <img style="width: 16px;" src="~/Content/Images/country.png" />
-                                            <p>
-                                                Country
-                                            </p>
-                                        </a>
-                                    </li>-->
-                                    <!-- Add more submenu items if needed -->
-                                <!--</ul>
-                            </li>
-                        }-->
+                        <!-- Registers -->
+                        <!--<li class="nav-item has-treeview">
+        <a href="#" class="nav-link text-white">
+            <img style="width: 24px;" src="~/Content/Images/register.png" />
+            <p>
+                Registers
+                <i class="right fas fa-angle-left"></i>
+            </p>
+        </a>
+        <ul class="nav nav-treeview">
+            <li class="nav-item">
+                <a href="@Url.Action("CountryIndex", "Registers")" id="countryLink" class="nav-link text-white">
+                    <img style="width: 16px;" src="~/Content/Images/country.png" />
+                    <p>
+                        Country
+                    </p>
+                </a>
+            </li>-->
+                        <!-- Add more submenu items if needed -->
+                        <!--</ul>
+        </li>
+    }-->
                     </ul>
                 </nav>
             </div>

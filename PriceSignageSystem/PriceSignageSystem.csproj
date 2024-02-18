@@ -293,6 +293,7 @@
     <Compile Include="Controllers\QueueController.cs" />
     <Compile Include="Controllers\RegistersController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
+    <Compile Include="Controllers\ScanController.cs" />
     <Compile Include="Controllers\STRPRCController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -562,6 +563,7 @@
     <Content Include="Views\STRPRC\_HistoryPartialView.cshtml" />
     <Content Include="Views\Registers\CountryIndex.cshtml" />
     <Content Include="Views\Account\UpdatePassword.cshtml" />
+    <Content Include="Views\Scan\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
