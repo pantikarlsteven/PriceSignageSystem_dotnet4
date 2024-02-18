@@ -18,6 +18,7 @@ namespace PriceSignageSystem.Models.Repository
         private readonly ApplicationDbContext _db;
         private readonly string connectionString;
         private readonly string connectionString151;
+        private readonly string connStringCentralizedExemptions;
         private readonly int commandTimeoutInSeconds;
 
         public STRPRCRepository(ApplicationDbContext db)
@@ -25,6 +26,7 @@ namespace PriceSignageSystem.Models.Repository
             _db = db;
             connectionString = ConfigurationManager.ConnectionStrings["MyConnectionString"].ConnectionString;
             connectionString151 = ConfigurationManager.ConnectionStrings["MyConnectionString151"].ConnectionString;
+            connStringCentralizedExemptions = ConfigurationManager.ConnectionStrings["ConnStringCentralizedExemptions"].ConnectionString;
             commandTimeoutInSeconds = 180;
 
         }
@@ -378,6 +380,126 @@ namespace PriceSignageSystem.Models.Repository
 
         }
 
+        public async Task<bool> UpdateCentralizedExemptions(decimal startDate)
+        {
+            try
+            {
+                var sp = "sp_GettmpData";
+                var data = new List<CentralizedSTRPRCDto>();
+                var store = int.Parse(ConfigurationManager.AppSettings["StoreID"]);
+                // Set up the connection and command
+                using (var connection = new SqlConnection(connectionString))
+                using (var command = new SqlCommand(sp, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandTimeout = commandTimeoutInSeconds;
+
+                    // Add parameters if required
+                    command.Parameters.AddWithValue("@O3SDT", startDate);
+                    command.Parameters.AddWithValue("@O3LOC", store);
+
+                    // Open the connection and execute the command
+                    connection.Open();
+                    SqlDataReader reader = await command.ExecuteReaderAsync();
+
+                    // Process the result set
+                    while (reader.Read())
+                    {
+                        var record = new CentralizedSTRPRCDto
+                        {
+                            IsPrinted = reader["IsPrinted"].ToString(),
+                            O3SKU = (decimal)reader["O3SKU"],
+                            O3UPC = (decimal)reader["O3UPC"],
+                            O3IDSC = reader["O3IDSC"].ToString(),
+                            O3REG = (decimal)reader["O3REG"],
+                            O3POS = (decimal)reader["O3POS"],
+                            O3SDT = (decimal)reader["O3SDT"],
+                            O3EDT = (decimal)reader["O3EDT"],
+                            O3RSDT = (decimal)reader["O3RSDT"],
+                            O3REDT = (decimal)reader["O3REDT"],
+                            TypeId = (int)reader["TypeId"],
+                            SizeId = (int)reader["SizeId"],
+                            CategoryId = (int)reader["CategoryId"],
+                            DepartmentName = reader["DPTNAM"].ToString(),
+                            IsReverted = reader["O3FLAG1"].ToString(),
+                            HasInventory = reader["INV2"].ToString(),
+                            IsExemp = reader["IsExemp"].ToString(),
+                            NegativeSave = reader["NegativeSave"].ToString(),
+                            O3TYPE = reader["O3TYPE"].ToString(),
+                            IBHAND = (decimal)reader["IBHAND"],
+                            ZeroInvDCOnHand = (decimal)reader["ZeroInvDCOnHand"],
+                            ZeroInvInTransit = (decimal)reader["ZeroInvInTransit"],
+                            StoreID = store
+                        };
+
+                        if ((decimal)reader["O3RSDT"] == startDate)
+                        {
+                            if ((int)reader["TypeId"] == ReportConstants.Type.Regular)
+                            {
+                                record.O3SDT = (decimal)reader["O3RSDT"];
+                                record.O3EDT = (decimal)reader["O3REDT"];
+                            }
+                            else continue;
+                        }
+
+                        data.Add(record);
+                    }
+
+                    // Close the reader and connection
+                    reader.Close();
+                    connection.Close();
+                }
+
+                var exemptions = data.Where(w => w.IsExemp == "Y").ToList();
+                string insertQuery = "INSERT INTO Exemptions (IsPrinted, O3SKU, O3UPC, O3IDSC, o3type, O3REG," +
+                                    " O3POS, O3SDT, O3EDT, O3RSDT, O3REDT, TypeId, SizeId, CategoryId, DPTNAM, O3FLAG1, INV2, IsExemp, NegativeSave, IBHAND, StoreID) " +
+                                     "VALUES (@IsPrinted, @O3SKU, @O3UPC, @O3IDSC, @o3type, @O3REG," +
+                                    " @O3POS, @O3SDT, @O3EDT, @O3RSDT, @O3REDT, @TypeId, @SizeId, @CategoryId, @DPTNAM, @O3FLAG1, @INV2, @IsExemp, @NegativeSave, @IBHAND, @StoreID)";
+
+                using (SqlConnection connection = new SqlConnection(connStringCentralizedExemptions))
+                {
+                    connection.Open();
+
+                    foreach (var exemption in exemptions)
+                    {
+                        using (SqlCommand command = new SqlCommand(insertQuery, connection))
+                        {
+                            // Add parameters to the SQL command
+                            command.Parameters.AddWithValue("@IsPrinted", 0);
+                            command.Parameters.AddWithValue("@O3SKU", exemption.O3SKU);
+                            command.Parameters.AddWithValue("@O3UPC", exemption.O3UPC);
+                            command.Parameters.AddWithValue("@O3IDSC", exemption.O3IDSC);
+                            command.Parameters.AddWithValue("@o3type", exemption.O3TYPE);
+                            command.Parameters.AddWithValue("@O3REG", exemption.O3REG);
+                            command.Parameters.AddWithValue("@O3POS", exemption.O3POS);
+                            command.Parameters.AddWithValue("@O3SDT", exemption.O3SDT);
+                            command.Parameters.AddWithValue("@O3EDT", exemption.O3EDT);
+                            command.Parameters.AddWithValue("@O3RSDT", exemption.O3RSDT);
+                            command.Parameters.AddWithValue("@O3REDT", exemption.O3REDT);
+                            command.Parameters.AddWithValue("@TypeId", exemption.TypeId);
+                            command.Parameters.AddWithValue("@SizeId", exemption.SizeId);
+                            command.Parameters.AddWithValue("@CategoryId", exemption.CategoryId);
+                            command.Parameters.AddWithValue("@DPTNAM", exemption.DepartmentName);
+                            command.Parameters.AddWithValue("@O3FLAG1", exemption.IsReverted);
+                            command.Parameters.AddWithValue("@INV2", exemption.HasInventory);
+                            command.Parameters.AddWithValue("@IsExemp", exemption.IsExemp);
+                            command.Parameters.AddWithValue("@NegativeSave", exemption.NegativeSave);
+                            command.Parameters.AddWithValue("@IBHAND", exemption.IBHAND);
+                            command.Parameters.AddWithValue("@StoreID", exemption.StoreID);
+
+                            // Execute the SQL command
+                            command.ExecuteNonQuery();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public STRPRCDto GetSKUDetails(decimal O3SKU)
         {
             var sp = "sp_GetSKUDetails";
@@ -661,23 +783,6 @@ namespace PriceSignageSystem.Models.Repository
             decimal date = 0;
             try
             {
-                //using (SqlConnection connection = new SqlConnection(connectionString151))
-                //{
-                //    using (SqlCommand command = new SqlCommand("sp_GetSTRPRC", connection))
-                //    {
-                //        command.CommandType = CommandType.StoredProcedure;
-                //        command.CommandTimeout = commandTimeoutInSeconds;
-                //        // Add any required parameters to the command if needed
-                //        command.Parameters.AddWithValue("@Store", storeId);
-
-                //        connection.Open();
-
-                //        // Execute the command and retrieve the result count
-                //        command.ExecuteNonQuery();
-                //        connection.Close();
-                //    }
-                //}
-
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     using (SqlCommand command = new SqlCommand("sp_GetLatestSTRPRCTable", connection))

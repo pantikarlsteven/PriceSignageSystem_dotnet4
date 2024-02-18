@@ -37,6 +37,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -426,6 +427,7 @@
     <Compile Include="Models\Dto\ExportPCAExemptionDto.cs" />
     <Compile Include="Models\Dto\ItemQueueDto.cs" />
     <Compile Include="Models\Dto\ReportDto.cs" />
+    <Compile Include="Models\Dto\CentralizedSTRPRCDto.cs" />
     <Compile Include="Models\Dto\STRPRCDto.cs" />
     <Compile Include="Models\Dto\STRPRCLogDto.cs" />
     <Compile Include="Models\Dto\UserDto.cs" />

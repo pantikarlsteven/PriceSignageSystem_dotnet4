@@ -67,72 +67,16 @@ namespace PriceSignageSystem.Controllers
             data.IsSLBrand = textToImage.IsSLBrand;
             data.IsSLDescription = textToImage.IsSLDescription;
             data.IsBiggerFont = textToImage.IsBiggerFont;
-
-            var test = _sTRPRCRepository.GetReportData(11656);
-            data.country_img = test.country_img;
-            //data.O3FNAM = data.O3FNAM + " TESTING ONLY TESTING ONLY";
-            //data.O3IDSC = data.O3IDSC + " TESTING ONLY TESTING ONLY";
-            //data.O3MODL = test1.O3MODL;
-            //data.O3LONG = test1.O3LONG;
             data.O3SDSC = _sTRPRCRepository.GetSubClassDescription(o3sku);
-            //data.O3IDSC  = "ELECTRIC KETTLE 2L";
-            //data.O3MODL = "KJK2-1";
-            //data.TypeId = 1;
-            //data.CategoryId = 1;
-            //data.O3POS = 110000;
             var dataTable = ConversionHelper.ConvertObjectToDataTable(data);
 
             ReportDocument report = new ReportDocument();
             report.Load(Server.MapPath("~/Reports/CrystalReports/Dynamic_WholeReport.rpt"));
             report.SetDataSource(dataTable);
 
-            string pdfPath = Server.MapPath("~/Reports/PDFs");
-            Guid guid = Guid.NewGuid();
-            var pdf = pdfPath + "\\" + guid + ".pdf";
-            PDFConversion.ConvertCrystalReportToPDF(defaultPDFViewerLocation, report, pdfPath, pdf);
-
-            Logs.WriteToFile("Installed Printers:");
-            foreach (string printer in PrinterSettings.InstalledPrinters)
-            {
-                Logs.WriteToFile(printer);
-            }
-
-            PrinterSettings printerSettings = new PrinterSettings()
-            {
-                PrinterName = _printerName,
-                Copies = 1
-            };
-
-            PageSettings pageSettings = new PageSettings(printerSettings)
-            {
-                Margins = new Margins(0, 0, 0, 0)
-            };
-
-            foreach (System.Drawing.Printing.PaperSize paperSize in printerSettings.PaperSizes)
-            {
-                if (paperSize.PaperName == "Letter")
-                {
-                    pageSettings.PaperSize = paperSize;
-                    break;
-                }
-            }
-
-            using (PdfDocument pdfDocument = PdfDocument.Load(pdf))
-            {
-                using (PrintDocument printDocument = pdfDocument.CreatePrintDocument())
-                {
-                    printDocument.PrinterSettings = printerSettings;
-                    printDocument.DefaultPageSettings = pageSettings;
-                    printDocument.PrintController = (PrintController)new StandardPrintController();
-                    //printDocument.Print();
-                    Logs.WriteToFile("Start printing");
-                }
-            }
-
             Stream stream = report.ExportToStream(ExportFormatType.PortableDocFormat);
             byte[] pdfBytes = new byte[stream.Length];
             stream.Read(pdfBytes, 0, pdfBytes.Length);
-
             Response.AppendHeader("Content-Disposition", "inline; filename=Report.pdf");
             report.Close();
             report.Dispose();

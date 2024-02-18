@@ -417,11 +417,22 @@ namespace PriceSignageSystem.Controllers
                     data151 = _sTRPRCRepository.CheckSTRPRCUpdates(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
                     if (DateTime.TryParseExact(data151.ToString(), "yyMMdd", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate1))
                     {
-                        if (parsedDate1.Date != result.DateUpdated.Date)
+                        if (result == null)
                         {
-                            _sTRPRCRepository.GetLatestInventory(ConfigurationManager.AppSettings["StoreID"].ToString());
                             _sTRPRCRepository.UpdateSTRPRCTable(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
+                            await _sTRPRCRepository.UpdateCentralizedExemptions(data151);
+                            _sTRPRCRepository.GetLatestInventory(ConfigurationManager.AppSettings["StoreID"].ToString());
                         }
+                        else
+                        {
+                            if (parsedDate1.Date != result.DateUpdated.Date)
+                            {
+                                _sTRPRCRepository.UpdateSTRPRCTable(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
+                                await _sTRPRCRepository.UpdateCentralizedExemptions(data151);
+                                _sTRPRCRepository.GetLatestInventory(ConfigurationManager.AppSettings["StoreID"].ToString());
+                            }
+                        }
+                        
                     }
                     else
                     {
