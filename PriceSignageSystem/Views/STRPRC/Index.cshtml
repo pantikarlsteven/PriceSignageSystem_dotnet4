@@ -3,11 +3,8 @@
     ViewData["Title"] = "Product Page";
 }
 
-
-@*<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>*@
-@*<script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>*@
-@*<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>*@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="~/Scripts/html5-qrcode.min.js"></script>
 
 <div class="content-wrapper bg-white px-3">
     <br />
@@ -41,8 +38,29 @@
             <div class="col-auto">
                 <input type="text" id="searchInput" class="form-control" style="max-width: 200px; background-color: #fff;" placeholder="Search...">
             </div>
+            <div class="col-auto" id="qrScanBtnContainer">
+                <button id="qrScanBtn" class="btn btn-primary" onclick="startScanning()">Scan QR Code</button>
+            </div>
         </div>
     </div>
+
+    <!-- QR SCAN Modal -->
+    <div class="modal" id="qrScanModal" tabindex="-1" role="dialog" aria-labelledby="qrScanModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="qrScanModalLongTitle">QR CODE SCAN</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="reader"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <br />
     <div id="searchResults">
         @Html.Partial("_SearchResultPartialView", new STRPRCDto())
@@ -51,7 +69,21 @@
 
 
 <script>
+    var qrScanBtnContainer = document.getElementById('qrScanBtnContainer');
+
     $('#searchInput').focus();
+    qrScanBtnContainer.style.display = 'none';
+
+    // The scan button will only appear if UPC is selected
+    document.getElementById('searchFilter').addEventListener('change', function () {
+        var selectedValue = this.value;
+
+        if (selectedValue === 'UPC') {
+            qrScanBtnContainer.style.display = 'block';
+        } else {
+            qrScanBtnContainer.style.display = 'none';
+        }
+    });
 
     $(document).ready(function () {
         var timeoutId;
@@ -77,4 +109,23 @@
             }, 300); // Adjust the delay as needed
         });
     });
+
+    function onScanSuccess(decodedText, decodedResult) {
+        console.log(`Code matched = ${decodedText}`, decodedResult);
+    }
+
+    function onScanFailure(error) {
+        console.warn(`Code scan error = ${error}`);
+    }
+
+    function startScanning() {
+        $('#qrScanModal').modal('show');
+        var html5QrcodeScanner = new Html5QrcodeScanner(
+            "reader",
+            { fps: 10, qrbox: { width: 250, height: 250 } },
+             false);
+
+        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    }
+    
 </script>
