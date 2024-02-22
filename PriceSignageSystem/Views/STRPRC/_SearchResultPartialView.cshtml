@@ -257,7 +257,7 @@
 
         });
 
-        
+
 
         $("#currPrice").on("change", function () {
             var regPrice = $("#regPrice");
@@ -280,7 +280,7 @@
 
             var isCurrDisabled = $('#currPrice').prop('disabled');
 
-            if (isCurrDisabled) {
+            if (isCurrDisabled && '@Model.IsExemp' != "Y") {
                 var regPrice = $("#regPrice");
                 var currPrice = $("#currPrice");
                 convertedRegPrice = Number(regPrice.val());
@@ -368,7 +368,7 @@
                         });
 
                         $('#editPrintBtn').click(function () {
-                            
+
                             var selectedRemarks= $('#remarksDropdown').val();
                             var newShortDesc = $('#shortDesc').val();
                             var newBrand = $('#brand').val();
@@ -436,6 +436,7 @@
         });
 
         $(".queuebtn").click(function () {
+
             var isCurrDisabled = $('#currPrice').prop('disabled');
             var newShortDesc = $('#shortDesc').val();
             var newBrand = $('#brand').val();
@@ -449,14 +450,19 @@
 
             var typeId = $('#SelectedTypeId').val();
 
-            
-            if (convertedRegPrice == convertedCurrPrice) {
+
+            if ((convertedRegPrice == convertedCurrPrice && typeId == 2 ) || (convertedRegPrice < convertedCurrPrice && typeId == 2)) {
                 typeId = 1; // Validation for Negative Save (Curr > Reg)
             }
 
+            @*if ('@Model.IsExemp' == "Y") {
+                typeId = 1;
+            }*@
+
             var dto = {};
 
-            if (isCurrDisabled) {
+            if (isCurrDisabled && '@Model.IsExemp' != "Y") {
+
                 dto = {
                     O3SKU: @Model.O3SKU,
                     TypeId: typeId,
@@ -518,7 +524,7 @@
                          // Build the HTML for the print button
                         var printButtonHtml = '<button id="queuePrintBtn" class="btn btn-primary">Queue</button>' +
                             '<button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancel</button>';
-        
+
 
                         // Create the modal content
                         var modalContent = '<div class="modal-dialog modal-dialog-centered">' +
