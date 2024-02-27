@@ -451,10 +451,62 @@ namespace PriceSignageSystem.Models.Repository
                 }
 
                 var exemptions = data.Where(w => w.IsExemp == "Y").ToList();
+
+                var dataExemp = new List<ExemptionDto>();
+                using (var connection = new SqlConnection(connStringCentralizedExemptions))
+                using (var command = new SqlCommand("sp_GetExemptionsRaw", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandTimeout = commandTimeoutInSeconds;
+                    command.Parameters.AddWithValue("@O3LOC", store);
+                    connection.Open();
+                    SqlDataReader reader = await command.ExecuteReaderAsync();
+
+                    while (reader.Read())
+                    {
+                        var record = new ExemptionDto
+                        {
+                            Id = (int)reader["Id"],
+                            O3SKU = (decimal)reader["O3SKU"],
+                            O3UPC = (decimal)reader["O3UPC"],
+                            O3IDSC = reader["O3IDSC"].ToString(),
+                            StoreID = (int)reader["StoreID"],
+                            DateExemption = Convert.ToDateTime(reader["DateExemption"]),
+                        };
+
+                        dataExemp.Add(record);
+                    }
+                    reader.Close();
+                    connection.Close();
+                }
+                //pca with exemptions that are in merchandise but not in new pca
+                var result = dataExemp.Where(exemp => !exemptions.Select(s => s.O3SKU).Contains(exemp.O3SKU)).ToList();
+
+                //delete pca with exemptions that are in merchandise but not in new pca
+                if (result.Count > 0)
+                {
+                    using (SqlConnection connection = new SqlConnection(connStringCentralizedExemptions))
+                    {
+                        connection.Open();
+                        using (SqlCommand command = new SqlCommand($"DELETE FROM Exemptions WHERE Id IN ({string.Join(",", result.Select((_, i) => $"@id{i}"))})", connection))
+                        {
+                            for (int i = 0; i < result.Count; i++)
+                            {
+                                command.Parameters.AddWithValue($"@id{i}", result[i].Id);
+                            }
+
+                            int rowsAffected = command.ExecuteNonQuery();
+                            Console.WriteLine($"Rows affected: {rowsAffected}");
+                        }
+                    }
+                }
+
                 string insertQuery = "INSERT INTO Exemptions (IsPrinted, O3SKU, O3UPC, O3IDSC, o3type, O3REG," +
                                     " O3POS, O3SDT, O3EDT, O3RSDT, O3REDT, TypeId, SizeId, CategoryId, DPTNAM, O3FLAG1, INV2, IsExemp, NegativeSave, IBHAND, StoreID) " +
                                      "VALUES (@IsPrinted, @O3SKU, @O3UPC, @O3IDSC, @o3type, @O3REG," +
                                     " @O3POS, @O3SDT, @O3EDT, @O3RSDT, @O3REDT, @TypeId, @SizeId, @CategoryId, @DPTNAM, @O3FLAG1, @INV2, @IsExemp, @NegativeSave, @IBHAND, @StoreID)";
+
+                var listOfIds = new List<int>();
 
                 using (SqlConnection connection = new SqlConnection(connStringCentralizedExemptions))
                 {
@@ -462,6 +514,9 @@ namespace PriceSignageSystem.Models.Repository
 
                     foreach (var exemption in exemptions)
                     {
+                        if (dataExemp.Where(s => s.O3SKU == exemption.O3SKU).Count() > 0)
+                            continue;
+
                         using (SqlCommand command = new SqlCommand(insertQuery, connection))
                         {
                             // Add parameters to the SQL command
