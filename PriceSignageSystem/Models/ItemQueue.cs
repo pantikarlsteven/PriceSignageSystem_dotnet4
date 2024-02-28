@@ -14,6 +14,7 @@ namespace PriceSignageSystem.Models
         public int Id { get; set; }
         public decimal O3SKU { get; set; }
         public int TypeId { get; set; }
+        public int SizeId { get; set; }
         public string UserName { get; set; }
         public string Status { get; set; }
         public string ItemDesc { get; set; }

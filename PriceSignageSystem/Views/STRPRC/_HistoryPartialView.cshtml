@@ -6,6 +6,7 @@
             <tr>
                 <th>SKU</th>
                 <th>Type</th>
+                <th>Size</th>
                 <th>Status</th>
                 <th>Date Queued</th>
                 <th>Date Printed</th>
@@ -15,7 +16,7 @@
         </thead>
         <tbody>
             <tr>
-                <td colspan="7"> No history available</td>
+                <td colspan="8"> No history available</td>
             </tr>
         </tbody>
     </table>
@@ -36,11 +37,12 @@
                     pageLength: 10,
                     data: data,
                     columnDefs: [
-                        { targets: [0, 1, 2, 3, 4, 5, 6], orderable: false }
+                        { targets: [0, 1, 2, 3, 4, 5, 6, 7], orderable: false }
                     ],
                     columns: [
                         { data: 'O3SKU', name: 'O3SKU' },
                         { data: 'TypeName', name: 'TypeName' },
+                        { data: 'SizeName', name: 'SizeName' },
                         { data: 'Status', name: 'Status' },
                         {
                             data: 'DateCreated',

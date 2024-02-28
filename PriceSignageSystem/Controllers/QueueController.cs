@@ -47,9 +47,9 @@ namespace PriceSignageSystem.Controllers
         }
 
         [HttpPost]
-        public ActionResult QueueSelectedItems(decimal[] selectedRows)
+        public ActionResult QueueSelectedItems(int sizeId, decimal[] selectedRows)
         {
-            _queueRepository.QueueMultipleItems(selectedRows);
+            _queueRepository.QueueMultipleItems(sizeId, selectedRows);
             return Json(new { success = true });
         }
 
@@ -99,7 +99,7 @@ namespace PriceSignageSystem.Controllers
             try
             {
                 var username = User.Identity.Name;
-                var data = _queueRepository.GetQueueListPerUser(username).Where(a =>/* a.SizeId == sizeId && */a.Status == ReportConstants.Status.InQueue);
+                var data = _queueRepository.GetQueueListPerUser(username).Where(a => a.SizeId == sizeId);
                 foreach (var item in data)
                 {
                     
@@ -232,6 +232,15 @@ namespace PriceSignageSystem.Controllers
             }
 
             return Json(new { success = false });
+        }
+
+        [HttpPost]
+        public ActionResult GetInQueueSizePerUser()
+        {
+            var username = User.Identity.Name;
+            var sizes  = _queueRepository.GetInQueueSizePerUser(username);
+
+            return Json(sizes);
         }
     }
 }

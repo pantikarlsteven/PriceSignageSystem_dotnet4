@@ -420,6 +420,10 @@
     <Compile Include="Migrations\202402140723359_AddTuom_QueueTbl.designer.cs">
       <DependentUpon>202402140723359_AddTuom_QueueTbl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202402270633583_AddSizeId_ItemQueueTbl.cs" />
+    <Compile Include="Migrations\202402270633583_AddSizeId_ItemQueueTbl.designer.cs">
+      <DependentUpon>202402270633583_AddSizeId_ItemQueueTbl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Dto\AutoPrintStatusDto.cs" />
     <Compile Include="Models\Dto\CountryDto.cs" />
@@ -678,6 +682,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202402140723359_AddTuom_QueueTbl.resx">
       <DependentUpon>202402140723359_AddTuom_QueueTbl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202402270633583_AddSizeId_ItemQueueTbl.resx">
+      <DependentUpon>202402270633583_AddSizeId_ItemQueueTbl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Dynamic_OneEightReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

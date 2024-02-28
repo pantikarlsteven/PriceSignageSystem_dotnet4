@@ -24,6 +24,7 @@ namespace PriceSignageSystem.Models.Repository
             var record = new ItemQueue();
             record.O3SKU = model.O3SKU;
             record.TypeId = model.TypeId;
+            record.SizeId = model.SizeId;
             record.UserName = HttpContext.Current.User.Identity.Name;
             record.Status = ReportConstants.Status.InQueue;
             record.ItemDesc = model.O3IDSC;
@@ -89,6 +90,7 @@ namespace PriceSignageSystem.Models.Repository
                             DateUpdated = b.DateUpdated,
                             UserName = a.UserName,
                             TypeId = a.TypeId,
+                            SizeId = a.SizeId,
                             Status = a.Status,
                             iatrb3 = d.iatrb3,
                             country_img = d.country_img,
@@ -118,7 +120,7 @@ namespace PriceSignageSystem.Models.Repository
             _db.SaveChanges();
         }
 
-        public void QueueMultipleItems(decimal[] skus)
+        public void QueueMultipleItems(int sizeId, decimal[] skus)
         {
             var list = new List<STRPRC>();
            
@@ -133,6 +135,7 @@ namespace PriceSignageSystem.Models.Repository
                 var model = new ItemQueue();
                 model.O3SKU = item.O3SKU;
                 model.TypeId = item.O3REG < item.O3POS ? ReportConstants.Type.Regular : item.TypeId; // Validation for Negative Save
+                model.SizeId = sizeId;
                 model.UserName = HttpContext.Current.User.Identity.Name;
                 model.Status = ReportConstants.Status.InQueue;
                 model.DateCreated = DateTime.Now;
@@ -146,6 +149,7 @@ namespace PriceSignageSystem.Models.Repository
         {
             var dateToday = DateTime.Today;
             var result = (from a in _db.ItemQueues
+                          join b in _db.Sizes on a.SizeId equals b.Id
                           join c in _db.Types on a.TypeId equals c.Id
                           where a.UserName == username && DbFunctions.TruncateTime(a.DateCreated) == dateToday
                           orderby a.DateCreated descending
@@ -154,6 +158,7 @@ namespace PriceSignageSystem.Models.Repository
                               Id = a.Id,
                               O3SKU = a.O3SKU,
                               TypeName = c.Name,
+                              SizeName = b.Name,
                               Status = a.Status,
                               DateCreated = a.DateCreated,
                               DateUpdated = a.DateUpdated,
@@ -176,6 +181,18 @@ namespace PriceSignageSystem.Models.Repository
             var count = _db.SaveChanges();
 
             return count;
+        }
+
+        public Array GetInQueueSizePerUser(string username)
+        {
+            var result = (from a in _db.ItemQueues
+                             join b in _db.Sizes on a.SizeId equals b.Id
+                             where a.UserName == username && a.Status == ReportConstants.Status.InQueue
+                             select new { Id = b.Id, Name = b.Name }).Distinct();
+
+
+
+            return result.ToArray();
         }
     }
 }

@@ -449,6 +449,7 @@
             convertedCurrPrice = Number(currPrice);
 
             var typeId = $('#SelectedTypeId').val();
+            var sizeId = $('#SelectedSizeId').val();
 
 
             if ((convertedRegPrice == convertedCurrPrice && typeId == 2 ) || (convertedRegPrice < convertedCurrPrice && typeId == 2)) {
@@ -466,6 +467,7 @@
                 dto = {
                     O3SKU: @Model.O3SKU,
                     TypeId: typeId,
+                    SizeId: sizeId
                 };
 
                 $.ajax({
@@ -569,6 +571,7 @@
                             dto = {
                                 O3SKU: @Model.O3SKU,
                                 TypeId: typeId,
+                                SizeId: sizeId,
                                 O3REGU: convertedRegPrice,
                                 O3POS: convertedCurrPrice,
                                 Remarks: selectedRemarks,
@@ -624,127 +627,107 @@
          //PRINT QUEUE BUTTON
         $('.qListbtn').click(function () {
                 $.ajax({
-                    url: '@Url.Action("GetAllSizes", "STRPRC")' ,
+                    url: '@Url.Action("GetInQueueSizePerUser", "Queue")' ,
                     type: 'POST',
                     success: function (response) {
-                        // Create the dropdown options
-                        var sizeOptions = '';
 
-                        // Populate dropdown options from the server response
-                        for (var i = 0; i < response.length; i++) {
-                            var option = response[i];
-                            sizeOptions += '<option value="' + option.Id + '">' + option.Name + '</option>';
-                        }
+                        if (response.length > 0) {
+                            // Create the dropdown options
+                            var sizeOptions = '';
 
-                        // Build the HTML for the dropdowns
-                        var dropdownHtml = '<div class="form-row">' +
-                            '<div class="form-group row col-12">' +
-                            '<label class="col-sm-2 col-form-label" for="sizeDropdown">Size:</label>' +
-                            '<select class="col-sm-9  ml-3 form-control" id="sizeDropdown" >' +
-                            sizeOptions +
-                            '</select>' +
-                            '</div>';
+                            // Populate dropdown options from the server response
+                            for (var i = 0; i < response.length; i++) {
+                                var option = response[i];
+                                sizeOptions += '<option value="' + option.Id + '">' + option.Name + '</option>';
+                            }
 
-                        // Build the HTML for the print button
-                        var printButtonHtml = '<button id="printQueueButton" class="btn btn-primary">Print</button>';
+                            // Build the HTML for the dropdowns
+                            var dropdownHtml = '<div class="form-row">' +
+                                '<div class="form-group row col-12">' +
+                                '<label class="col-sm-2 col-form-label" for="sizeDropdown">Size:</label>' +
+                                '<select class="col-sm-9  ml-3 form-control" id="sizeDropdown" >' +
+                                sizeOptions +
+                                '</select>' +
+                                '</div>';
 
-                        // Create the modal content
-                        var modalContent = '<div class="modal-dialog modal-sm modal-dialog-centered">' +
-                            '<div class="modal-content">' +
-                            '<div class="modal-header">' +
-                            '<h5 class="modal-title">Print Queue Report</h5>' +
-                            '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
-                            '<span aria-hidden="true">&times;</span>' +
-                            '</button>' +
-                            '</div>' +
-                            '<div class="modal-body">' +
-                            dropdownHtml +
-                            '</div>' +
-                            '<div class="modal-footer">' +
-                            printButtonHtml +
-                            '</div>' +
-                            '</div>' +
-                            '</div>';
+                            // Build the HTML for the print button
+                            var printButtonHtml = '<button id="printQueueButton" class="btn btn-primary">Print</button>';
 
-                        // Remove any existing modals
-                        $('#modalView').remove();
+                            // Create the modal content
+                            var modalContent = '<div class="modal-dialog modal-sm modal-dialog-centered">' +
+                                '<div class="modal-content">' +
+                                '<div class="modal-header">' +
+                                '<h5 class="modal-title">Print Queue Report</h5>' +
+                                '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
+                                '<span aria-hidden="true">&times;</span>' +
+                                '</button>' +
+                                '</div>' +
+                                '<div class="modal-body">' +
+                                dropdownHtml +
+                                '</div>' +
+                                '<div class="modal-footer">' +
+                                printButtonHtml +
+                                '</div>' +
+                                '</div>' +
+                                '</div>';
 
-                        // Append the modal to the body
-                        $('body').append('<div id="modalView" class="modal">' + modalContent + '</div>');
+                            // Remove any existing modals
+                            $('#modalView').remove();
 
-                        // Show the modal with fade-in effect from top
-                        $('#modalView').modal({
-                            show: true,
-                            backdrop: false,
-                            keyboard: false
-                        });
+                            // Append the modal to the body
+                            $('body').append('<div id="modalView" class="modal">' + modalContent + '</div>');
 
-                        $('#printQueueButton').click(function () {
-                            $("#loadingContainer").show();
-
-                            var selectedSize = $('#sizeDropdown').val();
-                            var url = '@Url.Action("CheckItemQueuesPerUser", "Queue")';
-                            $.ajax({
-                                url: url,
-                                type: 'POST',
-                                data: { sizeId: selectedSize },
-                                success: function (response) {
-                                    if (response.success) {
-                                        $('#modalView').modal('hide');
-                                        $("#reportIframe").attr("src", "/Queue/PrintPreviewQueueReport?sizeId=" + selectedSize + "");
-                                        var reportIframe = document.getElementById("reportIframe");
-                                        if (reportIframe) {
-                                            reportIframe.onload = function () {
-                                                reportIframe.contentWindow.print();
-                                                $("#loadingContainer").hide();
-
-                                            };
-                                            reportIframe.src = $("#reportIframe").attr("src");
-                                        }
-
-                                        //var url = "/Queue/PrintPreviewQueueReport";
-                                        //$.ajax({
-                                        //    url: url,
-                                        //    type: 'GET',
-                                        //    data: { sizeId: selectedSize },
-                                        //    success: function (data) {
-                                        //        if (!data)
-                                        //            alert("Error in printing.");
-
-                                        //    }
-                                        //});
-                                    } else {
-                                        $("#loadingContainer").hide();
-                                        $('#modalView').modal('hide');
-                                        // Show success modal
-                                        var modalHtml = '<div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">';
-                                        modalHtml += '<div class="modal-dialog" role="document">';
-                                        modalHtml += '<div class="modal-content">';
-                                        modalHtml += '<div class="modal-header">';
-                                        modalHtml += '<h5 class="modal-title" id="errorModalLabel">Error!</h5>';
-                                        modalHtml += '<button type="button" class="close" data-dismiss="modal" aria-label="Close">';
-                                        modalHtml += '<span aria-hidden="true">&times;</span>';
-                                        modalHtml += '</button>';
-                                        modalHtml += '</div>';
-                                        modalHtml += '<div class="modal-body">';
-                                        modalHtml += 'PLEASE QUEUE A PRODUCT FIRST.';
-                                        modalHtml += '</div>';
-                                        modalHtml += '<div class="modal-footer">';
-                                        modalHtml += '<button type="button" class="okBtn btn btn-primary" data-dismiss="modal">OK</button>';
-                                        modalHtml += '</div>';
-                                        modalHtml += '</div>';
-                                        modalHtml += '</div>';
-                                        modalHtml += '</div>';
-
-                                        $('body').append(modalHtml);
-                                        $('#errorModal').modal('show');
-                                    }
-                                },
-                                error: function (xhr, status, error) {
-                                }
+                            // Show the modal with fade-in effect from top
+                            $('#modalView').modal({
+                                show: true,
+                                backdrop: false,
+                                keyboard: false
                             });
 
-                        });
+                            $('#printQueueButton').click(function () {
+                                $("#loadingContainer").show();
+                                var selectedSize = $('#sizeDropdown').val();
+
+                                $('#modalView').modal('hide');
+                                $("#reportIframe").attr("src", "/Queue/PrintPreviewQueueReport?sizeId=" + selectedSize + "");
+                                var reportIframe = document.getElementById("reportIframe");
+                                if (reportIframe) {
+                                    reportIframe.onload = function () {
+                                        reportIframe.contentWindow.print();
+                                        $("#loadingContainer").hide();
+
+                                    };
+                                    reportIframe.src = $("#reportIframe").attr("src");
+                                }
+
+                            });
+
+                        } else {
+
+                            $('#modalView').modal('hide');
+                            // Show success modal
+                            var modalHtml = '<div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">';
+                            modalHtml += '<div class="modal-dialog" role="document">';
+                            modalHtml += '<div class="modal-content">';
+                            modalHtml += '<div class="modal-header">';
+                            modalHtml += '<h5 class="modal-title" id="errorModalLabel">Error!</h5>';
+                            modalHtml += '<button type="button" class="close" data-dismiss="modal" aria-label="Close">';
+                            modalHtml += '<span aria-hidden="true">&times;</span>';
+                            modalHtml += '</button>';
+                            modalHtml += '</div>';
+                            modalHtml += '<div class="modal-body">';
+                            modalHtml += 'PLEASE QUEUE A PRODUCT FIRST.';
+                            modalHtml += '</div>';
+                            modalHtml += '<div class="modal-footer">';
+                            modalHtml += '<button type="button" class="okBtn btn btn-primary" data-dismiss="modal">OK</button>';
+                            modalHtml += '</div>';
+                            modalHtml += '</div>';
+                            modalHtml += '</div>';
+                            modalHtml += '</div>';
+
+                            $('body').append(modalHtml);
+                            $('#errorModal').modal('show');
+                        }
                     }
                 });
         });

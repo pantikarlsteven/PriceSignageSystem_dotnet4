@@ -431,6 +431,7 @@
             });
 
             $('.queueBtnWith').click(function () {
+                
                 var selectedRows = [];
                 $('.rowCheckboxWith:checked').each(function () {
                     var rowId = $(this).data('id');
@@ -440,94 +441,102 @@
                 if (selectedRows.length > 0) {
                     console.log('Selected Row IDs:', selectedRows);
 
-                    //// Build the HTML for the dropdowns
-                    //var dropdownHtml = '<div class="form-row">' +
-                    //    '<div class="form-group row col-12">' +
-                    //    '<label class="col-sm-2 col-form-label" for="sizeDropdown">Size:</label>' +
-                    //    '<select class="col-sm-9  ml-3 form-control" id="sizeDropdown">' +
-                    //    '<option value="1">Whole</option>' +
-                    //    '<option value="2">1/8</option>' +
-                    //    '<option value="3">Jewelry</option>' +
-                    //    '</select>' +
-                    //    '</div>' +
-                    //    '</div>';
-                    //// Build the HTML for the print button
-                    //var buttonHtml = '<button id="queueSelectedButtonWith" class="btn btn-primary">Queue</button>' +
-                    //    '<button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancel</button>';
-                    //// Create the modal content
-                    //var modalContent = '<div class="modal-dialog modal-sm modal-dialog-centered">' +
-                    //    '<div class="modal-content">' +
-                    //    '<div class="modal-header">' +
-                    //    '<h5 class="modal-title">Queue</h5>' +
-                    //    '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
-                    //    '<span aria-hidden="true">&times;</span>' +
-                    //    '</button>' +
-                    //    '</div>' +
-                    //    '<div class="modal-body">' +
-                    //    dropdownHtml +
-                    //    '</div>' +
-                    //    '<div class="modal-footer">' +
-                    //    buttonHtml +
-                    //    '</div>' +
-                    //    '</div>' +
-                    //    '</div>';
-                    //// Remove any existing modals
-                    //$('#modalView').remove();
+                    // Build the HTML for the dropdowns
+                    var dropdownHtml = '<div class="form-row">' +
+                        '<div class="form-group row col-12">' +
+                        '<label class="col-sm-2 col-form-label" for="sizeDropdown">Size:</label>' +
+                        '<select class="col-sm-9  ml-3 form-control" id="sizeDropdown">' +
+                        '<option value="1">Whole</option>' +
+                        '<option value="2">1/8</option>' +
+                        '<option value="3">Jewelry</option>' +
+                        '</select>' +
+                        '</div>' +
+                        '</div>';
+                    // Build the HTML for the print button
+                    var buttonHtml = '<button id="queueSelectedButtonWith" class="btn btn-primary">Queue</button>' +
+                        '<button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancel</button>';
+                    // Create the modal content
+                    var modalContent = '<div class="modal-dialog modal-sm modal-dialog-centered">' +
+                        '<div class="modal-content">' +
+                        '<div class="modal-header">' +
+                        '<h5 class="modal-title">Queue</h5>' +
+                        '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
+                        '<span aria-hidden="true">&times;</span>' +
+                        '</button>' +
+                        '</div>' +
+                        '<div class="modal-body">' +
+                        dropdownHtml +
+                        '</div>' +
+                        '<div class="modal-footer">' +
+                        buttonHtml +
+                        '</div>' +
+                        '</div>' +
+                        '</div>';
+                    // Remove any existing modals
+                    $('#modalView').remove();
 
-                    //// Append the modal to the body
-                    //$('body').append('<div id="modalView" class="modal">' + modalContent + '</div>');
+                    // Append the modal to the body
+                    $('body').append('<div id="modalView" class="modal">' + modalContent + '</div>');
 
-                    //// Show the modal with fade-in effect from top
-                    //$('#modalView').modal({
-                    //    show: true,
-                    //    backdrop: false,
-                    //    keyboard: false
-                    //});
+                    // Show the modal with fade-in effect from top
+                    $('#modalView').modal({
+                        show: true,
+                        backdrop: false,
+                        keyboard: false
+                    });
 
-                    //// Set default values for the dropdowns
-                    //$('#sizeDropdown').val(2); // 1/8
+                    // Set default values for the dropdowns
+                    $('#sizeDropdown').val(2); // 1/8
 
-                    $("#loadingContainer").show();
-                    $.ajax({
-                        url: '/Queue/QueueSelectedItems',
-                        type: "POST",
-                        data: { /*sizeId: sizeId,*/ selectedRows: selectedRows },
-                        success: function (data) {
-                            $("#loadingContainer").hide();
-                            // Show success modal
-                            var modalHtml = '<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">';
-                            modalHtml += '<div class="modal-dialog" role="document">';
-                            modalHtml += '<div class="modal-content">';
-                            modalHtml += '<div class="modal-header">';
-                            modalHtml += '<h5 class="modal-title" id="successModalLabel">Success!</h5>';
-                            modalHtml += '<button type="button" class="close" data-dismiss="modal" aria-label="Close">';
-                            modalHtml += '<span aria-hidden="true">&times;</span>';
-                            modalHtml += '</button>';
-                            modalHtml += '</div>';
-                            modalHtml += '<div class="modal-body">';
-                            modalHtml += 'Item queued successfully!';
-                            modalHtml += '</div>';
-                            modalHtml += '<div class="modal-footer">';
-                            modalHtml += '<button type="button" class="qOkBtn btn btn-primary" data-dismiss="modal">OK</button>';
-                            modalHtml += '</div>';
-                            modalHtml += '</div>';
-                            modalHtml += '</div>';
-                            modalHtml += '</div>';
+                    $('#queueSelectedButtonWith').click(function() {
+                        
+                        $("#loadingContainer").show();
 
-                            $('body').append(modalHtml);
-                            $('#successModal').modal('show');
-                        },
-                        error: function (error) {
+                        var sizeId = $('#sizeDropdown').val();
 
-                        }
-                    })
+                        $.ajax({
+                            url: '/Queue/QueueSelectedItems',
+                            type: "POST",
+                            data: { sizeId: sizeId, selectedRows: selectedRows },
+                            success: function (data) {
+                                $("#loadingContainer").hide();
+                                // Show success modal
+                                var modalHtml = '<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">';
+                                modalHtml += '<div class="modal-dialog" role="document">';
+                                modalHtml += '<div class="modal-content">';
+                                modalHtml += '<div class="modal-header">';
+                                modalHtml += '<h5 class="modal-title" id="successModalLabel">Success!</h5>';
+                                modalHtml += '<button type="button" class="close" data-dismiss="modal" aria-label="Close">';
+                                modalHtml += '<span aria-hidden="true">&times;</span>';
+                                modalHtml += '</button>';
+                                modalHtml += '</div>';
+                                modalHtml += '<div class="modal-body">';
+                                modalHtml += 'Item queued successfully!';
+                                modalHtml += '</div>';
+                                modalHtml += '<div class="modal-footer">';
+                                modalHtml += '<button type="button" class="qOkBtn btn btn-primary" data-dismiss="modal">OK</button>';
+                                modalHtml += '</div>';
+                                modalHtml += '</div>';
+                                modalHtml += '</div>';
+                                modalHtml += '</div>';
 
-                    $('#modalView').modal('hide');
-                    $('input[type="checkbox"]').prop('checked', false);
+                                $('body').append(modalHtml);
+                                $('#successModal').modal('show');
+                            },
+                            error: function (error) {
+
+                            }
+                        });
+
+                        $('#modalView').modal('hide');
+                        $('input[type="checkbox"]').prop('checked', false);
+                    });
+                   
 
                 } else {
                     alert('Please select items to queue.');
                 }
+
             });
 
             $('#selectAllWith').on('change', function () {

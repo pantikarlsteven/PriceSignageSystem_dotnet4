@@ -13,8 +13,9 @@ namespace PriceSignageSystem.Models.Interface
         ItemQueue AddItemQueue(STRPRCDto model);
         List<ReportDto> GetQueueListPerUser(string username);
         void UpdateStatus(IEnumerable<ReportDto> data);
-        void QueueMultipleItems(decimal[] skus);
+        void QueueMultipleItems(int sizeId, decimal[] skus);
         List<ItemQueueDto> GetHistory(string username);
         int RequeueItem(int id, string username);
+        Array GetInQueueSizePerUser(string username);
     }
 }
