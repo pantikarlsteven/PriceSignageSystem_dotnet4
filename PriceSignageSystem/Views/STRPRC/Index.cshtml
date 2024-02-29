@@ -38,9 +38,9 @@
             <div class="col-auto">
                 <input type="text" id="searchInput" class="form-control" style="max-width: 200px; background-color: #fff;" placeholder="Search...">
             </div>
-            @*<div class="col-auto" id="qrScanBtnContainer">
-                <button id="qrScanBtn" class="btn btn-primary" onclick="startScanning()">Scan QR Code</button>
-            </div>*@
+            <div class="col-auto" id="qrScanBtnContainer">
+                <button id="qrScanBtn" class="btn btn-primary" onclick="openBarcodeScan()">Scan QR Code</button>
+            </div>
         </div>
     </div>
 
@@ -50,7 +50,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="qrScanModalLongTitle">QR CODE SCAN</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" onclick="closeModal()">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -69,25 +69,43 @@
 
 
 <script>
-    //var qrScanBtnContainer = document.getElementById('qrScanBtnContainer');
+    var qrScanBtnContainer = document.getElementById('qrScanBtnContainer');
+    var modalContainer = document.getElementById('qrScanModal');
+    var searchFilterDropdown = document.getElementById('searchFilter');
+    var html5QrcodeScanner;
+    var codeFormat = "";
+    var isScanUsed = localStorage.getItem("isScanUsed");
 
-    //$('#searchInput').focus();
-    //qrScanBtnContainer.style.display = 'none';
+    $('#searchInput').focus();
+    qrScanBtnContainer.style.display = 'none';
 
-    //// The scan button will only appear if UPC is selected
-    //document.getElementById('searchFilter').addEventListener('change', function () {
-    //    var selectedValue = this.value;
+    // The scan button will only appear if UPC is selected
+    searchFilterDropdown.addEventListener('change', function () {
+        var selectedValue = this.value;
 
-    //    if (selectedValue === 'UPC') {
-    //        qrScanBtnContainer.style.display = 'block';
-    //    } else {
-    //        qrScanBtnContainer.style.display = 'none';
-    //    }
-    //});
+        if (selectedValue === 'UPC') {
+            qrScanBtnContainer.style.display = 'block';
+        } else {
+            qrScanBtnContainer.style.display = 'none';
+        }
+    });
 
     $(document).ready(function () {
+
+        if (isScanUsed == "true") {
+
+            searchFilterDropdown.value = 'UPC';
+            // Create a new 'change' event
+            var event = new Event('change');
+            // Dispatch the 'change' event on the dropdown
+            searchFilterDropdown.dispatchEvent(event);
+
+            openBarcodeScan();
+        }
+
         var timeoutId;
         $('#searchInput').on('input', function () {
+            localStorage.setItem("isScanUsed", false);
             var searchQuery = $(this).val();
             var filter = $('#searchFilter').val();
             // Clear any previously scheduled request
@@ -98,7 +116,7 @@
                 $.ajax({
                     url: '@Url.Action("Search", "STRPRC")',
                     type: 'POST',
-                    data: { query: searchQuery, searchFilter: filter},
+                    data: { query: searchQuery, searchFilter: filter, codeFormat: codeFormat},
                     success: function (result) {
                         $('#searchResults').html(result);
                     },
@@ -111,21 +129,58 @@
     });
 
     function onScanSuccess(decodedText, decodedResult) {
-        console.log(`Code matched = ${decodedText}`, decodedResult);
+        html5QrcodeScanner.clear();
+        modalContainer.style.display = 'none';
+        localStorage.setItem("isScanUsed", true);
+
+        var filter = $('#searchFilter').val();
+        codeFormat = decodedResult.result.format.toString().toUpperCase();
+
+         $.ajax({
+             url: '@Url.Action("Search", "STRPRC")',
+             type: 'POST',
+             data: { query: decodedText, searchFilter: filter, codeFormat: codeFormat},
+             success: function (result) {
+                 
+                 if (result != null) {
+                     $('#searchResults').html(result);
+                 }
+                 else {
+                     alert('Item Not Found!');
+                 }
+             },
+             error: function () {
+             }
+         });
     }
 
     function onScanFailure(error) {
         console.warn(`Code scan error = ${error}`);
     }
 
-    function startScanning() {
-        $('#qrScanModal').modal('show');
-        var html5QrcodeScanner = new Html5QrcodeScanner(
+    function openBarcodeScan() {
+        modalContainer.style.display = 'block';
+
+        html5QrcodeScanner = new Html5QrcodeScanner(
             "reader",
-            { fps: 10, qrbox: { width: 250, height: 250 } },
+            {
+                fps: 10,
+                qrbox: { width: 250, height: 250 },
+                rememberLastUsedCamera: true,
+                showZoomSliderIfSupported: true,
+                defaultZoomValueIfSupported: 2,
+                formatsToSupport: [9, 10, 14, 15], // EAN-13, EAN-8, UPC-A, UPC-E respectively
+                //videoConstraints: {
+                //    facingMode: { exact: "environment" },
+                //},
+                useBarCodeDetectorIfSupported: true
+            },
              false);
 
         html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    };
+
+    function closeModal() {
+        modalContainer.style.display = 'none';
     }
-    
 </script>

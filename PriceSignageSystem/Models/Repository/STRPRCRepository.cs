@@ -1,4 +1,5 @@
 ﻿using Org.BouncyCastle.Asn1.Pkcs;
+using PriceSignageSystem.Helper;
 using PriceSignageSystem.Models.Constants;
 using PriceSignageSystem.Models.DatabaseContext;
 using PriceSignageSystem.Models.Dto;
@@ -128,7 +129,7 @@ namespace PriceSignageSystem.Models.Repository
             return stores;
         }
 
-        public STRPRCDto SearchString(string query, string searchFilter)
+        public STRPRCDto SearchString(string query, string searchFilter, string codeFormat)
         {
             var data = new STRPRCDto();
 
@@ -182,8 +183,20 @@ namespace PriceSignageSystem.Models.Repository
             }
             else
             {
+                var formattedCode = "";
+                if (codeFormat == "UPC_A")
+                {
+                    formattedCode = BarcodeHelper.GetNormalizedUPC_A(query);
+                }
+                else if (codeFormat == "UPC_E")
+                {
+                    formattedCode = BarcodeHelper.GetNormalizedUPC_E(query);
+                }
+
+                formattedCode = formattedCode != "" ? formattedCode : query;
+
                 data = (from a in _db.STRPRCs
-                        where a.O3UPC.ToString() == query
+                        where a.O3UPC.ToString() == formattedCode
                         select new STRPRCDto
                         {
                             O3LOC = a.O3LOC,

@@ -401,6 +401,8 @@
                                     O3TUOM: newTuom != origTuom ? newTuom : origTuom
                                 };
 
+                                reportDto.O3FNAM = reportDto.O3FNAM.replace(/&/g, "\\u0026");
+                                reportDto.O3IDSC = reportDto.O3IDSC.replace(/&/g, "\\u0026");
                                 reportDto.TypeId = $('#SelectedTypeId').val();
                                 if (convertedRegPrice == convertedCurrPrice) {
                                     reportDto.TypeId = 1; // Validation for Negative Save (Curr > Reg)
@@ -751,6 +753,8 @@
         $(document).on('click', '#successModal .qOkBtn', function () {
             $('#modalView').modal('hide');
             window.location.href = '/STRPRC/Index';
+            //openBarcodeScan();
+
         });
 
         // Remove the modal from the DOM when it is hidden

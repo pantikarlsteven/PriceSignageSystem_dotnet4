@@ -17,6 +17,7 @@ using System.Data;
 using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 
 namespace PriceSignageSystem.Controllers
@@ -128,6 +129,8 @@ namespace PriceSignageSystem.Controllers
             try
             {
                 var model = JsonConvert.DeserializeObject<ReportDto>(response);
+                model.O3FNAM = Regex.Unescape(model.O3FNAM);
+                model.O3IDSC = Regex.Unescape(model.O3IDSC);
                 ReportDocument report = new ReportDocument();
                 var path = string.Empty;
 

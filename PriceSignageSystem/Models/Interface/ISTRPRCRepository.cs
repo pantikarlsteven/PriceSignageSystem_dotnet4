@@ -9,7 +9,7 @@ namespace PriceSignageSystem.Models.Interface
 {
     public interface ISTRPRCRepository
     {
-        STRPRCDto SearchString(string query, string searchFilter);
+        STRPRCDto SearchString(string query, string searchFilter, string codeFormat);
         List<STRPRC> GetAll();
         List<STRPRCDto> GetStores();
         List<STRPRCDto> GetData(decimal O3SKU);

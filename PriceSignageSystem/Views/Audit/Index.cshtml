@@ -1,0 +1,358 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Audit</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <style>
+        td.details-control {
+            text-align: center;
+            color: #6396fd;
+            cursor: pointer;
+        }
+
+        tr.shown td.details-control {
+            text-align: center;
+            color: #fd6363;
+        }
+
+        th.no-sort::after {
+            display: none !important;
+        }
+
+        .custom-button {
+            background-color: #4CAF50;
+            color: white;
+            border: 1px solid green;
+            border-radius: 4px;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-left: 10px;
+        }
+
+
+
+        .dataTables_wrapper .dataTables_filter {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper bg-white px-3">
+        <div class="content">
+            <div class="overlay-wrapper" id="loadingContainer" style="display:none;">
+                <div class="overlay" style="background-color: rgba(0, 0, 0, 0.59); z-index: 999999;">
+                    <img class="" src="~/Content/Images/loading.gif" alt="Loading" style="max-width:350px;" />
+                </div>
+            </div>
+
+            <div class="overlay-wrapper" id="inventoryUpdateLoadingContainer" style="display:none;">
+                <div class="overlay" style="background-color: rgba(0, 0, 0, 0.59); z-index: 999999;">
+                    <img class="" src="~/Content/Images/loading.gif" alt="Loading" style="max-width:350px;" />
+                    <p style="position: absolute; margin-top: 250px; background-color: #dee2e6; padding: 10px;">Updating Inventory. Please Wait...</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="card elevation-3  px-0 ">
+
+                <ul class="nav nav-tabs bg-primary1 px-2 pt-2">
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-tab active" style="color:white;" data-toggle="tab" href="#printed-pca">Printed</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-tab" style="color:white;" data-toggle="tab" href="#audited-pca">Audited</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-tab" style="color:white;" data-toggle="tab" href="#notprinted-pca">Not Printed</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-tab" style="color:white;" data-toggle="tab" href="#exemption-pca">Exemption</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div id="printed-pca" class="tab-pane active mx-2">
+                        <h3 class="text-center mt-2">Printed PCA</h3>
+                        <table id="printed-pca-table" class="table table-sm table-hover" style="width: 100%; text-align: center;">
+                            <thead style="background-color: #1C3766;" class="text-white">
+                                <tr>
+                                    <th>-</th>
+                                    <th>Printed?</th>
+                                    <th>SKU</th>
+                                    <th>UPC</th>
+                                    <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
+                                    <th>Reg Price</th>
+                                    <th>Current Price</th>
+                                    <th>Date Start</th>
+                                    <th>Date End</th>
+                                    <th>Type</th>
+                                    <th>Size</th>
+                                    <th>Category</th>
+                                    <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
+                                    <th>Type</th>
+                                    <th>Reverted?</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="15" style="text-align: center;">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="audited-pca" class="tab-pane fade mx-2">
+                        <h3 class="text-center mt-2">Audited PCA</h3>
+                        <table id="audited-pca-table" class="table table-sm table-hover" style="width: 100%; text-align: center;">
+                            <thead style="background-color: #1C3766;" class="text-white">
+                                <tr>
+                                    <th>-</th>
+                                    <th>Printed?</th>
+                                    <th>SKU</th>
+                                    <th>UPC</th>
+                                    <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
+                                    <th>Reg Price</th>
+                                    <th>Current Price</th>
+                                    <th>Date Start</th>
+                                    <th>Date End</th>
+                                    <th>Type</th>
+                                    <th>Size</th>
+                                    <th>Category</th>
+                                    <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
+                                    <th>Type</th>
+                                    <th>Reverted?</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="15" style="text-align: center;">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="notprinted-pca" class="tab-pane fade mx-2">
+                        <h3 class="text-center mt-2">Not Printed PCA</h3>
+                        <table id="notprinted-pca-table" class="table table-sm table-hover" style="width: 100%; text-align: center;">
+                            <thead style="background-color: #1C3766;" class="text-white">
+                                <tr>
+                                    <th>-</th>
+                                    <th>Printed?</th>
+                                    <th>SKU</th>
+                                    <th>UPC</th>
+                                    <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
+                                    <th>Reg Price</th>
+                                    <th>Current Price</th>
+                                    <th>Date Start</th>
+                                    <th>Date End</th>
+                                    <th>Type</th>
+                                    <th>Size</th>
+                                    <th>Category</th>
+                                    <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
+                                    <th>Type</th>
+                                    <th>Reverted?</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="15" style="text-align: center;">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="exemption-pca" class="tab-pane fade mx-2">
+                        <h3 class="text-center mt-2">Printed Exemption</h3>
+                        <table id="exemption-pca-table" class="table table-sm table-hover" style="width: 100%; text-align: center;">
+                            <thead style="background-color: #1C3766;" class="text-white">
+                                <tr>
+                                    <th>-</th>
+                                    <th>Printed?</th>
+                                    <th>SKU</th>
+                                    <th>UPC</th>
+                                    <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
+                                    <th>Reg Price</th>
+                                    <th>Current Price</th>
+                                    <th>Date Start</th>
+                                    <th>Date End</th>
+                                    <th>Type</th>
+                                    <th>Size</th>
+                                    <th>Category</th>
+                                    <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
+                                    <th>Type</th>
+                                    <th>Reverted?</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="15" style="text-align: center;">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+
+</body>
+</html>
+<script>
+    $(document).ready(function () {
+
+        InitLoad();
+
+        var tableForPrinted = null;
+        var tableForNotPrinted = null;
+
+        function InitLoad() {
+            $("#loadingContainer").show();
+
+            $.ajax({
+                url: '/Audit/LoadAudit',
+                type: "POST",
+                dataType: 'json',
+                success: function (data) {
+
+                    if (tableForPrinted !== null) {
+                        tableForPrinted.destroy();
+                    }
+                    if (tableForNotPrinted !== null) {
+                        tableForNotPrinted.destroy();
+                    }
+
+                    RenderTableForPrinted(data.PrintedList);
+                    RenderTableForNotPrinted(data.NotPrintedList);
+                    $("#loadingContainer").hide();
+
+                },
+                error: function (e) { }
+            });
+
+        }
+
+        function RenderTableForPrinted(data) {
+            tableForPrinted = $('#printed-pca-table').DataTable({
+                scrollY: 500,
+                scrollX: true,
+                scroller: true,
+                deferRender: true,
+                lengthMenu: [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, 'All']
+                ],
+                pageLength: -1,
+                data: data,
+                columnDefs: [
+                    { targets: [4, 5, 6], orderable: false },
+                ],
+                columns: [
+                    {
+                        "className": 'details-control',
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": '',
+                        "render": function () {
+                            return '<i class="fa-solid fa-square-caret-down"></i>';
+                        },
+                        width: "15px"
+                    },
+                    {
+                        data: 'IsPrinted', name: 'IsPrinted', render: function (data) {
+                            if (data === 'Yes') {
+                                return '<span style="color: green;">' + data + '</span>';
+                            } else {
+                                return '<span style="color: red;">' + data + '</span>';
+                            }
+                        }
+                    },
+                    { data: 'O3SKU', name: 'O3SKU' },
+                    { data: 'O3UPC', name: 'O3UPC' },
+                    { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap' },
+                    { data: 'O3REG', name: 'O3REG' },
+                    { data: 'O3POS', name: 'O3POS' },
+                    { data: 'O3SDT', name: 'O3SDT' },
+                    { data: 'O3EDT', name: 'O3EDT' },
+                    { data: 'TypeName', name: 'TypeName' },
+                    { data: 'SizeName', name: 'SizeName' },
+                    { data: 'CategoryName', name: 'CategoryName' },
+                    { data: 'DepartmentName', name: 'DepartmentName' },
+                    { data: 'O3TYPE', name: 'O3TYPE' },
+                    { data: 'IsReverted', name: 'IsReverted' },
+                ],
+                "dom": '<"top"lfB>rt<"bottom"ip>',
+            });
+        }
+
+        function RenderTableForNotPrinted(data) {
+            tableForNotPrinted = $('#notprinted-pca-table').DataTable({
+                scrollY: 500,
+                scrollX: true,
+                scroller: true,
+                deferRender: true,
+                lengthMenu: [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, 'All']
+                ],
+                pageLength: -1,
+                data: data,
+                columnDefs: [
+                    { targets: [4, 5, 6], orderable: false },
+                ],
+                columns: [
+                    {
+                        "className": 'details-control',
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": '',
+                        "render": function () {
+                            return '<i class="fa-solid fa-square-caret-down"></i>';
+                        },
+                        width: "15px"
+                    },
+                    {
+                        data: 'IsPrinted', name: 'IsPrinted', render: function (data) {
+                            if (data === 'Yes') {
+                                return '<span style="color: green;">' + data + '</span>';
+                            } else {
+                                return '<span style="color: red;">' + data + '</span>';
+                            }
+                        }
+                    },
+                    { data: 'O3SKU', name: 'O3SKU' },
+                    { data: 'O3UPC', name: 'O3UPC' },
+                    { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap' },
+                    { data: 'O3REG', name: 'O3REG' },
+                    { data: 'O3POS', name: 'O3POS' },
+                    { data: 'O3SDT', name: 'O3SDT' },
+                    { data: 'O3EDT', name: 'O3EDT' },
+                    { data: 'TypeName', name: 'TypeName' },
+                    { data: 'SizeName', name: 'SizeName' },
+                    { data: 'CategoryName', name: 'CategoryName' },
+                    { data: 'DepartmentName', name: 'DepartmentName' },
+                    { data: 'O3TYPE', name: 'O3TYPE' },
+                    { data: 'IsReverted', name: 'IsReverted' },
+                ],
+                "dom": '<"top"lfB>rt<"bottom"ip>',
+            });
+        }
+
+    });
+</script>

@@ -51,11 +51,11 @@ namespace PriceSignageSystem.Controllers
             var data = _queueRepository.GetHistory(username);
             return Json(data);
         }
-        public ActionResult Search(string query, string searchFilter)
+        public ActionResult Search(string query, string searchFilter, string codeFormat)
         {
             try
             {
-                var dto = _sTRPRCRepository.SearchString(query, searchFilter);
+                var dto = _sTRPRCRepository.SearchString(query, searchFilter, codeFormat);
                 
                 if (dto != null/* && dto.IsExemp == "N"*/)
                 {
@@ -378,9 +378,14 @@ namespace PriceSignageSystem.Controllers
             var data151 = _sTRPRCRepository.CheckSTRPRCUpdates(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
             if (DateTime.TryParseExact(data151.ToString(), "yyMMdd", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
             {
-                // Now you can format the parsed date as needed
-                if (parsedDate.Date != DateTime.Now.Date || parsedDate.Date != result.DateUpdated.Date)
+                if (result == null)
                     return Json(false, JsonRequestBehavior.AllowGet);
+                else
+                {
+                    // Now you can format the parsed date as needed
+                    if (parsedDate.Date != DateTime.Now.Date || parsedDate.Date != result.DateUpdated.Date)
+                        return Json(false, JsonRequestBehavior.AllowGet);
+                }
             }
             else
             {
@@ -411,45 +416,34 @@ namespace PriceSignageSystem.Controllers
 
             if (DateTime.TryParseExact(data151.ToString(), "yyMMdd", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
             {
-                // Now you can format the parsed date as needed
                 if (parsedDate.Date != DateTime.Now.Date)
                 {
                     await _sTRPRCRepository.UpdateSTRPRC151(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
                     data151 = _sTRPRCRepository.CheckSTRPRCUpdates(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
-                    if (DateTime.TryParseExact(data151.ToString(), "yyMMdd", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate1))
-                    {
-                        if (result == null)
-                        {
-                            _sTRPRCRepository.UpdateSTRPRCTable(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
-                            await _sTRPRCRepository.UpdateCentralizedExemptions(data151);
-                            _sTRPRCRepository.GetLatestInventory(ConfigurationManager.AppSettings["StoreID"].ToString());
-                        }
-                        else
-                        {
-                            if (parsedDate1.Date != result.DateUpdated.Date)
-                            {
-                                _sTRPRCRepository.UpdateSTRPRCTable(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
-                                await _sTRPRCRepository.UpdateCentralizedExemptions(data151);
-                                _sTRPRCRepository.GetLatestInventory(ConfigurationManager.AppSettings["StoreID"].ToString());
-                            }
-                        }
-                        
-                    }
-                    else
-                    {
-                        Console.WriteLine("Invalid date format");
-                    }
                 }
-                else
+
+                if (DateTime.TryParseExact(data151.ToString(), "yyMMdd", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate1))
                 {
-                    //if 0.151 data is updated but particular club is not updated
-                    DateTime.TryParseExact(data151.ToString(), "yyMMdd", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate1);
-                    if (parsedDate1.Date != result.DateUpdated.Date)
+                    if (result == null)
                     {
                         _sTRPRCRepository.UpdateSTRPRCTable(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
                         await _sTRPRCRepository.UpdateCentralizedExemptions(data151);
                         _sTRPRCRepository.GetLatestInventory(ConfigurationManager.AppSettings["StoreID"].ToString());
                     }
+                    else
+                    {
+                        if (parsedDate1.Date != result.DateUpdated.Date)
+                        {
+                            _sTRPRCRepository.UpdateSTRPRCTable(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
+                            await _sTRPRCRepository.UpdateCentralizedExemptions(data151);
+                            _sTRPRCRepository.GetLatestInventory(ConfigurationManager.AppSettings["StoreID"].ToString());
+                        }
+                    }
+
+                }
+                else
+                {
+                    Console.WriteLine("Invalid date format");
                 }
             }
             else

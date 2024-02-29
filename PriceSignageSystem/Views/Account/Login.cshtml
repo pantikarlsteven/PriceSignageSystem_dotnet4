@@ -99,7 +99,7 @@
                 url: '/STRPRC/CheckSTRPRCUpdates',
                 type: "GET",
                 success: function (isUpdated) {
-                    console.log(isUpdated);
+                    localStorage.setItem("isScanUsed", false);
                     $("#loadingCheckingSTRPRCUpdate").hide();
                     if (!isUpdated) {
                         $("#loadingSTRPRCUpdate").show();

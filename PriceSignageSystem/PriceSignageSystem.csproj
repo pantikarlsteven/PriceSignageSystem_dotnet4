@@ -290,6 +290,7 @@
     <Compile Include="Code\SessionExpirationAttribute.cs" />
     <Compile Include="Code\TextToImage.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AuditController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\QueueController.cs" />
     <Compile Include="Controllers\RegistersController.cs" />
@@ -298,6 +299,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helper\BarcodeHelper.cs" />
     <Compile Include="Helper\ConversionHelper.cs" />
     <Compile Include="Helper\EncryptionHelper.cs" />
     <Compile Include="Migrations\202305120307196_InitialCreate.cs" />
@@ -433,11 +435,13 @@
     <Compile Include="Models\Dto\ItemQueueDto.cs" />
     <Compile Include="Models\Dto\ReportDto.cs" />
     <Compile Include="Models\Dto\CentralizedSTRPRCDto.cs" />
+    <Compile Include="Models\Dto\AuditDto.cs" />
     <Compile Include="Models\Dto\STRPRCDto.cs" />
     <Compile Include="Models\Dto\STRPRCLogDto.cs" />
     <Compile Include="Models\Dto\UserDto.cs" />
     <Compile Include="Models\Dto\UserStoreDto.cs" />
     <Compile Include="Models\EditReason.cs" />
+    <Compile Include="Models\Interface\IAuditRepository.cs" />
     <Compile Include="Models\Interface\IRegistersRepository.cs" />
     <Compile Include="Models\Interface\IEditReasonRepository.cs" />
     <Compile Include="Models\InventoryPrintingLog.cs" />
@@ -453,6 +457,7 @@
     <Compile Include="Models\Interface\ITypeRepository.cs" />
     <Compile Include="Models\Interface\IUserRepository.cs" />
     <Compile Include="Models\ItemQueue.cs" />
+    <Compile Include="Models\Repository\AuditRepository.cs" />
     <Compile Include="Models\Repository\CategoryRepository.cs" />
     <Compile Include="Models\Repository\QueueRepository.cs" />
     <Compile Include="Models\Repository\RegistersRepository.cs" />
@@ -570,6 +575,7 @@
     <Content Include="Views\STRPRC\_HistoryPartialView.cshtml" />
     <Content Include="Views\Registers\CountryIndex.cshtml" />
     <Content Include="Views\Account\UpdatePassword.cshtml" />
+    <Content Include="Views\Audit\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
