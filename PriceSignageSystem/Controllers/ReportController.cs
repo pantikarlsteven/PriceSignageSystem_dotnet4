@@ -129,8 +129,8 @@ namespace PriceSignageSystem.Controllers
             try
             {
                 var model = JsonConvert.DeserializeObject<ReportDto>(response);
-                model.O3FNAM = Regex.Unescape(model.O3FNAM);
-                model.O3IDSC = Regex.Unescape(model.O3IDSC);
+                model.O3FNAM = string.IsNullOrEmpty(model.O3FNAM) ? model.O3FNAM : Regex.Unescape(model.O3FNAM);
+                model.O3IDSC = string.IsNullOrEmpty(model.O3IDSC) ? model.O3IDSC : Regex.Unescape(model.O3IDSC);
                 ReportDocument report = new ReportDocument();
                 var path = string.Empty;
 

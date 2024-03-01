@@ -375,6 +375,13 @@ namespace PriceSignageSystem.Controllers
         public async Task<JsonResult> CheckSTRPRCUpdates()
         {
             var result = _sTRPRCRepository.GetLatestUpdate();
+
+            if (result != null)
+            {
+                if (result.DateUpdated.Date == DateTime.Now.Date)
+                    return Json(true, JsonRequestBehavior.AllowGet);
+            }
+
             var data151 = _sTRPRCRepository.CheckSTRPRCUpdates(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
             if (DateTime.TryParseExact(data151.ToString(), "yyMMdd", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
             {
