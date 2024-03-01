@@ -191,6 +191,14 @@ namespace PriceSignageSystem.Controllers
                 stream.Read(pdfBytes, 0, pdfBytes.Length);
 
                 _queueRepository.UpdateStatus(data);
+
+                if (data != null)
+                {
+                    var o3skus = data.Select(s => s.O3SKU).ToList();
+                    _sTRPRCRepository.UpdateMultipleStatus(o3skus);
+                    _sTRPRCRepository.AddMultipleInventoryPrintingLog(o3skus, User.Identity.Name);
+                }
+
                 Response.AppendHeader("Content-Disposition", "inline; filename=QueueReport.pdf");
                 report.Close();
                 report.Dispose();
