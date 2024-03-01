@@ -9,7 +9,6 @@
     @Html.HiddenFor(m => m.O3SKU)
     <div class="container">
         <h2 class="text-center bg-primarydark text-white p-2">Item Details</h2>
-
         <div class="row">
             <div class="col-md-6">
                 <dl class="row">
@@ -225,6 +224,32 @@
     }
 
     $(document).ready(function () {
+        var isScanUsed = localStorage.getItem("isScanUsed");
+
+        if ('@ViewBag.IsScannedDtoNull' == "True" && isScanUsed == "true") {
+
+            var modalHtml = '<div class="modal" id="notFoundModal" tabindex="-1" role="dialog" aria-labelledby="notFoundModalLabel" aria-hidden="true">';
+            modalHtml += '<div class="modal-dialog" role="document">';
+            modalHtml += '<div class="modal-content">';
+            modalHtml += '<div class="modal-header">';
+            modalHtml += '<h5 class="modal-title" id="notFoundModalLabel">Error!</h5>';
+            modalHtml += '<button type="button" class="close" data-dismiss="modal" aria-label="Close">';
+            modalHtml += '<span aria-hidden="true">&times;</span>';
+            modalHtml += '</button>';
+            modalHtml += '</div>';
+            modalHtml += '<div class="modal-body">';
+            modalHtml += 'Item Not Found!';
+            modalHtml += '</div>';
+            modalHtml += '<div class="modal-footer">';
+            modalHtml += '<button type="button" class="notFoundBtn btn btn-primary" data-dismiss="modal">OK</button>';
+            modalHtml += '</div>';
+            modalHtml += '</div>';
+            modalHtml += '</div>';
+            modalHtml += '</div>';
+
+            $('body').append(modalHtml);
+            $('#notFoundModal').modal('show');
+        }
 
         var origShortDesc = "";
         var origBrand = "";
@@ -753,8 +778,16 @@
         $(document).on('click', '#successModal .qOkBtn', function () {
             $('#modalView').modal('hide');
             window.location.href = '/STRPRC/Index';
-            //openBarcodeScan();
+        });
 
+        $(document).on('click', '#notFoundModal .notFoundBtn', function () {
+            $('#modalView').modal('hide');
+            window.location.href = '/STRPRC/Index';
+        });
+
+        $(document).on('click', '#notFoundModal .close', function () {
+            $('#modalView').modal('hide');
+            window.location.href = '/STRPRC/Index';
         });
 
         // Remove the modal from the DOM when it is hidden

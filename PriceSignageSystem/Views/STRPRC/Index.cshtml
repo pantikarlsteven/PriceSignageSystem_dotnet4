@@ -39,7 +39,7 @@
                 <input type="text" id="searchInput" class="form-control" style="max-width: 200px; background-color: #fff;" placeholder="Search...">
             </div>
             <div class="col-auto" id="qrScanBtnContainer">
-                <button id="qrScanBtn" class="btn btn-primary" onclick="openBarcodeScan()">Scan QR Code</button>
+                <button id="qrScanBtn" class="btn btn-primary" onclick="openBarcodeScan()">Scan Bar Code</button>
             </div>
         </div>
     </div>
@@ -49,7 +49,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="qrScanModalLongTitle">QR CODE SCAN</h5>
+                    <h5 class="modal-title" id="qrScanModalLongTitle">BAR CODE SCAN</h5>
                     <button type="button" onclick="closeModal()">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -141,13 +141,7 @@
              type: 'POST',
              data: { query: decodedText, searchFilter: filter, codeFormat: codeFormat},
              success: function (result) {
-                 
-                 if (result != null) {
-                     $('#searchResults').html(result);
-                 }
-                 else {
-                     alert('Item Not Found!');
-                 }
+                  $('#searchResults').html(result);
              },
              error: function () {
              }
@@ -165,14 +159,14 @@
             "reader",
             {
                 fps: 10,
-                qrbox: { width: 250, height: 250 },
+                qrbox: { width: 300, height: 200 },
                 rememberLastUsedCamera: true,
                 showZoomSliderIfSupported: true,
                 defaultZoomValueIfSupported: 2,
                 formatsToSupport: [9, 10, 14, 15], // EAN-13, EAN-8, UPC-A, UPC-E respectively
-                //videoConstraints: {
-                //    facingMode: { exact: "environment" },
-                //},
+                videoConstraints: {
+                    facingMode: { exact: "environment" },
+                },
                 useBarCodeDetectorIfSupported: true
             },
              false);

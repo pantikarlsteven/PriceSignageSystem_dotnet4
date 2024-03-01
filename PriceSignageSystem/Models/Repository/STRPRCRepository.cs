@@ -195,53 +195,60 @@ namespace PriceSignageSystem.Models.Repository
 
                 formattedCode = formattedCode != "" ? formattedCode : query;
 
-                data = (from a in _db.STRPRCs
-                        where a.O3UPC.ToString() == formattedCode
-                        select new STRPRCDto
-                        {
-                            O3LOC = a.O3LOC,
-                            O3CLAS = a.O3CLAS,
-                            O3IDSC = a.O3IDSC,
-                            O3SKU = a.O3SKU,
-                            O3SCCD = String.IsNullOrEmpty(a.O3SCCD) ? "-" : a.O3SCCD,
-                            O3UPC = a.O3UPC,
-                            O3VNUM = a.O3VNUM,
-                            O3TYPE = a.O3TYPE,
-                            O3DEPT = a.O3DEPT,
-                            O3SDPT = a.O3SDPT,
-                            O3SCLS = a.O3SCLS,
-                            O3POS = a.O3POS,
-                            O3POSU = a.O3POSU,
-                            O3REG = a.O3REG,
-                            O3REGU = a.O3REGU,
-                            O3ORIG = a.O3ORIG,
-                            O3ORGU = a.O3ORGU,
-                            O3EVT = a.O3EVT,
-                            O3PMMX = a.O3PMMX,
-                            O3PMTH = a.O3PMTH,
-                            O3PDQT = a.O3PDQT,
-                            O3PDPR = a.O3PDPR,
-                            O3SDT = a.O3SDT,
-                            O3EDT = a.O3EDT,
-                            O3TRB3 = String.IsNullOrEmpty(a.O3TRB3) ? "-" : a.O3TRB3,
-                            O3FGR = a.O3FGR,
-                            O3FNAM = a.O3FNAM,
-                            O3MODL = String.IsNullOrEmpty(a.O3MODL) ? "-" : a.O3MODL,
-                            O3LONG = String.IsNullOrEmpty(a.O3LONG) ? "-" : a.O3LONG,
-                            O3SLUM = a.O3SLUM,
-                            O3DIV = a.O3DIV,
-                            O3TUOM = a.O3TUOM,
-                            O3DATE = a.O3DATE,
-                            O3CURD = a.O3CURD,
-                            O3USER = a.O3USER,
-                            DateUpdated = a.DateUpdated,
-                            SelectedTypeId = a.O3REGU == a.O3POS && a.O3EDT == 999999 ? 1 : 2,
-                            SelectedCategoryId = (a.O3DEPT == 150 && (a.O3SDPT == 10 || a.O3SDPT == 12 || a.O3SDPT == 13 || a.O3SDPT == 14)) ||
-                            (a.O3DEPT == 401 || a.O3DEPT == 402 || a.O3DEPT == 403 || a.O3DEPT == 404) ? 1 : 2,
-                            IsExemp = (a.O3REG == a.O3POS && a.O3EDT != 999999) || (a.O3REG < a.O3POS && a.TypeId == 2) ? "Y" : "N",
-                        }).FirstOrDefault();
-            }
+                var upc = _db.CompleteSTRPRCs.Where(f => f.IUPC.ToString() == formattedCode).FirstOrDefault();
 
+                if (upc == null)
+                    data = null;
+                else
+                {
+                    data = (from a in _db.STRPRCs
+                            where a.O3SKU == upc.INUMBR
+                            select new STRPRCDto
+                            {
+                                O3LOC = a.O3LOC,
+                                O3CLAS = a.O3CLAS,
+                                O3IDSC = a.O3IDSC,
+                                O3SKU = a.O3SKU,
+                                O3SCCD = String.IsNullOrEmpty(a.O3SCCD) ? "-" : a.O3SCCD,
+                                O3UPC = a.O3UPC,
+                                O3VNUM = a.O3VNUM,
+                                O3TYPE = a.O3TYPE,
+                                O3DEPT = a.O3DEPT,
+                                O3SDPT = a.O3SDPT,
+                                O3SCLS = a.O3SCLS,
+                                O3POS = a.O3POS,
+                                O3POSU = a.O3POSU,
+                                O3REG = a.O3REG,
+                                O3REGU = a.O3REGU,
+                                O3ORIG = a.O3ORIG,
+                                O3ORGU = a.O3ORGU,
+                                O3EVT = a.O3EVT,
+                                O3PMMX = a.O3PMMX,
+                                O3PMTH = a.O3PMTH,
+                                O3PDQT = a.O3PDQT,
+                                O3PDPR = a.O3PDPR,
+                                O3SDT = a.O3SDT,
+                                O3EDT = a.O3EDT,
+                                O3TRB3 = String.IsNullOrEmpty(a.O3TRB3) ? "-" : a.O3TRB3,
+                                O3FGR = a.O3FGR,
+                                O3FNAM = a.O3FNAM,
+                                O3MODL = String.IsNullOrEmpty(a.O3MODL) ? "-" : a.O3MODL,
+                                O3LONG = String.IsNullOrEmpty(a.O3LONG) ? "-" : a.O3LONG,
+                                O3SLUM = a.O3SLUM,
+                                O3DIV = a.O3DIV,
+                                O3TUOM = a.O3TUOM,
+                                O3DATE = a.O3DATE,
+                                O3CURD = a.O3CURD,
+                                O3USER = a.O3USER,
+                                DateUpdated = a.DateUpdated,
+                                SelectedTypeId = a.O3REGU == a.O3POS && a.O3EDT == 999999 ? 1 : 2,
+                                SelectedCategoryId = (a.O3DEPT == 150 && (a.O3SDPT == 10 || a.O3SDPT == 12 || a.O3SDPT == 13 || a.O3SDPT == 14)) ||
+                                (a.O3DEPT == 401 || a.O3DEPT == 402 || a.O3DEPT == 403 || a.O3DEPT == 404) ? 1 : 2,
+                                IsExemp = (a.O3REG == a.O3POS && a.O3EDT != 999999) || (a.O3REG < a.O3POS && a.TypeId == 2) ? "Y" : "N",
+                            }).FirstOrDefault();
+                }
+                
+            }
 
             return data;
         }

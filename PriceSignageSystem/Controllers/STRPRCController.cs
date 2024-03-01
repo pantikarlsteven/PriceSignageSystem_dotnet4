@@ -123,6 +123,9 @@ namespace PriceSignageSystem.Controllers
                 {
                     dto = dto ?? new STRPRCDto();
                 }
+                
+                ViewBag.IsScannedDtoNull = dto.O3SKU == 0 ? true : false;
+
                 return PartialView("~/Views/STRPRC/_SearchResultPartialView.cshtml", dto);
 
             }
