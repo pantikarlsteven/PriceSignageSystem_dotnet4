@@ -426,7 +426,12 @@
     <Compile Include="Migrations\202402270633583_AddSizeId_ItemQueueTbl.designer.cs">
       <DependentUpon>202402270633583_AddSizeId_ItemQueueTbl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202403010029046_AddTbl_CompleteSTRPRC.cs" />
+    <Compile Include="Migrations\202403010029046_AddTbl_CompleteSTRPRC.designer.cs">
+      <DependentUpon>202403010029046_AddTbl_CompleteSTRPRC.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\CompleteSTRPRC.cs" />
     <Compile Include="Models\Dto\AutoPrintStatusDto.cs" />
     <Compile Include="Models\Dto\CountryDto.cs" />
     <Compile Include="Models\Dto\ExemptionDto.cs" />
@@ -691,6 +696,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202402270633583_AddSizeId_ItemQueueTbl.resx">
       <DependentUpon>202402270633583_AddSizeId_ItemQueueTbl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202403010029046_AddTbl_CompleteSTRPRC.resx">
+      <DependentUpon>202403010029046_AddTbl_CompleteSTRPRC.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Dynamic_OneEightReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

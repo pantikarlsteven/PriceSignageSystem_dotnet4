@@ -19,6 +19,7 @@ namespace PriceSignageSystem.Models.DatabaseContext
         public DbSet<STRPRCLog> STRPRCLogs { get; set; }
         public DbSet<EditReason> EditReasons { get; set; }
         public DbSet<InventoryPrintingLog> InventoryPrintingLogs { get; set; }
+        public DbSet<CompleteSTRPRC> CompleteSTRPRCs { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
