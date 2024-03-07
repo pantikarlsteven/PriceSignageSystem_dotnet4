@@ -92,6 +92,8 @@ namespace PriceSignageSystem.Models.Dto
         public string DepartmentName { get; set; }
         public string IsReverted { get; set; }
         public string IsPrinted { get; set; }
+        public string IsAudited { get; set; } = "No";
+        public string IsResolved { get; set; }
         public decimal LatestDate { get; set; }
         public string HasInventory { get; set; }
         public string IsExemp { get; set; }
@@ -99,6 +101,7 @@ namespace PriceSignageSystem.Models.Dto
         public decimal IBHAND { get; set; }
         public List<AuditDto> PrintedList { get; set; }
         public List<AuditDto> NotPrintedList { get; set; }
+        public List<AuditDto> AuditedList { get; set; }
         public string Remarks { get; set; }
         public decimal ZeroInvDCOnHand { get; set; }
         public decimal ZeroInvInTransit { get; set; }

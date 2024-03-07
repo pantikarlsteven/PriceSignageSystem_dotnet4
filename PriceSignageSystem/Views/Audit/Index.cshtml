@@ -10,6 +10,14 @@
     <title>Audit</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <script src="~/Scripts/html5-qrcode.min.js"></script>
 
     <style>
         td.details-control {
@@ -48,6 +56,13 @@
             display: flex;
             align-items: center;
         }
+
+        .chart-container {
+            width: 400px;
+            height: 400px;
+            margin: 30px;
+        }
+
     </style>
 </head>
 <body>
@@ -77,21 +92,24 @@
                         <a class="nav-link nav-link-tab" style="color:white;" data-toggle="tab" href="#audited-pca">Audited</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link nav-link-tab" style="color:white;" data-toggle="tab" href="#notprinted-pca">Not Printed</a>
+                        <a class="nav-link nav-link-tab" style="color:white;" data-toggle="tab" href="#notprinted-pca">Unprinted</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link nav-link-tab" style="color:white;" data-toggle="tab" href="#exemption-pca">Exemption</a>
+                        <a class="nav-link nav-link-tab" style="color:white;" data-toggle="tab" href="#graph">Graph</a>
                     </li>
                 </ul>
 
                 <div class="tab-content">
                     <div id="printed-pca" class="tab-pane active mx-2">
                         <h3 class="text-center mt-2">Printed PCA</h3>
+                        <div class="row align-items-center justify-content-center">
+                            <div class="col-auto" id="barcodeContainer">
+                                <button id="barcodeScan" class="btn btn-primary" onclick="Scan()">Scan Bar Code</button>
+                            </div>
+                        </div>
                         <table id="printed-pca-table" class="table table-sm table-hover" style="width: 100%; text-align: center;">
                             <thead style="background-color: #1C3766;" class="text-white">
                                 <tr>
-                                    <th>-</th>
-                                    <th>Printed?</th>
                                     <th>SKU</th>
                                     <th>UPC</th>
                                     <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
@@ -102,14 +120,18 @@
                                     <th>Type</th>
                                     <th>Size</th>
                                     <th>Category</th>
-                                    <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
+                                    <th>
+                                        Dept
+                                        <i class="filter-icon bi bi-funnel-fill"></i>
+                                    </th>
                                     <th>Type</th>
                                     <th>Reverted?</th>
+                                    <th>Exemption?</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="15" style="text-align: center;">No data available</td>
+                                    <td colspan="14" style="text-align: center;">No data available</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -120,8 +142,6 @@
                         <table id="audited-pca-table" class="table table-sm table-hover" style="width: 100%; text-align: center;">
                             <thead style="background-color: #1C3766;" class="text-white">
                                 <tr>
-                                    <th>-</th>
-                                    <th>Printed?</th>
                                     <th>SKU</th>
                                     <th>UPC</th>
                                     <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
@@ -132,14 +152,18 @@
                                     <th>Type</th>
                                     <th>Size</th>
                                     <th>Category</th>
-                                    <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
+                                    <th>
+                                        Dept
+                                        <i class="filter-icon bi bi-funnel-fill"></i>
+                                    </th>
                                     <th>Type</th>
                                     <th>Reverted?</th>
+                                    <th>Exemption?</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="15" style="text-align: center;">No data available</td>
+                                    <td colspan="14" style="text-align: center;">No data available</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -150,8 +174,7 @@
                         <table id="notprinted-pca-table" class="table table-sm table-hover" style="width: 100%; text-align: center;">
                             <thead style="background-color: #1C3766;" class="text-white">
                                 <tr>
-                                    <th>-</th>
-                                    <th>Printed?</th>
+                                    <th>Resolved?</th>
                                     <th>SKU</th>
                                     <th>UPC</th>
                                     <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
@@ -162,9 +185,13 @@
                                     <th>Type</th>
                                     <th>Size</th>
                                     <th>Category</th>
-                                    <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
+                                    <th>
+                                        Dept
+                                        <i class="filter-icon bi bi-funnel-fill"></i>
+                                    </th>
                                     <th>Type</th>
                                     <th>Reverted?</th>
+                                    <th>Exemption?</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -175,52 +202,136 @@
                         </table>
                     </div>
 
-                    <div id="exemption-pca" class="tab-pane fade mx-2">
-                        <h3 class="text-center mt-2">Printed Exemption</h3>
-                        <table id="exemption-pca-table" class="table table-sm table-hover" style="width: 100%; text-align: center;">
-                            <thead style="background-color: #1C3766;" class="text-white">
-                                <tr>
-                                    <th>-</th>
-                                    <th>Printed?</th>
-                                    <th>SKU</th>
-                                    <th>UPC</th>
-                                    <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
-                                    <th>Reg Price</th>
-                                    <th>Current Price</th>
-                                    <th>Date Start</th>
-                                    <th>Date End</th>
-                                    <th>Type</th>
-                                    <th>Size</th>
-                                    <th>Category</th>
-                                    <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
-                                    <th>Type</th>
-                                    <th>Reverted?</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="15" style="text-align: center;">No data available</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div id="graph" class="tab-pane fade mx-2" style="min-height: 950px">
+                        <div class="row align-items-center justify-content-center">
+                            <div class="chart-container">
+                                <h3 class="printedCount text-center">PRINTED COUNT: </h3>
+                                <canvas id="pieChart"></canvas>
+                            </div>
+                            <div class="chart-container">
+                                <h3 class="unprintedCount text-center">UNPRINTED COUNT: </h3>
+                                <canvas id="pieChart2"></canvas>
+                            </div>
+                        </div>
                     </div>
+                </div>
+            </div>
+        </div>
 
+        <!-- QR SCAN Modal -->
+        <div class="modal" id="barcodeScanModal" tabindex="-1" role="dialog" aria-labelledby="barcodeScanModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="qbarcodeScanModalLongTitle">BAR CODE SCAN</h5>
+                        <button type="button" onclick="closeModal()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="reader"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scan Result Modal -->
+        <div class="modal" id="scanResultModal" tabindex="-1" role="dialog" aria-labelledby="scanResultModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="sku"></h5>
+                        <h5 class="scanResultTitle modal-title" id="scanResultModalLongTitle"></h5>
+                        <button type="button" onclick="closeScanResultModal()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="scanResult">
+                            <div class="resultDetails">
+                            </div>
+                            <div class="resultDesc row align-items-center justify-content-center" style="font-size: 24px; font-weight: bold;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="yesOrNoBtns modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="postSku()">Yes</button>
+                        <button type="button" class="btn btn-secondary" onclick="closeScanResultModal()">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Modal -->
+        <div id="successModal" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Success</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-success">
+                            Audited Successfully!
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="auditSuccess()">Ok</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Unprinted Modal -->
+        <div class="modal" id="UnprintedModal" tabindex="-1" role="dialog" aria-labelledby="UnprintedModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="isChecked"></h5>
+                        <h5 class="sku"></h5>
+                        <h5 class="UnprintedTitle modal-title" id="UnprintedModalLongTitle"></h5>
+                        <button type="button" onclick="closeUnprintedModal()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="Unprinted">
+                            <div class="resultDetails">
+                            </div>
+                            <div class="resultDesc row align-items-center justify-content-center" style="font-size: 24px; font-weight: bold;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="yesOrNoBtns modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="resolveUnresolve()">Yes</button>
+                        <button type="button" class="btn btn-secondary" onclick="closeUnprintedModal()">Close</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+
 
 </body>
 </html>
 <script>
+    var modalContainer = document.getElementById('barcodeScanModal');
+    var scanResultModalContainer = document.getElementById('scanResultModal');
+    var successModalContainer = document.getElementById('successModal');
+    var unprintedModal = document.getElementById('UnprintedModal');
+    var isScanUsed = localStorage.getItem("isScanUsed");
+
+
     $(document).ready(function () {
 
         InitLoad();
 
         var tableForPrinted = null;
         var tableForNotPrinted = null;
+        var tableForAudited = null;
+        var printedCount = 0;
+        var auditedCount = 0;
+        var resolvedCount = 0;
+        var unresolvedCount = 0;
 
         function InitLoad() {
             $("#loadingContainer").show();
@@ -237,15 +348,39 @@
                     if (tableForNotPrinted !== null) {
                         tableForNotPrinted.destroy();
                     }
+                    if (tableForAudited !== null) {
+                        tableForAudited.destroy();
+                    }
 
                     RenderTableForPrinted(data.PrintedList);
                     RenderTableForNotPrinted(data.NotPrintedList);
+                    RenderTableForAudited(data.AuditedList);
+
+                    printedCount = data.PrintedList.length;
+                    auditedCount = data.AuditedList.length;
+
+                    resolvedData = data.NotPrintedList.filter(function (item) {
+                        return item.IsResolved === 'Y';
+                    });
+                    resolvedCount = resolvedData.length;
+
+                    unresolvedData = data.NotPrintedList.filter(function (item) {
+                        return item.IsResolved === 'N';
+                    });
+                    unresolvedCount = unresolvedData.length;
+
+                    RenderGraph();
+
                     $("#loadingContainer").hide();
 
                 },
                 error: function (e) { }
             });
 
+        }
+
+        if (isScanUsed == "true") {
+            Scan();
         }
 
         function RenderTableForPrinted(data) {
@@ -260,29 +395,11 @@
                 ],
                 pageLength: -1,
                 data: data,
+                order: [],
                 columnDefs: [
-                    { targets: [4, 5, 6], orderable: false },
+                    { targets: [0, 2, 3, 4, 10], orderable: false },
                 ],
                 columns: [
-                    {
-                        "className": 'details-control',
-                        "orderable": false,
-                        "data": null,
-                        "defaultContent": '',
-                        "render": function () {
-                            return '<i class="fa-solid fa-square-caret-down"></i>';
-                        },
-                        width: "15px"
-                    },
-                    {
-                        data: 'IsPrinted', name: 'IsPrinted', render: function (data) {
-                            if (data === 'Yes') {
-                                return '<span style="color: green;">' + data + '</span>';
-                            } else {
-                                return '<span style="color: red;">' + data + '</span>';
-                            }
-                        }
-                    },
                     { data: 'O3SKU', name: 'O3SKU' },
                     { data: 'O3UPC', name: 'O3UPC' },
                     { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap' },
@@ -296,6 +413,58 @@
                     { data: 'DepartmentName', name: 'DepartmentName' },
                     { data: 'O3TYPE', name: 'O3TYPE' },
                     { data: 'IsReverted', name: 'IsReverted' },
+                    {
+                        data: 'IsExemp', name: 'IsExemp', render: function (data) {
+                            if (data === 'Yes') {
+                                return '<span style="color: green;">' + data + '</span>';
+                            } else {
+                                return '<span style="color: red;">' + data + '</span>';
+                            }
+                        }
+                    },
+                ],
+                "dom": '<"top"lfB>rt<"bottom"ip>',
+            });
+        }
+
+        function RenderTableForAudited(data) {
+            tableForAudited = $('#audited-pca-table').DataTable({
+                scrollY: 500,
+                scrollX: true,
+                scroller: true,
+                deferRender: true,
+                lengthMenu: [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, 'All']
+                ],
+                pageLength: -1,
+                data: data,
+                columnDefs: [
+                    { targets: [2, 3, 4, 10], orderable: false },
+                ],
+                columns: [
+                    { data: 'O3SKU', name: 'O3SKU' },
+                    { data: 'O3UPC', name: 'O3UPC' },
+                    { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap' },
+                    { data: 'O3REG', name: 'O3REG' },
+                    { data: 'O3POS', name: 'O3POS' },
+                    { data: 'O3SDT', name: 'O3SDT' },
+                    { data: 'O3EDT', name: 'O3EDT' },
+                    { data: 'TypeName', name: 'TypeName' },
+                    { data: 'SizeName', name: 'SizeName' },
+                    { data: 'CategoryName', name: 'CategoryName' },
+                    { data: 'DepartmentName', name: 'DepartmentName' },
+                    { data: 'O3TYPE', name: 'O3TYPE' },
+                    { data: 'IsReverted', name: 'IsReverted' },
+                    {
+                        data: 'IsExemp', name: 'IsExemp', render: function (data) {
+                            if (data === 'Yes') {
+                                return '<span style="color: green;">' + data + '</span>';
+                            } else {
+                                return '<span style="color: red;">' + data + '</span>';
+                            }
+                        }
+                    },
                 ],
                 "dom": '<"top"lfB>rt<"bottom"ip>',
             });
@@ -313,26 +482,17 @@
                 ],
                 pageLength: -1,
                 data: data,
+                order: [],
                 columnDefs: [
-                    { targets: [4, 5, 6], orderable: false },
+                    { targets: [0, 3, 4, 5, 11], orderable: false },
                 ],
                 columns: [
                     {
-                        "className": 'details-control',
-                        "orderable": false,
-                        "data": null,
-                        "defaultContent": '',
-                        "render": function () {
-                            return '<i class="fa-solid fa-square-caret-down"></i>';
-                        },
-                        width: "15px"
-                    },
-                    {
-                        data: 'IsPrinted', name: 'IsPrinted', render: function (data) {
-                            if (data === 'Yes') {
-                                return '<span style="color: green;">' + data + '</span>';
+                        data: null, render: function (data, type, row) {
+                            if (row.IsResolved === 'Y') {
+                                return '<input type="checkbox" class="rowCheckboxNotPrinted" data-id="' + data.O3SKU + '" checked>';
                             } else {
-                                return '<span style="color: red;">' + data + '</span>';
+                                return '<input type="checkbox" class="rowCheckboxNotPrinted" data-id="' + data.O3SKU + '">';
                             }
                         }
                     },
@@ -349,10 +509,773 @@
                     { data: 'DepartmentName', name: 'DepartmentName' },
                     { data: 'O3TYPE', name: 'O3TYPE' },
                     { data: 'IsReverted', name: 'IsReverted' },
+                    {
+                        data: 'IsExemp', name: 'IsExemp', render: function (data) {
+                            if (data === 'Yes') {
+                                return '<span style="color: green;">' + data + '</span>';
+                            } else {
+                                return '<span style="color: red;">' + data + '</span>';
+                            }
+                        }
+                    },
                 ],
                 "dom": '<"top"lfB>rt<"bottom"ip>',
             });
         }
 
+        // FIX DT HEADER MISALIGNMENT FOR NewExemption INV TAB
+        $('.nav-link-tab').click(function () {
+            // Remove 'active' class from all tabs
+            $('.nav-link-tab').removeClass('active');
+
+            // Add 'active' class to the clicked tab
+            $(this).addClass('active');
+
+            // Get the href value of the clicked tab
+            var tabId = $(this).attr('href');
+
+            // Show the corresponding tab content
+            $('.tab-pane').removeClass('show active');
+            $(tabId).addClass('show active');
+
+            // Get the current active tab
+            var currentActiveTab = $('.nav-link-tab.active').attr('href');
+            if (currentActiveTab == "#printed-pca") {
+                tableForPrinted.draw();
+            }
+            else if (currentActiveTab == "#audited-pca") {
+                tableForAudited.draw();
+            }
+            else if (currentActiveTab == "#notprinted-pca") {
+                tableForNotPrinted.draw();
+            }
+
+        });
+
+        // FIX DT HEADER MISALIGNMENT FOR NewExemption INV TAB
+        $('.nav-link-burger').click(function () {
+            setTimeout(function () {
+                $("a.nav-link-tab.active").trigger("click");
+            }, 300);
+        });
+
+
+        function RenderGraph() {
+            var totalSku = printedCount + auditedCount;
+
+            var text = document.querySelector('#graph .printedCount').textContent.concat(totalSku);
+            document.querySelector('#graph .printedCount').textContent = text;
+            var data = {
+                "Printed": printedCount,
+                "Audited": auditedCount
+            };
+
+            var labels = Object.keys(data);
+            var values = Object.values(data);
+
+            var ctx = document.getElementById('pieChart').getContext('2d');
+            var pieChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: [
+                            "#51829B",
+                            "#CD8D7A"
+                        ],
+                        borderColor: [
+                            "rgb(255,255,255)",
+                            'rgb(255,255,255)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                plugins: [ChartDataLabels],
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Audited vs Printed'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    var label = context.label;
+                                    var value = context.formattedValue;
+                                    var auditedPercentage = ((auditedCount / printedCount) * 100).toFixed(2);
+                                    var printedPercentage = 100 - auditedPercentage;
+
+                                    if (label == "Audited") {
+                                        label += ' - ' + value + ' (' + auditedPercentage + '%)';
+                                    } else {
+                                        label += ' - ' + value + ' (' + printedPercentage + '%)';
+
+                                    }
+
+                                    return label;
+                                }
+                            }
+                        },
+                        datalabels: {
+                            display: true,
+                            formatter: (val, ctx) => {
+                                // Grab the label for this value
+                                var label = ctx.chart.data.labels[ctx.dataIndex];
+
+                                var auditedPercentage = ((auditedCount / printedCount) * 100).toFixed(2);
+                                var printedPercentage = 100 - auditedPercentage;
+
+                                if (label == "Audited") {
+                                    label = auditedPercentage + '%' + " (" + auditedCount + ")";
+                                } else {
+                                    label = printedPercentage + '%' + " (" + printedCount + ")";
+
+                                }
+
+                                return label;
+                            },
+                            align: 'bottom',
+                            backgroundColor: '#ccc',
+                            borderRadius: 3,
+                            font: {
+                                size: 14,
+                            },
+                        },
+                    }
+                }
+            });
+
+
+            // RESOLVE & UNRESOLVE
+            var totalUnprinted = resolvedCount + unresolvedCount;
+
+            var text = document.querySelector('#graph .unprintedCount').textContent.concat(totalUnprinted);
+            document.querySelector('#graph .unprintedCount').textContent = text;
+            var data = {
+                "Resolved": resolvedCount,
+                "Unresolved": unresolvedCount
+            };
+
+            var labels = Object.keys(data);
+            var values = Object.values(data);
+
+            var ctx = document.getElementById('pieChart2').getContext('2d');
+            var pieChart2 = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: [
+                            "#FFCF81",
+                            "#8E7AB5"
+                        ],
+                        borderColor: [
+                            "rgb(255,255,255)",
+                            'rgb(255,255,255)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                plugins: [ChartDataLabels],
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Resolved vs Unresolved'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    var label = context.label;
+                                    var value = context.formattedValue;
+                                    var resolvedPercentage = ((resolvedCount / unresolvedCount) * 100).toFixed(2);
+                                    var unresolvedPercentage = 100 - resolvedPercentage;
+
+                                    if (label == "Resolved") {
+                                        label += ' - ' + value + ' (' + resolvedPercentage + '%)';
+                                    } else {
+                                        label += ' - ' + value + ' (' + unresolvedPercentage + '%)';
+
+                                    }
+
+                                    return label;
+                                }
+                            }
+                        },
+                        datalabels: {
+                            display: true,
+                            formatter: (val, ctx) => {
+                                // Grab the label for this value
+                                var label = ctx.chart.data.labels[ctx.dataIndex];
+
+                                var resolvedPercentage = ((resolvedCount / unresolvedCount) * 100).toFixed(2);
+                                var unresolvedPercentage = 100 - resolvedPercentage;
+
+                                if (label == "Resolved") {
+                                    label = resolvedPercentage + '%' + " (" + resolvedCount + ")";
+                                } else {
+                                    label = unresolvedPercentage + '%' + " (" + unresolvedCount + ")";
+
+                                }
+
+                                return label;
+                            },
+                            align: 'bottom',
+                            backgroundColor: '#ccc',
+                            borderRadius: 3,
+                            font: {
+                                size: 14,
+                            },
+                        },
+                    }
+                }
+            });
+        }
+
+        // FILTER DEPT FOR PRINTED
+        var dialogForPrinted = $('<div>').dialog({
+            autoOpen: false,
+            modal: true,
+            resizable: false,
+            width: 300,
+            position: { my: 'center', at: 'center', of: window },
+            open: function (event, ui) {
+                $('.ui-widget-overlay').bind('click', function () {
+                    dialogForPrinted.dialog('close');
+                });
+            },
+            close: function (event, ui) {
+                $('.ui-widget-overlay').unbind('click');
+            }
+        });
+        $('#printed-pca-table thead').on('click', '.filter-icon', function (event) {
+            event.stopPropagation(); // Prevent event propagation
+
+            var columnName = "Dept";
+            var table = $('#printed-pca-table').DataTable();
+            var columnIndex = table.column(function (idx, data, node) {
+                return table.column(idx).header().textContent.trim() === columnName ? true : false;
+            }).index();
+
+            var column = tableForPrinted.column(columnIndex);
+
+            // Clear existing filter input
+            dialogForPrinted.dialog('option', 'title', 'Filter Dept').html('');
+
+            // Get distinct values of the column
+            var distinctValues = column.data().unique().toArray();
+
+            // Retrieve previously selected values (if any)
+            var selectedValues = column.search().split('|').map(function (value) {
+                return value.trim();
+            });
+
+            if (selectedValues.length > 0) {
+                selectedValues[0] = selectedValues[0].replace(/^\^\(/, '');
+                var lastIndex = selectedValues.length - 1;
+                selectedValues[lastIndex] = selectedValues[lastIndex].replace(/\)\$$/, '');
+            }
+
+
+            // Create checkboxes for each distinct value
+            var scrollableDiv = $('<div>').css({
+                'max-height': '200px', // Set a maximum height for scrolling
+                'overflow-y': 'scroll' // Enable vertical scrolling
+            });
+
+            var checkboxContainer = $('<div>').css({
+                'display': 'flex',
+                'flex-direction': 'column', // Align checkboxes vertically
+                'gap': '3px' // Add spacing between checkboxes
+            });
+
+            // Add "Select All" checkbox
+            var selectAllCheckbox = $('<input type="checkbox">').addClass('filter-checkbox select-all-checkbox');
+            var selectAllLabel = $('<label>').text(' Select All').prepend(selectAllCheckbox);
+            checkboxContainer.prepend(selectAllLabel);
+
+            for (var i = 0; i < distinctValues.length; i++) {
+                var checkbox = $('<input type="checkbox">').addClass('filter-checkbox').val(distinctValues[i]);
+                if (selectedValues.includes(distinctValues[i])) {
+                    checkbox.prop('checked', true);
+                }
+                var label = $('<label>').text(' ' + distinctValues[i]).prepend(checkbox);
+                checkboxContainer.append(label);
+            }
+
+            scrollableDiv.append(checkboxContainer);
+            dialogForPrinted.append(scrollableDiv);
+
+            // Create button container for the "OK" and "Clear All Checkboxes" buttons
+            var buttonContainer = $('<div>').css('display', 'flex');
+            dialogForPrinted.append(buttonContainer);
+
+            // Create "Clear All Checkboxes" button
+            var clearButton = $('<button>').text('Clear All').addClass('btn btn-secondary btn-sm').css('background-color', 'gray').click(function () {
+                $('.filter-checkbox').prop('checked', false);
+                applyFilter();
+            });
+            buttonContainer.append(clearButton);
+
+            // Create "OK" button
+            var okButton = $('<button>').text('OK').addClass('btn btn-secondary btn-sm ml-2').css('background-color', 'orange').click(function () {
+                applyFilter();
+                dialogForPrinted.dialog('close');
+            });
+            buttonContainer.append(okButton);
+
+            // Apply filter when checkbox state changes
+            $('.filter-checkbox').on('change', applyFilter);
+
+            // Toggle state of all checkboxes when "Select All" checkbox changes
+            selectAllCheckbox.click(function () {
+                $('.filter-checkbox').not('.select-all-checkbox').prop('checked', $(this).prop('checked'));
+            });
+
+            // Open the filter dialog
+            dialogForPrinted.dialog('open');
+
+            function applyFilter() {
+                var selectedValues = $('.filter-checkbox:checked').map(function () {
+                    return $(this).val();
+                }).get();
+
+                if (selectedValues.length === 0) {
+                    column.search('').draw();
+                } else {
+                    // Use a regular expression to match exact values
+                    var regex = '^(' + selectedValues.map(function (value) {
+                        return $.fn.dataTable.util.escapeRegex(value);
+                    }).join('|') + ')$';
+
+                    column.search(regex, true, false).draw();
+                }
+            }
+        });
+
+        // FILTER DEPT FOR AUDITED
+        var dialogForAudited = $('<div>').dialog({
+            autoOpen: false,
+            modal: true,
+            resizable: false,
+            width: 300,
+            position: { my: 'center', at: 'center', of: window },
+            open: function (event, ui) {
+                $('.ui-widget-overlay').bind('click', function () {
+                    dialogForAudited.dialog('close');
+                });
+            },
+            close: function (event, ui) {
+                $('.ui-widget-overlay').unbind('click');
+            }
+        });
+        $('#audited-pca-table thead').on('click', '.filter-icon', function (event) {
+            event.stopPropagation(); // Prevent event propagation
+
+            var columnName = "Dept";
+            var table = $('#audited-pca-table').DataTable();
+            var columnIndex = table.column(function (idx, data, node) {
+                return table.column(idx).header().textContent.trim() === columnName ? true : false;
+            }).index();
+
+            var column = tableForAudited.column(columnIndex);
+
+            // Clear existing filter input
+            dialogForAudited.dialog('option', 'title', 'Filter Dept').html('');
+
+            // Get distinct values of the column
+            var distinctValues = column.data().unique().toArray();
+
+            // Retrieve previously selected values (if any)
+            var selectedValues = column.search().split('|').map(function (value) {
+                return value.trim();
+            });
+
+            if (selectedValues.length > 0) {
+                selectedValues[0] = selectedValues[0].replace(/^\^\(/, '');
+                var lastIndex = selectedValues.length - 1;
+                selectedValues[lastIndex] = selectedValues[lastIndex].replace(/\)\$$/, '');
+            }
+
+
+            // Create checkboxes for each distinct value
+            var scrollableDiv = $('<div>').css({
+                'max-height': '200px', // Set a maximum height for scrolling
+                'overflow-y': 'scroll' // Enable vertical scrolling
+            });
+
+            var checkboxContainer = $('<div>').css({
+                'display': 'flex',
+                'flex-direction': 'column', // Align checkboxes vertically
+                'gap': '3px' // Add spacing between checkboxes
+            });
+
+            // Add "Select All" checkbox
+            var selectAllCheckbox = $('<input type="checkbox">').addClass('filter-checkbox select-all-checkbox');
+            var selectAllLabel = $('<label>').text(' Select All').prepend(selectAllCheckbox);
+            checkboxContainer.prepend(selectAllLabel);
+
+            for (var i = 0; i < distinctValues.length; i++) {
+                var checkbox = $('<input type="checkbox">').addClass('filter-checkbox').val(distinctValues[i]);
+                if (selectedValues.includes(distinctValues[i])) {
+                    checkbox.prop('checked', true);
+                }
+                var label = $('<label>').text(' ' + distinctValues[i]).prepend(checkbox);
+                checkboxContainer.append(label);
+            }
+
+            scrollableDiv.append(checkboxContainer);
+            dialogForAudited.append(scrollableDiv);
+
+            // Create button container for the "OK" and "Clear All Checkboxes" buttons
+            var buttonContainer = $('<div>').css('display', 'flex');
+            dialogForAudited.append(buttonContainer);
+
+            // Create "Clear All Checkboxes" button
+            var clearButton = $('<button>').text('Clear All').addClass('btn btn-secondary btn-sm').css('background-color', 'gray').click(function () {
+                $('.filter-checkbox').prop('checked', false);
+                applyFilter();
+            });
+            buttonContainer.append(clearButton);
+
+            // Create "OK" button
+            var okButton = $('<button>').text('OK').addClass('btn btn-secondary btn-sm ml-2').css('background-color', 'orange').click(function () {
+                applyFilter();
+                dialogForAudited.dialog('close');
+            });
+            buttonContainer.append(okButton);
+
+            // Apply filter when checkbox state changes
+            $('.filter-checkbox').on('change', applyFilter);
+
+            // Toggle state of all checkboxes when "Select All" checkbox changes
+            selectAllCheckbox.click(function () {
+                $('.filter-checkbox').not('.select-all-checkbox').prop('checked', $(this).prop('checked'));
+            });
+
+            // Open the filter dialog
+            dialogForAudited.dialog('open');
+
+            function applyFilter() {
+                var selectedValues = $('.filter-checkbox:checked').map(function () {
+                    return $(this).val();
+                }).get();
+
+                if (selectedValues.length === 0) {
+                    column.search('').draw();
+                } else {
+                    // Use a regular expression to match exact values
+                    var regex = '^(' + selectedValues.map(function (value) {
+                        return $.fn.dataTable.util.escapeRegex(value);
+                    }).join('|') + ')$';
+
+                    column.search(regex, true, false).draw();
+                }
+            }
+        });
+
+        // FILTER DEPT FOR NOT PRINTED
+        var dialogForNotPrinted = $('<div>').dialog({
+            autoOpen: false,
+            modal: true,
+            resizable: false,
+            width: 300,
+            position: { my: 'center', at: 'center', of: window },
+            open: function (event, ui) {
+                $('.ui-widget-overlay').bind('click', function () {
+                    dialogForNotPrinted.dialog('close');
+                });
+            },
+            close: function (event, ui) {
+                $('.ui-widget-overlay').unbind('click');
+            }
+        });
+        $('#notprinted-pca-table thead').on('click', '.filter-icon', function (event) {
+            event.stopPropagation(); // Prevent event propagation
+
+            var columnName = "Dept";
+            var table = $('#notprinted-pca-table').DataTable();
+            var columnIndex = table.column(function (idx, data, node) {
+                return table.column(idx).header().textContent.trim() === columnName ? true : false;
+            }).index();
+
+            var column = tableForNotPrinted.column(columnIndex);
+
+            // Clear existing filter input
+            dialogForNotPrinted.dialog('option', 'title', 'Filter Dept').html('');
+
+            // Get distinct values of the column
+            var distinctValues = column.data().unique().toArray();
+
+            // Retrieve previously selected values (if any)
+            var selectedValues = column.search().split('|').map(function (value) {
+                return value.trim();
+            });
+
+            if (selectedValues.length > 0) {
+                selectedValues[0] = selectedValues[0].replace(/^\^\(/, '');
+                var lastIndex = selectedValues.length - 1;
+                selectedValues[lastIndex] = selectedValues[lastIndex].replace(/\)\$$/, '');
+            }
+
+
+            // Create checkboxes for each distinct value
+            var scrollableDiv = $('<div>').css({
+                'max-height': '200px', // Set a maximum height for scrolling
+                'overflow-y': 'scroll' // Enable vertical scrolling
+            });
+
+            var checkboxContainer = $('<div>').css({
+                'display': 'flex',
+                'flex-direction': 'column', // Align checkboxes vertically
+                'gap': '3px' // Add spacing between checkboxes
+            });
+
+            // Add "Select All" checkbox
+            var selectAllCheckbox = $('<input type="checkbox">').addClass('filter-checkbox select-all-checkbox');
+            var selectAllLabel = $('<label>').text(' Select All').prepend(selectAllCheckbox);
+            checkboxContainer.prepend(selectAllLabel);
+
+            for (var i = 0; i < distinctValues.length; i++) {
+                var checkbox = $('<input type="checkbox">').addClass('filter-checkbox').val(distinctValues[i]);
+                if (selectedValues.includes(distinctValues[i])) {
+                    checkbox.prop('checked', true);
+                }
+                var label = $('<label>').text(' ' + distinctValues[i]).prepend(checkbox);
+                checkboxContainer.append(label);
+            }
+
+            scrollableDiv.append(checkboxContainer);
+            dialogForNotPrinted.append(scrollableDiv);
+
+            // Create button container for the "OK" and "Clear All Checkboxes" buttons
+            var buttonContainer = $('<div>').css('display', 'flex');
+            dialogForNotPrinted.append(buttonContainer);
+
+            // Create "Clear All Checkboxes" button
+            var clearButton = $('<button>').text('Clear All').addClass('btn btn-secondary btn-sm').css('background-color', 'gray').click(function () {
+                $('.filter-checkbox').prop('checked', false);
+                applyFilter();
+            });
+            buttonContainer.append(clearButton);
+
+            // Create "OK" button
+            var okButton = $('<button>').text('OK').addClass('btn btn-secondary btn-sm ml-2').css('background-color', 'orange').click(function () {
+                applyFilter();
+                dialogForNotPrinted.dialog('close');
+            });
+            buttonContainer.append(okButton);
+
+            // Apply filter when checkbox state changes
+            $('.filter-checkbox').on('change', applyFilter);
+
+            // Toggle state of all checkboxes when "Select All" checkbox changes
+            selectAllCheckbox.click(function () {
+                $('.filter-checkbox').not('.select-all-checkbox').prop('checked', $(this).prop('checked'));
+            });
+
+            // Open the filter dialog
+            dialogForNotPrinted.dialog('open');
+
+            function applyFilter() {
+                var selectedValues = $('.filter-checkbox:checked').map(function () {
+                    return $(this).val();
+                }).get();
+
+                if (selectedValues.length === 0) {
+                    column.search('').draw();
+                } else {
+                    // Use a regular expression to match exact values
+                    var regex = '^(' + selectedValues.map(function (value) {
+                        return $.fn.dataTable.util.escapeRegex(value);
+                    }).join('|') + ')$';
+
+                    column.search(regex, true, false).draw();
+                }
+            }
+        });
+
+        $('#notprinted-pca-table').on('change', '.rowCheckboxNotPrinted', function () {
+            var rowData = tableForNotPrinted.row($(this).closest('tr')).data();
+            var isChecked = $(this).is(':checked');
+            var id = $(this).data('id');
+            var details = `<b>SKU:</b> ${rowData.O3SKU} <br> <b>Description:</b> ${rowData.O3IDSC} <br> <b>Current Price:</b> ${rowData.O3POS} <br><br><br>`;
+
+            document.querySelector("#UnprintedModal .isChecked").textContent = isChecked;
+            document.querySelector("#UnprintedModal .isChecked").style.display = "none";
+            document.querySelector("#UnprintedModal .sku").textContent = id;
+            document.querySelector("#UnprintedModal .sku").style.display = "none";
+
+            if (isChecked) {
+                document.querySelector("#UnprintedModal .UnprintedTitle").textContent = "For Confirmation";
+                document.querySelector("#Unprinted .resultDetails").innerHTML = details;
+                document.querySelector("#Unprinted .resultDesc").textContent = "Resolve?";
+                document.querySelector("#UnprintedModal .yesOrNoBtns").style.display = "block";
+                unprintedModal.style.display = "block";
+
+            } else {
+                document.querySelector("#UnprintedModal .UnprintedTitle").textContent = "For Confirmation";
+                document.querySelector("#Unprinted .resultDetails").innerHTML = details;
+                document.querySelector("#Unprinted .resultDesc").textContent = "Unresolve?";
+                document.querySelector("#UnprintedModal .yesOrNoBtns").style.display = "block";
+                unprintedModal.style.display = "block";
+            }
+        });
     });
+
+    function Scan() {
+        modalContainer.style.display = 'block';
+
+        html5QrcodeScanner = new Html5QrcodeScanner(
+            "reader",
+            {
+                fps: 10,
+                qrbox: { width: 300, height: 200 },
+                rememberLastUsedCamera: true,
+                showZoomSliderIfSupported: true,
+                defaultZoomValueIfSupported: 2,
+                formatsToSupport: [9, 10, 14, 15], // EAN-13, EAN-8, UPC-A, UPC-E respectively
+                //videoConstraints: {
+                //    facingMode: { exact: "environment" },
+                //},
+                useBarCodeDetectorIfSupported: true
+            },
+            false);
+
+        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    };
+
+    function onScanSuccess(decodedText, decodedResult) {
+        html5QrcodeScanner.clear();
+        modalContainer.style.display = 'none';
+        localStorage.setItem("isScanUsed", true);
+
+        codeFormat = decodedResult.result.format.toString().toUpperCase();
+
+         $.ajax({
+             url: '@Url.Action("ScanBarcode", "Audit")',
+             type: 'POST',
+             data: { code: decodedText, codeFormat: codeFormat},
+             success: function (result) {
+
+                 document.querySelector("#scanResultModal .sku").textContent = result.Sku;
+                 document.querySelector("#scanResultModal .sku").style.display = "none";
+                 var details = `<b>SKU:</b> ${result.Sku} <br> <b>Description:</b> ${result.Desc} <br> <b>Current Price:</b> ${result.CurrentPrice} <br><br><br>`;
+
+                 if (result.IsItemExisting && result.DoesItemBelongToCurrentPCA) {
+                     if (result.IsAudited == "Y") {
+                         document.querySelector("#scanResultModal .scanResultTitle").textContent = "Item Found";
+                         document.querySelector("#scanResult .resultDetails").innerHTML = details;
+                         document.querySelector("#scanResult .resultDesc").textContent = "Item is already audited.";
+                         document.querySelector("#scanResultModal .yesOrNoBtns").style.display = "none";
+                         scanResultModalContainer.style.display = 'block';
+                     } else {
+                         if (result.IsPrinted) {
+
+                             document.querySelector("#scanResultModal .scanResultTitle").textContent = "Item Found";
+                             document.querySelector("#scanResult .resultDetails").innerHTML = details;
+                             document.querySelector("#scanResult .resultDesc").textContent = "Do you want to post?";
+                             document.querySelector("#scanResultModal .yesOrNoBtns").style.display = "block";
+                             scanResultModalContainer.style.display = 'block';
+                         } else {
+                             document.querySelector("#scanResultModal .scanResultTitle").textContent = "Item Found";
+                             document.querySelector("#scanResult .resultDetails").innerHTML = details;
+                             document.querySelector("#scanResult .resultDesc").textContent = "Item is not yet printed.";
+                             document.querySelector("#scanResultModal .yesOrNoBtns").style.display = "none";
+                             scanResultModalContainer.style.display = 'block';
+                         }
+                     }
+                 }
+                 else if (result.IsItemExisting && !result.DoesItemBelongToCurrentPCA) {
+
+                     document.querySelector("#scanResultModal .scanResultTitle").textContent = "Item Found";
+                     document.querySelector("#scanResult .resultDetails").innerHTML = details;
+                     document.querySelector("#scanResult .resultDesc").textContent = "Item does not belong to current PCA.";
+                     document.querySelector("#scanResultModal .yesOrNoBtns").style.display = "none";
+                     scanResultModalContainer.style.display = 'block';
+                 }
+                 else {
+                     document.querySelector("#scanResultModal .scanResultTitle").textContent = "Item Not Found";
+                     document.querySelector("#scanResult .resultDetails").innerHTML = "";
+                     document.querySelector("#scanResult .resultDesc").textContent = "Item does not exist.";
+                     document.querySelector("#scanResultModal .yesOrNoBtns").style.display = "none";
+                     scanResultModalContainer.style.display = 'block';
+                 }
+
+             },
+             error: function () {
+             }
+         });
+    }
+
+    function onScanFailure(error) {
+        console.warn(`Code scan error = ${error}`);
+    }
+
+    function closeModal() {
+        modalContainer.style.display = 'none';
+    }
+    function closeScanResultModal() {
+        scanResultModalContainer.style.display = 'none';
+        Scan();
+    }
+    function closeUnprintedModal() {
+        var sku = document.querySelector("#UnprintedModal .sku").textContent;
+        var checkbox = $(`input[data-id="${sku}"]`);
+        var isChecked = document.querySelector("#UnprintedModal .isChecked").textContent;
+
+        if (isChecked === "true")
+            checkbox.prop('checked', false);
+        else
+            checkbox.prop('checked', true);
+
+        unprintedModal.style.display = 'none';
+    }
+
+    function postSku() {
+        scanResultModalContainer.style.display = 'none';
+        var sku = document.querySelector("#scanResultModal .sku").textContent;
+
+        $.ajax({
+            url: '/Audit/Post',
+            type: 'POST',
+            data: { sku: sku },
+            success: function (result) {
+                if (result) {
+                    successModalContainer.style.display = 'block';
+                }
+            },
+            error: function () {
+            }
+        });
+    }
+
+    function auditSuccess() {
+        successModalContainer.style.display = 'none';
+        window.location.href = '/Audit/Index';
+
+    }
+
+    function resolveUnresolve() {
+        var sku = document.querySelector("#UnprintedModal .sku").textContent;
+        var isChecked = document.querySelector("#UnprintedModal .isChecked").textContent;
+
+        $.ajax({
+            url: '/Audit/ResolveUnresolve',
+            type: 'POST',
+            data: { sku: sku, isChecked: isChecked },
+            success: function (result) {
+                if(result == 1)
+                    unprintedModal.style.display = 'none';
+            },
+            error: function () {
+            }
+        });
+    }
 </script>

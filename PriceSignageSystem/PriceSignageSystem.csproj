@@ -430,6 +430,22 @@
     <Compile Include="Migrations\202403010029046_AddTbl_CompleteSTRPRC.designer.cs">
       <DependentUpon>202403010029046_AddTbl_CompleteSTRPRC.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202403040453357_AddTbl_Audit.cs" />
+    <Compile Include="Migrations\202403040453357_AddTbl_Audit.designer.cs">
+      <DependentUpon>202403040453357_AddTbl_Audit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202403040504554_removeTbl_Audit.cs" />
+    <Compile Include="Migrations\202403040504554_removeTbl_Audit.designer.cs">
+      <DependentUpon>202403040504554_removeTbl_Audit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202403040514448_addTbl_Audit_again.cs" />
+    <Compile Include="Migrations\202403040514448_addTbl_Audit_again.designer.cs">
+      <DependentUpon>202403040514448_addTbl_Audit_again.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202403040521185_removeTbl_Audit_again.cs" />
+    <Compile Include="Migrations\202403040521185_removeTbl_Audit_again.designer.cs">
+      <DependentUpon>202403040521185_removeTbl_Audit_again.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CompleteSTRPRC.cs" />
     <Compile Include="Models\Dto\AutoPrintStatusDto.cs" />
@@ -441,6 +457,7 @@
     <Compile Include="Models\Dto\ReportDto.cs" />
     <Compile Include="Models\Dto\CentralizedSTRPRCDto.cs" />
     <Compile Include="Models\Dto\AuditDto.cs" />
+    <Compile Include="Models\Dto\ScanResultDto.cs" />
     <Compile Include="Models\Dto\STRPRCDto.cs" />
     <Compile Include="Models\Dto\STRPRCLogDto.cs" />
     <Compile Include="Models\Dto\UserDto.cs" />
@@ -497,6 +514,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\buttons.dataTables.min.css" />
     <Content Include="Content\fonts.css" />
+    <Content Include="Content\Images\audit.png" />
     <Content Include="Content\Images\changes.png" />
     <Content Include="Content\Images\country.png" />
     <Content Include="Content\Images\generic_user.png" />
@@ -699,6 +717,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202403010029046_AddTbl_CompleteSTRPRC.resx">
       <DependentUpon>202403010029046_AddTbl_CompleteSTRPRC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202403040453357_AddTbl_Audit.resx">
+      <DependentUpon>202403040453357_AddTbl_Audit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202403040504554_removeTbl_Audit.resx">
+      <DependentUpon>202403040504554_removeTbl_Audit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202403040514448_addTbl_Audit_again.resx">
+      <DependentUpon>202403040514448_addTbl_Audit_again.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202403040521185_removeTbl_Audit_again.resx">
+      <DependentUpon>202403040521185_removeTbl_Audit_again.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Dynamic_OneEightReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

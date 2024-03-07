@@ -1,4 +1,5 @@
-﻿using PriceSignageSystem.Models.Dto;
+﻿using PriceSignageSystem.Code.CustomValidations;
+using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using System.Web.Mvc;
 
 namespace PriceSignageSystem.Controllers
 {
+    [CustomAuthorize]
     public class AuditController : Controller
     {
         public readonly IAuditRepository _auditRepo;
@@ -31,9 +33,10 @@ namespace PriceSignageSystem.Controllers
             var rawData = await _auditRepo.GetPCAbyLatestDate(latestDate);
             var auditList = new AuditDto();
 
-            auditList.PrintedList = rawData.Where(a => a.HasInventory == "Y" && a.IsPrinted == "True").ToList();
-            auditList.NotPrintedList = rawData.Where(a => a.HasInventory == "Y" && a.IsPrinted == "False").ToList();
-                                   
+            auditList.PrintedList = rawData.Where(a => a.IsPrinted == "True" && a.IsAudited == "N").ToList();
+            auditList.NotPrintedList = rawData.Where(a => a.IsPrinted == "False" && a.IsAudited == "N").ToList();
+            auditList.AuditedList = rawData.Where(a => a.IsAudited == "Y").ToList();
+            
             foreach (var item in auditList.PrintedList)
             {
                 item.TypeName = item.TypeId == 2 ? "Save"
@@ -48,6 +51,7 @@ namespace PriceSignageSystem.Controllers
                                     : "Non-Appliance";
                 item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
                 item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
+                item.IsExemp = item.IsExemp == "Y" ? "Yes" : "No";
             }
 
             foreach (var item in auditList.NotPrintedList)
@@ -64,6 +68,24 @@ namespace PriceSignageSystem.Controllers
                                     : "Non-Appliance";
                 item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
                 item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
+                item.IsExemp = item.IsExemp == "Y" ? "Yes" : "No";
+            }
+
+            foreach (var item in auditList.AuditedList)
+            {
+                item.TypeName = item.TypeId == 2 ? "Save"
+                                : item.TypeId == 1 ? "Regular"
+                                : "Save";
+                item.SizeName = item.SizeId == 1 ? "Whole"
+                                : item.SizeId == 2 ? "1/8"
+                                : item.SizeId == 3 ? "Jewelry"
+                                : "Whole";
+                item.CategoryName = item.CategoryId == 1 ? "Appliance"
+                                    : item.CategoryId == 2 ? "Non-Appliance"
+                                    : "Non-Appliance";
+                item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
+                item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
+                item.IsExemp = item.IsExemp == "Y" ? "Yes" : "No";
             }
 
             string jsonData = Newtonsoft.Json.JsonConvert.SerializeObject(auditList);
@@ -86,6 +108,31 @@ namespace PriceSignageSystem.Controllers
             Response.AppendHeader("Content-Length", compressedData.Length.ToString());
 
             return File(compressedData, "application/json");
+        }
+
+        [HttpPost]
+        public ActionResult ScanBarcode(string code, string codeFormat)
+        {
+            var data = _auditRepo.ScanBarcode(code, codeFormat);
+            return Json(data);
+        }
+
+        [HttpPost]
+        public ActionResult Post(string sku)
+        {
+            var username = User.Identity.Name;
+            var isSuccess = _auditRepo.Post(sku, username);
+
+            return Json(isSuccess);
+        }
+
+        [HttpPost]
+        public ActionResult ResolveUnresolve(string sku, string isChecked)
+        {
+            var username = User.Identity.Name;
+            var result = _auditRepo.ResolveUnresolve(sku, isChecked, username);
+
+            return Json(result);
         }
     }
 }

@@ -11,5 +11,8 @@ namespace PriceSignageSystem.Models.Interface
     {
         decimal GetLatestDate();
         Task<List<AuditDto>> GetPCAbyLatestDate(decimal latestDate);
+        ScanResultDto ScanBarcode(string code, string codeFormat);
+        bool Post(string sku, string username);
+        int ResolveUnresolve(string sku, string isChecked, string username);
     }
 }

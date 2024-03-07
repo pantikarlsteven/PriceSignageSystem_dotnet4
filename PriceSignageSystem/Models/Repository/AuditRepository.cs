@@ -1,4 +1,5 @@
-﻿using PriceSignageSystem.Models.Constants;
+﻿using PriceSignageSystem.Helper;
+using PriceSignageSystem.Models.Constants;
 using PriceSignageSystem.Models.DatabaseContext;
 using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
@@ -77,7 +78,9 @@ namespace PriceSignageSystem.Models.Repository
                         O3TYPE = reader["O3TYPE"].ToString(),
                         IBHAND = (decimal)reader["IBHAND"],
                         ZeroInvDCOnHand = (decimal)reader["ZeroInvDCOnHand"],
-                        ZeroInvInTransit = (decimal)reader["ZeroInvInTransit"]
+                        ZeroInvInTransit = (decimal)reader["ZeroInvInTransit"],
+                        IsAudited = reader["IsAudited"].ToString(),
+                        IsResolved = reader["IsResolved"].ToString()
                     };
 
                     if ((decimal)reader["O3RSDT"] == startDate)
@@ -99,6 +102,94 @@ namespace PriceSignageSystem.Models.Repository
             }
 
             return data;
+
+        }
+
+        public ScanResultDto ScanBarcode(string code, string codeFormat)
+        {
+            var formattedCode = string.Empty;
+            var result = new ScanResultDto();
+
+            if (codeFormat == "UPC_A")
+            {
+                formattedCode = BarcodeHelper.GetNormalizedUPC_A(code);
+            }
+            else if (codeFormat == "UPC_E")
+            {
+                formattedCode = BarcodeHelper.GetNormalizedUPC_E(code);
+            }
+
+            formattedCode = formattedCode != string.Empty ? formattedCode : code;
+
+            var upc = _db.CompleteSTRPRCs.Where(f => f.IUPC.ToString() == formattedCode).FirstOrDefault();
+
+            if (upc != null)
+            {
+                var data = _db.Database.SqlQuery<ScanResultDto>("EXEC sp_CheckIfBelongToCurrentPCA @Sku", new SqlParameter("@Sku", upc.INUMBR)).FirstOrDefault(); // check if sku belongs to current pca 
+               
+                result.IsItemExisting = true;
+
+                if (data != null)
+                {
+                    result.Sku = data.Sku;
+                    result.CurrentPrice = data.CurrentPrice;
+                    result.Desc = data.Desc;
+                    result.DoesItemBelongToCurrentPCA = true;
+                    result.IsPrinted = data.IsPrinted && data.IsPrinted;
+                    result.IsAudited = data.IsAudited;
+                }
+                else
+                {
+                    result.DoesItemBelongToCurrentPCA = false;
+                }
+
+            }
+            else
+            {
+                result.IsItemExisting = false;
+            }
+          
+            return result;
+        }
+
+        public bool Post(string sku, string username)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand("sp_Audit", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.CommandTimeout = commandTimeoutInSeconds;
+                        // Add any required parameters to the command if needed
+                        command.Parameters.AddWithValue("@Sku", sku);
+                        command.Parameters.AddWithValue("@Username", username);
+
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                        connection.Close();
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error executing stored procedure: " + ex.Message);
+                return false;
+            }
+        }
+
+        public int ResolveUnresolve(string sku, string isChecked, string username)
+        {
+            var IsResolved = isChecked == "true" ? "Y" : "N";
+            var rowsAffected = _db.Database.SqlQuery<int>("EXEC sp_ResolveUnresolve @Sku, @IsResolved, @Username",
+                new SqlParameter("@Sku", sku),
+                new SqlParameter("@IsResolved", IsResolved),
+                new SqlParameter("@Username", username))
+                .FirstOrDefault();
+
+            return rowsAffected;
 
         }
     }
