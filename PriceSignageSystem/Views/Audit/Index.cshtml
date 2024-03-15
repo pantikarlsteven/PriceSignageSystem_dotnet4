@@ -57,12 +57,40 @@
             align-items: center;
         }
 
-        .chart-container {
-            width: 400px;
+      /*  .chart-container1 {
+            width: 800px;
             height: 400px;
-            margin: 30px;
+      }
+
+        .chart-container2 {
+            width: 800px;
+            height: 400px;
+            margin-top: 80px;
+
+        }*/
+
+        .graphcontainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 12px;
         }
 
+        .graphrow {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            margin-bottom: 5px; /* Adjust as needed */
+        }
+
+        .graphcolumn {
+            margin: 0 5px; /* Adjust as needed */
+        }
+
+        canvas {
+            height: 400px !important;
+            width: 100% !important;
+        }
     </style>
 </head>
 <body>
@@ -110,9 +138,11 @@
                         <table id="printed-pca-table" class="table table-sm table-hover" style="width: 100%; text-align: center;">
                             <thead style="background-color: #1C3766;" class="text-white">
                                 <tr>
+                                    <th>Audit?</th>
                                     <th>SKU</th>
                                     <th>UPC</th>
                                     <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
+                                    <th>Wrong Price?</th>
                                     <th>Reg Price</th>
                                     <th>Current Price</th>
                                     <th>Date Start</th>
@@ -131,7 +161,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="14" style="text-align: center;">No data available</td>
+                                    <td colspan="16" style="text-align: center;">No data available</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -174,7 +204,7 @@
                         <table id="notprinted-pca-table" class="table table-sm table-hover" style="width: 100%; text-align: center;">
                             <thead style="background-color: #1C3766;" class="text-white">
                                 <tr>
-                                    <th>Resolved?</th>
+                                    <th>Not Required?</th>
                                     <th>SKU</th>
                                     <th>UPC</th>
                                     <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
@@ -202,15 +232,18 @@
                         </table>
                     </div>
 
-                    <div id="graph" class="tab-pane fade mx-2" style="min-height: 950px">
-                        <div class="row align-items-center justify-content-center">
-                            <div class="chart-container">
-                                <h3 class="printedCount text-center">PRINTED COUNT: </h3>
-                                <canvas id="pieChart"></canvas>
+                    <div id="graph" class="tab-pane fade mx-2" style="min-height: 1000px">
+                        <div class="row pt-3">
+                            <div class="col-md-6">
+                                <h3 class="graph1Count text-center">COUNT: </h3>
+                                <div class="graph1Data"></div>
+                                <canvas id="pieChart" ></canvas>
+
                             </div>
-                            <div class="chart-container">
-                                <h3 class="unprintedCount text-center">UNPRINTED COUNT: </h3>
-                                <canvas id="pieChart2"></canvas>
+                            <div class="col-md-6">
+                                <h3 class="graph2Count text-center">COUNT: </h3>
+                                <div class="graph2Data"></div>
+                                <canvas id="pieChart2" ></canvas>
                             </div>
                         </div>
                     </div>
@@ -218,7 +251,7 @@
             </div>
         </div>
 
-        <!-- QR SCAN Modal -->
+        <!-- BARCODE SCAN Modal -->
         <div class="modal" id="barcodeScanModal" tabindex="-1" role="dialog" aria-labelledby="barcodeScanModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -255,8 +288,8 @@
                         </div>
                     </div>
                     <div class="yesOrNoBtns modal-footer">
-                        <button type="button" class="btn btn-primary" onclick="postSku()">Yes</button>
-                        <button type="button" class="btn btn-secondary" onclick="closeScanResultModal()">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="postSku()">Audit</button>
+                        <button type="button" class="btn btn-secondary" onclick="tagWrongPrice()">Wrong Price</button>
                     </div>
                 </div>
             </div>
@@ -271,7 +304,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="alert alert-success">
-                            Audited Successfully!
+                            Tagged Successfully!
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -302,8 +335,36 @@
                         </div>
                     </div>
                     <div class="yesOrNoBtns modal-footer">
-                        <button type="button" class="btn btn-primary" onclick="resolveUnresolve()">Yes</button>
-                        <button type="button" class="btn btn-secondary" onclick="closeUnprintedModal()">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="notRequireTagging()">Yes</button>
+                        <button type="button" class="btn btn-secondary" onclick="closeUnprintedModal()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Printed Modal -->
+        <div class="modal" id="printedModal" tabindex="-1" role="dialog" aria-labelledby="printedModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="isChecked"></h5>
+                        <h5 class="sku"></h5>
+                        <h5 class="printedTitle modal-title" id="printedModalLongTitle"></h5>
+                        <button type="button" onclick="closePrintedModal()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="printed">
+                            <div class="resultDetails">
+                            </div>
+                            <div class="resultDesc" style="font-size: 18px; font-weight: bold;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="yesOrNoBtns modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="postSkuWithRemarks()">Yes</button>
+                        <button type="button" class="btn btn-secondary" onclick="closePrintedModal()">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -318,6 +379,8 @@
     var scanResultModalContainer = document.getElementById('scanResultModal');
     var successModalContainer = document.getElementById('successModal');
     var unprintedModal = document.getElementById('UnprintedModal');
+    var printedModal = document.getElementById('printedModal');
+    var html5QrcodeScanner;
     var isScanUsed = localStorage.getItem("isScanUsed");
 
 
@@ -330,8 +393,12 @@
         var tableForAudited = null;
         var printedCount = 0;
         var auditedCount = 0;
-        var resolvedCount = 0;
-        var unresolvedCount = 0;
+        var unPrintedCount = 0;
+        var notRequiredYCount = 0;
+        var notRequiredNCount = 0;
+        var NOFListCount = 0;
+        var DisposalListCount = 0;
+        var MarkDownListCount = 0;
 
         function InitLoad() {
             $("#loadingContainer").show();
@@ -358,16 +425,32 @@
 
                     printedCount = data.PrintedList.length;
                     auditedCount = data.AuditedList.length;
+                    unPrintedCount = data.NotPrintedList.length;
 
-                    resolvedData = data.NotPrintedList.filter(function (item) {
-                        return item.IsResolved === 'Y';
+                    var notRequiredY = data.NotPrintedList.filter(function (item) {
+                        return item.IsNotRequired === 'Y';
                     });
-                    resolvedCount = resolvedData.length;
+                    notRequiredYCount = notRequiredY.length;
 
-                    unresolvedData = data.NotPrintedList.filter(function (item) {
-                        return item.IsResolved === 'N';
+                    var notRequiredN = data.NotPrintedList.filter(function (item) {
+                        return item.IsNotRequired === 'N';
                     });
-                    unresolvedCount = unresolvedData.length;
+                    notRequiredNCount = notRequiredN.length;
+
+                    var NOFList = data.AuditedList.filter(function (item) {
+                        return item.AuditedRemarks === "NOF";
+                    });
+                    NOFListCount = NOFList.length;
+
+                    var DisposalList = data.AuditedList.filter(function (item) {
+                        return item.AuditedRemarks === "Disposal";
+                    });
+                    DisposalListCount = DisposalList.length;
+
+                    var MarkDownList = data.AuditedList.filter(function (item) {
+                        return item.AuditedRemarks === "Mark Down";
+                    });
+                    MarkDownListCount = MarkDownList.length;
 
                     RenderGraph();
 
@@ -397,12 +480,18 @@
                 data: data,
                 order: [],
                 columnDefs: [
-                    { targets: [0, 2, 3, 4, 10], orderable: false },
+                    { targets: [0, 3, 5, 6, 12], orderable: false },
                 ],
                 columns: [
+                    {
+                        data: null, render: function (data, type, row) {
+                            return '<input type="checkbox" class="rowCheckboxPrinted" data-id="' + data.O3SKU + '">';
+                        }
+                    },
                     { data: 'O3SKU', name: 'O3SKU' },
                     { data: 'O3UPC', name: 'O3UPC' },
                     { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap' },
+                    { data: 'IsWrongPrice', name: 'IsWrongPrice' },
                     { data: 'O3REG', name: 'O3REG' },
                     { data: 'O3POS', name: 'O3POS' },
                     { data: 'O3SDT', name: 'O3SDT' },
@@ -489,7 +578,7 @@
                 columns: [
                     {
                         data: null, render: function (data, type, row) {
-                            if (row.IsResolved === 'Y') {
+                            if (row.IsNotRequired === 'Y') {
                                 return '<input type="checkbox" class="rowCheckboxNotPrinted" data-id="' + data.O3SKU + '" checked>';
                             } else {
                                 return '<input type="checkbox" class="rowCheckboxNotPrinted" data-id="' + data.O3SKU + '">';
@@ -561,13 +650,36 @@
 
 
         function RenderGraph() {
-            var totalSku = printedCount + auditedCount;
 
-            var text = document.querySelector('#graph .printedCount').textContent.concat(totalSku);
-            document.querySelector('#graph .printedCount').textContent = text;
+            // 1st GRAPH
+            var totalSku = printedCount + unPrintedCount;
+
+            var text = document.querySelector('#graph .graph1Count').textContent.concat(totalSku);
+            document.querySelector('#graph .graph1Count').textContent = text;
+
+            var printedPercentage = ((printedCount / totalSku) * 100).toFixed(2);
+            var UnprintedPercentage = ((notRequiredNCount / totalSku) * 100).toFixed(2);
+            var notRequiredYPercentage = ((notRequiredYCount / totalSku) * 100).toFixed(2);
+
+            var data1 = `<div class="graphcontainer">
+                            <div class="graphrow">
+                                <div class="graphcolumn">
+                                    <label>Printed: </label> ${printedCount} - ${printedPercentage}%
+                                </div>
+                                <div class="graphcolumn">
+                                    <label>Not Required: </label> ${notRequiredYCount} - ${notRequiredYPercentage}%
+                                </div>
+                                <div class="graphcolumn">
+                                    <label>Unprinted: </label> ${notRequiredNCount} - ${UnprintedPercentage}%
+                                </div>
+                            </div>
+                        </div>`;
+
+            document.querySelector('#graph .graph1Data').innerHTML = data1;
             var data = {
                 "Printed": printedCount,
-                "Audited": auditedCount
+                "Not Required": notRequiredYCount,
+                "Unprinted": notRequiredNCount
             };
 
             var labels = Object.keys(data);
@@ -582,81 +694,122 @@
                         data: values,
                         backgroundColor: [
                             "#51829B",
-                            "#CD8D7A"
+                            "#FFDEB4",
+                            "#E97777"
                         ],
                         borderColor: [
                             "rgb(255,255,255)",
-                            'rgb(255,255,255)'
+                            "rgb(255,255,255)",
+                            "rgb(255,255,255)"
                         ],
-                        borderWidth: 1
+                        borderWidth: 1,
+                        hoverOffset: 5
                     }]
                 },
-                plugins: [ChartDataLabels],
+                //plugins: [ChartDataLabels],
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        title: {
-                            display: true,
-                            text: 'Audited vs Printed'
-                        },
+                        //title: {
+                        //    display: true,
+                        //    text: "Printed | Not Required | Unprinted"
+                        //},
                         tooltip: {
                             callbacks: {
                                 label: function (context) {
                                     var label = context.label;
                                     var value = context.formattedValue;
-                                    var auditedPercentage = ((auditedCount / printedCount) * 100).toFixed(2);
-                                    var printedPercentage = 100 - auditedPercentage;
 
-                                    if (label == "Audited") {
-                                        label += ' - ' + value + ' (' + auditedPercentage + '%)';
-                                    } else {
+                                    if (label == "Printed") {
                                         label += ' - ' + value + ' (' + printedPercentage + '%)';
-
+                                    }
+                                    else if (label == "Unprinted") {
+                                        label += ' - ' + value + ' (' + UnprintedPercentage+ '%)';
+                                    }
+                                    else {
+                                        label += ' - ' + value + ' (' + notRequiredYPercentage + '%)';
                                     }
 
                                     return label;
                                 }
                             }
                         },
-                        datalabels: {
-                            display: true,
-                            formatter: (val, ctx) => {
-                                // Grab the label for this value
-                                var label = ctx.chart.data.labels[ctx.dataIndex];
+                        //datalabels: {
+                        //    display: true,
+                        //    formatter: (val, ctx) => {
+                        //        // Grab the label for this value
+                        //        var label = ctx.chart.data.labels[ctx.dataIndex];
 
-                                var auditedPercentage = ((auditedCount / printedCount) * 100).toFixed(2);
-                                var printedPercentage = 100 - auditedPercentage;
+                        //        var printedPercentage = ((printedCount / totalSku) * 100);
+                        //        var UnprintedPercentage = (((unPrintedCount - notRequiredYCount) / totalSku) * 100);
+                        //        var notRequiredYPercentage = ((notRequiredYCount / totalSku) * 100);
 
-                                if (label == "Audited") {
-                                    label = auditedPercentage + '%' + " (" + auditedCount + ")";
-                                } else {
-                                    label = printedPercentage + '%' + " (" + printedCount + ")";
 
-                                }
+                        //        if (label == "Printed") {
+                        //            label = printedPercentage.toFixed(2) + '%' + " (" + printedCount + ")";
+                        //        }
+                        //        else if (label == "Unprinted") {
+                        //            label = UnprintedPercentage.toFixed(2) + '%' + " (" + notRequiredNCount + ")";
+                        //        }
+                        //        else {
+                        //            label = notRequiredYPercentage.toFixed(2) + '%' + " (" + notRequiredYCount + ")";
+                        //        }
 
-                                return label;
-                            },
-                            align: 'bottom',
-                            backgroundColor: '#ccc',
-                            borderRadius: 3,
-                            font: {
-                                size: 14,
-                            },
-                        },
+                        //        return label;
+                        //    },
+                        //    align: 'top',
+                        //    backgroundColor: '#ccc',
+                        //    borderRadius: 3,
+                        //    font: {
+                        //        size: 14,
+                        //    },
+                        //},
                     }
                 }
             });
 
 
-            // RESOLVE & UNRESOLVE
-            var totalUnprinted = resolvedCount + unresolvedCount;
+            // 2nd GRAPH -- AUDITED VS UNAUDITED
+            var auditedUnauditedSum = auditedCount + printedCount;
+            var auditedWithoutRemarksCount = auditedCount - NOFListCount - DisposalListCount - MarkDownListCount;
+            var text = document.querySelector('#graph .graph2Count').textContent.concat(auditedUnauditedSum);
+            document.querySelector('#graph .graph2Count').textContent = text;
 
-            var text = document.querySelector('#graph .unprintedCount').textContent.concat(totalUnprinted);
-            document.querySelector('#graph .unprintedCount').textContent = text;
+            var auditedPercentage = ((auditedWithoutRemarksCount / auditedUnauditedSum) * 100).toFixed(2);
+            var unauditedPercentage = ((printedCount / auditedUnauditedSum) * 100).toFixed(2);
+            var nofPercentage = ((NOFListCount / auditedUnauditedSum) * 100).toFixed(2);
+            var disposalPercentage = ((DisposalListCount / auditedUnauditedSum) * 100).toFixed(2);
+            var markdownPercentage = ((MarkDownListCount / auditedUnauditedSum) * 100).toFixed(2);
+
+            var data2 = `<div class="graphcontainer">
+                            <div class="graphrow">
+                                <div class="graphcolumn">
+                                    <label>Audited: </label> ${auditedWithoutRemarksCount} - ${auditedPercentage}%
+                                </div>
+                                <div class="graphcolumn">
+                                    <label>NOF: </label> ${NOFListCount} - ${nofPercentage}%
+                                </div>
+                                <div class="graphcolumn">
+                                    <label>Disposal: </label> ${DisposalListCount} - ${disposalPercentage}%
+                                </div>
+                                <div class="graphcolumn">
+                                    <label>Mark Down: </label> ${MarkDownListCount} - ${markdownPercentage}%
+                                </div>
+                                <div class="graphcolumn">
+                                    <label>Unaudited: </label> ${printedCount} - ${unauditedPercentage}%
+                                </div>
+                        </div>`;
+
+            document.querySelector('#graph .graph2Data').innerHTML = data2;
+
+
             var data = {
-                "Resolved": resolvedCount,
-                "Unresolved": unresolvedCount
+                "Audited": auditedWithoutRemarksCount,
+                "NOF": NOFListCount,
+                "Disposal": DisposalListCount,
+                "Mark Down": MarkDownListCount,
+                "Unaudited": printedCount
             };
 
             var labels = Object.keys(data);
@@ -670,69 +823,97 @@
                     datasets: [{
                         data: values,
                         backgroundColor: [
-                            "#FFCF81",
-                            "#8E7AB5"
+                            "#51829B",
+                            "#FFDEB4",
+                            "#79AC78",
+                            "#967E76",
+                            "#E97777"
+
                         ],
                         borderColor: [
                             "rgb(255,255,255)",
-                            'rgb(255,255,255)'
+                            "rgb(255,255,255)",
+                            "rgb(255,255,255)",
+                            "rgb(255,255,255)",
+                            "rgb(255,255,255)"
                         ],
-                        borderWidth: 1
+                        borderWidth: 1,
+                        hoverOffset: 5
                     }]
                 },
-                plugins: [ChartDataLabels],
+                //plugins: [ChartDataLabels],
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        title: {
-                            display: true,
-                            text: 'Resolved vs Unresolved'
-                        },
+                        //title: {
+                        //    display: true,
+                        //    text: `Audited - ${auditedWithoutRemarksCount} (${auditedPercentage}%)| NOF - ${NOFListCount} (${nofPercentage}%)| Disposal - ${DisposalListCount} (${disposalPercentage}%)| Mark Down - ${MarkDownListCount} (${markdownPercentage}%)| Unaudited - ${printedCount} (${unauditedPercentage}%)`
+                        //},
                         tooltip: {
                             callbacks: {
                                 label: function (context) {
                                     var label = context.label;
                                     var value = context.formattedValue;
-                                    var resolvedPercentage = ((resolvedCount / unresolvedCount) * 100).toFixed(2);
-                                    var unresolvedPercentage = 100 - resolvedPercentage;
+                                   
 
-                                    if (label == "Resolved") {
-                                        label += ' - ' + value + ' (' + resolvedPercentage + '%)';
-                                    } else {
-                                        label += ' - ' + value + ' (' + unresolvedPercentage + '%)';
-
+                                    if (label == "Audited") {
+                                        label += ' - ' + value + ' (' + auditedPercentage + '%)';
+                                    }
+                                    else if (label == "Unaudited") {
+                                        label += ' - ' + value + ' (' + unauditedPercentage + '%)';
+                                    }
+                                    else if (label == "NOF") {
+                                        label += ' - ' + value + ' (' + nofPercentage + '%)';
+                                    }
+                                    else if (label == "Disposal") {
+                                        label += ' - ' + value + ' (' + disposalPercentage + '%)';
+                                    }
+                                    else if (label == "Mark Down") {
+                                        label += ' - ' + value + ' (' + markdownPercentage + '%)';
                                     }
 
                                     return label;
                                 }
                             }
                         },
-                        datalabels: {
-                            display: true,
-                            formatter: (val, ctx) => {
-                                // Grab the label for this value
-                                var label = ctx.chart.data.labels[ctx.dataIndex];
+                        //datalabels: {
+                        //    display: true,
+                        //    formatter: (val, ctx) => {
+                        //        // Grab the label for this value
+                        //        var label = ctx.chart.data.labels[ctx.dataIndex];
 
-                                var resolvedPercentage = ((resolvedCount / unresolvedCount) * 100).toFixed(2);
-                                var unresolvedPercentage = 100 - resolvedPercentage;
+                        //        var auditedPercentage = (auditedWithoutRemarksCount / auditedUnauditedSum) * 100;
+                        //        var unauditedPercentage = (printedCount / auditedUnauditedSum) * 100;
+                        //        var nofPercentage = (NOFListCount / auditedUnauditedSum) * 100;
+                        //        var disposalPercentage = (DisposalListCount / auditedUnauditedSum) * 100;
+                        //        var markdownPercentage = (MarkDownListCount / auditedUnauditedSum) * 100;
 
-                                if (label == "Resolved") {
-                                    label = resolvedPercentage + '%' + " (" + resolvedCount + ")";
-                                } else {
-                                    label = unresolvedPercentage + '%' + " (" + unresolvedCount + ")";
+                        //        if (label == "Audited") {
+                        //            label = auditedPercentage.toFixed(2) + '%' + " (" + auditedWithoutRemarksCount + ")";
+                        //        }
+                        //        else if (label == "Unaudited"){
+                        //            label = unauditedPercentage.toFixed(2) + '%' + " (" + printedCount + ")";
+                        //        }
+                        //        else if (label == "NOF") {
+                        //            label = nofPercentage.toFixed(2) + '%' + " (" + NOFListCount + ")";
+                        //        }
+                        //        else if (label == "Disposal") {
+                        //            label = disposalPercentage.toFixed(2) + '%' + " (" + DisposalListCount + ")";
+                        //        }
+                        //        else if (label == "Mark Down") {
+                        //            label = markdownPercentage.toFixed(2) + '%' + " (" + MarkDownListCount + ")";
+                        //        }
 
-                                }
-
-                                return label;
-                            },
-                            align: 'bottom',
-                            backgroundColor: '#ccc',
-                            borderRadius: 3,
-                            font: {
-                                size: 14,
-                            },
-                        },
+                        //        return label;
+                        //    },
+                        //    align: 'top',
+                        //    backgroundColor: '#ccc',
+                        //    borderRadius: 3,
+                        //    font: {
+                        //        size: 14,
+                        //    },
+                        //},
                     }
                 }
             });
@@ -1115,17 +1296,52 @@
             if (isChecked) {
                 document.querySelector("#UnprintedModal .UnprintedTitle").textContent = "For Confirmation";
                 document.querySelector("#Unprinted .resultDetails").innerHTML = details;
-                document.querySelector("#Unprinted .resultDesc").textContent = "Resolve?";
+                document.querySelector("#Unprinted .resultDesc").textContent = "Not required?";
                 document.querySelector("#UnprintedModal .yesOrNoBtns").style.display = "block";
                 unprintedModal.style.display = "block";
 
             } else {
                 document.querySelector("#UnprintedModal .UnprintedTitle").textContent = "For Confirmation";
                 document.querySelector("#Unprinted .resultDetails").innerHTML = details;
-                document.querySelector("#Unprinted .resultDesc").textContent = "Unresolve?";
+                document.querySelector("#Unprinted .resultDesc").textContent = "Uncheck?";
                 document.querySelector("#UnprintedModal .yesOrNoBtns").style.display = "block";
                 unprintedModal.style.display = "block";
             }
+        });
+
+        $('#printed-pca-table').on('change', '.rowCheckboxPrinted', function () {
+            var rowData = tableForPrinted.row($(this).closest('tr')).data();
+            var isChecked = $(this).is(':checked');
+            var id = $(this).data('id');
+            var details = `<b>SKU:</b> ${rowData.O3SKU} <br> <b>Description:</b> ${rowData.O3IDSC} <br> <b>Current Price:</b> ${rowData.O3POS} <br><br><br>`;
+            var remarksOptions = '';
+
+            getRemarksList().then(function (remarksList) {
+                
+                for (var i = 0; i < remarksList.length; i++) {
+                    var option = remarksList[i];
+                    remarksOptions += '<option value="' + option.Name + '">' + option.Name + '</option>';
+                }
+
+                var dropdown = '<div class="form-group row col-12"><label class="col-sm-4 col-form-label" for="remarksList" style="color: red;">Remarks:</label>' +
+                    '<select class="col-sm-8 ml-3 form-control custom-select" id="remarksList" >' +
+                    remarksOptions +
+                    '</select></div>';
+                document.querySelector("#printedModal .isChecked").textContent = isChecked;
+                document.querySelector("#printedModal .isChecked").style.display = "none";
+                document.querySelector("#printedModal .sku").textContent = id;
+                document.querySelector("#printedModal .sku").style.display = "none";
+
+                if (isChecked) {
+                    document.querySelector("#printedModal .printedTitle").textContent = "For Confirmation";
+                    document.querySelector("#printed .resultDetails").innerHTML = details;
+                    document.querySelector("#printed .resultDesc").innerHTML = dropdown;
+                    document.querySelector("#printedModal .yesOrNoBtns").style.display = "block";
+                    printedModal.style.display = "block";
+
+                }
+            });
+
         });
     });
 
@@ -1141,9 +1357,9 @@
                 showZoomSliderIfSupported: true,
                 defaultZoomValueIfSupported: 2,
                 formatsToSupport: [9, 10, 14, 15], // EAN-13, EAN-8, UPC-A, UPC-E respectively
-                //videoConstraints: {
-                //    facingMode: { exact: "environment" },
-                //},
+                videoConstraints: {
+                    facingMode: { exact: "environment" },
+                },
                 useBarCodeDetectorIfSupported: true
             },
             false);
@@ -1180,7 +1396,7 @@
 
                              document.querySelector("#scanResultModal .scanResultTitle").textContent = "Item Found";
                              document.querySelector("#scanResult .resultDetails").innerHTML = details;
-                             document.querySelector("#scanResult .resultDesc").textContent = "Do you want to post?";
+                             document.querySelector("#scanResult .resultDesc").textContent = "";
                              document.querySelector("#scanResultModal .yesOrNoBtns").style.display = "block";
                              scanResultModalContainer.style.display = 'block';
                          } else {
@@ -1220,9 +1436,12 @@
 
     function closeModal() {
         modalContainer.style.display = 'none';
+        html5QrcodeScanner.clear();
+        localStorage.setItem("isScanUsed", false);
     }
     function closeScanResultModal() {
         scanResultModalContainer.style.display = 'none';
+        document.querySelector("#scanResultModal .sku").textContent = "";
         Scan();
     }
     function closeUnprintedModal() {
@@ -1236,6 +1455,7 @@
             checkbox.prop('checked', true);
 
         unprintedModal.style.display = 'none';
+        document.querySelector("#UnprintedModal .sku").textContent = "";
     }
 
     function postSku() {
@@ -1250,6 +1470,7 @@
                 if (result) {
                     successModalContainer.style.display = 'block';
                 }
+                document.querySelector("#scanResultModal .sku").textContent = "";
             },
             error: function () {
             }
@@ -1262,17 +1483,87 @@
 
     }
 
-    function resolveUnresolve() {
+    function notRequireTagging() {
         var sku = document.querySelector("#UnprintedModal .sku").textContent;
         var isChecked = document.querySelector("#UnprintedModal .isChecked").textContent;
 
         $.ajax({
-            url: '/Audit/ResolveUnresolve',
+            url: '/Audit/NotRequireTagging',
             type: 'POST',
             data: { sku: sku, isChecked: isChecked },
             success: function (result) {
                 if(result == 1)
                     unprintedModal.style.display = 'none';
+                document.querySelector("#UnprintedModal .sku").textContent = "";
+            },
+            error: function () {
+            }
+        });
+    }
+
+    function closePrintedModal() {
+        var sku = document.querySelector("#printedModal .sku").textContent;
+        var checkbox = $(`input[data-id="${sku}"]`);
+        var isChecked = document.querySelector("#printedModal .isChecked").textContent;
+
+        if (isChecked === "true")
+            checkbox.prop('checked', false);
+
+        printedModal.style.display = 'none';
+        document.querySelector("#printedModal .sku").textContent = "";
+    }
+
+    function postSkuWithRemarks() {
+        scanResultModalContainer.style.display = 'none';
+        var sku = document.querySelector("#printedModal .sku").textContent;
+        var selectedRemarks = $('#remarksList').val();
+
+        $.ajax({
+            url: '/Audit/PostWithRemarks',
+            type: 'POST',
+            data: { sku: sku , remarks: selectedRemarks},
+            success: function (result) {
+                document.querySelector("#printedModal .sku").textContent = "";
+                printedModal.style.display = 'none';
+
+                if (result) {
+                    successModalContainer.style.display = 'block';
+                }
+
+            },
+            error: function () {
+            }
+        });
+    }
+
+    function getRemarksList() {
+        return new Promise(function (resolve, reject) {
+            $.ajax({
+                url: '@Url.Action("GetAllRemarks", "Audit")',
+                type: 'POST',
+                success: function (response) {
+                    resolve(response);
+                },
+                error: function (e) {
+                    reject(e);
+                }
+            });
+        });
+    }
+
+    function tagWrongPrice() {
+        scanResultModalContainer.style.display = 'none';
+        var sku = document.querySelector("#scanResultModal .sku").textContent;
+
+        $.ajax({
+            url: '/Audit/TagWrongPrice',
+            type: 'POST',
+            data: { sku: sku },
+            success: function (result) {
+                if (result == 1) {
+                    successModalContainer.style.display = 'block';
+                }
+                document.querySelector("#scanResultModal .sku").textContent = "";
             },
             error: function () {
             }

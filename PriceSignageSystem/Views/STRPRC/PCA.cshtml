@@ -109,11 +109,11 @@
                         <a class="nav-link nav-link-tab active" style="color:white;" data-toggle="tab" href="#with-inventory">With Inventory</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link nav-link-tab" style="color:white;" data-toggle="tab" href="#consignment">Consignment</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link nav-link-tab" style="color:white;" data-toggle="tab" href="#new-exemption">Exemption</a>
                     </li>
-                    @*<li class="nav-item">
-                            <a class="nav-link" style="color:white;" data-toggle="tab" href="#excemption">Exemption</a>
-                        </li>*@
                 </ul>
 
                 <!-- Tab panes -->
@@ -140,6 +140,37 @@
                                     <th>Type</th>
                                     <th>Reverted?</th>
                                     <th><button class="printAllBtnWith btn btn-secondary px-3">Print Selected</button></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="17" style="text-align: center;">Please enter start date</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="consignment" class="tab-pane fade mx-2">
+                        <h3 class="text-center mt-2">Consignment</h3>
+                        <table id="consignment-table" class="table table-sm table-hover" style="width: 100%; text-align: center;">
+                            <thead style="background-color: #1C3766;" class="text-white">
+                                <tr>
+                                    <th><input type="checkbox" id="selectAllCo" /></th>
+                                    <th>-</th>
+                                    <th>Printed?</th>
+                                    <th>SKU</th>
+                                    <th>UPC</th>
+                                    <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
+                                    <th>Reg Price</th>
+                                    <th>Current Price</th>
+                                    <th>Date Start</th>
+                                    <th>Date End</th>
+                                    <th>Type</th>
+                                    <th>Size</th>
+                                    <th>Category</th>
+                                    <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
+                                    <th>Type</th>
+                                    <th>Reverted?</th>
+                                    <th><button class="printAllBtnCo btn btn-secondary px-3">Print Selected</button></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -184,6 +215,7 @@
                             </tbody>
                         </table>
                     </div>
+
                     <div id="excemption" class="tab-pane fade mx-2">
                         <h3 class="text-center mt-2">Exemption</h3>
                         <table id="excemption-table" class="table table-sm table-hover" style="width: 100%; text-align: center;">
@@ -243,6 +275,7 @@
         var tableWith = null;
         var tableNewExemption = null;
         var tableExcemption = null;
+        var tableConsignment = null;
 
         function InitLoad() {
             $("#loadingContainer").show();
@@ -273,9 +306,13 @@
                     if (tableExcemption !== null) {
                         tableExcemption.destroy();
                     }
+                    if (tableConsignment !== null) {
+                        tableConsignment.destroy();
+                    }
 
                     RenderDatatableWithInv(data.WithInventoryList);
                     RenderDatatableNewExemptionInv(data.ExcemptionList);
+                    RenderDatatableConsignment(data.ConsignmentList);
                     //RenderDatatableExcemption(data.ExcemptionList);
 
                     if ('@User.IsInRole("Merchandiser")' == 'True') {
@@ -350,11 +387,11 @@
                     {
                         "targets": 10, // TYPE COLUMN
                         "render": function (data, type, row, meta) {
-                            
+
                             if (row['O3REG'] < row['O3POS']) {
                                 return 'Regular';
                             } else {
-                                return data; 
+                                return data;
                             }
                         }
                     }
@@ -431,7 +468,7 @@
             });
 
             $('.queueBtnWith').click(function () {
-                
+
                 var selectedRows = [];
                 $('.rowCheckboxWith:checked').each(function () {
                     var rowId = $(this).data('id');
@@ -489,7 +526,7 @@
                     $('#sizeDropdown').val(2); // 1/8
 
                     $('#queueSelectedButtonWith').click(function() {
-                        
+
                         $("#loadingContainer").show();
 
                         var sizeId = $('#sizeDropdown').val();
@@ -531,7 +568,7 @@
                         $('#modalView').modal('hide');
                         $('input[type="checkbox"]').prop('checked', false);
                     });
-                   
+
 
                 } else {
                     alert('Please select items to queue.');
@@ -632,32 +669,6 @@
                         $('#modalView').modal('hide');
                         $('input[type="checkbox"]').prop('checked', false);
 
-                        //var url = "/Report/PrintPreviewMultipleReport?selectedIds=" + encodeURIComponent(selectedRows.join(',')) + "&sizeId=" + sizeId + "";
-                        //$.ajax({
-                        //    url: url,
-                        //    type: 'GET',
-                        //    data: { selectedIds: selectedRows, sizeId: sizeId },
-                        //    success: function (data) {
-                        //        if (!data)
-                        //            alert("Error in printing.");
-                        //        else {
-                        //            $('.rowCheckboxWith:checked').each(function () {
-                        //                var row = $(this).closest('tr');
-                        //                var table = row.closest('table');
-                        //                var rowIndex = table.DataTable().row(row).index();
-                        //                var specificRow = $('#with-inventory-table tbody tr:eq(' + rowIndex + ')');
-                        //                specificRow.find('td:eq(2)').text("Yes");
-                        //                specificRow.find('td:eq(2)').css('color', 'green');
-
-                        //            });
-                        //        }
-
-                        //    }
-                        //});
-
-                        //$("#loadingContainer").hide();
-                        //$('#modalView').modal('hide');
-                        //$('input[type="checkbox"]').prop('checked', false);
                     });
 
                 } else {
@@ -733,7 +744,7 @@
                     { data: 'DepartmentName', name: 'DepartmentName' },
                     { data: 'IsReverted', name: 'IsReverted' },
                     { data: 'NegativeSave', name: 'NegativeSave' },
-         
+
 
                     //{
                     //    data: null,
@@ -1045,6 +1056,323 @@
                         //$('input[type="checkbox"]').prop('checked', false);
                     });
                     //End for print preview multiple report
+
+                } else {
+                    alert('Please select items to print.');
+                }
+            });
+        }
+        function RenderDatatableConsignment(data) {
+            tableConsignment = $('#consignment-table').DataTable({
+                scrollY: 500,
+                scrollX: true,
+                scroller: true,
+                deferRender: true,
+                lengthMenu: [
+                    [10, 25, 50, -1],
+                    [10, 25, 50, 'All']
+                ],
+                pageLength: -1,
+                data: data,
+                columnDefs: [
+                    { targets: [0, 1, 13, 15], orderable: false },
+                    {
+                        "targets": 6, // column "O3REG"
+                        "render": function (data, type, row, meta) {
+                            // Check if O3REG < O3POS, then update O3REG
+                            if (row['O3REG'] < row['O3POS']) {
+                                return row['O3POS'];
+                            } else {
+                                return data; // Return original value if condition is not met
+                            }
+                        }
+                    },
+                    {
+                        "targets": 10, // TYPE COLUMN
+                        "render": function (data, type, row, meta) {
+
+                            if (row['O3REG'] < row['O3POS']) {
+                                return 'Regular';
+                            } else {
+                                return data;
+                            }
+                        }
+                    }
+                ],
+                columns: [
+                    {
+                        data: null, orderable: false, searchable: false, render: function (data) {
+                            return '<input type="checkbox" class="rowCheckboxCo" data-id="' + data.O3SKU + '">';
+                        }
+                    },
+                    {
+                        "className": 'details-control',
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": '',
+                        "render": function () {
+                            return '<i class="fa-solid fa-square-caret-down"></i>';
+                        },
+                        width: "15px"
+                    },
+                    {
+                        data: 'IsPrinted', name: 'IsPrinted', render: function (data) {
+                            if (data === 'Yes') {
+                                return '<span style="color: green;">' + data + '</span>';
+                            } else {
+                                return '<span style="color: red;">' + data + '</span>';
+                            }
+                        }
+                    },
+                    { data: 'O3SKU', name: 'O3SKU' },
+                    { data: 'O3UPC', name: 'O3UPC' },
+                    { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap' },
+                    { data: 'O3REG', name: 'O3REG' },
+                    { data: 'O3POS', name: 'O3POS' },
+                    { data: 'O3SDT', name: 'O3SDT' },
+                    { data: 'O3EDT', name: 'O3EDT' },
+                    { data: 'TypeName', name: 'TypeName' },
+                    { data: 'SizeName', name: 'SizeName' },
+                    { data: 'CategoryName', name: 'CategoryName' },
+                    { data: 'DepartmentName', name: 'DepartmentName' },
+                    { data: 'O3TYPE', name: 'O3TYPE' },
+                    { data: 'IsReverted', name: 'IsReverted' },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            return '<button class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '">Print</button>';
+                        }
+                    }
+                ],
+                "dom": '<"top"lfB>rt<"bottom"ip>',
+
+                initComplete: function () {
+                    var date = $('#startDate').val();
+                    // Create the button element
+                    var $button = $('<button>')
+                        .addClass('custom-button')
+                        .text('Export')
+                        .on('click', function () {
+                            window.location.href = '/STRPRC/ExportDataTableToExcel?tab=Consignment&date=' + date;
+                        });
+
+                    var $queueButton = $('<button>')
+                        .addClass('queueBtnCo btn btn-warning')
+                        .text('Queue Selected')
+                        .on('click', function () {
+
+                        });
+
+                    var dataTableWrapper = $('#consignment-table').closest('.dataTables_wrapper');
+                    dataTableWrapper.find('.dataTables_filter').before($button);
+                    dataTableWrapper.find('.dataTables_filter').before($queueButton);
+
+                }
+            });
+
+            $('.queueBtnCo').click(function () {
+
+                var selectedRows = [];
+                $('.rowCheckboxCo:checked').each(function () {
+                    var rowId = $(this).data('id');
+                    selectedRows.push(rowId);
+                });
+
+                if (selectedRows.length > 0) {
+                    console.log('Selected Row IDs:', selectedRows);
+
+                    // Build the HTML for the dropdowns
+                    var dropdownHtml = '<div class="form-row">' +
+                        '<div class="form-group row col-12">' +
+                        '<label class="col-sm-2 col-form-label" for="sizeDropdown">Size:</label>' +
+                        '<select class="col-sm-9  ml-3 form-control" id="sizeDropdown">' +
+                        '<option value="1">Whole</option>' +
+                        '<option value="2">1/8</option>' +
+                        '<option value="3">Jewelry</option>' +
+                        '</select>' +
+                        '</div>' +
+                        '</div>';
+                    // Build the HTML for the print button
+                    var buttonHtml = '<button id="queueSelectedButtonCo" class="btn btn-primary">Queue</button>' +
+                        '<button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancel</button>';
+                    // Create the modal content
+                    var modalContent = '<div class="modal-dialog modal-sm modal-dialog-centered">' +
+                        '<div class="modal-content">' +
+                        '<div class="modal-header">' +
+                        '<h5 class="modal-title">Queue</h5>' +
+                        '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
+                        '<span aria-hidden="true">&times;</span>' +
+                        '</button>' +
+                        '</div>' +
+                        '<div class="modal-body">' +
+                        dropdownHtml +
+                        '</div>' +
+                        '<div class="modal-footer">' +
+                        buttonHtml +
+                        '</div>' +
+                        '</div>' +
+                        '</div>';
+                    // Remove any existing modals
+                    $('#modalView').remove();
+
+                    // Append the modal to the body
+                    $('body').append('<div id="modalView" class="modal">' + modalContent + '</div>');
+
+                    // Show the modal with fade-in effect from top
+                    $('#modalView').modal({
+                        show: true,
+                        backdrop: false,
+                        keyboard: false
+                    });
+
+                    // Set default values for the dropdowns
+                    $('#sizeDropdown').val(2); // 1/8
+
+                    $('#queueSelectedButtonCo').click(function () {
+
+                        $("#loadingContainer").show();
+
+                        var sizeId = $('#sizeDropdown').val();
+
+                        $.ajax({
+                            url: '/Queue/QueueSelectedItems',
+                            type: "POST",
+                            data: { sizeId: sizeId, selectedRows: selectedRows },
+                            success: function (data) {
+                                $("#loadingContainer").hide();
+                                // Show success modal
+                                var modalHtml = '<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">';
+                                modalHtml += '<div class="modal-dialog" role="document">';
+                                modalHtml += '<div class="modal-content">';
+                                modalHtml += '<div class="modal-header">';
+                                modalHtml += '<h5 class="modal-title" id="successModalLabel">Success!</h5>';
+                                modalHtml += '<button type="button" class="close" data-dismiss="modal" aria-label="Close">';
+                                modalHtml += '<span aria-hidden="true">&times;</span>';
+                                modalHtml += '</button>';
+                                modalHtml += '</div>';
+                                modalHtml += '<div class="modal-body">';
+                                modalHtml += 'Item queued successfully!';
+                                modalHtml += '</div>';
+                                modalHtml += '<div class="modal-footer">';
+                                modalHtml += '<button type="button" class="qOkBtn btn btn-primary" data-dismiss="modal">OK</button>';
+                                modalHtml += '</div>';
+                                modalHtml += '</div>';
+                                modalHtml += '</div>';
+                                modalHtml += '</div>';
+
+                                $('body').append(modalHtml);
+                                $('#successModal').modal('show');
+                            },
+                            error: function (error) {
+
+                            }
+                        });
+
+                        $('#modalView').modal('hide');
+                        $('input[type="checkbox"]').prop('checked', false);
+                    });
+
+
+                } else {
+                    alert('Please select items to queue.');
+                }
+
+            });
+
+            $('#selectAllCo').on('change', function () {
+                var isChecked = $(this).is(':checked');
+                $('.rowCheckboxCo').prop('checked', isChecked);
+            });
+
+
+            $('.printAllBtnCo').on('click', function () {
+
+                var selectedRows = [];
+                $('.rowCheckboxCo:checked').each(function () {
+                    var rowId = $(this).data('id');
+                    selectedRows.push(rowId);
+                });
+
+                if (selectedRows.length > 0) {
+                    console.log('Selected Row IDs:', selectedRows);
+
+                    // Build the HTML for the dropdowns
+                    var dropdownHtml = '<div class="form-row">' +
+                        '<div class="form-group row col-12">' +
+                        '<label class="col-sm-2 col-form-label" for="sizeDropdown">Size:</label>' +
+                        '<select class="col-sm-9  ml-3 form-control" id="sizeDropdown">' +
+                        '<option value="1">Whole</option>' +
+                        '<option value="2">1/8</option>' +
+                        '<option value="3">Jewelry</option>' +
+                        '</select>' +
+                        '</div>' +
+                        '</div>';
+                    // Build the HTML for the print button
+                    var buttonHtml = '<button id="printSelectedButtonCo" class="btn btn-primary">Print</button>' +
+                        '<button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancel</button>';
+                    // Create the modal content
+                    var modalContent = '<div class="modal-dialog modal-sm modal-dialog-centered">' +
+                        '<div class="modal-content">' +
+                        '<div class="modal-header">' +
+                        '<h5 class="modal-title">Print Report</h5>' +
+                        '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
+                        '<span aria-hidden="true">&times;</span>' +
+                        '</button>' +
+                        '</div>' +
+                        '<div class="modal-body">' +
+                        dropdownHtml +
+                        '</div>' +
+                        '<div class="modal-footer">' +
+                        buttonHtml +
+                        '</div>' +
+                        '</div>' +
+                        '</div>';
+                    // Remove any existing modals
+                    $('#modalView').remove();
+
+                    // Append the modal to the body
+                    $('body').append('<div id="modalView" class="modal">' + modalContent + '</div>');
+
+                    // Show the modal with fade-in effect from top
+                    $('#modalView').modal({
+                        show: true,
+                        backdrop: false,
+                        keyboard: false
+                    });
+
+                    // Set default values for the dropdowns
+                    $('#sizeDropdown').val(2); // 1/8
+
+
+                    //Start for print preview multiple report
+                    // PRINT MULTIPLE
+                    $('#printSelectedButtonCo').click(function () {
+                        $("#loadingContainer").show();
+                        var sizeId = $('#sizeDropdown').val();
+
+                        $("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "");
+                        var reportIframe = document.getElementById("reportIframe");
+                        if (reportIframe) {
+                            $('.rowCheckboxCo:checked').each(function () {
+                                var row = $(this).closest('tr');
+                                var table = row.closest('table');
+                                var rowIndex = table.DataTable().row(row).index();
+                                var specificRow = $('#consignment-table tbody tr:eq(' + rowIndex + ')');
+                                specificRow.find('td:eq(2)').text("Yes");
+                                specificRow.find('td:eq(2)').css('color', 'green');
+
+                            });
+                            reportIframe.onload = function () {
+                                $("#loadingContainer").hide();
+
+                                reportIframe.contentWindow.print();
+                            };
+                            reportIframe.src = $("#reportIframe").attr("src");
+                        }
+                        $('#modalView').modal('hide');
+                        $('input[type="checkbox"]').prop('checked', false);
+
+                    });
 
                 } else {
                     alert('Please select items to print.');
@@ -1640,6 +1968,138 @@
             });
         });
 
+        $('#consignment-table').on('click', '.printBtn', function () {
+            var rowId = $(this).data('id');
+
+            $.ajax({
+                url: '@Url.Action("GetDataBySKU", "STRPRC")' ,
+                type: 'POST',
+                data: { id: rowId },
+                success: function (response) {
+
+                        // Create the dropdown options
+                        var sizeOptions = '';
+                        var typeOptions = '';
+                        var categoryOptions = '';
+
+                        if (response.CategoryId == 1 || response.TypeId == 2) { // if appliance, remove jewelry size
+                            response.SizeArray.length = 2;
+                        }
+
+                        if (response.O3REG < response.O3POS) { // Validation for Negative Save
+                            response.TypeId = 1;
+                        }
+
+                        // Populate dropdown options from the server response
+                        for (var i = 0; i < response.SizeArray.length; i++) {
+                            var option = response.SizeArray[i];
+                            sizeOptions += '<option value="' + option.Id + '">' + option.Name + '</option>';
+                        }
+                        for (var i = 0; i < response.TypeArray.length; i++) {
+                            var option = response.TypeArray[i];
+                            typeOptions += '<option value="' + option.Id + '">' + option.Name + '</option>';
+                        }
+                        for (var i = 0; i < response.CategoryArray.length; i++) {
+                            var option = response.CategoryArray[i];
+                            categoryOptions += '<option value="' + option.Id + '">' + option.Name + '</option>';
+                        }
+
+                        // Build the HTML for the dropdowns
+                        var dropdownHtml = '<div class="form-row">' +
+                            '<div class="form-group row col-12">' +
+                            '<label class="col-sm-2 col-form-label" for="sizeDropdown">Size:</label>' +
+                            '<select class="col-sm-9  ml-3 form-control" id="sizeDropdown" >' +
+                            sizeOptions +
+                            '</select>' +
+                            '</div>' +
+                            '<div class="form-group row col-md-12">' +
+                            '<label class="col-sm-2 col-form-label" for="typeDropdown">Type:</label>' +
+                            '<select class="col-sm-9  ml-3 form-control" id="typeDropdown" disabled>' +
+                            typeOptions +
+                            '</select>' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="form-row">' +
+                            '<div class="form-group row col-md-12">' +
+                            '<label class="col-sm-2 col-form-label" for="categoryDropdown">Category:</label>' +
+                            '<select class="col-sm-9  ml-3 form-control" id="categoryDropdown" disabled>' +
+                            categoryOptions +
+                            '</select>' +
+                            '</div>' +
+                            '</div>';
+
+                        // Build the HTML for the print button
+                        var buttonHtml = '<button id="printButton" class="btn btn-primary">Print</button>' +
+                                         '<button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancel</button>';
+
+
+                        // Create the modal content
+                        var modalContent = '<div class="modal-dialog modal-dialog-centered">' +
+                            '<div class="modal-content">' +
+                            '<div class="modal-header">' +
+                            '<h5 class="modal-title">Print Report</h5>' +
+                            '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
+                            '<span aria-hidden="true">&times;</span>' +
+                            '</button>' +
+                            '</div>' +
+                            '<div class="modal-body">' +
+                            dropdownHtml +
+                            '</div>' +
+                            '<div class="modal-footer">' +
+                            buttonHtml +
+                            '</div>' +
+                            '</div>' +
+                            '</div>';
+
+                        // Remove any existing modals
+                        $('#modalView').remove();
+
+                        // Append the modal to the body
+                        $('body').append('<div id="modalView" class="modal">' + modalContent + '</div>');
+
+                        // Show the modal with fade-in effect from top
+                        $('#modalView').modal({
+                            show: true,
+                            backdrop: false,
+                            keyboard: false
+                        });
+
+                        // Set default values for the dropdowns
+                        $('#sizeDropdown').val(response.SizeId);
+                        $('#typeDropdown').val(response.TypeId);
+                        $('#categoryDropdown').val(response.CategoryId);
+
+                        //Start for print preview single report
+                        // Print button click event handler
+                    $('#printButton').click(function () {
+                            $("#loadingContainer").show();
+                            response.SizeId = $('#sizeDropdown').val();
+                            response.TypeId = $('#typeDropdown').val();
+                            response.CategoryId = $('#categoryDropdown').val();
+                            response.O3IDSC = "";
+                            response.O3LONG = "";
+                            response.O3FNAM = "";
+                            response.O3MODL = "";
+                            $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(response));
+                            var reportIframe = document.getElementById("reportIframe");
+                            if (reportIframe) {
+                                reportIframe.onload = function () {
+                                    $("#loadingContainer").hide();
+                                    reportIframe.contentWindow.print();
+                                };
+                                reportIframe.src = $("#reportIframe").attr("src");
+                            }
+                            $('#modalView').modal('hide');
+                            var cell = tableConsignment.cell({ row: 0, column: 2 });
+                            cell.data('Yes');
+                            tableConsignment.draw();
+
+                        });
+                        //End for print preview single report
+                }
+            });
+        });
+
         $('#excemption-table').on('click', '.printBtn', function () {
             var rowId = $(this).data('id');
 
@@ -1855,6 +2315,38 @@
             }
         });
 
+        // collapsible for with Co
+        $('#consignment-table tbody').on('click', 'td.details-control', function () {
+
+            var tr = $(this).closest('tr');
+            var tdi = tr.find("i.fa-solid");
+            var row = tableConsignment.row(tr);
+
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+                tdi.first().removeClass('fa-solid fa-square-caret-up');
+                tdi.first().addClass('fa-solid fa-square-caret-down');
+            }
+            else {
+                // Open this row
+                $.ajax({
+                    url: '/STRPRC/GetSKUDetails',
+                    type: "GET",
+                    data: { O3SKU: row.data().O3SKU },
+                    success: function (response) {
+                        row.child(format(response)).show();
+                        tr.addClass('shown');
+                        tdi.first().removeClass('fa-solid fa-square-caret-down');
+                        tdi.first().addClass('fa-solid fa-square-caret-up');
+                    }
+                });
+
+
+            }
+        });
+
         // collapsible for excemption
         $('#excemption-table tbody').on('click', 'td.details-control', function () {
 
@@ -2019,7 +2511,7 @@
             }
         });
         $('#new-exemption-table thead').on('click', '.filter-icon', function (event) {
-            
+
             event.stopPropagation(); // Prevent event propagation
 
             var columnName = "Dept";
@@ -2243,6 +2735,123 @@
             }
         });
 
+        // CO TAB
+        var dialog4 = $('<div>').dialog({
+            autoOpen: false,
+            modal: true,
+            resizable: false,
+            width: 300,
+            position: { my: 'center', at: 'center', of: window },
+            open: function (event, ui) {
+                $('.ui-widget-overlay').bind('click', function () {
+                    dialog4.dialog('close');
+                });
+            },
+            close: function (event, ui) {
+                $('.ui-widget-overlay').unbind('click');
+            }
+        });
+        $('#consignment-table thead').on('click', '.filter-icon', function (event) {
+            event.stopPropagation(); // Prevent event propagation
+
+            var columnIndex = $(this).closest('th').index();
+            var column = tableConsignment.column(columnIndex);
+
+            // Clear existing filter input
+            dialog4.dialog('option', 'title', 'Filter Dept').html('');
+
+            // Get distinct values of the column
+            var distinctValues = column.data().unique().toArray();
+
+            // Retrieve previously selected values (if any)
+
+            var selectedValues = column.search().split('|').map(function (value) {
+                return value.trim();
+            });
+
+            if (selectedValues.length > 0) {
+                selectedValues[0] = selectedValues[0].replace(/^\^\(/, '');
+                var lastIndex = selectedValues.length - 1;
+                selectedValues[lastIndex] = selectedValues[lastIndex].replace(/\)\$$/, '');
+            }
+
+
+            // Create checkboxes for each distinct value
+            var scrollableDiv = $('<div>').css({
+                'max-height': '200px', // Set a maximum height for scrolling
+                'overflow-y': 'scroll' // Enable vertical scrolling
+            });
+
+            var checkboxContainer = $('<div>').css({
+                'display': 'flex',
+                'flex-direction': 'column', // Align checkboxes vertically
+                'gap': '5px' // Add spacing between checkboxes
+            });
+
+            // Add "Select All" checkbox
+            var selectAllCheckbox = $('<input type="checkbox">').addClass('filter-checkbox select-all-checkbox');
+            var selectAllLabel = $('<label>').text('Select All').prepend(selectAllCheckbox);
+            checkboxContainer.prepend(selectAllLabel);
+
+            for (var i = 0; i < distinctValues.length; i++) {
+                var checkbox = $('<input type="checkbox">').addClass('filter-checkbox').val(distinctValues[i]);
+                if (selectedValues.includes(distinctValues[i])) {
+                    checkbox.prop('checked', true);
+                }
+                var label = $('<label>').text(distinctValues[i]).prepend(checkbox);
+                checkboxContainer.append(label);
+            }
+
+            scrollableDiv.append(checkboxContainer);
+            dialog4.append(scrollableDiv);
+
+            // Create button container for the "OK" and "Clear All Checkboxes" buttons
+            var buttonContainer = $('<div>').css('display', 'flex');
+            dialog4.append(buttonContainer);
+
+            // Create "Clear All Checkboxes" button
+            var clearButton = $('<button>').text('Clear All').addClass('btn btn-secondary btn-sm').css('background-color', 'gray').click(function () {
+                $('.filter-checkbox').prop('checked', false);
+                applyFilter();
+            });
+            buttonContainer.append(clearButton);
+
+            // Create "OK" button
+            var okButton = $('<button>').text('OK').addClass('btn btn-secondary btn-sm ml-2').css('background-color', 'orange').click(function () {
+                applyFilter();
+                dialog4.dialog('close');
+            });
+            buttonContainer.append(okButton);
+
+            // Apply filter when checkbox state changes
+            $('.filter-checkbox').on('change', applyFilter);
+
+            // Toggle state of all checkboxes when "Select All" checkbox changes
+            selectAllCheckbox.click(function () {
+                $('.filter-checkbox').not('.select-all-checkbox').prop('checked', $(this).prop('checked'));
+            });
+
+            // Open the filter dialog
+            dialog4.dialog('open');
+
+            function applyFilter() {
+                var selectedValues = $('.filter-checkbox:checked').map(function () {
+                    return $(this).val();
+                }).get();
+
+                if (selectedValues.length === 0) {
+                    column.search('').draw();
+                } else {
+                    // Use a regular expression to match exact values
+                    var regex = '^(' + selectedValues.map(function (value) {
+                        return $.fn.dataTable.util.escapeRegex(value);
+                    }).join('|') + ')$';
+
+                    column.search(regex, true, false).draw();
+                }
+            }
+        });
+
         // FIX DT HEADER MISALIGNMENT FOR NewExemption INV TAB
         $('.nav-link-tab').click(function () {
             // Remove 'active' class from all tabs
@@ -2268,6 +2877,9 @@
             }
             else if (currentActiveTab == "#excemption") {
                 tableExcemption.draw();
+            }
+            else if (currentActiveTab == "#consignment") {
+                tableConsignment.draw();
             }
 
         });

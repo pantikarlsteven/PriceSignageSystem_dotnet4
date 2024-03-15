@@ -475,27 +475,24 @@ namespace PriceSignageSystem.Controllers
         [HttpPost]
         public async Task<ActionResult> LoadPCA()
         {
+            DateTime currentTime = DateTime.Now;
+            var currentHour = currentTime.Hour;
+
+            if (currentHour >= 4 && currentHour < 5)
+            {
+                return View("MaintenanceError");
+            }
+
             var result = _sTRPRCRepository.GetLatestUpdate();
             var data = new STRPRCDto();
             var rawData = await _sTRPRCRepository.GetDataByStartDate(result.LatestDate);
 
             data.LatestDate = result.LatestDate;
-            data.WithInventoryList = rawData.Where(a => a.HasInventory == "Y" && a.IsExemp == "N").ToList();
-
+            data.WithInventoryList = rawData.Where(a => a.HasInventory == "Y" && a.IsExemp == "N" && a.O3TYPE != "CO").ToList();
             var NegativeSaveList = rawData.Where(a => a.NegativeSave == "Y" && a.IBHAND > 0).ToList(); // Negative save with positive onhand
-
-            //foreach(var item in NegativeSaveList)
-            //{
-            //    if(item.O3REG < item.O3POS)
-            //    {
-            //        item.O3REG = item.O3POS;
-            //        item.TypeId = ReportConstants.Type.Regular;
-            //    }
-            //}
-
             data.WithInventoryList.AddRange(NegativeSaveList);
-            //data.WithoutInventoryList = rawData.Where(a => a.HasInventory == "" || a.IsExemp == "Y").ToList();
             data.ExcemptionList = rawData.Where(a => a.HasInventory == "" || a.IsExemp == "Y").ToList();
+            data.ConsignmentList = rawData.Where(a => a.HasInventory == "Y" && a.IsExemp == "N" && a.O3TYPE == "CO").ToList();
 
             foreach (var item in data.WithInventoryList)
             {
@@ -505,7 +502,6 @@ namespace PriceSignageSystem.Controllers
                 item.SizeName = item.SizeId == 1 ? "Whole"
                                 : item.SizeId == 2 ? "1/8"
                                 : item.SizeId == 3 ? "Jewelry"
-                                //: item.SizeId == 4 ? "Jewelry"
                                 : "Whole";
                 item.CategoryName = item.CategoryId == 1 ? "Appliance"
                                     : item.CategoryId == 2 ? "Non-Appliance"
@@ -522,7 +518,6 @@ namespace PriceSignageSystem.Controllers
                     item.SizeName = item.SizeId == 1 ? "Whole"
                                     : item.SizeId == 2 ? "1/8"
                                     : item.SizeId == 3 ? "Jewelry"
-                                    //: item.SizeId == 4 ? "Jewelry"
                                     : "Whole";
                     item.CategoryName = item.CategoryId == 1 ? "Appliance"
                                         : item.CategoryId == 2 ? "Non-Appliance"
@@ -538,7 +533,6 @@ namespace PriceSignageSystem.Controllers
                     item.SizeName = item.SizeId == 1 ? "Whole"
                                     : item.SizeId == 2 ? "1/8"
                                     : item.SizeId == 3 ? "Jewelry"
-                                    //: item.SizeId == 4 ? "Jewelry"
                                     : "Whole";
                     item.CategoryName = item.CategoryId == 1 ? "Appliance"
                                         : item.CategoryId == 2 ? "Non-Appliance"
@@ -547,21 +541,21 @@ namespace PriceSignageSystem.Controllers
                     item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
                 }
             }
-
-            //foreach (var item in data.ExcemptionList)
-            //{
-            //    item.TypeName = item.O3EDT != 999999 ? "Save" : "Regular";
-            //    item.SizeName = item.SizeId == 1 ? "Whole"
-            //                    : item.SizeId == 2 ? "1/8"
-            //                    : item.SizeId == 3 ? "Jewelry"
-            //                    //: item.SizeId == 4 ? "Jewelry"
-            //                    : "Whole";
-            //    item.CategoryName = item.CategoryId == 1 ? "Appliance"
-            //                        : item.CategoryId == 2 ? "Non-Appliance"
-            //                        : "Non-Appliance";
-            //    item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
-            //    item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
-            //}
+            foreach (var item in data.ConsignmentList)
+            {
+                item.TypeName = item.TypeId == 2 ? "Save"
+                                : item.TypeId == 1 ? "Regular"
+                                : "Save";
+                item.SizeName = item.SizeId == 1 ? "Whole"
+                                : item.SizeId == 2 ? "1/8"
+                                : item.SizeId == 3 ? "Jewelry"
+                                : "Whole";
+                item.CategoryName = item.CategoryId == 1 ? "Appliance"
+                                    : item.CategoryId == 2 ? "Non-Appliance"
+                                    : "Non-Appliance";
+                item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
+                item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
+            }
 
             string jsonData = Newtonsoft.Json.JsonConvert.SerializeObject(data);
 
@@ -618,7 +612,11 @@ namespace PriceSignageSystem.Controllers
                 var toExportRawData = _sTRPRCRepository.PCAToExport().ToList();
                 if (tab == "WithInventory")
                 {
-                    toExportRawData = toExportRawData.Where(a => a.WithInventory == "Yes" && a.IsExemption == "No").ToList();
+                    toExportRawData = toExportRawData.Where(a => a.WithInventory == "Yes" && a.IsExemption == "No" && a.O3TYPE != "CO").ToList();
+                }
+                else if (tab == "Consignment")
+                {
+                    toExportRawData = toExportRawData.Where(a => a.WithInventory == "Yes" && a.IsExemption == "No" && a.O3TYPE == "CO").ToList();
                 }
                 //else if (tab == "WithoutInventory")
                 //{

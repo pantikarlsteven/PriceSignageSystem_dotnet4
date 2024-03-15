@@ -25,5 +25,6 @@ namespace PriceSignageSystem.Models.Dto
         public string Category { get; set; }
         public string WithInventory { get; set; }
         public string IsExemption { get; set; }
+        public string O3TYPE { get; set; }
     }
 }

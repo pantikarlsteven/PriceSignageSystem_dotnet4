@@ -13,6 +13,9 @@ namespace PriceSignageSystem.Models.Interface
         Task<List<AuditDto>> GetPCAbyLatestDate(decimal latestDate);
         ScanResultDto ScanBarcode(string code, string codeFormat);
         bool Post(string sku, string username);
-        int ResolveUnresolve(string sku, string isChecked, string username);
+        int NotRequireTagging(string sku, string isChecked, string username);
+        bool PostWithRemarks(string sku, string username, string remarks);
+        int TagWrongPrice(string sku, string username);
+
     }
 }

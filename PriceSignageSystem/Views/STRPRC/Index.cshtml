@@ -176,5 +176,7 @@
 
     function closeModal() {
         modalContainer.style.display = 'none';
+        html5QrcodeScanner.clear();
+        localStorage.setItem("isScanUsed", false);
     }
 </script>

@@ -80,7 +80,10 @@ namespace PriceSignageSystem.Models.Repository
                         ZeroInvDCOnHand = (decimal)reader["ZeroInvDCOnHand"],
                         ZeroInvInTransit = (decimal)reader["ZeroInvInTransit"],
                         IsAudited = reader["IsAudited"].ToString(),
-                        IsResolved = reader["IsResolved"].ToString()
+                        IsNotRequired = reader["IsNotRequired"].ToString(),
+                        AuditedRemarks = reader["AuditedRemarks"].ToString(),
+                        IsWrongPrice = reader["IsWrongPrice"].ToString()
+
                     };
 
                     if ((decimal)reader["O3RSDT"] == startDate)
@@ -180,12 +183,52 @@ namespace PriceSignageSystem.Models.Repository
             }
         }
 
-        public int ResolveUnresolve(string sku, string isChecked, string username)
+        public int NotRequireTagging(string sku, string isChecked, string username)
         {
-            var IsResolved = isChecked == "true" ? "Y" : "N";
-            var rowsAffected = _db.Database.SqlQuery<int>("EXEC sp_ResolveUnresolve @Sku, @IsResolved, @Username",
+            var isNotRequired = isChecked == "true" ? "Y" : "N";
+            var rowsAffected = _db.Database.SqlQuery<int>("EXEC sp_NotRequireTagging @Sku, @IsNotRequired, @Username",
                 new SqlParameter("@Sku", sku),
-                new SqlParameter("@IsResolved", IsResolved),
+                new SqlParameter("@IsNotRequired", isNotRequired),
+                new SqlParameter("@Username", username))
+                .FirstOrDefault();
+
+            return rowsAffected;
+
+        }
+
+        public bool PostWithRemarks(string sku, string username, string remarks)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand("sp_AuditWithRemarks", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.CommandTimeout = commandTimeoutInSeconds;
+                        // Add any required parameters to the command if needed
+                        command.Parameters.AddWithValue("@Sku", sku);
+                        command.Parameters.AddWithValue("@Username", username);
+                        command.Parameters.AddWithValue("@Remarks", remarks);
+
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                        connection.Close();
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error executing stored procedure: " + ex.Message);
+                return false;
+            }
+        }
+
+        public int TagWrongPrice(string sku, string username)
+        {
+            var rowsAffected = _db.Database.SqlQuery<int>("EXEC sp_TagWrongPrice @Sku, @Username",
+                new SqlParameter("@Sku", sku),
                 new SqlParameter("@Username", username))
                 .FirstOrDefault();
 

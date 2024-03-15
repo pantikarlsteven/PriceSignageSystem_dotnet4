@@ -1,4 +1,5 @@
 ﻿using PriceSignageSystem.Code.CustomValidations;
+using PriceSignageSystem.Models;
 using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
 using System;
@@ -52,6 +53,8 @@ namespace PriceSignageSystem.Controllers
                 item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
                 item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
                 item.IsExemp = item.IsExemp == "Y" ? "Yes" : "No";
+                item.IsWrongPrice = item.IsWrongPrice == "Y" ? "Yes" : "No";
+
             }
 
             foreach (var item in auditList.NotPrintedList)
@@ -127,10 +130,40 @@ namespace PriceSignageSystem.Controllers
         }
 
         [HttpPost]
-        public ActionResult ResolveUnresolve(string sku, string isChecked)
+        public ActionResult NotRequireTagging(string sku, string isChecked)
         {
             var username = User.Identity.Name;
-            var result = _auditRepo.ResolveUnresolve(sku, isChecked, username);
+            var result = _auditRepo.NotRequireTagging(sku, isChecked, username);
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        public ActionResult PostWithRemarks(string sku, string remarks)
+        {
+            var username = User.Identity.Name;
+            var isSuccess = _auditRepo.PostWithRemarks(sku, username, remarks);
+
+            return Json(isSuccess);
+        }
+
+        [HttpPost]
+        public ActionResult GetAllRemarks()
+        {
+            //temporary 
+            var list = new List<AuditRemark>();
+            list.Add(new AuditRemark { Id = 1, Name = "NOF" });
+            list.Add(new AuditRemark { Id = 2, Name = "Disposal" });
+            list.Add(new AuditRemark { Id = 3, Name = "Mark Down" });
+
+            return Json(list.ToArray());
+        }
+
+        [HttpPost]
+        public ActionResult TagWrongPrice(string sku)
+        {
+            var username = User.Identity.Name;
+            var result = _auditRepo.TagWrongPrice(sku, username);
 
             return Json(result);
         }

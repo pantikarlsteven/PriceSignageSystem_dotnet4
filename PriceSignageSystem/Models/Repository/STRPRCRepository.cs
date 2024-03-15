@@ -1270,7 +1270,7 @@ namespace PriceSignageSystem.Models.Repository
                         IsPrinted = reader["IsPrintedYN"].ToString(),
                         WithInventory = reader["INVYN"].ToString(),
                         IsExemption = reader["IsExemp"].ToString(),
-
+                        O3TYPE = reader["O3TYPE"].ToString()
                     };
 
                     data.Add(record);
