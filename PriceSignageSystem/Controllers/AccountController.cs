@@ -28,6 +28,14 @@ namespace PriceSignageSystem.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
+            DateTime currentTime = DateTime.Now;
+            var currentHour = currentTime.Hour;
+
+            if (currentHour >= 5 && currentHour < 6)
+            {
+                return View("MaintenanceError");
+            }
+
             ViewBag.returnUrl = returnUrl;
             var model = new UserStoreDto
             {

@@ -28,7 +28,7 @@ namespace PriceSignageSystem.Models.Repository
             connectionString = ConfigurationManager.ConnectionStrings["MyConnectionString"].ConnectionString;
             connectionString151 = ConfigurationManager.ConnectionStrings["MyConnectionString151"].ConnectionString;
             connStringCentralizedExemptions = ConfigurationManager.ConnectionStrings["ConnStringCentralizedExemptions"].ConnectionString;
-            commandTimeoutInSeconds = 180;
+            commandTimeoutInSeconds = 3600;
 
         }
 
@@ -391,6 +391,91 @@ namespace PriceSignageSystem.Models.Repository
 
             return data;
 
+        }
+
+        public async Task<CentralizedExemptionStatusDto> CheckCentralizedExemptionStatus()
+        {
+            var centralizedExDto = new CentralizedExemptionStatusDto();
+            var storeId = int.Parse(ConfigurationManager.AppSettings["StoreID"]);
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connStringCentralizedExemptions))
+                {
+                    using (SqlCommand command = new SqlCommand("sp_GetExemptionStatus", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.CommandTimeout = commandTimeoutInSeconds;
+                        command.Parameters.AddWithValue("@StoreId", storeId);
+                        connection.Open();
+                        SqlDataReader reader = await command.ExecuteReaderAsync();
+
+                        while (reader.Read())
+                        {
+                            var record = new CentralizedExemptionStatusDto
+                            {
+                                Id = (int)reader["Id"],
+                                StoreId = (int)reader["StoreId"],
+                                DateUpdated = !reader.IsDBNull(reader.GetOrdinal("DateUpdated")) ? Convert.ToDateTime(reader["DateUpdated"]) : DateTime.Now.AddDays(-1),
+                                OngoingUpdate = (bool)reader["OngoingUpdate"],
+                            };
+
+                            centralizedExDto = record;
+                        }
+                        reader.Close();
+                        connection.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error executing stored procedure: " + ex.Message);
+            }
+            return centralizedExDto;
+        }
+
+        public void UpdateCentralizedExemptionStatus(CentralizedExemptionStatusDto data, bool onGoingUpdate)
+        {
+            var storeId = int.Parse(ConfigurationManager.AppSettings["StoreID"]);
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connStringCentralizedExemptions))
+                {
+                    connection.Open();
+                    if (data.Id > 0)
+                    {
+                        var query = "UPDATE ExemptionStatus SET DateUpdated = @DateUpdated," +
+                                        " OngoingUpdate = @OngoingUpdate WHERE StoreId = @StoreId";
+
+                        if (onGoingUpdate)
+                            query = "UPDATE ExemptionStatus SET" +
+                                        " OngoingUpdate = @OngoingUpdate WHERE StoreId = @StoreId";
+
+                        using (SqlCommand command = new SqlCommand(query, connection))
+                        {
+                            command.Parameters.AddWithValue("@StoreId", storeId);
+                            command.Parameters.AddWithValue("@DateUpdated", DateTime.Now);
+                            command.Parameters.AddWithValue("@OngoingUpdate", onGoingUpdate);
+                            int rowsAffected = command.ExecuteNonQuery();
+                        }
+                    }
+                    else
+                    {
+                        using (SqlCommand command = new SqlCommand("INSERT INTO ExemptionStatus (StoreId,DateUpdated,OngoingUpdate)" +
+                                                                    " VALUES (@StoreId, @DateUpdated, @OngoingUpdate)", connection))
+                        {
+                            command.Parameters.AddWithValue("@StoreId", storeId);
+                            command.Parameters.AddWithValue("@DateUpdated", DateTime.Now.AddDays(-1));
+                            command.Parameters.AddWithValue("@OngoingUpdate", onGoingUpdate);
+                            int rowsAffected = command.ExecuteNonQuery();
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error executing stored procedure: " + ex.Message);
+            }
         }
 
         public async Task<bool> UpdateCentralizedExemptions(decimal startDate)

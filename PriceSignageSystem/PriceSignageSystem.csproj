@@ -428,6 +428,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Dto\AutoPrintStatusDto.cs" />
+    <Compile Include="Models\Dto\CentralizedExemptionStatusDto.cs" />
     <Compile Include="Models\Dto\CountryDto.cs" />
     <Compile Include="Models\Dto\ExemptionDto.cs" />
     <Compile Include="Models\Dto\ExportPCADto.cs" />
@@ -576,6 +577,7 @@
     <Content Include="Views\Registers\CountryIndex.cshtml" />
     <Content Include="Views\Account\UpdatePassword.cshtml" />
     <Content Include="Views\Audit\Index.cshtml" />
+    <Content Include="Views\Shared\MaintenanceError.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

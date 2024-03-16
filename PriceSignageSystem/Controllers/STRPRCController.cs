@@ -372,6 +372,50 @@ namespace PriceSignageSystem.Controllers
 
         [AllowAnonymous]
         [HttpGet]
+        public async Task<JsonResult> CheckCentralizedExemptionStatus()
+        {
+            var result = await _sTRPRCRepository.CheckCentralizedExemptionStatus();
+            var club = _sTRPRCRepository.GetLatestUpdate();
+
+            if (result.Id > 0)
+            {
+                if (result.DateUpdated.Value.Date != DateTime.Now.Date 
+                    && club.DateUpdated.Date == DateTime.Now.Date)
+                    return Json(false, JsonRequestBehavior.AllowGet);
+            }
+            else
+                return Json(false, JsonRequestBehavior.AllowGet);
+
+            return Json(true, JsonRequestBehavior.AllowGet);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task UpdateCentralizedExemption()
+        {
+            var result = await _sTRPRCRepository.CheckCentralizedExemptionStatus();
+            var data151 = _sTRPRCRepository.CheckSTRPRCUpdates(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
+            if (result.Id > 0)
+            {
+                if (!result.OngoingUpdate)
+                {
+                   _sTRPRCRepository.UpdateCentralizedExemptionStatus(result, true); //update ongoingupdate to true here;
+                    await _sTRPRCRepository.UpdateCentralizedExemptions(data151);
+                   _sTRPRCRepository.UpdateCentralizedExemptionStatus(result, false); //update ongoingupdate to false here and dateupdated to datetime.now;
+                }
+            }
+            else
+            {
+                //add row to exemptionstatus here;
+                _sTRPRCRepository.UpdateCentralizedExemptionStatus(result, true); //update ongoingupdate to true here;
+                await _sTRPRCRepository.UpdateCentralizedExemptions(data151);
+                result = await _sTRPRCRepository.CheckCentralizedExemptionStatus();
+                _sTRPRCRepository.UpdateCentralizedExemptionStatus(result, false); //update ongoingupdate to false here and dateupdated to datetime.now;
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
         public async Task<JsonResult> CheckSTRPRCUpdates()
         {
             var result = _sTRPRCRepository.GetLatestUpdate();
@@ -416,47 +460,9 @@ namespace PriceSignageSystem.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult> UpdatePCA()
+        public ActionResult UpdatePCA()
         {
-            var result = _sTRPRCRepository.GetLatestUpdate();
-            var data151 = _sTRPRCRepository.CheckSTRPRCUpdates(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
-
-            if (DateTime.TryParseExact(data151.ToString(), "yyMMdd", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
-            {
-                if (parsedDate.Date != DateTime.Now.Date)
-                {
-                    await _sTRPRCRepository.UpdateSTRPRC151(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
-                    data151 = _sTRPRCRepository.CheckSTRPRCUpdates(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
-                }
-
-                if (DateTime.TryParseExact(data151.ToString(), "yyMMdd", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate1))
-                {
-                    if (result == null)
-                    {
-                        _sTRPRCRepository.UpdateSTRPRCTable(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
-                        await _sTRPRCRepository.UpdateCentralizedExemptions(data151);
-                        _sTRPRCRepository.GetLatestInventory(ConfigurationManager.AppSettings["StoreID"].ToString());
-                    }
-                    else
-                    {
-                        if (parsedDate1.Date != result.DateUpdated.Date)
-                        {
-                            _sTRPRCRepository.UpdateSTRPRCTable(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
-                            await _sTRPRCRepository.UpdateCentralizedExemptions(data151);
-                            _sTRPRCRepository.GetLatestInventory(ConfigurationManager.AppSettings["StoreID"].ToString());
-                        }
-                    }
-
-                }
-                else
-                {
-                    Console.WriteLine("Invalid date format");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Invalid date format");
-            }
+            _sTRPRCRepository.UpdateSTRPRCTable(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
             return Json(true, JsonRequestBehavior.AllowGet);
         }
 
@@ -472,6 +478,14 @@ namespace PriceSignageSystem.Controllers
         [HttpPost]
         public async Task<ActionResult> LoadPCA()
         {
+            DateTime currentTime = DateTime.Now;
+            var currentHour = currentTime.Hour;
+
+            if (currentHour >= 5 && currentHour < 6)
+            {
+                return View("MaintenanceError");
+            }
+
             var result = _sTRPRCRepository.GetLatestUpdate();
             var data = new STRPRCDto();
             var rawData = await _sTRPRCRepository.GetDataByStartDate(result.LatestDate);
