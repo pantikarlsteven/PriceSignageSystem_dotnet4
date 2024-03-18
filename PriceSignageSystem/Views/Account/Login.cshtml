@@ -27,17 +27,17 @@
 <body class="hold-transition login-page">
 
     <div class="content">
-        <div class="overlay-wrapper" id="loadingSTRPRCUpdate" style="display:none;">
+        <div class="overlay-wrapper" id="loadingCEM" style="display:none;">
             <div class="overlay" style="background-color: rgba(0, 0, 0, 0.59); z-index: 99;">
                 <img class="" src="~/Content/Images/loading.gif" alt="Loading" style="max-width:350px;" />
-                <p style="position: absolute; margin-top: 250px; background-color: #dee2e6; padding: 10px;">Updating Data. Please Wait...</p>
+                <p style="position: absolute; margin-top: 250px; background-color: #dee2e6; padding: 10px;">Getting Exemptions. Please Wait...</p>
             </div>
         </div>
 
-        <div class="overlay-wrapper" id="loadingCheckingSTRPRCUpdate" style="display:none;">
+        <div class="overlay-wrapper" id="loadingCheckCEM" style="display:none;">
             <div class="overlay" style="background-color: rgba(0, 0, 0, 0.59); z-index: 99;">
                 <img class="" src="~/Content/Images/loading.gif" alt="Loading" style="max-width:350px;" />
-                <p style="position: absolute; margin-top: 250px; background-color: #dee2e6; padding: 10px;">Checking for updates...</p>
+                <p style="position: absolute; margin-top: 250px; background-color: #dee2e6; padding: 10px;">Please Wait...</p>
             </div>
         </div>
     </div>
@@ -93,30 +93,24 @@
         InitLoad();
 
         function InitLoad() {
-            //Check strprc updates
-            $("#loadingCheckingSTRPRCUpdate").show();
+            $("#loadingCheckCEM").show();
             $.ajax({
-                url: '/STRPRC/CheckSTRPRCUpdates',
+                url: '/STRPRC/CheckCentralizedExemptionStatus',
                 type: "GET",
                 success: function (isUpdated) {
                     localStorage.setItem("isScanUsed", false);
-                    $("#loadingCheckingSTRPRCUpdate").hide();
+                    $("#loadingCheckCEM").hide();
                     if (!isUpdated) {
-                        $("#loadingSTRPRCUpdate").show();
+                        $("#loadingCEM").show();
                         $.ajax({
-                            url: '/STRPRC/UpdatePCA',
+                            url: '/STRPRC/UpdateCentralizedExemption',
                             type: "POST",
                             dataType: 'json',
-                            beforeSend: function (xhr) {
-                                // Add the 'Accept-Encoding' header to let the server know that we can handle Gzip compression
-                                xhr.setRequestHeader('Accept-Encoding', 'gzip');
-                            },
-                            success: function (data) {
-                                //window.location.href = "/strprc/pca";
-                                $("#loadingSTRPRCUpdate").hide();
+                            success: function () {
+                                $("#loadingCEM").hide();
                             },
                             error: function (error) {
-                                $("#loadingSTRPRCUpdate").hide();
+                                $("#loadingCEM").hide();
                             }
                         });
                     }

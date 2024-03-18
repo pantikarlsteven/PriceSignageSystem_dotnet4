@@ -31,7 +31,7 @@ namespace PriceSignageSystem.Controllers
             DateTime currentTime = DateTime.Now;
             var currentHour = currentTime.Hour;
 
-            if (currentHour >= 4 && currentHour < 5)
+            if (currentHour >= 5 && currentHour < 6)
             {
                 return View("MaintenanceError");
             }

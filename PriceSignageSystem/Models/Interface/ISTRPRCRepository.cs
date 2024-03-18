@@ -37,5 +37,7 @@ namespace PriceSignageSystem.Models.Interface
         List<ExportPCAExemptionDto> PCAToExportExemption();
         List<ExportPCADto> PCAToExport();
         string GetSubClassDescription(decimal O3SKU);
+        Task<CentralizedExemptionStatusDto> CheckCentralizedExemptionStatus();
+        void UpdateCentralizedExemptionStatus(CentralizedExemptionStatusDto data, bool onGoingUpdate);
     }
 }

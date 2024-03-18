@@ -59,10 +59,10 @@
                 </div>
             </div>
 
-            <div class="overlay-wrapper" id="inventoryUpdateLoadingContainer" style="display:none;">
+            <div class="overlay-wrapper" id="updateLoadingContainer" style="display:none;">
                 <div class="overlay" style="background-color: rgba(0, 0, 0, 0.59); z-index: 999999;">
                     <img class="" src="~/Content/Images/loading.gif" alt="Loading" style="max-width:350px;" />
-                    <p style="position: absolute; margin-top: 250px; background-color: #dee2e6; padding: 10px;">Updating Inventory. Please Wait...</p>
+                    <p style="position: absolute; margin-top: 250px; background-color: #dee2e6; padding: 10px;">Updating. Please Wait...</p>
                 </div>
             </div>
         </div>
@@ -96,7 +96,8 @@
             <div class="col-md-2">
                 <div class="form-group">
                     <label class="text-white d-sm-none d-lg-block">_</label>
-                    <button class="btn btn-primary" id="updateInventory">Update Inventory</button>
+                    <button class="btn btn-primary" id="updateInventory" style="display: none">Update Inventory</button>
+                    <button class="btn btn-primary" id="updatePCA" style="display: none">Update PCA</button>
                 </div>
             </div>
         </div>
@@ -277,6 +278,15 @@
         var tableExcemption = null;
         var tableConsignment = null;
 
+        function formatDateToYYMMDD() {
+            const date = new Date();
+            const year = date.getFullYear().toString().slice(-2);
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+
+            return `${year}${month}${day}`;
+        }
+
         function InitLoad() {
             $("#loadingContainer").show();
 
@@ -296,6 +306,11 @@
                     const year = latestDate.toString().substr(0, 2);
                     const formattedDate = `20${year}-${month}-${day}`;
                     $('#startDate').val(formattedDate);
+
+                    if (latestDate == formatDateToYYMMDD(Date.now()))
+                        $('#updateInventory').show();
+                    else
+                        $('#updatePCA').show();
 
                     if (tableWith !== null) {
                         tableWith.destroy();
@@ -338,7 +353,7 @@
         }
 
         $("#updateInventory").on("click", function () {
-            $("#inventoryUpdateLoadingContainer").show();
+            $("#updateLoadingContainer").show();
 
             $.ajax({
                 url: '/STRPRC/GetLatestInventory',
@@ -350,11 +365,28 @@
                     else
                         location.reload();
 
-                    $("#inventoryUpdateLoadingContainer").hide();
+                    $("#updateLoadingContainer").hide();
                 },
                 error: function (error) {
                     alert(error);
-                    $("#inventoryUpdateLoadingContainer").hide();
+                    $("#updateLoadingContainer").hide();
+                }
+            });
+        });
+
+        $("#updatePCA").on("click", function () {
+            $("#updateLoadingContainer").show();
+
+            $.ajax({
+                url: '/STRPRC/UpdatePCA',
+                type: "POST",
+                dataType: 'json',
+                success: function () {
+                    location.reload();
+                },
+                error: function (error) {
+                    alert(error);
+                    $("#updateLoadingContainer").hide();
                 }
             });
         });

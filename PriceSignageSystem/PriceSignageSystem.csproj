@@ -450,6 +450,7 @@
     <Compile Include="Models\AuditRemark.cs" />
     <Compile Include="Models\CompleteSTRPRC.cs" />
     <Compile Include="Models\Dto\AutoPrintStatusDto.cs" />
+    <Compile Include="Models\Dto\CentralizedExemptionStatusDto.cs" />
     <Compile Include="Models\Dto\CountryDto.cs" />
     <Compile Include="Models\Dto\ExemptionDto.cs" />
     <Compile Include="Models\Dto\ExportPCADto.cs" />
