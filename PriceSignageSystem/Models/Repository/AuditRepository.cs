@@ -235,5 +235,29 @@ namespace PriceSignageSystem.Models.Repository
             return rowsAffected;
 
         }
+
+        public async Task<List<AuditDto>> GetPrintedSkuUpdates()
+        {
+            var result = await _db.Database.SqlQuery<AuditDto>("EXEC sp_GetPrintedSkuUpdates")
+                .ToListAsync();
+
+            return result;
+        }
+
+        public List<AuditDto> GetAll()
+        {
+            var result = new List<AuditDto>();
+            try
+            {
+                result = _db.Database.SqlQuery<AuditDto>("EXEC sp_GetAllAudits")
+                            .ToList();
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return result;
+        }
     }
 }

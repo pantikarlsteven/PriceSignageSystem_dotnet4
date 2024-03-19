@@ -17,5 +17,7 @@ namespace PriceSignageSystem.Models.Interface
         bool PostWithRemarks(string sku, string username, string remarks);
         int TagWrongPrice(string sku, string username);
 
+        Task<List<AuditDto>> GetPrintedSkuUpdates();
+        List<AuditDto> GetAll();
     }
 }

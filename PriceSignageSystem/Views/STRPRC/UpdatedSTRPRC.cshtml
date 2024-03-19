@@ -89,6 +89,9 @@
                     <li class="nav-item">
                         <a class="nav-link" style="color:white;" data-toggle="tab" href="#" id="withoutInventory">Without Inventory</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" style="color:white;" data-toggle="tab" href="#" id="consignment">Consignment</a>
+                    </li>
                 </ul>
 
                 <div class="card-body table-responsive">
@@ -388,12 +391,16 @@
         }
 
         $("#withInventory").click(function () {
-            GetDataTable(data.filter(row => row.Inv == 'Y'));
+            GetDataTable(data.filter(row => row.Inv == 'Y' && (row.O3TYPE != 'CO' || row.O3TYPE == null )));
 
         });
 
         $("#withoutInventory").click(function () {
             GetDataTable(data.filter(row => row.Inv == 'N'));
+        });
+
+        $("#consignment").click(function () {
+            GetDataTable(data.filter(row => row.Inv == 'Y' && row.O3TYPE == 'CO' ));
         });
 
         function InitLoad() {
@@ -417,7 +424,7 @@
                         data[i].DateUpdated = formattedDate;
                     }
 
-                    GetDataTable(data.filter(row => row.Inv == 'Y'));
+                    GetDataTable(data.filter(row => row.Inv == 'Y' && (row.O3TYPE != 'CO' || row.O3TYPE == null)));
 
                     $('#selectAll').on('change', function () {
                         var isChecked = $(this).is(':checked');

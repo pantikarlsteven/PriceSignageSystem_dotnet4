@@ -690,7 +690,8 @@ namespace PriceSignageSystem.Models.Repository
 
                         TypeName = reader["TypeName"].ToString(),
                         SizeName = reader["SizeName"].ToString(),
-                        CategoryName = reader["CategoryName"].ToString()
+                        CategoryName = reader["CategoryName"].ToString(),
+                        O3TYPE = reader["O3TYPE"].ToString()
                         //Id = (int)reader["Id"],
                         //FromValue = reader["FromValue"].ToString(),
                         //ToValue = reader["IdToValue"].ToString()

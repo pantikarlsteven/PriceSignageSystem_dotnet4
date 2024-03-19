@@ -107,6 +107,10 @@ namespace PriceSignageSystem.Models.Dto
         public decimal ZeroInvDCOnHand { get; set; }
         public decimal ZeroInvInTransit { get; set; }
         public string AuditedRemarks { get; set; }
+        public string AuditedBy { get; set; }
+        public DateTime? DateAudited { get; set; }
+        public string TaggedBy { get; set; }
+        public DateTime? DateTagged { get; set; }
     }
 
 }

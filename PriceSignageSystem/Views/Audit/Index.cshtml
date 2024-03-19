@@ -142,7 +142,7 @@
                                     <th>SKU</th>
                                     <th>UPC</th>
                                     <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
-                                    <th>Wrong Price?</th>
+                                    <th>Wrong Sign?</th>
                                     <th>Reg Price</th>
                                     <th>Current Price</th>
                                     <th>Date Start</th>
@@ -270,7 +270,7 @@
 
         <!-- Scan Result Modal -->
         <div class="modal" id="scanResultModal" tabindex="-1" role="dialog" aria-labelledby="scanResultModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-dialog modal-fullscreen modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="sku"></h5>
@@ -281,15 +281,15 @@
                     </div>
                     <div class="modal-body">
                         <div id="scanResult">
-                            <div class="resultDetails">
+                            <div class="resultDetails" style="font-size: 30px;">
                             </div>
-                            <div class="resultDesc row align-items-center justify-content-center" style="font-size: 24px; font-weight: bold;">
+                            <div class="resultDesc row align-items-center justify-content-center" style="font-size: 32px; text-decoration:underline; font-weight: bold;">
                             </div>
                         </div>
                     </div>
                     <div class="yesOrNoBtns modal-footer">
                         <button type="button" class="btn btn-primary" onclick="postSku()">Audit</button>
-                        <button type="button" class="btn btn-secondary" onclick="tagWrongPrice()">Wrong Price</button>
+                        <button type="button" class="btn btn-secondary" onclick="tagWrongPrice()">Wrong Sign</button>
                     </div>
                 </div>
             </div>
@@ -855,7 +855,7 @@
                                 label: function (context) {
                                     var label = context.label;
                                     var value = context.formattedValue;
-                                   
+
 
                                     if (label == "Audited") {
                                         label += ' - ' + value + ' (' + auditedPercentage + '%)';
@@ -1317,7 +1317,7 @@
             var remarksOptions = '';
 
             getRemarksList().then(function (remarksList) {
-                
+
                 for (var i = 0; i < remarksList.length; i++) {
                     var option = remarksList[i];
                     remarksOptions += '<option value="' + option.Name + '">' + option.Name + '</option>';
@@ -1357,9 +1357,9 @@
                 showZoomSliderIfSupported: true,
                 defaultZoomValueIfSupported: 2,
                 formatsToSupport: [9, 10, 14, 15], // EAN-13, EAN-8, UPC-A, UPC-E respectively
-                videoConstraints: {
-                    facingMode: { exact: "environment" },
-                },
+                //videoConstraints: {
+                //    facingMode: { exact: "environment" },
+                //},
                 useBarCodeDetectorIfSupported: true
             },
             false);
@@ -1383,6 +1383,7 @@
                  document.querySelector("#scanResultModal .sku").textContent = result.Sku;
                  document.querySelector("#scanResultModal .sku").style.display = "none";
                  var details = `<b>SKU:</b> ${result.Sku} <br> <b>Description:</b> ${result.Desc} <br> <b>Current Price:</b> ${result.CurrentPrice} <br><br><br>`;
+                 var printPreview = `<iframe src="@Url.Action("PreviewCrystalReport", "Report")?id=${result.Sku}#toolbar=0&navpanes=0&scrollbar=0&zoom=80" style="width: 100%; height: 600px;" frameborder="0"></iframe>`;
 
                  if (result.IsItemExisting && result.DoesItemBelongToCurrentPCA) {
                      if (result.IsAudited == "Y") {
@@ -1395,7 +1396,7 @@
                          if (result.IsPrinted) {
 
                              document.querySelector("#scanResultModal .scanResultTitle").textContent = "Item Found";
-                             document.querySelector("#scanResult .resultDetails").innerHTML = details;
+                             document.querySelector("#scanResult .resultDetails").innerHTML = printPreview;
                              document.querySelector("#scanResult .resultDesc").textContent = "";
                              document.querySelector("#scanResultModal .yesOrNoBtns").style.display = "block";
                              scanResultModalContainer.style.display = 'block';

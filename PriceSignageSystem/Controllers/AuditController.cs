@@ -32,12 +32,43 @@ namespace PriceSignageSystem.Controllers
         {
             var latestDate = _auditRepo.GetLatestDate();
             var rawData = await _auditRepo.GetPCAbyLatestDate(latestDate);
+            var printedSkuUpdates = await _auditRepo.GetPrintedSkuUpdates();
             var auditList = new AuditDto();
 
             auditList.PrintedList = rawData.Where(a => a.IsPrinted == "True" && a.IsAudited == "N").ToList();
             auditList.NotPrintedList = rawData.Where(a => a.IsPrinted == "False" && a.IsAudited == "N").ToList();
             auditList.AuditedList = rawData.Where(a => a.IsAudited == "Y").ToList();
             
+            foreach(var updatedItem in printedSkuUpdates) // printed SKu updates are added in printed audit 
+            {
+                var existingItem = auditList.PrintedList.FirstOrDefault(item => item.O3SKU == updatedItem.O3SKU);
+
+                if (existingItem != null)
+                    auditList.PrintedList.Remove(existingItem);
+                
+                auditList.PrintedList.Add(updatedItem);
+
+            }
+
+            foreach(var item in printedSkuUpdates) // for audited sku updates
+            {
+                var auditData = _auditRepo.GetAll().Where(a => a.O3SKU == item.O3SKU).FirstOrDefault();
+                
+                if(auditData != null)
+                {
+                    if (auditData.IsAudited == "Y")
+                    {
+                        auditList.PrintedList.RemoveAll(a => a.O3SKU == item.O3SKU);
+                        auditList.AuditedList.Add(item);
+                    }
+
+                }
+
+            }
+
+
+
+
             foreach (var item in auditList.PrintedList)
             {
                 item.TypeName = item.TypeId == 2 ? "Save"
