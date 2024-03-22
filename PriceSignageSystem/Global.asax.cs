@@ -3,6 +3,7 @@ using Autofac.Integration.Mvc;
 using PriceSignageSystem.Models.DatabaseContext;
 using PriceSignageSystem.Models.Interface;
 using PriceSignageSystem.Models.Repository;
+using PriceSignageSystem.Services;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -34,6 +35,7 @@ namespace PriceSignageSystem
             builder.RegisterType<RegistersRepository>().As<IRegistersRepository>();
             builder.RegisterType<EditReasonRepository>().As<IEditReasonRepository>();
             builder.RegisterType<AuditRepository>().As<IAuditRepository>();
+            builder.RegisterType<SQLBulk>().As<ISQLBulk>();
 
             // Register the MVC controllers
             builder.RegisterControllers(typeof(MvcApplication).Assembly);

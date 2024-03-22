@@ -130,6 +130,7 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
       <Private>True</Private>
@@ -270,6 +271,9 @@
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
+    <Reference Include="WinSCPnet, Version=1.15.0.14890, Culture=neutral, PublicKeyToken=2271ec4a3c56d0bf, processorArchitecture=MSIL">
+      <HintPath>..\packages\WinSCP.6.3.2\lib\net40\WinSCPnet.dll</HintPath>
+    </Reference>
     <Reference Include="XLParser, Version=1.5.2.0, Culture=neutral, PublicKeyToken=63397e1e46bb91b4, processorArchitecture=MSIL">
       <HintPath>..\packages\XLParser.1.5.2\lib\net461\XLParser.dll</HintPath>
     </Reference>
@@ -460,6 +464,7 @@
     <Compile Include="Models\Dto\CentralizedSTRPRCDto.cs" />
     <Compile Include="Models\Dto\AuditDto.cs" />
     <Compile Include="Models\Dto\ScanResultDto.cs" />
+    <Compile Include="Models\Dto\STRPRCBulkDto.cs" />
     <Compile Include="Models\Dto\STRPRCDto.cs" />
     <Compile Include="Models\Dto\STRPRCLogDto.cs" />
     <Compile Include="Models\Dto\UserDto.cs" />
@@ -468,6 +473,7 @@
     <Compile Include="Models\Interface\IAuditRepository.cs" />
     <Compile Include="Models\Interface\IRegistersRepository.cs" />
     <Compile Include="Models\Interface\IEditReasonRepository.cs" />
+    <Compile Include="Models\Interface\ISQLBulk.cs" />
     <Compile Include="Models\InventoryPrintingLog.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Constants\ReportConstants.cs" />
@@ -487,6 +493,7 @@
     <Compile Include="Models\Repository\RegistersRepository.cs" />
     <Compile Include="Models\Repository\EditReasonRepository.cs" />
     <Compile Include="Models\Repository\SizeRepository.cs" />
+    <Compile Include="Models\Repository\SQLBulk.cs" />
     <Compile Include="Models\Repository\STRPRCRepository.cs" />
     <Compile Include="Models\Repository\TypeRepository.cs" />
     <Compile Include="Models\Repository\UserRepository.cs" />
@@ -504,6 +511,9 @@
       <DependentUpon>Dynamic_OneEightReport.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Services\Conversion.cs" />
+    <Compile Include="Services\FTPService.cs" />
+    <Compile Include="Services\LocalPath.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -778,8 +788,10 @@
     <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
     <Error Condition="!Exists('..\packages\PdfiumViewer.Native.x86.v8-xfa.2018.4.8.256\Build\PdfiumViewer.Native.x86.v8-xfa.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\PdfiumViewer.Native.x86.v8-xfa.2018.4.8.256\Build\PdfiumViewer.Native.x86.v8-xfa.props'))" />
     <Error Condition="!Exists('..\packages\PdfiumViewer.Native.x86_64.v8-xfa.2018.4.8.256\Build\PdfiumViewer.Native.x86_64.v8-xfa.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\PdfiumViewer.Native.x86_64.v8-xfa.2018.4.8.256\Build\PdfiumViewer.Native.x86_64.v8-xfa.props'))" />
+    <Error Condition="!Exists('..\packages\WinSCP.6.3.2\build\WinSCP.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\WinSCP.6.3.2\build\WinSCP.targets'))" />
   </Target>
   <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+  <Import Project="..\packages\WinSCP.6.3.2\build\WinSCP.targets" Condition="Exists('..\packages\WinSCP.6.3.2\build\WinSCP.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

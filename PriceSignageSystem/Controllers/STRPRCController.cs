@@ -7,6 +7,7 @@ using PriceSignageSystem.Helper;
 using PriceSignageSystem.Models.Constants;
 using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
+using PriceSignageSystem.Services;
 using System;
 using System.Configuration;
 using System.Data;
@@ -29,8 +30,10 @@ namespace PriceSignageSystem.Controllers
         private readonly ICategoryRepository _categoryRepository;
         private readonly IQueueRepository _queueRepository;
         private readonly IEditReasonRepository _reasonRepository;
+        private readonly ISQLBulk _sqlBulk;
 
-        public STRPRCController(ISTRPRCRepository sTRPRCRepository, ITypeRepository typeRepository, ISizeRepository sizeRepository, ICategoryRepository categoryRepository, IQueueRepository queueRepository, IEditReasonRepository reasonRepository)
+        public STRPRCController(ISTRPRCRepository sTRPRCRepository, ITypeRepository typeRepository, ISizeRepository sizeRepository,
+            ICategoryRepository categoryRepository, IQueueRepository queueRepository, IEditReasonRepository reasonRepository, ISQLBulk sqlBulk)
         {
             _sTRPRCRepository = sTRPRCRepository;
             _typeRepository = typeRepository;
@@ -38,6 +41,7 @@ namespace PriceSignageSystem.Controllers
             _categoryRepository = categoryRepository;
             _queueRepository = queueRepository;
             _reasonRepository = reasonRepository;
+            _sqlBulk = sqlBulk;
         }
 
         public ActionResult Index()
@@ -247,19 +251,20 @@ namespace PriceSignageSystem.Controllers
 
             return Json(dto);
         }
-        [HttpPost]
-        public ActionResult UpdateSTRPRCData()
-        {
-            var storeId = int.Parse(ConfigurationManager.AppSettings["StoreID"]);
-            var startdate = _sTRPRCRepository.UpdateSTRPRCTable(storeId);
-            var dateString = startdate.ToString();
-            //var dateString = (230620).ToString();
 
-            DateTime date;
-            DateTime.TryParseExact(dateString, "yyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out date);
+        //[HttpPost]
+        //public ActionResult UpdateSTRPRCData()
+        //{
+        //    var storeId = int.Parse(ConfigurationManager.AppSettings["StoreID"]);
+        //    var startdate = _sTRPRCRepository.UpdateSTRPRCTable(storeId);
+        //    var dateString = startdate.ToString();
+        //    //var dateString = (230620).ToString();
 
-            return Json(date.Date);
-        }
+        //    DateTime date;
+        //    DateTime.TryParseExact(dateString, "yyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out date);
+
+        //    return Json(date.Date);
+        //}
 
         [HttpPost]
         public JsonResult GetAllSizes()
@@ -419,10 +424,20 @@ namespace PriceSignageSystem.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public ActionResult UpdatePCA()
+        public async Task<ActionResult> UpdatePCA()
         {
-            _sTRPRCRepository.UpdateSTRPRCTable(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
-            return Json(true, JsonRequestBehavior.AllowGet);
+            bool isFileExist = _sTRPRCRepository.CheckSTRPRCFromRemote();
+            string formattedDate = DateTime.Now.ToString("yyMMdd");
+            if (isFileExist)
+            {
+                await _sTRPRCRepository.PreSTRPRCUpdate();
+                var strprcList = _sTRPRCRepository.GetSTRPRCList();
+                _sqlBulk.InsertBulk(Conversion.ToDataTable(strprcList), "STRPRCs");
+                await _sTRPRCRepository.PostSTRPRCUpdate();
+                await _sTRPRCRepository.UpdateCentralizedExemptions(decimal.Parse(formattedDate));
+                return Json(true, JsonRequestBehavior.AllowGet);
+            }
+            return Json(false, JsonRequestBehavior.AllowGet);
         }
 
         [AllowAnonymous]

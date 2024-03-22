@@ -97,7 +97,7 @@
                 <div class="form-group">
                     <label class="text-white d-sm-none d-lg-block">_</label>
                     <button class="btn btn-primary" id="updateInventory" style="display: none">Update Inventory</button>
-                    <button class="btn btn-primary" id="updatePCA" style="display: none">Update PCA</button>
+                    <button class="btn btn-primary" id="updatePCA" style="display: block">Update PCA</button>
                 </div>
             </div>
         </div>
@@ -307,8 +307,10 @@
                     const formattedDate = `20${year}-${month}-${day}`;
                     $('#startDate').val(formattedDate);
 
-                    if (latestDate == formatDateToYYMMDD(Date.now()))
+                    if (latestDate == formatDateToYYMMDD(Date.now())) {
                         $('#updateInventory').show();
+                        $('#updatePCA').hide();
+                    }
                     else
                         $('#updatePCA').show();
 

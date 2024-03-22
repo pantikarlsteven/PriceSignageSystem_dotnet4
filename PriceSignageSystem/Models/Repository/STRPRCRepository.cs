@@ -4,13 +4,18 @@ using PriceSignageSystem.Models.Constants;
 using PriceSignageSystem.Models.DatabaseContext;
 using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
+using PriceSignageSystem.Services;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using WinSCP;
 
 namespace PriceSignageSystem.Models.Repository
 {
@@ -21,6 +26,9 @@ namespace PriceSignageSystem.Models.Repository
         private readonly string connectionString151;
         private readonly string connStringCentralizedExemptions;
         private readonly int commandTimeoutInSeconds;
+        private readonly int _storeID;
+        private readonly string _server;
+        private readonly int _protocol;
 
         public STRPRCRepository(ApplicationDbContext db)
         {
@@ -29,7 +37,9 @@ namespace PriceSignageSystem.Models.Repository
             connectionString151 = ConfigurationManager.ConnectionStrings["MyConnectionString151"].ConnectionString;
             connStringCentralizedExemptions = ConfigurationManager.ConnectionStrings["ConnStringCentralizedExemptions"].ConnectionString;
             commandTimeoutInSeconds = 3600;
-
+            _storeID = int.Parse(ConfigurationManager.AppSettings["StoreID"]);
+            _server = ConfigurationManager.AppSettings["Server"];
+            _protocol = int.Parse(ConfigurationManager.AppSettings["Protocol"]);
         }
 
         public List<STRPRC> GetAll()
@@ -406,7 +416,6 @@ namespace PriceSignageSystem.Models.Repository
             {
                 var sp = "sp_GettmpData";
                 var data = new List<CentralizedSTRPRCDto>();
-                var store = int.Parse(ConfigurationManager.AppSettings["StoreID"]);
                 // Set up the connection and command
                 using (var connection = new SqlConnection(connectionString))
                 using (var command = new SqlCommand(sp, connection))
@@ -416,7 +425,7 @@ namespace PriceSignageSystem.Models.Repository
 
                     // Add parameters if required
                     command.Parameters.AddWithValue("@O3SDT", startDate);
-                    command.Parameters.AddWithValue("@O3LOC", store);
+                    command.Parameters.AddWithValue("@O3LOC", _storeID);
 
                     // Open the connection and execute the command
                     connection.Open();
@@ -449,7 +458,7 @@ namespace PriceSignageSystem.Models.Repository
                             IBHAND = (decimal)reader["IBHAND"],
                             ZeroInvDCOnHand = (decimal)reader["ZeroInvDCOnHand"],
                             ZeroInvInTransit = (decimal)reader["ZeroInvInTransit"],
-                            StoreID = store
+                            StoreID = _storeID
                         };
 
                         if ((decimal)reader["O3RSDT"] == startDate)
@@ -478,7 +487,7 @@ namespace PriceSignageSystem.Models.Repository
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.CommandTimeout = commandTimeoutInSeconds;
-                    command.Parameters.AddWithValue("@O3LOC", store);
+                    command.Parameters.AddWithValue("@O3LOC", _storeID);
                     connection.Open();
                     SqlDataReader reader = await command.ExecuteReaderAsync();
 
@@ -853,29 +862,20 @@ namespace PriceSignageSystem.Models.Repository
             }
         }
 
-        public decimal UpdateSTRPRCTable(int storeId)
+        public async Task PreSTRPRCUpdate()
         {
-            decimal date = 0;
             try
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    using (SqlCommand command = new SqlCommand("sp_GetLatestSTRPRCTable", connection))
+                    using (SqlCommand command = new SqlCommand("sp_PreSTRPRCUpdate", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.CommandTimeout = commandTimeoutInSeconds;
-                        // Add any required parameters to the command if needed
-                        command.Parameters.AddWithValue("@O3LOC", storeId);
-
+                        command.Parameters.AddWithValue("@O3LOC", _storeID);
                         connection.Open();
-
-                        // Execute the command and retrieve the result count
-                        date = (decimal)command.ExecuteScalar();
-
+                        await command.ExecuteNonQueryAsync();
                         connection.Close();
-
-                        // Use the result count as needed
-                        //Console.WriteLine("Result Count: " + resultCount);
                     }
                 }
             }
@@ -883,7 +883,149 @@ namespace PriceSignageSystem.Models.Repository
             {
                 Console.WriteLine("Error executing stored procedure: " + ex.Message);
             }
-            return date;
+        }
+
+        public async Task PostSTRPRCUpdate()
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand("sp_PostSTRPRCUpdate", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.CommandTimeout = commandTimeoutInSeconds;
+                        // Add any required parameters to the command if needed
+                        command.Parameters.AddWithValue("@O3LOC", _storeID);
+                        connection.Open();
+                        await command.ExecuteScalarAsync();
+                        connection.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error executing stored procedure: " + ex.Message);
+            }
+        }
+
+        [Obsolete]
+        public bool CheckSTRPRCFromRemote()
+        {
+            try
+            {
+                using (Session session = new Session())
+                {
+                    session.Open(FTPService.GetSessionOptions(_server, _protocol));
+                    string remoteFilePath = ConfigurationManager.AppSettings["DataConRemotePath"];
+
+                    string formattedDate = DateTime.Now.ToString("MMddyy");
+                    //string fileName = _storeID.ToString() + $"_STRPRC_{formattedDate}.zip";
+                    string fileName = _storeID.ToString() + "_STRPRC_031924.zip";
+                    string localFilePath = LocalPath.CreateLocalFilePath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "exported_strprc\\"));
+                    string extractedFilePath = LocalPath.CreateLocalFilePath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "exported_strprc\\extracted\\"));
+
+                    string[] zipFiles = Directory.GetFiles(localFilePath);
+                    foreach (string file in zipFiles)
+                    {
+                        if (Path.GetExtension(file).Equals(".zip", StringComparison.OrdinalIgnoreCase))
+                            File.Delete(file);
+                    }
+
+                    string[] textFiles = Directory.GetFiles(extractedFilePath);
+                    foreach (string file in textFiles)
+                    {
+                        if (Path.GetExtension(file).Equals(".txt", StringComparison.OrdinalIgnoreCase))
+                            File.Delete(file);
+                    }
+
+                    TransferOperationResult transferResult;
+                    transferResult = session.GetFiles(Path.Combine(remoteFilePath, fileName), localFilePath); //Copy 201_STRPRC_031924.zip file to local file path
+
+                    if (transferResult.IsSuccess)
+                    {
+                        ZipFile.ExtractToDirectory(localFilePath + fileName, extractedFilePath);
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return false;
+        }
+
+        [Obsolete]
+        public List<STRPRCBulkDto> GetSTRPRCList()
+        {
+            var list = new List<STRPRCBulkDto>();
+            string extractedFilePath = LocalPath.CreateLocalFilePath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "exported_strprc\\extracted\\"));
+
+            // Read all lines from the file
+            string[] lines = System.IO.File.ReadAllLines(Path.Combine(extractedFilePath, _storeID.ToString() + "_STRPRC.txt"));
+
+            // Convert each string to a list of strings
+            List<List<string>> strprcList = new List<List<string>>();
+
+            foreach (string str in lines)
+            {
+                string[] splitStrings = str.Split('|');
+
+                if (splitStrings.Length > 43)
+                    continue;
+
+                strprcList.Add(new List<string>(splitStrings));
+            }
+
+            foreach (var strprc in strprcList)
+            {
+                var data = new STRPRCBulkDto();
+                data.O3LOC = decimal.Parse(strprc[0]);
+                data.O3SKU = decimal.Parse(strprc[1]);
+                data.O3SCCD = strprc[2];
+                data.O3IDSC = strprc[3];
+                data.O3UPC = decimal.Parse(strprc[4]);
+                data.O3VNUM = decimal.Parse(strprc[5]);
+                data.O3TYPE = strprc[6];
+                data.O3DEPT = decimal.Parse(strprc[7]);
+                data.O3SDPT = decimal.Parse(strprc[8]);
+                data.O3CLAS = decimal.Parse(strprc[9]);
+                data.O3SCLS = decimal.Parse(strprc[10]);
+                data.O3SDSC = strprc[11];
+                data.O3POS = decimal.Parse(strprc[12]);
+                data.O3POSU = decimal.Parse(strprc[13]);
+                data.O3REG = decimal.Parse(strprc[14]);
+                data.O3REGU = decimal.Parse(strprc[15]);
+                data.O3ORIG = decimal.Parse(strprc[16]);
+                data.O3ORGU = decimal.Parse(strprc[17]);
+                data.O3EVT = decimal.Parse(strprc[18]);
+                data.O3REVT = decimal.Parse(strprc[19]);
+                data.O3PMMX = decimal.Parse(strprc[20]);
+                data.O3PMTH = decimal.Parse(strprc[21]);
+                data.O3PDQT = decimal.Parse(strprc[22]);
+                data.O3PDPR = decimal.Parse(strprc[23]);
+                data.O3SDT = decimal.Parse(strprc[24]);
+                data.O3EDT = decimal.Parse(strprc[25]);
+                data.O3RSDT = decimal.Parse(strprc[26]);
+                data.O3REDT = decimal.Parse(strprc[27]);
+                data.O3TRB3 = strprc[28];
+                data.O3FGR = decimal.Parse(strprc[29]);
+                data.O3FNAM = strprc[30];
+                data.O3MSRP = decimal.Parse(strprc[31]);
+                data.O3MODL = strprc[32];
+                data.O3LONG = strprc[33];
+                data.O3SLUM = strprc[34];
+                data.O3DIV = strprc[35];
+                data.O3TUOM = strprc[36];
+                data.O3DATE = decimal.Parse(strprc[37]);
+                data.O3CURD = decimal.Parse(strprc[38]);
+                data.O3USER = strprc[39];
+                data.O3FLAG1 = strprc[40];
+                data.O3FLAG2 = strprc[41];
+                list.Add(data);
+            }
+
+            return list;
         }
 
         public CountryDto GetCountryImg(string country)
@@ -1307,7 +1449,6 @@ namespace PriceSignageSystem.Models.Repository
         public async Task<CentralizedExemptionStatusDto> CheckCentralizedExemptionStatus()
         {
             var centralizedExDto = new CentralizedExemptionStatusDto();
-            var storeId = int.Parse(ConfigurationManager.AppSettings["StoreID"]);
             try
             {
                 using (SqlConnection connection = new SqlConnection(connStringCentralizedExemptions))
@@ -1316,7 +1457,7 @@ namespace PriceSignageSystem.Models.Repository
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.CommandTimeout = commandTimeoutInSeconds;
-                        command.Parameters.AddWithValue("@StoreId", storeId);
+                        command.Parameters.AddWithValue("@StoreId", _storeID);
                         connection.Open();
                         SqlDataReader reader = await command.ExecuteReaderAsync();
 
@@ -1346,7 +1487,6 @@ namespace PriceSignageSystem.Models.Repository
 
         public void UpdateCentralizedExemptionStatus(CentralizedExemptionStatusDto data, bool onGoingUpdate)
         {
-            var storeId = int.Parse(ConfigurationManager.AppSettings["StoreID"]);
             try
             {
                 using (SqlConnection connection = new SqlConnection(connStringCentralizedExemptions))
@@ -1363,7 +1503,7 @@ namespace PriceSignageSystem.Models.Repository
 
                         using (SqlCommand command = new SqlCommand(query, connection))
                         {
-                            command.Parameters.AddWithValue("@StoreId", storeId);
+                            command.Parameters.AddWithValue("@StoreId", _storeID);
                             command.Parameters.AddWithValue("@DateUpdated", DateTime.Now);
                             command.Parameters.AddWithValue("@OngoingUpdate", onGoingUpdate);
                             int rowsAffected = command.ExecuteNonQuery();
@@ -1374,7 +1514,7 @@ namespace PriceSignageSystem.Models.Repository
                         using (SqlCommand command = new SqlCommand("INSERT INTO ExemptionStatus (StoreId,DateUpdated,OngoingUpdate)" +
                                                                     " VALUES (@StoreId, @DateUpdated, @OngoingUpdate)", connection))
                         {
-                            command.Parameters.AddWithValue("@StoreId", storeId);
+                            command.Parameters.AddWithValue("@StoreId", _storeID);
                             command.Parameters.AddWithValue("@DateUpdated", DateTime.Now.AddDays(-1));
                             command.Parameters.AddWithValue("@OngoingUpdate", onGoingUpdate);
                             int rowsAffected = command.ExecuteNonQuery();

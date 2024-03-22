@@ -23,7 +23,10 @@ namespace PriceSignageSystem.Models.Interface
         Task UpdateSTRPRC151(int storeId);
         decimal CheckSTRPRCUpdates(int storeId);
 
-        decimal UpdateSTRPRCTable(int storeId);
+        Task PreSTRPRCUpdate();
+        Task PostSTRPRCUpdate();
+        List<STRPRCBulkDto> GetSTRPRCList();
+        bool CheckSTRPRCFromRemote();
         Task<bool> UpdateCentralizedExemptions(decimal startDate);
         CountryDto GetCountryImg(string country);
         ReportDto GetReportData(decimal O3SKU);
