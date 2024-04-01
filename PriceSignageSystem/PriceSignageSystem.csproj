@@ -653,7 +653,6 @@
     <EmbeddedResource Include="Migrations\202307070755032_add_InventoryPrintingLogTbl.resx">
       <DependentUpon>202307070755032_add_InventoryPrintingLogTbl.cs</DependentUpon>
     </EmbeddedResource>
-    <Content Include="Reports\CrystalReports\Dynamic_OneEightReport.rpt" />
     <Content Include="Reports\CrystalReports\Dynamic_WholeReport.rpt" />
     <EmbeddedResource Include="Migrations\202401180808274_addFields_tblQueues.resx">
       <DependentUpon>202401180808274_addFields_tblQueues.cs</DependentUpon>
@@ -694,6 +693,8 @@
     <EmbeddedResource Include="Migrations\202402270633583_AddSizeId_ItemQueueTbl.resx">
       <DependentUpon>202402270633583_AddSizeId_ItemQueueTbl.cs</DependentUpon>
     </EmbeddedResource>
+    <Content Include="Reports\CrystalReports\Dynamic_OneEightReport_New.rpt" />
+    <Content Include="Reports\CrystalReports\Dynamic_OneEightReport.rpt" />
     <EmbeddedResource Include="Reports\Dynamic_OneEightReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Dynamic_OneEightReport.cs</LastGenOutput>

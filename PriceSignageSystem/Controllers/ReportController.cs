@@ -244,6 +244,7 @@ namespace PriceSignageSystem.Controllers
                 {
                     List<decimal> o3skus = selectedIds[0].Split(',').Select(decimal.Parse).ToList();
                     var data = _sTRPRCRepository.GetReportDataList(o3skus);
+                    //var dataTest = _sTRPRCRepository.GetReportData(11656);
                     foreach (var item in data)
                     {
                         item.UserName = User.Identity.Name;
@@ -253,6 +254,7 @@ namespace PriceSignageSystem.Controllers
                         item.IsSLDescription = textToImage.IsSLDescription;
                         item.IsBiggerFont = textToImage.IsBiggerFont;
                         item.O3SDSC = _sTRPRCRepository.GetSubClassDescription(item.O3SKU);
+                        //item.country_img = dataTest.country_img;
                     }
                     var dataTable = ConversionHelper.ConvertListToDataTable(data);
                     var reportPath = string.Empty;
@@ -273,6 +275,19 @@ namespace PriceSignageSystem.Controllers
                     ReportDocument report = new ReportDocument();
                     report.Load(reportPath);
                     report.SetDataSource(dataTable);
+
+                    #region Export report to PDF
+                    //// Set up export options
+                    //string pdfPath = Server.MapPath("~/Reports/PDFs");
+                    //Guid guid = Guid.NewGuid();
+                    //var pdf = pdfPath + "\\" + guid + ".pdf";
+                    //ExportOptions exportOptions = report.ExportOptions;
+                    //exportOptions.ExportFormatType = ExportFormatType.PortableDocFormat;
+                    //exportOptions.ExportDestinationType = ExportDestinationType.DiskFile;
+                    //exportOptions.DestinationOptions = new DiskFileDestinationOptions { DiskFileName = pdf };
+                    //// Export the report to PDF
+                    //report.Export();
+                    #endregion
 
                     Stream stream = report.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
                     var pdfBytes = new byte[stream.Length];

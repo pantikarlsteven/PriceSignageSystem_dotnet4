@@ -460,9 +460,17 @@ namespace PriceSignageSystem.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public ActionResult UpdatePCA()
+        public async Task<ActionResult> UpdatePCA()
         {
             _sTRPRCRepository.UpdateSTRPRCTable(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
+            var result = _sTRPRCRepository.GetLatestUpdate();
+            if (result != null)
+            {
+                if (result.DateUpdated.Date == DateTime.Now.Date)
+                {
+                    await _sTRPRCRepository.UpdateCentralizedExemptions(result.LatestDate);
+                }
+            }
             return Json(true, JsonRequestBehavior.AllowGet);
         }
 
