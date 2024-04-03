@@ -24,6 +24,8 @@ namespace PriceSignageSystem.Models.Interface
         decimal CheckSTRPRCUpdates(int storeId);
 
         decimal UpdateSTRPRCTable(int storeId);
+        bool Check151STRPRCChanges_LatestDate(int o3loc);
+        bool Check151STRPRCNew_LatestDate(int o3loc);
         Task<bool> UpdateCentralizedExemptions(decimal startDate);
         CountryDto GetCountryImg(string country);
         ReportDto GetReportData(decimal O3SKU);

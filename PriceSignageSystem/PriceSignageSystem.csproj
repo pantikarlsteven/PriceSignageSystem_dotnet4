@@ -693,7 +693,6 @@
     <EmbeddedResource Include="Migrations\202402270633583_AddSizeId_ItemQueueTbl.resx">
       <DependentUpon>202402270633583_AddSizeId_ItemQueueTbl.cs</DependentUpon>
     </EmbeddedResource>
-    <Content Include="Reports\CrystalReports\Dynamic_OneEightReport_New.rpt" />
     <Content Include="Reports\CrystalReports\Dynamic_OneEightReport.rpt" />
     <EmbeddedResource Include="Reports\Dynamic_OneEightReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

@@ -96,7 +96,7 @@
             <div class="col-md-2">
                 <div class="form-group">
                     <label class="text-white d-sm-none d-lg-block">_</label>
-                    <button class="btn btn-primary" id="updateInventory" style="display: none">Update Inventory</button>
+                    <button class="btn btn-primary" id="updateInventory">Update Inventory</button>
                     <button class="btn btn-primary" id="updatePCA" style="display: none">Update PCA</button>
                 </div>
             </div>
@@ -230,7 +230,6 @@
 <script>
     $(document).ready(function () {
 
-
         InitLoad();
 
         $('#registrationSuccessModal').modal('show');
@@ -267,6 +266,20 @@
                 //},
                 success: function (data) {
 
+                    $.ajax({
+                        url: '/STRPRC/CheckPCALatestDates',
+                        type: "GET",
+                        dataType: 'json',
+                        success: function (data) {
+                            if (!data) {
+                                $('#updateInventory').hide();
+                                $('#updatePCA').show();
+                            }
+                        },
+                        error: function (error) {
+                        }
+                    });
+
                     var latestDate = data.LatestDate;
                     const day = latestDate.toString().substr(4, 2);
                     const month = latestDate.toString().substr(2, 2);
@@ -276,11 +289,6 @@
 
                     console.log(latestDate + " latest date");
                     console.log(formatDateToYYMMDD(Date.now()) + " date now");
-
-                    if (latestDate == formatDateToYYMMDD(Date.now()))
-                        $('#updateInventory').show();
-                    else
-                        $('#updatePCA').show();
 
                     if (tableWith !== null) {
                         tableWith.destroy();
@@ -370,7 +378,7 @@
                 pageLength: -1,
                 data: data,
                 columnDefs: [
-                    { targets: [0, 1, 13, 15], orderable: false },
+                    { targets: [0, 1, 13, 16], orderable: false },
                     {
                         "targets": 6, // column "O3REG"
                         "render": function (data, type, row, meta) {
