@@ -22,5 +22,8 @@ namespace PriceSignageSystem.Models
         public string Model { get; set; }
         public string Divisor { get; set; }
         public string Remarks { get; set; }
+        public int SizeId { get; set; }
+        public int TypeId { get; set; }
+
     }
 }

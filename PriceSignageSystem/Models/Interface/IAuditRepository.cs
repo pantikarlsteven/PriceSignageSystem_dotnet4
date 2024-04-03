@@ -15,9 +15,9 @@ namespace PriceSignageSystem.Models.Interface
         bool Post(string sku, string username);
         int NotRequireTagging(string sku, string isChecked, string username);
         bool PostWithRemarks(string sku, string username, string remarks);
-        int TagWrongPrice(string sku, string username);
+        int TagWrongSign(string sku, string username);
 
-        Task<List<AuditDto>> GetPrintedSkuUpdates();
+        Task<List<AuditDto>> GetSkuUpdates();
         List<AuditDto> GetAll();
     }
 }

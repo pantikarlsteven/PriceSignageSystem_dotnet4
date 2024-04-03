@@ -30,7 +30,8 @@ namespace PriceSignageSystem.Models.Interface
         List<ReportDto> GetReportDataList(List<decimal> O3SKU);
         void UpdateSelection(decimal startDate, decimal endDate);
         void UpdateMultipleStatus(List<decimal> o3skus);
-        void AddMultipleInventoryPrintingLog(List<decimal> o3skus, string user);
+        void AddMultipleInventoryPrintingLog(List<decimal> o3skus, string user, int sizeId);
+        void AddMultipleQueuedPrintingLog(IEnumerable<ReportDto> data, string user, int sizeId);
         void UpdateSingleStatus(decimal O3SKU);
         void AddInventoryPrintingLog(ReportDto model, string user);
         List<STRPRCDto> GetLatestPCAData();
@@ -39,5 +40,6 @@ namespace PriceSignageSystem.Models.Interface
         string GetSubClassDescription(decimal O3SKU);
         Task<CentralizedExemptionStatusDto> CheckCentralizedExemptionStatus();
         void UpdateCentralizedExemptionStatus(CentralizedExemptionStatusDto data, bool onGoingUpdate);
+        ReportDto GetPrintedLogPerSku(string sku);
     }
 }

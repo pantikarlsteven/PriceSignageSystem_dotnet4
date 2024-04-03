@@ -375,7 +375,8 @@ namespace PriceSignageSystem.Models.Repository
                         O3TYPE = reader["O3TYPE"].ToString(),
                         IBHAND = (decimal)reader["IBHAND"],
                         ZeroInvDCOnHand = (decimal)reader["ZeroInvDCOnHand"],
-                        ZeroInvInTransit = (decimal)reader["ZeroInvInTransit"]
+                        ZeroInvInTransit = (decimal)reader["ZeroInvInTransit"],
+                        IsNotRequired = reader["IsNotRequired"].ToString()
                     };
 
                     if ((decimal)reader["O3RSDT"] == startDate)
@@ -1043,7 +1044,7 @@ namespace PriceSignageSystem.Models.Repository
 
         }
 
-        public void AddMultipleInventoryPrintingLog(List<decimal> o3skus, string user)
+        public void AddMultipleInventoryPrintingLog(List<decimal> o3skus, string user, int sizeId)
         {
             foreach (var item in o3skus)
             {
@@ -1051,7 +1052,31 @@ namespace PriceSignageSystem.Models.Repository
                 {
                     O3SKU = item,
                     PrintedBy = user,
-                    DateCreated = DateTime.Now
+                    DateCreated = DateTime.Now,
+                    SizeId = sizeId
+                });
+            }
+            _db.SaveChanges();
+        }
+
+        public void AddMultipleQueuedPrintingLog(IEnumerable<ReportDto> data, string user, int sizeId)
+        {
+            foreach (var item in data)
+            {
+                _db.InventoryPrintingLogs.Add(new InventoryPrintingLog()
+                {
+                    O3SKU = item.O3SKU,
+                    PrintedBy = user,
+                    DateCreated = DateTime.Now,
+                    RegularPrice = item.O3REGU,
+                    CurrentPrice = item.O3POS,
+                    Remarks = item.qRemarks,
+                    ItemDesc = item.O3IDSC,
+                    Brand = item.O3FNAM,
+                    Model = item.O3MODL,
+                    Divisor = item.O3DIV,
+                    SizeId = sizeId,
+                    TypeId = item.TypeId
                 });
             }
             _db.SaveChanges();
@@ -1086,7 +1111,9 @@ namespace PriceSignageSystem.Models.Repository
                 ItemDesc = model.O3IDSC,
                 Brand = model.O3FNAM,
                 Model = model.O3MODL,
-                Divisor = model.O3DIV
+                Divisor = model.O3DIV,
+                SizeId = model.SizeId,
+                TypeId = model.TypeId
             };
             _db.InventoryPrintingLogs.Add(data);
             _db.SaveChanges();
@@ -1388,6 +1415,30 @@ namespace PriceSignageSystem.Models.Repository
             {
                 Console.WriteLine("Error executing stored procedure: " + ex.Message);
             }
+        }
+        public ReportDto GetPrintedLogPerSku(string sku)
+        {
+            var _sku = decimal.Parse(sku);
+            var data = _db.InventoryPrintingLogs.Where(a => a.O3SKU == _sku).OrderByDescending(o => o.DateCreated).FirstOrDefault();
+
+            if (data != null)
+            {
+                var log = new ReportDto();
+                log.O3SKU = data.O3SKU;
+                log.O3IDSC = data.ItemDesc;
+                log.O3REGU = data.RegularPrice;
+                log.O3POS = data.CurrentPrice;
+                log.qRemarks = data.Remarks;
+                log.O3FNAM = data.Brand;
+                log.O3MODL = data.Model;
+                log.O3DIV = data.Divisor;
+                log.SizeId = data.SizeId == 0 ? 2 : data.SizeId;
+                log.TypeId = data.TypeId;
+
+                return log;
+            }
+
+            return null;
         }
     }
 }

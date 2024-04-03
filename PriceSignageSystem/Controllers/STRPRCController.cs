@@ -470,6 +470,8 @@ namespace PriceSignageSystem.Controllers
                                     : "Non-Appliance";
                 item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
                 item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
+                item.IsNotRequired = item.IsNotRequired == "Y" ? "Yes" : "No";
+
             }
 
             foreach (var item in data.ExcemptionList)
@@ -486,6 +488,8 @@ namespace PriceSignageSystem.Controllers
                                         : "Non-Appliance";
                     item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
                     item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
+                    item.IsNotRequired = item.IsNotRequired == "Y" ? "Yes" : "No";
+
                 }
                 else
                 {
@@ -501,6 +505,8 @@ namespace PriceSignageSystem.Controllers
                                         : "Non-Appliance";
                     item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
                     item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
+                    item.IsNotRequired = item.IsNotRequired == "Y" ? "Yes" : "No";
+
                 }
             }
             foreach (var item in data.ConsignmentList)
@@ -517,6 +523,8 @@ namespace PriceSignageSystem.Controllers
                                     : "Non-Appliance";
                 item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
                 item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
+                item.IsNotRequired = item.IsNotRequired == "Y" ? "Yes" : "No";
+
             }
 
             string jsonData = Newtonsoft.Json.JsonConvert.SerializeObject(data);

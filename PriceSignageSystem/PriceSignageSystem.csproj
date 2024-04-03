@@ -446,6 +446,14 @@
     <Compile Include="Migrations\202403040521185_removeTbl_Audit_again.designer.cs">
       <DependentUpon>202403040521185_removeTbl_Audit_again.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202403200150409_AddInventoryLogsField_SizeId.cs" />
+    <Compile Include="Migrations\202403200150409_AddInventoryLogsField_SizeId.designer.cs">
+      <DependentUpon>202403200150409_AddInventoryLogsField_SizeId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202403200337494_AddInventoryLogsField_TypeId.cs" />
+    <Compile Include="Migrations\202403200337494_AddInventoryLogsField_TypeId.designer.cs">
+      <DependentUpon>202403200337494_AddInventoryLogsField_TypeId.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AuditRemark.cs" />
     <Compile Include="Models\CompleteSTRPRC.cs" />
@@ -732,6 +740,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202403040521185_removeTbl_Audit_again.resx">
       <DependentUpon>202403040521185_removeTbl_Audit_again.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202403200150409_AddInventoryLogsField_SizeId.resx">
+      <DependentUpon>202403200150409_AddInventoryLogsField_SizeId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202403200337494_AddInventoryLogsField_TypeId.resx">
+      <DependentUpon>202403200337494_AddInventoryLogsField_TypeId.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Dynamic_OneEightReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

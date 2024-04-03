@@ -82,7 +82,8 @@ namespace PriceSignageSystem.Models.Repository
                         IsAudited = reader["IsAudited"].ToString(),
                         IsNotRequired = reader["IsNotRequired"].ToString(),
                         AuditedRemarks = reader["AuditedRemarks"].ToString(),
-                        IsWrongPrice = reader["IsWrongPrice"].ToString()
+                        IsWrongSign = reader["IsWrongSign"].ToString(),
+                        O3FNAM = reader["O3FNAM"].ToString()
 
                     };
 
@@ -143,7 +144,41 @@ namespace PriceSignageSystem.Models.Repository
                 }
                 else
                 {
-                    result.DoesItemBelongToCurrentPCA = false;
+                    var printedSkuUpdates = _db.Database.SqlQuery<AuditDto>("EXEC sp_GetSkuUpdates").ToList();
+                    var skuUpdate = printedSkuUpdates.Where(a => a.O3SKU == upc.INUMBR).ToList();
+
+                    if(skuUpdate.Count > 0)
+                    {
+                        result.Sku = skuUpdate.First().O3SKU;
+                        result.CurrentPrice = skuUpdate.First().O3POS;
+                        result.Desc = skuUpdate.First().O3IDSC;
+                        result.DoesItemBelongToCurrentPCA = true;
+                        result.IsPrinted = skuUpdate.First().IsPrinted == "Y" ? true : false;
+                        result.IsAudited = skuUpdate.First().IsAudited == "N" || skuUpdate.First().IsAudited == null ? "N" : "Y";
+
+                        foreach (var item in skuUpdate)
+                        {
+                            if (item.ColumnName == "O3UPC")
+                                result.NewUPC = item.ToValue;
+
+                            else if (item.ColumnName == "O3FNAM")
+                                result.NewBrand = item.ToValue;
+
+                            else if (item.ColumnName == "O3MODL")
+                                result.NewModel = item.ToValue;
+
+                            else if (item.ColumnName == "O3IDSC")
+                                result.NewDesc = item.ToValue;
+
+                            else if (item.ColumnName == "O3DEPT")
+                                result.NewDept = item.ToValue;
+
+                            else if (item.ColumnName == "O3TRB3")
+                                result.NewFlag = item.ToValue;
+                        }
+                    }
+                    else
+                        result.DoesItemBelongToCurrentPCA = false;
                 }
 
             }
@@ -225,9 +260,9 @@ namespace PriceSignageSystem.Models.Repository
             }
         }
 
-        public int TagWrongPrice(string sku, string username)
+        public int TagWrongSign(string sku, string username)
         {
-            var rowsAffected = _db.Database.SqlQuery<int>("EXEC sp_TagWrongPrice @Sku, @Username",
+            var rowsAffected = _db.Database.SqlQuery<int>("EXEC sp_TagWrongSign @Sku, @Username",
                 new SqlParameter("@Sku", sku),
                 new SqlParameter("@Username", username))
                 .FirstOrDefault();
@@ -236,9 +271,9 @@ namespace PriceSignageSystem.Models.Repository
 
         }
 
-        public async Task<List<AuditDto>> GetPrintedSkuUpdates()
+        public async Task<List<AuditDto>> GetSkuUpdates()
         {
-            var result = await _db.Database.SqlQuery<AuditDto>("EXEC sp_GetPrintedSkuUpdates")
+            var result = await _db.Database.SqlQuery<AuditDto>("EXEC sp_GetSkuUpdates")
                 .ToListAsync();
 
             return result;

@@ -32,42 +32,76 @@ namespace PriceSignageSystem.Controllers
         {
             var latestDate = _auditRepo.GetLatestDate();
             var rawData = await _auditRepo.GetPCAbyLatestDate(latestDate);
-            var printedSkuUpdates = await _auditRepo.GetPrintedSkuUpdates();
+            var skuUpdates = await _auditRepo.GetSkuUpdates();
+            var printedSkuUpdates = skuUpdates.Where(a => a.IsPrinted == "Y").ToList();
+            var unprintedSkuUpdates = skuUpdates.Where(a => a.IsPrinted == "N").ToList();
             var auditList = new AuditDto();
 
-            auditList.PrintedList = rawData.Where(a => a.IsPrinted == "True" && a.IsAudited == "N").ToList();
-            auditList.NotPrintedList = rawData.Where(a => a.IsPrinted == "False" && a.IsAudited == "N").ToList();
+            auditList.PrintedList = rawData.Where(a => a.IsPrinted == "True" && (a.IsAudited == "N" || a.IsAudited == "")).ToList();
+            auditList.NotPrintedList = rawData.Where(a => a.IsPrinted == "False" && (a.IsAudited == "N" || a.IsAudited == "")).OrderByDescending(o => o.IsNotRequired).ToList();
             auditList.AuditedList = rawData.Where(a => a.IsAudited == "Y").ToList();
-            
-            foreach(var updatedItem in printedSkuUpdates) // printed SKu updates are added in printed audit 
+            auditList.ExemptionList = rawData.Where(a => a.IsExemp == "Y" || a.HasInventory == "").ToList();
+            auditList.NotPrintedList.RemoveAll(item => auditList.ExemptionList.Contains(item));
+
+            if(printedSkuUpdates.Count > 0)
             {
-                var existingItem = auditList.PrintedList.FirstOrDefault(item => item.O3SKU == updatedItem.O3SKU);
-
-                if (existingItem != null)
-                    auditList.PrintedList.Remove(existingItem);
-                
-                auditList.PrintedList.Add(updatedItem);
-
-            }
-
-            foreach(var item in printedSkuUpdates) // for audited sku updates
-            {
-                var auditData = _auditRepo.GetAll().Where(a => a.O3SKU == item.O3SKU).FirstOrDefault();
-                
-                if(auditData != null)
+                foreach (var updatedItem in printedSkuUpdates) // printed SKu updates are added in printed audit 
                 {
-                    if (auditData.IsAudited == "Y")
+                    var existingItem = auditList.PrintedList.FirstOrDefault(item => item.O3SKU == updatedItem.O3SKU);
+
+                    if (existingItem != null)
+                        auditList.PrintedList.Remove(existingItem);
+
+                    auditList.PrintedList.Add(updatedItem);
+
+                }
+
+                foreach (var item in printedSkuUpdates) // for audited sku updates
+                {
+                    var auditData = _auditRepo.GetAll().Where(a => a.O3SKU == item.O3SKU).FirstOrDefault();
+
+                    if (auditData != null)
                     {
-                        auditList.PrintedList.RemoveAll(a => a.O3SKU == item.O3SKU);
-                        auditList.AuditedList.Add(item);
+                        if (auditData.IsAudited == "Y")
+                        {
+                            auditList.PrintedList.RemoveAll(a => a.O3SKU == item.O3SKU);
+                            auditList.AuditedList.Add(item);
+                        }
+
                     }
 
                 }
 
             }
 
+            if(unprintedSkuUpdates.Count > 0)
+            {
+                foreach (var unprintedItem in unprintedSkuUpdates) // unprinted
+                {
+                    var existingItem = auditList.NotPrintedList.FirstOrDefault(item => item.O3SKU == unprintedItem.O3SKU);
 
+                    if (existingItem != null)
+                        auditList.NotPrintedList.Remove(existingItem);
 
+                    auditList.NotPrintedList.Add(unprintedItem);
+                }
+
+                foreach (var item in unprintedSkuUpdates) // for audited sku updates
+                {
+                    var auditData = _auditRepo.GetAll().Where(a => a.O3SKU == item.O3SKU).FirstOrDefault();
+
+                    if (auditData != null)
+                    {
+                        if (auditData.IsAudited == "Y")
+                        {
+                            auditList.NotPrintedList.RemoveAll(a => a.O3SKU == item.O3SKU);
+                            auditList.AuditedList.Add(item);
+                        }
+
+                    }
+
+                }
+            }
 
             foreach (var item in auditList.PrintedList)
             {
@@ -83,8 +117,8 @@ namespace PriceSignageSystem.Controllers
                                     : "Non-Appliance";
                 item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
                 item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
-                item.IsExemp = item.IsExemp == "Y" ? "Yes" : "No";
-                item.IsWrongPrice = item.IsWrongPrice == "Y" ? "Yes" : "No";
+                item.IsExemp = item.IsExemp == "Y" || item.HasInventory == "" ? "Yes" : "No";
+                item.IsWrongSign = item.IsWrongSign == "Y" ? "Yes" : "No";
 
             }
 
@@ -102,7 +136,7 @@ namespace PriceSignageSystem.Controllers
                                     : "Non-Appliance";
                 item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
                 item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
-                item.IsExemp = item.IsExemp == "Y" ? "Yes" : "No";
+                item.IsExemp = item.IsExemp == "Y" || item.HasInventory == "" ? "Yes" : "No";
             }
 
             foreach (var item in auditList.AuditedList)
@@ -119,7 +153,7 @@ namespace PriceSignageSystem.Controllers
                                     : "Non-Appliance";
                 item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
                 item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
-                item.IsExemp = item.IsExemp == "Y" ? "Yes" : "No";
+                item.IsExemp = item.IsExemp == "Y" || item.HasInventory == "" ? "Yes" : "No";
             }
 
             string jsonData = Newtonsoft.Json.JsonConvert.SerializeObject(auditList);
@@ -184,17 +218,17 @@ namespace PriceSignageSystem.Controllers
             //temporary 
             var list = new List<AuditRemark>();
             list.Add(new AuditRemark { Id = 1, Name = "NOF" });
-            list.Add(new AuditRemark { Id = 2, Name = "Disposal" });
-            list.Add(new AuditRemark { Id = 3, Name = "Mark Down" });
+            list.Add(new AuditRemark { Id = 2, Name = "Damaged" });
+            list.Add(new AuditRemark { Id = 3, Name = "Marked Down" });
 
             return Json(list.ToArray());
         }
 
         [HttpPost]
-        public ActionResult TagWrongPrice(string sku)
+        public ActionResult TagWrongSign(string sku)
         {
             var username = User.Identity.Name;
-            var result = _auditRepo.TagWrongPrice(sku, username);
+            var result = _auditRepo.TagWrongSign(sku, username);
 
             return Json(result);
         }

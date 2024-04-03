@@ -94,7 +94,7 @@ namespace PriceSignageSystem.Models.Dto
         public string IsPrinted { get; set; }
         public string IsAudited { get; set; }
         public string IsNotRequired { get; set; }
-        public string IsWrongPrice { get; set; }
+        public string IsWrongSign { get; set; }
         public decimal LatestDate { get; set; }
         public string HasInventory { get; set; }
         public string IsExemp { get; set; }
@@ -103,6 +103,7 @@ namespace PriceSignageSystem.Models.Dto
         public List<AuditDto> PrintedList { get; set; }
         public List<AuditDto> NotPrintedList { get; set; }
         public List<AuditDto> AuditedList { get; set; }
+        public List<AuditDto> ExemptionList { get; set; }
         public string Remarks { get; set; }
         public decimal ZeroInvDCOnHand { get; set; }
         public decimal ZeroInvInTransit { get; set; }
@@ -111,6 +112,9 @@ namespace PriceSignageSystem.Models.Dto
         public DateTime? DateAudited { get; set; }
         public string TaggedBy { get; set; }
         public DateTime? DateTagged { get; set; }
+        public string ColumnName { get; set; }
+        public string FromValue { get; set; }
+        public string ToValue { get; set; }
     }
 
 }

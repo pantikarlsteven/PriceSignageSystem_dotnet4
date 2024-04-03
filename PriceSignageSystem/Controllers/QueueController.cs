@@ -196,7 +196,9 @@ namespace PriceSignageSystem.Controllers
                 {
                     var o3skus = data.Select(s => s.O3SKU).ToList();
                     _sTRPRCRepository.UpdateMultipleStatus(o3skus);
-                    _sTRPRCRepository.AddMultipleInventoryPrintingLog(o3skus, User.Identity.Name);
+                    //_sTRPRCRepository.AddMultipleInventoryPrintingLog(o3skus, User.Identity.Name, sizeId);
+                    _sTRPRCRepository.AddMultipleQueuedPrintingLog(data, User.Identity.Name, sizeId);
+
                 }
 
                 Response.AppendHeader("Content-Disposition", "inline; filename=QueueReport.pdf");

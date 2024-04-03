@@ -88,10 +88,10 @@ namespace PriceSignageSystem.Controllers
         {
             var model = JsonConvert.DeserializeObject<STRPRCDto>(response);
             var data = _sTRPRCRepository.GetReportData(model.O3SKU);
-                data.UserName = User.Identity.Name;
-                data.TypeId = model.SelectedTypeId;
-                data.SizeId = model.SelectedSizeId;
-                data.CategoryId = model.SelectedCategoryId;
+            data.UserName = User.Identity.Name;
+            data.TypeId = model.SelectedTypeId;
+            data.SizeId = model.SelectedSizeId;
+            data.CategoryId = model.SelectedCategoryId;
             var dataTable = ConversionHelper.ConvertObjectToDataTable(data);
             var reportPath = "";
 
@@ -114,7 +114,7 @@ namespace PriceSignageSystem.Controllers
             report.SetDataSource(dataTable);
 
             PrinterSettings printerSettings = new PrinterSettings();
-            printerSettings.PrinterName = _printerName; 
+            printerSettings.PrinterName = _printerName;
             report.PrintOptions.PrinterName = _printerName;
             report.PrintToPrinter(1, true, 0, 0);
 
@@ -153,7 +153,7 @@ namespace PriceSignageSystem.Controllers
                 skuModel.CategoryId = model.CategoryId;
                 skuModel.UserName = User.Identity.Name;
                 skuModel.O3SDSC = _sTRPRCRepository.GetSubClassDescription(model.O3SKU);
-                skuModel.O3REGU = model.O3REGU != 0 ? model.O3REGU: skuModel.O3REGU;
+                skuModel.O3REGU = model.O3REGU != 0 ? model.O3REGU : skuModel.O3REGU;
                 skuModel.O3POS = model.O3POS != 0 ? model.O3POS : skuModel.O3POS;
                 skuModel.O3IDSC = !string.IsNullOrEmpty(model.O3IDSC) ? model.O3IDSC : skuModel.O3IDSC;
                 skuModel.O3FNAM = !string.IsNullOrEmpty(model.O3FNAM) ? model.O3FNAM : skuModel.O3FNAM;
@@ -253,6 +253,7 @@ namespace PriceSignageSystem.Controllers
                         item.IsSLDescription = textToImage.IsSLDescription;
                         item.IsBiggerFont = textToImage.IsBiggerFont;
                         item.O3SDSC = _sTRPRCRepository.GetSubClassDescription(item.O3SKU);
+
                     }
                     var dataTable = ConversionHelper.ConvertListToDataTable(data);
                     var reportPath = string.Empty;
@@ -321,7 +322,7 @@ namespace PriceSignageSystem.Controllers
                     #endregion
 
                     _sTRPRCRepository.UpdateMultipleStatus(o3skus);
-                    _sTRPRCRepository.AddMultipleInventoryPrintingLog(o3skus, User.Identity.Name);
+                    _sTRPRCRepository.AddMultipleInventoryPrintingLog(o3skus, User.Identity.Name, sizeId);
 
                     return File(pdfBytes, "application/pdf");
                 }
@@ -430,6 +431,60 @@ namespace PriceSignageSystem.Controllers
                 Logs.WriteToFile(ex.Message);
             }
             return RedirectToAction("Index", "STRPRC");
+        }
+
+        [AllowAnonymous]
+        public ActionResult PreviewSignage(string sku)
+        {
+            var skuLog = _sTRPRCRepository.GetPrintedLogPerSku(sku);
+            skuLog.O3FNAM = string.IsNullOrEmpty(skuLog.O3FNAM) ? skuLog.O3FNAM : Regex.Unescape(skuLog.O3FNAM);
+            skuLog.O3IDSC = string.IsNullOrEmpty(skuLog.O3IDSC) ? skuLog.O3IDSC : Regex.Unescape(skuLog.O3IDSC);
+            ReportDocument report = new ReportDocument();
+            var path = string.Empty;
+
+            switch (skuLog.SizeId)
+            {
+                case ReportConstants.Size.Whole:
+                    path = Server.MapPath(ReportConstants.Dynamic_WholeReportPath);
+                    break;
+                case ReportConstants.Size.OneEight:
+                    path = Server.MapPath(ReportConstants.Dynamic_OneEightReportPath);
+                    break;
+                case ReportConstants.Size.Jewelry:
+                    path = Server.MapPath(ReportConstants.Dynamic_JewelryReportPath);
+                    break;
+            }
+
+            report.Load(path);
+            var skuModel = _sTRPRCRepository.GetReportData(skuLog.O3SKU);
+            skuModel.TypeId = skuLog.TypeId != 0 ? skuLog.TypeId : skuModel.TypeId;
+            skuModel.CategoryId = skuModel.CategoryId;
+            skuModel.UserName = User.Identity.Name;
+            skuModel.O3SDSC = _sTRPRCRepository.GetSubClassDescription(skuLog.O3SKU);
+            skuModel.O3REGU = skuLog.O3REGU != 0 ? skuLog.O3REGU : skuModel.O3REGU;
+            skuModel.O3POS = skuLog.O3POS != 0 ? skuLog.O3POS : skuModel.O3POS;
+            skuModel.O3IDSC = !string.IsNullOrEmpty(skuLog.O3IDSC) ? skuLog.O3IDSC : skuModel.O3IDSC;
+            skuModel.O3FNAM = !string.IsNullOrEmpty(skuLog.O3FNAM) ? skuLog.O3FNAM : skuModel.O3FNAM;
+            skuModel.O3MODL = !string.IsNullOrEmpty(skuLog.O3MODL) ? skuLog.O3MODL : skuModel.O3MODL;
+            skuModel.O3DIV = !string.IsNullOrEmpty(skuLog.O3DIV) ? skuLog.O3DIV : skuModel.O3DIV;
+            skuModel.O3TUOM = !string.IsNullOrEmpty(skuLog.O3TUOM) ? skuLog.O3TUOM : skuModel.O3TUOM;
+
+            var textToImage = new TextToImage();
+            textToImage.GetImageWidth(skuModel.O3FNAM, skuModel.O3IDSC, skuLog.SizeId);
+            skuModel.IsSLBrand = textToImage.IsSLBrand;
+            skuModel.IsSLDescription = textToImage.IsSLDescription;
+            skuModel.IsBiggerFont = textToImage.IsBiggerFont;
+
+            report.SetDataSource(ConversionHelper.ConvertObjectToDataTable(skuModel));
+            Stream stream = report.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            var pdfBytes = new byte[stream.Length];
+            stream.Read(pdfBytes, 0, pdfBytes.Length);
+            Response.AppendHeader("Content-Disposition", "inline; filename=" + skuLog.O3SKU.ToString() + ".pdf");
+            report.Close();
+            report.Dispose();
+
+            return File(pdfBytes, "application/pdf");
+
         }
 
         #region FOR RDLC REPORT

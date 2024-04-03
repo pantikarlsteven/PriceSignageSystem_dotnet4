@@ -51,23 +51,10 @@
         }
 
 
-
         .dataTables_wrapper .dataTables_filter {
             display: flex;
             align-items: center;
         }
-
-      /*  .chart-container1 {
-            width: 800px;
-            height: 400px;
-      }
-
-        .chart-container2 {
-            width: 800px;
-            height: 400px;
-            margin-top: 80px;
-
-        }*/
 
         .graphcontainer {
             display: flex;
@@ -129,7 +116,7 @@
 
                 <div class="tab-content">
                     <div id="printed-pca" class="tab-pane active mx-2">
-                        <h3 class="text-center mt-2">Printed PCA</h3>
+                        <h3 class="text-center mt-2">Printed Sign</h3>
                         <div class="row align-items-center justify-content-center">
                             <div class="col-auto" id="barcodeContainer">
                                 <button id="barcodeScan" class="btn btn-primary" onclick="Scan()">Scan Bar Code</button>
@@ -141,8 +128,77 @@
                                     <th>Audit?</th>
                                     <th>SKU</th>
                                     <th>UPC</th>
+                                    <th>Brand</th>
                                     <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
                                     <th>Wrong Sign?</th>
+                                    <th>Reg Price</th>
+                                    <th>Current Price</th>
+                                    <th>Date Start</th>
+                                    <th>Date End</th>
+                                    <th>Type</th>
+                                    <th>Size</th>
+                                    <th>Category</th>
+                                    <th>
+                                        Dept
+                                        <i class="filter-icon bi bi-funnel-fill"></i>
+                                    </th>
+                                    <th>Type</th>
+                                    <th>Reverted?</th>
+                                    <th>Exemption?</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="17" style="text-align: center;">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="audited-pca" class="tab-pane fade mx-2">
+                        <h3 class="text-center mt-2">Audited Sign</h3>
+                        <table id="audited-pca-table" class="table table-sm table-hover" style="width: 100%; text-align: center;">
+                            <thead style="background-color: #1C3766;" class="text-white">
+                                <tr>
+                                    <th>SKU</th>
+                                    <th>UPC</th>
+                                    <th>Brand</th>
+                                    <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
+                                    <th>Reg Price</th>
+                                    <th>Current Price</th>
+                                    <th>Date Start</th>
+                                    <th>Date End</th>
+                                    <th>Type</th>
+                                    <th>Size</th>
+                                    <th>Category</th>
+                                    <th>
+                                        Dept
+                                        <i class="filter-icon bi bi-funnel-fill"></i>
+                                    </th>
+                                    <th>Type</th>
+                                    <th>Reverted?</th>
+                                    <th>Exemption?</th>
+                                    <th>Remarks</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="16" style="text-align: center;">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="notprinted-pca" class="tab-pane fade mx-2">
+                        <h3 class="text-center mt-2">Unprinted Sign</h3>
+                        <table id="notprinted-pca-table" class="table table-sm table-hover" style="width: 100%; text-align: center;">
+                            <thead style="background-color: #1C3766;" class="text-white">
+                                <tr>
+                                    <th>Not Required?</th>
+                                    <th>SKU</th>
+                                    <th>UPC</th>
+                                    <th>Brand</th>
+                                    <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
                                     <th>Reg Price</th>
                                     <th>Current Price</th>
                                     <th>Date Start</th>
@@ -167,81 +223,16 @@
                         </table>
                     </div>
 
-                    <div id="audited-pca" class="tab-pane fade mx-2">
-                        <h3 class="text-center mt-2">Audited PCA</h3>
-                        <table id="audited-pca-table" class="table table-sm table-hover" style="width: 100%; text-align: center;">
-                            <thead style="background-color: #1C3766;" class="text-white">
-                                <tr>
-                                    <th>SKU</th>
-                                    <th>UPC</th>
-                                    <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
-                                    <th>Reg Price</th>
-                                    <th>Current Price</th>
-                                    <th>Date Start</th>
-                                    <th>Date End</th>
-                                    <th>Type</th>
-                                    <th>Size</th>
-                                    <th>Category</th>
-                                    <th>
-                                        Dept
-                                        <i class="filter-icon bi bi-funnel-fill"></i>
-                                    </th>
-                                    <th>Type</th>
-                                    <th>Reverted?</th>
-                                    <th>Exemption?</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="14" style="text-align: center;">No data available</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div id="notprinted-pca" class="tab-pane fade mx-2">
-                        <h3 class="text-center mt-2">Not Printed PCA</h3>
-                        <table id="notprinted-pca-table" class="table table-sm table-hover" style="width: 100%; text-align: center;">
-                            <thead style="background-color: #1C3766;" class="text-white">
-                                <tr>
-                                    <th>Not Required?</th>
-                                    <th>SKU</th>
-                                    <th>UPC</th>
-                                    <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
-                                    <th>Reg Price</th>
-                                    <th>Current Price</th>
-                                    <th>Date Start</th>
-                                    <th>Date End</th>
-                                    <th>Type</th>
-                                    <th>Size</th>
-                                    <th>Category</th>
-                                    <th>
-                                        Dept
-                                        <i class="filter-icon bi bi-funnel-fill"></i>
-                                    </th>
-                                    <th>Type</th>
-                                    <th>Reverted?</th>
-                                    <th>Exemption?</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="15" style="text-align: center;">No data available</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
                     <div id="graph" class="tab-pane fade mx-2" style="min-height: 1000px">
                         <div class="row pt-3">
                             <div class="col-md-6">
-                                <h3 class="graph1Count text-center">COUNT: </h3>
+                                <h3 class="graph1Count text-center">PRINT SUMMARY: </h3>
                                 <div class="graph1Data"></div>
                                 <canvas id="pieChart" ></canvas>
 
                             </div>
                             <div class="col-md-6">
-                                <h3 class="graph2Count text-center">COUNT: </h3>
+                                <h3 class="graph2Count text-center">AUDIT SUMMARY: </h3>
                                 <div class="graph2Data"></div>
                                 <canvas id="pieChart2" ></canvas>
                             </div>
@@ -288,8 +279,8 @@
                         </div>
                     </div>
                     <div class="yesOrNoBtns modal-footer">
-                        <button type="button" class="btn btn-primary" onclick="postSku()">Audit</button>
-                        <button type="button" class="btn btn-secondary" onclick="tagWrongPrice()">Wrong Sign</button>
+                        <button type="button" class="btn btn-primary"  onclick="postSku()">Matched</button>
+                        <button type="button" class="btn btn-secondary" style="float:right;" onclick="tagWrongSign()">Wrong Sign</button>
                     </div>
                 </div>
             </div>
@@ -304,7 +295,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="alert alert-success">
-                            Tagged Successfully!
+                            Updated!
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -334,9 +325,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="yesOrNoBtns modal-footer">
-                        <button type="button" class="btn btn-primary" onclick="notRequireTagging()">Yes</button>
-                        <button type="button" class="btn btn-secondary" onclick="closeUnprintedModal()">Cancel</button>
+                    <div class="yesOrNoBtns modal-footer d-flex justify-content-between">
+                        <button type="button" class="btn btn-primary" onclick="notRequireTagging()">Not Required</button>
+                        <button type="button" class="btn btn-success" onclick="notRequireTagging()">Required</button>
                     </div>
                 </div>
             </div>
@@ -362,7 +353,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="yesOrNoBtns modal-footer">
+                    <div class="yesOrNoBtns modal-footer d-flex justify-content-between">
                         <button type="button" class="btn btn-primary" onclick="postSkuWithRemarks()">Yes</button>
                         <button type="button" class="btn btn-secondary" onclick="closePrintedModal()">Cancel</button>
                     </div>
@@ -443,12 +434,12 @@
                     NOFListCount = NOFList.length;
 
                     var DisposalList = data.AuditedList.filter(function (item) {
-                        return item.AuditedRemarks === "Disposal";
+                        return item.AuditedRemarks === "Damaged";
                     });
                     DisposalListCount = DisposalList.length;
 
                     var MarkDownList = data.AuditedList.filter(function (item) {
-                        return item.AuditedRemarks === "Mark Down";
+                        return item.AuditedRemarks === "Marked Down";
                     });
                     MarkDownListCount = MarkDownList.length;
 
@@ -480,7 +471,7 @@
                 data: data,
                 order: [],
                 columnDefs: [
-                    { targets: [0, 3, 5, 6, 12], orderable: false },
+                    { targets: [0, 3, 4, 6, 7, 13], orderable: false },
                 ],
                 columns: [
                     {
@@ -490,8 +481,9 @@
                     },
                     { data: 'O3SKU', name: 'O3SKU' },
                     { data: 'O3UPC', name: 'O3UPC' },
+                    { data: 'O3FNAM', name: 'O3FNAM' },
                     { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap' },
-                    { data: 'IsWrongPrice', name: 'IsWrongPrice' },
+                    { data: 'IsWrongSign', name: 'IsWrongSign' },
                     { data: 'O3REG', name: 'O3REG' },
                     { data: 'O3POS', name: 'O3POS' },
                     { data: 'O3SDT', name: 'O3SDT' },
@@ -529,11 +521,12 @@
                 pageLength: -1,
                 data: data,
                 columnDefs: [
-                    { targets: [2, 3, 4, 10], orderable: false },
+                    { targets: [2, 3, 4, 5, 11], orderable: false },
                 ],
                 columns: [
                     { data: 'O3SKU', name: 'O3SKU' },
                     { data: 'O3UPC', name: 'O3UPC' },
+                    { data: 'O3FNAM', name: 'O3FNAM' },
                     { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap' },
                     { data: 'O3REG', name: 'O3REG' },
                     { data: 'O3POS', name: 'O3POS' },
@@ -554,6 +547,7 @@
                             }
                         }
                     },
+                    { data: 'AuditedRemarks', name: 'AuditedRemarks' },
                 ],
                 "dom": '<"top"lfB>rt<"bottom"ip>',
             });
@@ -573,7 +567,7 @@
                 data: data,
                 order: [],
                 columnDefs: [
-                    { targets: [0, 3, 4, 5, 11], orderable: false },
+                    { targets: [0, 3, 4, 5, 6, 12], orderable: false },
                 ],
                 columns: [
                     {
@@ -587,6 +581,7 @@
                     },
                     { data: 'O3SKU', name: 'O3SKU' },
                     { data: 'O3UPC', name: 'O3UPC' },
+                    { data: 'O3FNAM', name: 'O3FNAM' },
                     { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap' },
                     { data: 'O3REG', name: 'O3REG' },
                     { data: 'O3POS', name: 'O3POS' },
@@ -670,7 +665,7 @@
                                     <label>Not Required: </label> ${notRequiredYCount} - ${notRequiredYPercentage}%
                                 </div>
                                 <div class="graphcolumn">
-                                    <label>Unprinted: </label> ${notRequiredNCount} - ${UnprintedPercentage}%
+                                    <label>Unprinted: </label> ${unPrintedCount - notRequiredYCount} - ${UnprintedPercentage}%
                                 </div>
                             </div>
                         </div>`;
@@ -679,7 +674,7 @@
             var data = {
                 "Printed": printedCount,
                 "Not Required": notRequiredYCount,
-                "Unprinted": notRequiredNCount
+                "Unprinted": unPrintedCount - notRequiredYCount
             };
 
             var labels = Object.keys(data);
@@ -791,10 +786,10 @@
                                     <label>NOF: </label> ${NOFListCount} - ${nofPercentage}%
                                 </div>
                                 <div class="graphcolumn">
-                                    <label>Disposal: </label> ${DisposalListCount} - ${disposalPercentage}%
+                                    <label>Damaged: </label> ${DisposalListCount} - ${disposalPercentage}%
                                 </div>
                                 <div class="graphcolumn">
-                                    <label>Mark Down: </label> ${MarkDownListCount} - ${markdownPercentage}%
+                                    <label>Marked Down: </label> ${MarkDownListCount} - ${markdownPercentage}%
                                 </div>
                                 <div class="graphcolumn">
                                     <label>Unaudited: </label> ${printedCount} - ${unauditedPercentage}%
@@ -807,8 +802,8 @@
             var data = {
                 "Audited": auditedWithoutRemarksCount,
                 "NOF": NOFListCount,
-                "Disposal": DisposalListCount,
-                "Mark Down": MarkDownListCount,
+                "Damaged": DisposalListCount,
+                "Marked Down": MarkDownListCount,
                 "Unaudited": printedCount
             };
 
@@ -866,10 +861,10 @@
                                     else if (label == "NOF") {
                                         label += ' - ' + value + ' (' + nofPercentage + '%)';
                                     }
-                                    else if (label == "Disposal") {
+                                    else if (label == "Damaged") {
                                         label += ' - ' + value + ' (' + disposalPercentage + '%)';
                                     }
-                                    else if (label == "Mark Down") {
+                                    else if (label == "Marked Down") {
                                         label += ' - ' + value + ' (' + markdownPercentage + '%)';
                                     }
 
@@ -1296,14 +1291,14 @@
             if (isChecked) {
                 document.querySelector("#UnprintedModal .UnprintedTitle").textContent = "For Confirmation";
                 document.querySelector("#Unprinted .resultDetails").innerHTML = details;
-                document.querySelector("#Unprinted .resultDesc").textContent = "Not required?";
+                //document.querySelector("#Unprinted .resultDesc").textContent = "Not required?";
                 document.querySelector("#UnprintedModal .yesOrNoBtns").style.display = "block";
                 unprintedModal.style.display = "block";
 
             } else {
                 document.querySelector("#UnprintedModal .UnprintedTitle").textContent = "For Confirmation";
                 document.querySelector("#Unprinted .resultDetails").innerHTML = details;
-                document.querySelector("#Unprinted .resultDesc").textContent = "Uncheck?";
+                //document.querySelector("#Unprinted .resultDesc").textContent = "Uncheck?";
                 document.querySelector("#UnprintedModal .yesOrNoBtns").style.display = "block";
                 unprintedModal.style.display = "block";
             }
@@ -1383,7 +1378,34 @@
                  document.querySelector("#scanResultModal .sku").textContent = result.Sku;
                  document.querySelector("#scanResultModal .sku").style.display = "none";
                  var details = `<b>SKU:</b> ${result.Sku} <br> <b>Description:</b> ${result.Desc} <br> <b>Current Price:</b> ${result.CurrentPrice} <br><br><br>`;
-                 var printPreview = `<iframe src="@Url.Action("PreviewCrystalReport", "Report")?id=${result.Sku}#toolbar=0&navpanes=0&scrollbar=0&zoom=80" style="width: 100%; height: 600px;" frameborder="0"></iframe>`;
+
+                 var changesList = "<b>List of Changes:</b> <br> ";
+                 
+                 if (result.NewBrand != null)
+                     changesList += `- Brand<br>`;
+
+                 if (result.NewModel != null)
+                     changesList += `- Model <br>`;
+
+                 if (result.NewDesc != null)
+                     changesList += `- Description <br>`;
+
+                 if (result.NewUPC != null)
+                     changesList += `- UPC <br>`;
+
+                 if (result.NewDept != null)
+                     changesList += `- Department <br>`;
+
+                 if (result.NewFlag != null)
+                     changesList += `- Flag <br>`;
+
+                 var count = changesList.length;
+
+                 if (count <= 29)
+                     changesList = "";
+
+                 var printPreview = `<iframe src="@Url.Action("PreviewSignage", "Report")?sku=${result.Sku}#toolbar=0&navpanes=0&scrollbar=0&zoom=80" style="width: 100%; height: 600px;" frameborder="0"></iframe>` + changesList;
+                 @*var printPreview = `<iframe src="@Url.Action("PreviewSignage", "Report")?sku=${result.Sku}#toolbar=0&navpanes=0&scrollbar=0&zoom=150" style="width: 70%; height: 420px; margin: 100px;" frameborder="0"></iframe>`;*@
 
                  if (result.IsItemExisting && result.DoesItemBelongToCurrentPCA) {
                      if (result.IsAudited == "Y") {
@@ -1445,7 +1467,7 @@
         document.querySelector("#scanResultModal .sku").textContent = "";
         Scan();
     }
-    function closeUnprintedModal() {
+    function closeUnprintedModal() { // not used
         var sku = document.querySelector("#UnprintedModal .sku").textContent;
         var checkbox = $(`input[data-id="${sku}"]`);
         var isChecked = document.querySelector("#UnprintedModal .isChecked").textContent;
@@ -1552,12 +1574,12 @@
         });
     }
 
-    function tagWrongPrice() {
+    function tagWrongSign() {
         scanResultModalContainer.style.display = 'none';
         var sku = document.querySelector("#scanResultModal .sku").textContent;
 
         $.ajax({
-            url: '/Audit/TagWrongPrice',
+            url: '/Audit/TagWrongSign',
             type: 'POST',
             data: { sku: sku },
             success: function (result) {

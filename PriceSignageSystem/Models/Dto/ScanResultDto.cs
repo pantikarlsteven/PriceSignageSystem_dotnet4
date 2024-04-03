@@ -15,5 +15,11 @@ namespace PriceSignageSystem.Models.Dto
         public bool DoesItemBelongToCurrentPCA { get; set; }
         public string IsAudited { get; set; }
         public string IsResolved { get; set; }
+        public string NewUPC { get; set; }
+        public string NewModel { get; set; }
+        public string NewBrand { get; set; }
+        public string NewDept { get; set; }
+        public string NewFlag { get; set; }
+        public string NewDesc { get; set; }
     }
 }

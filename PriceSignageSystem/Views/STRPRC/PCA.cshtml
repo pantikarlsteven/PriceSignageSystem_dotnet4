@@ -127,6 +127,7 @@
                                     <th><input type="checkbox" id="selectAllWith" /></th>
                                     <th>-</th>
                                     <th>Printed?</th>
+                                    <th>Required?</th>
                                     <th>SKU</th>
                                     <th>UPC</th>
                                     <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
@@ -145,7 +146,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="17" style="text-align: center;">Please enter start date</td>
+                                    <td colspan="18" style="text-align: center;">Please enter start date</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -158,6 +159,7 @@
                                     <th><input type="checkbox" id="selectAllCo" /></th>
                                     <th>-</th>
                                     <th>Printed?</th>
+                                    <th>Required?</th>
                                     <th>SKU</th>
                                     <th>UPC</th>
                                     <th style="width: 200px;" class="text-nowrap">Item Desc.</th>
@@ -176,7 +178,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="17" style="text-align: center;">Please enter start date</td>
+                                    <td colspan="18" style="text-align: center;">Please enter start date</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -189,6 +191,7 @@
                                     <th><input type="checkbox" id="selectAllNewExemption" /></th>
                                     <th>-</th>
                                     <th>Printed?</th>
+                                    <th>Required?</th>
                                     <th>SKU</th>
                                     <th>IsExemp</th>
                                     <th style="width: 150px;">On Hand</th>
@@ -211,7 +214,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="19" style="text-align: center;">Please enter start date</td>
+                                    <td colspan="20" style="text-align: center;">Please enter start date</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -404,7 +407,7 @@
                 pageLength: -1,
                 data: data,
                 columnDefs: [
-                    { targets: [0, 1, 13, 15], orderable: false },
+                    { targets: [0, 1, 6, 7, 8, 14, 15], orderable: false },
                     {
                         "targets": 6, // column "O3REG"
                         "render": function (data, type, row, meta) {
@@ -450,6 +453,15 @@
                                 return '<span style="color: green;">' + data + '</span>';
                             } else {
                                 return '<span style="color: red;">' + data + '</span>';
+                            }
+                        }
+                    },
+                    {
+                        data: 'IsNotRequired', name: 'IsNotRequired', render: function (data) {
+                            if (data === 'Yes') {
+                                return 'No';
+                            } else {
+                                return 'Yes';
                             }
                         }
                     },
@@ -721,9 +733,9 @@
                 pageLength: -1,
                 data: data,
                 columnDefs: [
-                    { targets: [4,6,7,19], visible: false },
+                    { targets: [5,6,7,8,20], visible: false },
                     //{ targets: [4,5], visible: false },
-                    { targets: [0, 1, 13, 14, 15, 17], orderable: false },
+                    { targets: [0, 1, 10,11,12, 18], orderable: false },
                 ],
                 columns: [
                     {
@@ -747,6 +759,15 @@
                                 return '<span style="color: green;">' + data + '</span>';
                             } else {
                                 return '<span style="color: red;">' + data + '</span>';
+                            }
+                        }
+                    },
+                    {
+                        data: 'IsNotRequired', name: 'IsNotRequired', render: function (data) {
+                            if (data === 'Yes') {
+                                return 'No';
+                            } else {
+                                return 'Yes';
                             }
                         }
                     },
@@ -815,42 +836,42 @@
                     $select.append($All, $negativeInventory, $zeroInventory, $saveZero, $negativeSave);
 
                     $select.on('change', function () {
-
-                        tableNewExemption.column(5).visible(true); // ON HAND
-                        tableNewExemption.column(6).visible(false); // DC ONHAND FOR ZERO INV
-                        tableNewExemption.column(7).visible(false); // IN TRANSIT FOR ZERO INV
+                                                                   // 5-IsExemp | 20-neg save
+                        tableNewExemption.column(6).visible(true); // ON HAND
+                        tableNewExemption.column(7).visible(false); // DC ONHAND FOR ZERO INV
+                        tableNewExemption.column(8).visible(false); // IN TRANSIT FOR ZERO INV
 
                         // Log the selected value to the console
                         if ($select.val() == "negative") {
-                            tableNewExemption.column(5).search("^-\\d", true, false).draw();
-                            tableNewExemption.column(4).search("").draw();
-                            tableNewExemption.column(19).search("N", true, false).draw();
+                            tableNewExemption.column(6).search("^-\\d", true, false).draw();
+                            tableNewExemption.column(5).search("").draw(); 
+                            tableNewExemption.column(20).search("N", true, false).draw();
 
                         }
                         else if ($select.val() == "zero") {
-                            tableNewExemption.column(5).search("^0$",true,false).draw();
-                            tableNewExemption.column(4).search("").draw();
-                            tableNewExemption.column(19).search("N", true, false).draw();
+                            tableNewExemption.column(6).search("^0$",true,false).draw();
+                            tableNewExemption.column(5).search("").draw();
+                            tableNewExemption.column(20).search("N", true, false).draw();
 
-                            tableNewExemption.column(5).visible(false);
-                            tableNewExemption.column(6).visible(true);
+                            tableNewExemption.column(6).visible(false);
                             tableNewExemption.column(7).visible(true);
+                            tableNewExemption.column(8).visible(true);
                         }
                         else if ($select.val() == "saveZero") {
-                            tableNewExemption.column(5).search("").draw();
-                            tableNewExemption.column(4).search("Y", true, false).draw();
-                            tableNewExemption.column(19).search("N", true, false).draw();
+                            tableNewExemption.column(6).search("").draw();
+                            tableNewExemption.column(5).search("Y", true, false).draw();
+                            tableNewExemption.column(20).search("N", true, false).draw();
                         }
                         else if ($select.val() == "negativeSave") {
-                            tableNewExemption.column(5).search("").draw();
-                            tableNewExemption.column(4).search("Y", true, false).draw();
-                            tableNewExemption.column(19).search("Y", true, false).draw();
+                            tableNewExemption.column(6).search("").draw();
+                            tableNewExemption.column(5).search("Y", true, false).draw();
+                            tableNewExemption.column(20).search("Y", true, false).draw();
 
                         }
                         else {
+                            tableNewExemption.column(6).search("").draw();
                             tableNewExemption.column(5).search("").draw();
-                            tableNewExemption.column(4).search("").draw();
-                            tableNewExemption.column(19).search("").draw();
+                            tableNewExemption.column(20).search("").draw();
                         }
 
                         //console.log(data);
@@ -1107,7 +1128,7 @@
                 pageLength: -1,
                 data: data,
                 columnDefs: [
-                    { targets: [0, 1, 13, 15], orderable: false },
+                    { targets: [0, 1, 6, 7, 8, 14, 15], orderable: false },
                     {
                         "targets": 6, // column "O3REG"
                         "render": function (data, type, row, meta) {
@@ -1153,6 +1174,15 @@
                                 return '<span style="color: green;">' + data + '</span>';
                             } else {
                                 return '<span style="color: red;">' + data + '</span>';
+                            }
+                        }
+                    },
+                    {
+                        data: 'IsNotRequired', name: 'IsNotRequired', render: function (data) {
+                            if (data === 'Yes') {
+                                return 'No';
+                            } else {
+                                return 'Yes';
                             }
                         }
                     },
