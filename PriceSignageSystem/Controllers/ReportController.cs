@@ -254,6 +254,11 @@ namespace PriceSignageSystem.Controllers
                         item.IsBiggerFont = textToImage.IsBiggerFont;
                         item.O3SDSC = _sTRPRCRepository.GetSubClassDescription(item.O3SKU);
 
+                        if (item.TypeId == 2 && item.O3POSU > item.O3REG)
+                        {
+                            item.TypeId = 1;
+                            item.O3REG = item.O3POS;
+                        }
                     }
                     var dataTable = ConversionHelper.ConvertListToDataTable(data);
                     var reportPath = string.Empty;

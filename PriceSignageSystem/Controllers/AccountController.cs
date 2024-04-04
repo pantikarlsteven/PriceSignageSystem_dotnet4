@@ -29,9 +29,10 @@ namespace PriceSignageSystem.Controllers
         public ActionResult Login(string returnUrl)
         {
             DateTime currentTime = DateTime.Now;
-            var currentHour = currentTime.Hour;
+            DateTime startTime = DateTime.Today.AddHours(4);
+            DateTime endTime = DateTime.Today.AddHours(4).AddMinutes(15);
 
-            if (currentHour >= 5 && currentHour < 6)
+            if (currentTime >= startTime && currentTime < endTime)
             {
                 return View("MaintenanceError");
             }

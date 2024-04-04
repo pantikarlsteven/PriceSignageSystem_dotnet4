@@ -96,7 +96,7 @@
             <div class="col-md-2">
                 <div class="form-group">
                     <label class="text-white d-sm-none d-lg-block">_</label>
-                    <button class="btn btn-primary" id="updateInventory" style="display: none">Update Inventory</button>
+                    <button class="btn btn-primary" id="updateInventory">Update Inventory</button>
                     <button class="btn btn-primary" id="updatePCA" style="display: none">Update PCA</button>
                 </div>
             </div>
@@ -303,17 +303,26 @@
                 //},
                 success: function (data) {
 
+                    $.ajax({
+                        url: '/STRPRC/CheckPCALatestDates',
+                        type: "GET",
+                        dataType: 'json',
+                        success: function (data) {
+                            if (!data) {
+                                $('#updateInventory').hide();
+                                $('#updatePCA').show();
+                            }
+                        },
+                        error: function (error) {
+                        }
+                    });
+
                     var latestDate = data.LatestDate;
                     const day = latestDate.toString().substr(4, 2);
                     const month = latestDate.toString().substr(2, 2);
                     const year = latestDate.toString().substr(0, 2);
                     const formattedDate = `20${year}-${month}-${day}`;
                     $('#startDate').val(formattedDate);
-
-                    if (latestDate == formatDateToYYMMDD(Date.now()))
-                        $('#updateInventory').show();
-                    else
-                        $('#updatePCA').show();
 
                     if (tableWith !== null) {
                         tableWith.destroy();
@@ -407,7 +416,8 @@
                 pageLength: -1,
                 data: data,
                 columnDefs: [
-                    { targets: [0, 1, 6, 7, 8, 14, 15], orderable: false },
+                    { targets: [0, 1, 6, 7, 8, 14, 17], orderable: false },
+                    { targets: [3], visible: false },
                     {
                         "targets": 6, // column "O3REG"
                         "render": function (data, type, row, meta) {
@@ -733,7 +743,7 @@
                 pageLength: -1,
                 data: data,
                 columnDefs: [
-                    { targets: [5,6,7,8,20], visible: false },
+                    { targets: [3,5,6,7,8,20], visible: false },
                     //{ targets: [4,5], visible: false },
                     { targets: [0, 1, 10,11,12, 18], orderable: false },
                 ],
@@ -1128,7 +1138,8 @@
                 pageLength: -1,
                 data: data,
                 columnDefs: [
-                    { targets: [0, 1, 6, 7, 8, 14, 15], orderable: false },
+                    { targets: [0, 1, 6, 7, 8, 14, 17], orderable: false },
+                    { targets: [3], visible: false },
                     {
                         "targets": 6, // column "O3REG"
                         "render": function (data, type, row, meta) {
@@ -2458,7 +2469,12 @@
         $('#with-inventory-table thead').on('click', '.filter-icon', function (event) {
             event.stopPropagation(); // Prevent event propagation
 
-            var columnIndex = $(this).closest('th').index();
+            var columnName = "Dept";
+            var table = $('#with-inventory-table').DataTable();
+            var columnIndex = table.column(function (idx, data, node) {
+                return table.column(idx).header().textContent.trim() === columnName ? true : false;
+            }).index();
+
             var column = tableWith.column(columnIndex);
 
             // Clear existing filter input
@@ -2816,7 +2832,12 @@
         $('#consignment-table thead').on('click', '.filter-icon', function (event) {
             event.stopPropagation(); // Prevent event propagation
 
-            var columnIndex = $(this).closest('th').index();
+            var columnName = "Dept";
+            var table = $('#consignment-table').DataTable();
+            var columnIndex = table.column(function (idx, data, node) {
+                return table.column(idx).header().textContent.trim() === columnName ? true : false;
+            }).index();
+
             var column = tableConsignment.column(columnIndex);
 
             // Clear existing filter input

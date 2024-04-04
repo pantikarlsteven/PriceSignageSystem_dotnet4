@@ -419,9 +419,40 @@ namespace PriceSignageSystem.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public ActionResult UpdatePCA()
+        public async Task<ActionResult> UpdatePCA()
         {
-            _sTRPRCRepository.UpdateSTRPRCTable(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
+            var result = _sTRPRCRepository.GetLatestUpdate();
+            var decimalDateToday = ConversionHelper.ToDecimal(DateTime.Now);
+            if (result != null)
+            {
+                //if STRPRCs in club is updated then update centralized exemptions in merchandise and get latest inventory
+                if (result.LatestDate == decimalDateToday && result.O3SDT == decimalDateToday)
+                {
+                    await _sTRPRCRepository.UpdateCentralizedExemptions(result.LatestDate);
+                    _sTRPRCRepository.GetLatestInventory(ConfigurationManager.AppSettings["StoreID"].ToString());
+                }
+                // if STRPRCs in club is not updated then check XXX_STRPRC in 0.151
+                else
+                {
+                    var isUpdated = _sTRPRCRepository.Check151STRPRCChanges_LatestDate(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
+                    // if XXX_STRPRC is updated then run sp_GetLatestSTRPRCTable stored proc in club
+                    if (isUpdated)
+                    {
+                        _sTRPRCRepository.UpdateSTRPRCTable(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
+                        await _sTRPRCRepository.UpdateCentralizedExemptions(result.LatestDate);
+                        _sTRPRCRepository.GetLatestInventory(ConfigurationManager.AppSettings["StoreID"].ToString());
+                    }
+                    // if XXX_STRPRC is not updated then run sp_GetSTRPRC in 0.151 and sp_GetLatestSTRPRCTable stored proc in club
+                    else
+                    {
+                        await _sTRPRCRepository.UpdateSTRPRC151(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
+                        _sTRPRCRepository.UpdateSTRPRCTable(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
+                        await _sTRPRCRepository.UpdateCentralizedExemptions(result.LatestDate);
+                        _sTRPRCRepository.GetLatestInventory(ConfigurationManager.AppSettings["StoreID"].ToString());
+                    }
+                }
+            }
+
             return Json(true, JsonRequestBehavior.AllowGet);
         }
 
@@ -434,13 +465,30 @@ namespace PriceSignageSystem.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet]
+        public ActionResult CheckPCALatestDates()
+        {
+            var decimalDateToday = ConversionHelper.ToDecimal(DateTime.Now);
+            var result = _sTRPRCRepository.GetLatestUpdate();
+            if (result != null)
+            {
+                if (result.LatestDate == decimalDateToday && result.O3SDT == decimalDateToday)
+                    return Json(true, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(false, JsonRequestBehavior.AllowGet);
+        }
+
+        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult> LoadPCA()
         {
+            var dateToday = ConversionHelper.ToDecimal(DateTime.Now);
             DateTime currentTime = DateTime.Now;
-            var currentHour = currentTime.Hour;
+            DateTime startTime = DateTime.Today.AddHours(4);
+            DateTime endTime = DateTime.Today.AddHours(4).AddMinutes(15);
 
-            if (currentHour >= 5 && currentHour < 6)
+            if (currentTime >= startTime && currentTime < endTime)
             {
                 return View("MaintenanceError");
             }
@@ -472,6 +520,8 @@ namespace PriceSignageSystem.Controllers
                 item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
                 item.IsNotRequired = item.IsNotRequired == "Y" ? "Yes" : "No";
 
+                if (item.IsReverted == "Yes" && item.O3EDT == 999999)
+                    item.O3SDT = dateToday;
             }
 
             foreach (var item in data.ExcemptionList)
@@ -508,6 +558,9 @@ namespace PriceSignageSystem.Controllers
                     item.IsNotRequired = item.IsNotRequired == "Y" ? "Yes" : "No";
 
                 }
+
+                if (item.IsReverted == "Yes" && item.O3EDT == 999999)
+                    item.O3SDT = dateToday;
             }
             foreach (var item in data.ConsignmentList)
             {
@@ -525,6 +578,8 @@ namespace PriceSignageSystem.Controllers
                 item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
                 item.IsNotRequired = item.IsNotRequired == "Y" ? "Yes" : "No";
 
+                if (item.IsReverted == "Yes" && item.O3EDT == 999999)
+                    item.O3SDT = dateToday;
             }
 
             string jsonData = Newtonsoft.Json.JsonConvert.SerializeObject(data);

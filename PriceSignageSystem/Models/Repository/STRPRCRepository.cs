@@ -379,15 +379,15 @@ namespace PriceSignageSystem.Models.Repository
                         IsNotRequired = reader["IsNotRequired"].ToString()
                     };
 
-                    if ((decimal)reader["O3RSDT"] == startDate)
-                    {
-                        if ((int)reader["TypeId"] == ReportConstants.Type.Regular)
-                        {
-                            record.O3SDT = (decimal)reader["O3RSDT"];
-                            record.O3EDT = (decimal)reader["O3REDT"];
-                        }
-                        else continue;
-                    }
+                    //if ((decimal)reader["O3RSDT"] == startDate)
+                    //{
+                    //    if ((int)reader["TypeId"] == ReportConstants.Type.Regular)
+                    //    {
+                    //        record.O3SDT = (decimal)reader["O3RSDT"];
+                    //        record.O3EDT = (decimal)reader["O3REDT"];
+                    //    }
+                    //    else continue;
+                    //}
 
                     data.Add(record);
                 }
@@ -453,15 +453,15 @@ namespace PriceSignageSystem.Models.Repository
                             StoreID = store
                         };
 
-                        if ((decimal)reader["O3RSDT"] == startDate)
-                        {
-                            if ((int)reader["TypeId"] == ReportConstants.Type.Regular)
-                            {
-                                record.O3SDT = (decimal)reader["O3RSDT"];
-                                record.O3EDT = (decimal)reader["O3REDT"];
-                            }
-                            else continue;
-                        }
+                        //if ((decimal)reader["O3RSDT"] == startDate)
+                        //{
+                        //    if ((int)reader["TypeId"] == ReportConstants.Type.Regular)
+                        //    {
+                        //        record.O3SDT = (decimal)reader["O3RSDT"];
+                        //        record.O3EDT = (decimal)reader["O3REDT"];
+                        //    }
+                        //    else continue;
+                        //}
 
                         data.Add(record);
                     }
@@ -762,11 +762,12 @@ namespace PriceSignageSystem.Models.Repository
         public STRPRCDto GetLatestUpdate()
         {
             var data = (from a in _db.STRPRCs
-                        orderby a.DateUpdated descending
+                        orderby a.O3SDT descending
                         select new STRPRCDto
                         {
                             DateUpdated = a.DateUpdated,
-                            LatestDate = a.O3DATE
+                            LatestDate = a.O3DATE,
+                            O3SDT = a.O3SDT
                         }).FirstOrDefault();
 
             return data;
@@ -1439,6 +1440,56 @@ namespace PriceSignageSystem.Models.Repository
             }
 
             return null;
+        }
+
+        public bool Check151STRPRCChanges_LatestDate(int o3loc)
+        {
+            var dateToday = ConversionHelper.ToDecimal(DateTime.Now);
+            using (var connection = new SqlConnection(connectionString151))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand($"SELECT TOP 1 O3DATE,O3SDT FROM [{o3loc}_STRPRC] order by O3SDT desc", connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            if (reader.GetDecimal(0) == dateToday && reader.GetDecimal(1) == dateToday)
+                            {
+                                return true;
+                            }
+                            return false;
+                        }
+                        else
+                            return false;
+                    }
+                }
+            }
+        }
+
+        public bool Check151STRPRCNew_LatestDate(int o3loc)
+        {
+            var dateToday = ConversionHelper.ToDecimal(DateTime.Now);
+            using (var connection = new SqlConnection(connectionString151))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand($"SELECT TOP 1 O3DATE,O3SDT FROM [{o3loc}_STRPRC_NEW] order by O3SDT desc", connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            if (reader.GetDecimal(0) == dateToday && reader.GetDecimal(1) == dateToday)
+                            {
+                                return true;
+                            }
+                            return false;
+                        }
+                        else
+                            return false;
+                    }
+                }
+            }
         }
     }
 }
