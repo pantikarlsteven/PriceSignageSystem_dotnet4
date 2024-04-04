@@ -80,15 +80,15 @@ namespace PriceSignageSystem.Models.Repository
                         ZeroInvInTransit = (decimal)reader["ZeroInvInTransit"]
                     };
 
-                    if ((decimal)reader["O3RSDT"] == startDate)
-                    {
-                        if ((int)reader["TypeId"] == ReportConstants.Type.Regular)
-                        {
-                            record.O3SDT = (decimal)reader["O3RSDT"];
-                            record.O3EDT = (decimal)reader["O3REDT"];
-                        }
-                        else continue;
-                    }
+                    //if ((decimal)reader["O3RSDT"] == startDate)
+                    //{
+                    //    if ((int)reader["TypeId"] == ReportConstants.Type.Regular)
+                    //    {
+                    //        record.O3SDT = (decimal)reader["O3RSDT"];
+                    //        record.O3EDT = (decimal)reader["O3REDT"];
+                    //    }
+                    //    else continue;
+                    //}
 
                     data.Add(record);
                 }
