@@ -475,7 +475,13 @@
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Provider\UserRoleProvider.cs" />
-    <Compile Include="Reports\Dynamic_OneEightReport.cs">
+    <Compile Include="Reports\CrystalReports\Dynamic_JewelryReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Dynamic_JewelryReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\CrystalReports\Dynamic_OneEightReport.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Dynamic_OneEightReport.rpt</DependentUpon>
@@ -581,7 +587,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Reports\CrystalReports\" />
     <Folder Include="Views\AutoPrinting\" />
   </ItemGroup>
   <ItemGroup>
@@ -691,7 +696,11 @@
     <EmbeddedResource Include="Migrations\202402270633583_AddSizeId_ItemQueueTbl.resx">
       <DependentUpon>202402270633583_AddSizeId_ItemQueueTbl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Dynamic_OneEightReport.rpt">
+    <EmbeddedResource Include="Reports\CrystalReports\Dynamic_JewelryReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Dynamic_JewelryReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\CrystalReports\Dynamic_OneEightReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Dynamic_OneEightReport.cs</LastGenOutput>
     </EmbeddedResource>
