@@ -647,19 +647,20 @@
         function RenderGraph() {
 
             // 1st GRAPH
-            var totalSku = printedCount + unPrintedCount;
+            
+            var totalSku = printedCount + unPrintedCount + auditedCount;
 
             var text = document.querySelector('#graph .graph1Count').textContent.concat(totalSku);
             document.querySelector('#graph .graph1Count').textContent = text;
 
-            var printedPercentage = ((printedCount / totalSku) * 100).toFixed(2);
+            var printedPercentage = (((printedCount + auditedCount) / totalSku) * 100).toFixed(2);
             var UnprintedPercentage = ((notRequiredNCount / totalSku) * 100).toFixed(2);
             var notRequiredYPercentage = ((notRequiredYCount / totalSku) * 100).toFixed(2);
 
             var data1 = `<div class="graphcontainer">
                             <div class="graphrow">
                                 <div class="graphcolumn">
-                                    <label>Printed: </label> ${printedCount} - ${printedPercentage}%
+                                    <label>Printed: </label> ${printedCount + auditedCount} - ${printedPercentage}%
                                 </div>
                                 <div class="graphcolumn">
                                     <label>Not Required: </label> ${notRequiredYCount} - ${notRequiredYPercentage}%
@@ -672,7 +673,7 @@
 
             document.querySelector('#graph .graph1Data').innerHTML = data1;
             var data = {
-                "Printed": printedCount,
+                "Printed": printedCount + auditedCount,
                 "Not Required": notRequiredYCount,
                 "Unprinted": unPrintedCount - notRequiredYCount
             };
@@ -1379,7 +1380,7 @@
                  document.querySelector("#scanResultModal .sku").style.display = "none";
                  var details = `<b>SKU:</b> ${result.Sku} <br> <b>Description:</b> ${result.Desc} <br> <b>Current Price:</b> ${result.CurrentPrice} <br><br><br>`;
 
-                 var changesList = "<b>List of Changes:</b> <br> ";
+                 var changesList = "<label style='color:red;'>Changes On:</label> <br> ";
                  
                  if (result.NewBrand != null)
                      changesList += `- Brand<br>`;
@@ -1387,8 +1388,8 @@
                  if (result.NewModel != null)
                      changesList += `- Model <br>`;
 
-                 if (result.NewDesc != null)
-                     changesList += `- Description <br>`;
+                 if (result.NewDiv != null)
+                     changesList += `- Divisor <br>`;
 
                  if (result.NewUPC != null)
                      changesList += `- UPC <br>`;
@@ -1401,7 +1402,7 @@
 
                  var count = changesList.length;
 
-                 if (count <= 29)
+                 if (count <= 51)
                      changesList = "";
 
                  var printPreview = `<iframe src="@Url.Action("PreviewSignage", "Report")?sku=${result.Sku}#toolbar=0&navpanes=0&scrollbar=0&zoom=80" style="width: 100%; height: 600px;" frameborder="0"></iframe>` + changesList;

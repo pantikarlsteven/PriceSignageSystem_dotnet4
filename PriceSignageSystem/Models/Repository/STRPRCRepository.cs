@@ -1045,7 +1045,7 @@ namespace PriceSignageSystem.Models.Repository
 
         }
 
-        public void AddMultipleInventoryPrintingLog(List<decimal> o3skus, string user, int sizeId)
+        public void AddMultipleInventoryPrintingLog(List<decimal> o3skus, string user, int sizeId, string printedOn)
         {
             foreach (var item in o3skus)
             {
@@ -1054,7 +1054,8 @@ namespace PriceSignageSystem.Models.Repository
                     O3SKU = item,
                     PrintedBy = user,
                     DateCreated = DateTime.Now,
-                    SizeId = sizeId
+                    SizeId = sizeId,
+                    PrintedOn = printedOn
                 });
             }
             _db.SaveChanges();
@@ -1077,7 +1078,8 @@ namespace PriceSignageSystem.Models.Repository
                     Model = item.O3MODL,
                     Divisor = item.O3DIV,
                     SizeId = sizeId,
-                    TypeId = item.TypeId
+                    TypeId = item.TypeId,
+                    PrintedOn = "OnDemand - Queue"
                 });
             }
             _db.SaveChanges();
@@ -1114,7 +1116,8 @@ namespace PriceSignageSystem.Models.Repository
                 Model = model.O3MODL,
                 Divisor = model.O3DIV,
                 SizeId = model.SizeId,
-                TypeId = model.TypeId
+                TypeId = model.TypeId,
+                PrintedOn = model.PrintedOn
             };
             _db.InventoryPrintingLogs.Add(data);
             _db.SaveChanges();

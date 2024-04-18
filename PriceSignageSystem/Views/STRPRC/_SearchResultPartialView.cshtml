@@ -322,7 +322,8 @@
                     SizeId: 0,
                     TypeId: typeId.val(),
                     CategoryId: 0,
-                    O3REGU: regPrice.val()
+                    O3REGU: regPrice.val(),
+                    PrintedOn: "OnDemand"
                 };
 
                 reportDto.TypeId = $('#SelectedTypeId').val();
@@ -423,7 +424,9 @@
                                     O3FNAM: newBrand != origBrand ? newBrand : origBrand,
                                     O3MODL: newModel != origModel ? newModel : origModel,
                                     O3DIV: newDivisor != origDivisor ? newDivisor : origDivisor,
-                                    O3TUOM: newTuom != origTuom ? newTuom : origTuom
+                                    O3TUOM: newTuom != origTuom ? newTuom : origTuom,
+                                    PrintedOn: "OnDemand"
+
                                 };
 
                                 reportDto.O3FNAM = reportDto.O3FNAM.replace(/&/g, "\\u0026");

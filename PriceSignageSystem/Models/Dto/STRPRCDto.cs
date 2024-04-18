@@ -112,6 +112,7 @@ namespace PriceSignageSystem.Models.Dto
         public decimal ZeroInvDCOnHand { get; set; }
         public decimal ZeroInvInTransit { get; set; }
         public string IsNotRequired { get; set; }
+        public string PrintedOn { get; set; }
     }
 
 }

@@ -454,6 +454,10 @@
     <Compile Include="Migrations\202403200337494_AddInventoryLogsField_TypeId.designer.cs">
       <DependentUpon>202403200337494_AddInventoryLogsField_TypeId.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202404040334055_AddPrintedOnField_PrintingLogs.cs" />
+    <Compile Include="Migrations\202404040334055_AddPrintedOnField_PrintingLogs.designer.cs">
+      <DependentUpon>202404040334055_AddPrintedOnField_PrintingLogs.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AuditRemark.cs" />
     <Compile Include="Models\CompleteSTRPRC.cs" />
@@ -746,6 +750,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202403200337494_AddInventoryLogsField_TypeId.resx">
       <DependentUpon>202403200337494_AddInventoryLogsField_TypeId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202404040334055_AddPrintedOnField_PrintingLogs.resx">
+      <DependentUpon>202404040334055_AddPrintedOnField_PrintingLogs.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Dynamic_OneEightReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

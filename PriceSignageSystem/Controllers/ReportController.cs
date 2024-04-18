@@ -156,8 +156,8 @@ namespace PriceSignageSystem.Controllers
                 skuModel.O3REGU = model.O3REGU != 0 ? model.O3REGU : skuModel.O3REGU;
                 skuModel.O3POS = model.O3POS != 0 ? model.O3POS : skuModel.O3POS;
                 skuModel.O3IDSC = !string.IsNullOrEmpty(model.O3IDSC) ? model.O3IDSC : skuModel.O3IDSC;
-                skuModel.O3FNAM = !string.IsNullOrEmpty(model.O3FNAM) ? model.O3FNAM : skuModel.O3FNAM;
-                skuModel.O3MODL = !string.IsNullOrEmpty(model.O3MODL) ? model.O3MODL : skuModel.O3MODL;
+                skuModel.O3FNAM = model.O3FNAM;
+                skuModel.O3MODL = model.O3MODL;
                 skuModel.O3DIV = !string.IsNullOrEmpty(model.O3DIV) ? model.O3DIV : skuModel.O3DIV;
                 skuModel.O3TUOM = !string.IsNullOrEmpty(model.O3TUOM) ? model.O3TUOM : skuModel.O3TUOM;
 
@@ -235,7 +235,7 @@ namespace PriceSignageSystem.Controllers
         }
 
         [HttpGet]
-        public ActionResult PrintPreviewMultipleReport(string[] selectedIds, int sizeId)
+        public ActionResult PrintPreviewMultipleReport(string[] selectedIds, int sizeId, string printedOn)
         {
             //var isSuccess = true;
             try
@@ -327,7 +327,7 @@ namespace PriceSignageSystem.Controllers
                     #endregion
 
                     _sTRPRCRepository.UpdateMultipleStatus(o3skus);
-                    _sTRPRCRepository.AddMultipleInventoryPrintingLog(o3skus, User.Identity.Name, sizeId);
+                    _sTRPRCRepository.AddMultipleInventoryPrintingLog(o3skus, User.Identity.Name, sizeId, printedOn);
 
                     return File(pdfBytes, "application/pdf");
                 }
@@ -473,6 +473,8 @@ namespace PriceSignageSystem.Controllers
             skuModel.O3MODL = !string.IsNullOrEmpty(skuLog.O3MODL) ? skuLog.O3MODL : skuModel.O3MODL;
             skuModel.O3DIV = !string.IsNullOrEmpty(skuLog.O3DIV) ? skuLog.O3DIV : skuModel.O3DIV;
             skuModel.O3TUOM = !string.IsNullOrEmpty(skuLog.O3TUOM) ? skuLog.O3TUOM : skuModel.O3TUOM;
+            //skuModel.O3FNAM = string.IsNullOrEmpty(skuModel.O3FNAM) ? skuModel.O3FNAM : Regex.Unescape(skuModel.O3FNAM);
+            //skuModel.O3IDSC = string.IsNullOrEmpty(skuModel.O3IDSC) ? skuModel.O3IDSC : Regex.Unescape(skuModel.O3IDSC);
 
             var textToImage = new TextToImage();
             textToImage.GetImageWidth(skuModel.O3FNAM, skuModel.O3IDSC, skuLog.SizeId);

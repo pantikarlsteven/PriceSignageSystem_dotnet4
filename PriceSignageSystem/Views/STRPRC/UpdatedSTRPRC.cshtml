@@ -87,10 +87,10 @@
                         <a class="nav-link active" style="color:white;" data-toggle="tab" href="#" id="withInventory">With Inventory</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" style="color:white;" data-toggle="tab" href="#" id="withoutInventory">Without Inventory</a>
+                        <a class="nav-link" style="color:white;" data-toggle="tab" href="#" id="consignment">Consignment</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" style="color:white;" data-toggle="tab" href="#" id="consignment">Consignment</a>
+                        <a class="nav-link" style="color:white;" data-toggle="tab" href="#" id="withoutInventory">Without Inventory</a>
                     </li>
                 </ul>
 
@@ -420,7 +420,7 @@
                     for (var i = 0; i < data.length; i++) {
 
                         var dateString = data[i].DateUpdated;
-                        var formattedDate = moment(dateString).format("MMMM DD, YYYY");
+                        var formattedDate = moment(dateString).format("MM-DD-YYYY");
                         data[i].DateUpdated = formattedDate;
                     }
 
@@ -493,8 +493,8 @@
                             $('#printSelectedButton').click(function () {
                                 $("#loadingContainer").show();
                                 var sizeId = $('#sizeDropdown').val();
-
-                                $("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "");
+                                var printedOn = "SKU Updates - Multiple";
+                                $("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "&printedOn=" + printedOn + "");
 
                                 var reportIframe = document.getElementById("reportIframe");
                                 if (reportIframe) {
@@ -687,7 +687,7 @@
                             response.O3LONG = "";
                             response.O3FNAM = "";
                             response.O3MODL = "";
-
+                            response.PrintedOn = "SKU Updates - Single";
                             $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(response));
                             var reportIframe = document.getElementById("reportIframe");
                             if (reportIframe) {

@@ -280,6 +280,7 @@
         var tableNewExemption = null;
         var tableExcemption = null;
         var tableConsignment = null;
+        var printedOn = "PCA - Multiple";
 
         function formatDateToYYMMDD() {
             const date = new Date();
@@ -417,9 +418,9 @@
                 data: data,
                 columnDefs: [
                     { targets: [0, 1, 6, 7, 8, 14, 17], orderable: false },
-                    { targets: [3], visible: false },
+                    //{ targets: [3], visible: false },
                     {
-                        "targets": 6, // column "O3REG"
+                        "targets": 7, // column "O3REG"
                         "render": function (data, type, row, meta) {
                             // Check if O3REG < O3POS, then update O3REG
                             if (row['O3REG'] < row['O3POS']) {
@@ -430,7 +431,7 @@
                         }
                     },
                     {
-                        "targets": 10, // TYPE COLUMN
+                        "targets": 11, // TYPE COLUMN
                         "render": function (data, type, row, meta) {
 
                             if (row['O3REG'] < row['O3POS']) {
@@ -701,7 +702,7 @@
                         $("#loadingContainer").show();
                         var sizeId = $('#sizeDropdown').val();
 
-                        $("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "");
+                        $("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "&printedOn=" + printedOn + "");
                         var reportIframe = document.getElementById("reportIframe");
                         if (reportIframe) {
                             $('.rowCheckboxWith:checked').each(function () {
@@ -743,7 +744,7 @@
                 pageLength: -1,
                 data: data,
                 columnDefs: [
-                    { targets: [3,5,6,7,8,20], visible: false },
+                    { targets: [/*3,*/5,6,7,8,20], visible: false },
                     //{ targets: [4,5], visible: false },
                     { targets: [0, 1, 10,11,12, 18], orderable: false },
                 ],
@@ -846,45 +847,52 @@
                     $select.append($All, $negativeInventory, $zeroInventory, $saveZero, $negativeSave);
 
                     $select.on('change', function () {
-                                                                   // 5-IsExemp | 20-neg save
-                        tableNewExemption.column(6).visible(true); // ON HAND
-                        tableNewExemption.column(7).visible(false); // DC ONHAND FOR ZERO INV
-                        tableNewExemption.column(8).visible(false); // IN TRANSIT FOR ZERO INV
 
-                        // Log the selected value to the console
-                        if ($select.val() == "negative") {
-                            tableNewExemption.column(6).search("^-\\d", true, false).draw();
-                            tableNewExemption.column(5).search("").draw(); 
-                            tableNewExemption.column(20).search("N", true, false).draw();
+                        $('#loadingContainer').show();
+                        setTimeout(function () {
+                                                                        // 5-IsExemp | 20-neg save
+                            tableNewExemption.column(6).visible(true); // ON HAND
+                            tableNewExemption.column(7).visible(false); // DC ONHAND FOR ZERO INV
+                            tableNewExemption.column(8).visible(false); // IN TRANSIT FOR ZERO INV
 
-                        }
-                        else if ($select.val() == "zero") {
-                            tableNewExemption.column(6).search("^0$",true,false).draw();
-                            tableNewExemption.column(5).search("").draw();
-                            tableNewExemption.column(20).search("N", true, false).draw();
+                            // Log the selected value to the console
+                            if ($select.val() == "negative") {
+                                tableNewExemption.column(6).search("^-\\d", true, false).draw();
+                                tableNewExemption.column(5).search("").draw();
+                                tableNewExemption.column(20).search("N", true, false).draw();
 
-                            tableNewExemption.column(6).visible(false);
-                            tableNewExemption.column(7).visible(true);
-                            tableNewExemption.column(8).visible(true);
-                        }
-                        else if ($select.val() == "saveZero") {
-                            tableNewExemption.column(6).search("").draw();
-                            tableNewExemption.column(5).search("Y", true, false).draw();
-                            tableNewExemption.column(20).search("N", true, false).draw();
-                        }
-                        else if ($select.val() == "negativeSave") {
-                            tableNewExemption.column(6).search("").draw();
-                            tableNewExemption.column(5).search("Y", true, false).draw();
-                            tableNewExemption.column(20).search("Y", true, false).draw();
+                            }
+                            else if ($select.val() == "zero") {
 
-                        }
-                        else {
-                            tableNewExemption.column(6).search("").draw();
-                            tableNewExemption.column(5).search("").draw();
-                            tableNewExemption.column(20).search("").draw();
-                        }
+                                tableNewExemption.column(6).search("^0$", true, false).draw();
+                                tableNewExemption.column(5).search("").draw();
+                                tableNewExemption.column(20).search("N", true, false).draw();
 
-                        //console.log(data);
+                                tableNewExemption.column(6).visible(false);
+                                tableNewExemption.column(7).visible(true);
+                                tableNewExemption.column(8).visible(true);
+                            }
+                            else if ($select.val() == "saveZero") {
+                                tableNewExemption.column(6).search("").draw();
+                                tableNewExemption.column(5).search("Y", true, false).draw();
+                                tableNewExemption.column(20).search("N", true, false).draw();
+                            }
+                            else if ($select.val() == "negativeSave") {
+                                tableNewExemption.column(6).search("").draw();
+                                tableNewExemption.column(5).search("Y", true, false).draw();
+                                tableNewExemption.column(20).search("Y", true, false).draw();
+
+                            }
+                            else {
+                                tableNewExemption.column(6).search("").draw();
+                                tableNewExemption.column(5).search("").draw();
+                                tableNewExemption.column(20).search("").draw();
+                            }
+
+                            $("#loadingContainer").hide();
+
+                        }, 300);
+                                        
                     });
 
                     var dataTableWrapper = $('#new-exemption-table').closest('.dataTables_wrapper');
@@ -1069,8 +1077,7 @@
                     $('#printSelectedButtonNewExemption').click(function () {
                         $("#loadingContainer").show();
                         var sizeId = $('#sizeDropdown').val();
-
-                        $("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "");
+                        $("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "&printedOn=" + printedOn + "");
                         var reportIframe = document.getElementById("reportIframe");
                         if (reportIframe) {
                             $('.rowCheckboxWith:checked').each(function () {
@@ -1090,35 +1097,7 @@
                         }
                         $('#modalView').modal('hide');
                         $('input[type="checkbox"]').prop('checked', false);
-
-                        //var url = "/Report/PrintPreviewMultipleReport?selectedIds=" + encodeURIComponent(selectedRows.join(',')) + "&sizeId=" + sizeId + "";
-                        //$.ajax({
-                        //    url: url,
-                        //    type: 'GET',
-                        //    data: { selectedIds: selectedRows, sizeId: sizeId },
-                        //    success: function (data) {
-                        //        if (!data)
-                        //            alert("Error in printing.");
-                        //        else {
-                        //            $('.rowCheckboxNewExemption:checked').each(function () {
-                        //                var row = $(this).closest('tr');
-                        //                var table = row.closest('table');
-                        //                var rowIndex = table.DataTable().row(row).index();
-                        //                var specificRow = $('#new-exemption-table tbody tr:eq(' + rowIndex + ')');
-                        //                specificRow.find('td:eq(2)').text("Yes");
-                        //                specificRow.find('td:eq(2)').css('color', 'green');
-
-                        //            });
-                        //        }
-
-                        //    }
-                        //});
-
-                        //$("#loadingContainer").hide();
-                        //$('#modalView').modal('hide');
-                        //$('input[type="checkbox"]').prop('checked', false);
                     });
-                    //End for print preview multiple report
 
                 } else {
                     alert('Please select items to print.');
@@ -1139,9 +1118,9 @@
                 data: data,
                 columnDefs: [
                     { targets: [0, 1, 6, 7, 8, 14, 17], orderable: false },
-                    { targets: [3], visible: false },
+                    //{ targets: [3], visible: false },
                     {
-                        "targets": 6, // column "O3REG"
+                        "targets": 7, // column "O3REG"
                         "render": function (data, type, row, meta) {
                             // Check if O3REG < O3POS, then update O3REG
                             if (row['O3REG'] < row['O3POS']) {
@@ -1152,7 +1131,7 @@
                         }
                     },
                     {
-                        "targets": 10, // TYPE COLUMN
+                        "targets": 11, // TYPE COLUMN
                         "render": function (data, type, row, meta) {
 
                             if (row['O3REG'] < row['O3POS']) {
@@ -1423,7 +1402,7 @@
                         $("#loadingContainer").show();
                         var sizeId = $('#sizeDropdown').val();
 
-                        $("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "");
+                        $("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "&printedOn=" + printedOn + "");
                         var reportIframe = document.getElementById("reportIframe");
                         if (reportIframe) {
                             $('.rowCheckboxCo:checked').each(function () {
@@ -1864,6 +1843,7 @@
                             response.O3LONG = "";
                             response.O3FNAM = "";
                             response.O3MODL = "";
+                            response.PrintedOn = "PCA - Single";
                             $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(response));
                             var reportIframe = document.getElementById("reportIframe");
                             if (reportIframe) {
@@ -2004,6 +1984,7 @@
                         response.O3LONG = "";
                         response.O3FNAM = "";
                         response.O3MODL = "";
+                        response.PrintedOn = "PCA - Single";
                         $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(response));
                         var reportIframe = document.getElementById("reportIframe");
                         if (reportIframe) {
@@ -2153,6 +2134,7 @@
                             response.O3LONG = "";
                             response.O3FNAM = "";
                             response.O3MODL = "";
+                            response.PrintedOn = "PCA - Single";
                             $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(response));
                             var reportIframe = document.getElementById("reportIframe");
                             if (reportIframe) {

@@ -21,5 +21,6 @@ namespace PriceSignageSystem.Models.Dto
         public string NewDept { get; set; }
         public string NewFlag { get; set; }
         public string NewDesc { get; set; }
+        public string NewDiv { get; set; }
     }
 }

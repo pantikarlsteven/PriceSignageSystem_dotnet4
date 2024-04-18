@@ -135,12 +135,53 @@ namespace PriceSignageSystem.Models.Repository
 
                 if (data != null)
                 {
+                    
+                    var printedSkuUpdates = _db.Database.SqlQuery<AuditDto>("EXEC sp_GetSkuUpdates").ToList();
+                    var skuUpdate = printedSkuUpdates.Where(a => a.O3SKU == upc.INUMBR).ToList();
+                    var logs = _db.InventoryPrintingLogs.Where(a => a.O3SKU == data.Sku).OrderByDescending(o => o.DateCreated).FirstOrDefault();
+
                     result.Sku = data.Sku;
-                    result.CurrentPrice = data.CurrentPrice;
-                    result.Desc = data.Desc;
                     result.DoesItemBelongToCurrentPCA = true;
                     result.IsPrinted = data.IsPrinted && data.IsPrinted;
                     result.IsAudited = data.IsAudited;
+
+                    if (skuUpdate.Count > 0) // check if sku updates
+                    {
+                        foreach (var item in skuUpdate)
+                        {
+                            if (item.ColumnName == "O3UPC")
+                                result.NewUPC = item.ToValue;
+
+                            else if (item.ColumnName == "O3FNAM")
+                                result.NewBrand = item.ToValue;
+
+                            else if (item.ColumnName == "O3MODL")
+                                result.NewModel = item.ToValue;
+
+                            else if (item.ColumnName == "O3DEPT")
+                                result.NewDept = item.ToValue;
+
+                            else if (item.ColumnName == "O3TRB3")
+                                result.NewFlag = item.ToValue;
+                        }
+                    }
+                    else if (logs == null) // Check if edited
+                    {
+                        
+                        result.CurrentPrice = data.CurrentPrice;
+                        result.Desc = data.Desc;
+                       
+                    }
+                    else
+                    {
+                        var originalData = _db.STRPRCs.Where(a => a.O3SKU == data.Sku).FirstOrDefault();
+                        logs.Model = logs.Model == "-" ? "" : logs.Model;
+                        result.NewBrand = originalData.O3FNAM != logs.Brand && logs.Brand != "" ? logs.Brand : null;
+                        result.NewModel = originalData.O3MODL != logs.Model && logs.Model != "" ? logs.Model : null;
+                        result.NewDiv = originalData.O3DIV != logs.Divisor ? logs.Divisor : null;
+
+                    }
+                   
                 }
                 else
                 {
@@ -167,8 +208,8 @@ namespace PriceSignageSystem.Models.Repository
                             else if (item.ColumnName == "O3MODL")
                                 result.NewModel = item.ToValue;
 
-                            else if (item.ColumnName == "O3IDSC")
-                                result.NewDesc = item.ToValue;
+                            //else if (item.ColumnName == "O3IDSC")
+                            //    result.NewDesc = item.ToValue;
 
                             else if (item.ColumnName == "O3DEPT")
                                 result.NewDept = item.ToValue;
