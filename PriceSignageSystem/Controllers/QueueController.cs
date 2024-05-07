@@ -109,6 +109,7 @@ namespace PriceSignageSystem.Controllers
                     item.IsSLBrand = textToImage.IsSLBrand;
                     item.IsSLDescription = textToImage.IsSLDescription;
                     item.IsBiggerFont = textToImage.IsBiggerFont;
+                    item.OneEightDescTotalLines = textToImage.OneEightDescTotalLines;
                     item.O3SDSC = _sTRPRCRepository.GetSubClassDescription(item.O3SKU);
                     item.O3REGU = item.qRegularPrice != 0 ? item.qRegularPrice : item.O3REGU;
                     item.O3POS = item.qCurrentPrice != 0 ? item.qCurrentPrice : item.O3POS;

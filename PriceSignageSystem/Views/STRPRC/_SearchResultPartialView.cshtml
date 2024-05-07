@@ -302,7 +302,7 @@
         });
 
         $(".newPrint").click(function () {
-
+            debugger
             var isCurrDisabled = $('#currPrice').prop('disabled');
 
             if (isCurrDisabled && '@Model.IsExemp' != "Y") {
@@ -394,7 +394,7 @@
                         });
 
                         $('#editPrintBtn').click(function () {
-
+                            
                             var selectedRemarks= $('#remarksDropdown').val();
                             var newShortDesc = $('#shortDesc').val();
                             var newBrand = $('#brand').val();

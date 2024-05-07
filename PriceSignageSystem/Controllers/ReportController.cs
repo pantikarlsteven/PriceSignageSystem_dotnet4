@@ -134,6 +134,7 @@ namespace PriceSignageSystem.Controllers
                 ReportDocument report = new ReportDocument();
                 var path = string.Empty;
 
+
                 switch (model.SizeId)
                 {
                     case ReportConstants.Size.Whole:
@@ -150,23 +151,31 @@ namespace PriceSignageSystem.Controllers
                 report.Load(path);
                 var skuModel = _sTRPRCRepository.GetReportData(model.O3SKU);
                 skuModel.TypeId = model.TypeId;
+                //skuModel.TypeId = 2;
                 skuModel.CategoryId = model.CategoryId;
                 skuModel.UserName = User.Identity.Name;
                 skuModel.O3SDSC = _sTRPRCRepository.GetSubClassDescription(model.O3SKU);
                 skuModel.O3REGU = model.O3REGU != 0 ? model.O3REGU : skuModel.O3REGU;
+                //skuModel.O3POS = skuModel.O3REGU - 99;
                 skuModel.O3POS = model.O3POS != 0 ? model.O3POS : skuModel.O3POS;
                 skuModel.O3IDSC = !string.IsNullOrEmpty(model.O3IDSC) ? model.O3IDSC : skuModel.O3IDSC;
-                skuModel.O3FNAM = model.O3FNAM;
-                skuModel.O3MODL = model.O3MODL;
+                skuModel.O3FNAM = !string.IsNullOrEmpty(model.O3FNAM) ? model.O3FNAM : skuModel.O3FNAM;
+                skuModel.O3MODL = !string.IsNullOrEmpty(model.O3MODL) ? model.O3MODL : skuModel.O3MODL;
                 skuModel.O3DIV = !string.IsNullOrEmpty(model.O3DIV) ? model.O3DIV : skuModel.O3DIV;
                 skuModel.O3TUOM = !string.IsNullOrEmpty(model.O3TUOM) ? model.O3TUOM : skuModel.O3TUOM;
 
                 var textToImage = new TextToImage();
+                //skuModel.O3FNAM = "HAMALTON BEACH";
+                //skuModel.O3IDSC = "COMMERCIAL";
                 textToImage.GetImageWidth(skuModel.O3FNAM, skuModel.O3IDSC, model.SizeId);
+                //skuModel.IsSLBrand = true;
                 skuModel.IsSLBrand = textToImage.IsSLBrand;
                 skuModel.IsSLDescription = textToImage.IsSLDescription;
                 skuModel.IsBiggerFont = textToImage.IsBiggerFont;
-
+                skuModel.OneEightDescTotalLines = textToImage.OneEightDescTotalLines;
+                if (skuModel.IsSLBrand && skuModel.IsSLDescription)
+                    skuModel.IsSingleLines = true;
+              
                 report.SetDataSource(ConversionHelper.ConvertObjectToDataTable(skuModel));
                 Stream stream = report.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
                 var pdfBytes = new byte[stream.Length];

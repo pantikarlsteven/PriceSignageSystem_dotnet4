@@ -52,7 +52,15 @@ namespace PriceSignageSystem.Controllers
                     if (existingItem != null)
                         auditList.PrintedList.Remove(existingItem);
 
+
+                    var auditData = _auditRepo.CheckIfExisting(updatedItem.O3SKU);
+
+                        updatedItem.IsWrongSign = auditData.IsWrongSign;
+                        updatedItem.IsNotRequired = auditData.IsNotRequired;
+                
+
                     auditList.PrintedList.Add(updatedItem);
+
 
                 }
 
@@ -105,21 +113,41 @@ namespace PriceSignageSystem.Controllers
 
             foreach (var item in auditList.PrintedList)
             {
-                item.TypeName = item.TypeId == 2 ? "Save"
+                if(item.O3SKU == 81154)
+                {
+                    item.TypeName = item.TypeId == 2 ? "Save"
                                 : item.TypeId == 1 ? "Regular"
                                 : "Save";
-                item.SizeName = item.SizeId == 1 ? "Whole"
-                                : item.SizeId == 2 ? "1/8"
-                                : item.SizeId == 3 ? "Jewelry"
-                                : "Whole";
-                item.CategoryName = item.CategoryId == 1 ? "Appliance"
-                                    : item.CategoryId == 2 ? "Non-Appliance"
-                                    : "Non-Appliance";
-                item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
-                item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
-                item.IsExemp = item.IsExemp == "Y" || item.HasInventory == "" ? "Yes" : "No";
-                item.IsWrongSign = item.IsWrongSign == "Y" ? "Yes" : "No";
-
+                    item.SizeName = item.SizeId == 1 ? "Whole"
+                                    : item.SizeId == 2 ? "1/8"
+                                    : item.SizeId == 3 ? "Jewelry"
+                                    : "Whole";
+                    item.CategoryName = item.CategoryId == 1 ? "Appliance"
+                                        : item.CategoryId == 2 ? "Non-Appliance"
+                                        : "Non-Appliance";
+                    item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
+                    item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
+                    item.IsExemp = item.IsExemp == "Y" || item.HasInventory == "" ? "Yes" : "No";
+                    item.IsWrongSign = item.IsWrongSign == "Y" ? "Yes" : "No";
+                }
+                else
+                {
+                    item.TypeName = item.TypeId == 2 ? "Save"
+                               : item.TypeId == 1 ? "Regular"
+                               : "Save";
+                    item.SizeName = item.SizeId == 1 ? "Whole"
+                                    : item.SizeId == 2 ? "1/8"
+                                    : item.SizeId == 3 ? "Jewelry"
+                                    : "Whole";
+                    item.CategoryName = item.CategoryId == 1 ? "Appliance"
+                                        : item.CategoryId == 2 ? "Non-Appliance"
+                                        : "Non-Appliance";
+                    item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
+                    item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
+                    item.IsExemp = item.IsExemp == "Y" || item.HasInventory == "" ? "Yes" : "No";
+                    item.IsWrongSign = item.IsWrongSign == "Y" ? "Yes" : "No";
+                }
+               
             }
 
             foreach (var item in auditList.NotPrintedList)

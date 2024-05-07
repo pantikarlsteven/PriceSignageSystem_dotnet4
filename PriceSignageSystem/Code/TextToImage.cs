@@ -12,6 +12,7 @@ namespace PriceSignageSystem.Code
         public bool IsSLBrand { get; set; }
         public bool IsSLDescription { get; set; }
         public bool IsBiggerFont { get; set; } = true;
+        public int OneEightDescTotalLines { get; set; }
         //Note: This code will generate an image from text and will verify the width of an
         //image if the brand name and description are single line or double line depending on the report size.
         //Whole: Brand Single Line Max Width=64.63975, Description Single Line Max Width=63.692482
@@ -23,23 +24,24 @@ namespace PriceSignageSystem.Code
 
             var bnTotalLines = GetBrandAndDescriptionTotalLines(brand.Split(' '));
             var dnTotalLines = GetBrandAndDescriptionTotalLines(desc.Split(' '));
+            OneEightDescTotalLines = GetDescriptionTotalLinesOneEight(desc.Split(' '));
 
             if ((bnTotalLines + dnTotalLines) > 4)
                 IsBiggerFont = false;
 
             //Default is Whole
             //sizeId = 1;
-            Font brandFont = new Font("Arial", (float)4.375);
-            Font descFont = new Font("Arial", (float)4.375);
-            var brandMaxWidth = 62.0437164;
-            var descMaxWidth = 62.0437164;
+            Font brandFont = new Font("Arial", (float)4.688);
+            Font descFont = new Font("Arial", (float)4.688);
+            var brandMaxWidth = 57.88784;
+            var descMaxWidth = 57.88784;
             switch (sizeId)
             {
                 case ReportConstants.Size.OneEight:
-                    brandFont = new Font("Calibri", (float)1.4375, FontStyle.Bold);
-                    descFont = new Font("Calibri", (float)1.4375, FontStyle.Bold);
-                    brandMaxWidth = 17.19166;
-                    descMaxWidth = 17.19166;
+                    brandFont = new Font("Calibri", (float)1.875, FontStyle.Bold);
+                    descFont = new Font("Calibri", (float)1.875, FontStyle.Bold);
+                    brandMaxWidth = 20.5855275;
+                    descMaxWidth = 18.5982761;
                     break;
                 case ReportConstants.Size.Jewelry:
                     brandFont = new Font("Calibri", (float)1.125, FontStyle.Bold );
@@ -75,8 +77,44 @@ namespace PriceSignageSystem.Code
                 else
                     lines = word;
 
-                var brandMaxWidth = 62.0437164;
-                Font brandFont = new Font("Arial", (float)4.375);
+                var brandMaxWidth = 57.88784;
+                Font brandFont = new Font("Arial", (float)4.688);
+                Image fakeImage = new Bitmap(1, 1);
+                Graphics graphics = Graphics.FromImage(fakeImage);
+                SizeF brandSize = graphics.MeasureString(lines, brandFont);
+                var bsWidth = float.Parse(brandSize.Width.ToString("F5"));
+                var bmWidth = float.Parse(brandMaxWidth.ToString("F5"));
+
+                if (bsWidth > bmWidth)
+                {
+                    totalLines++;
+                    lines = word;
+                }
+
+            }
+
+            if (lines.Length > 0)
+                totalLines++;
+
+            return totalLines;
+        }
+
+        public int GetDescriptionTotalLinesOneEight(string[] words)
+        {
+            var totalLines = 0;
+            var lines = "";
+
+            // Iterate through the words and print them
+            foreach (string word in words)
+            {
+
+                if (lines.Length > 0)
+                    lines += " " + word;
+                else
+                    lines = word;
+
+                var brandMaxWidth = 18.5982761;
+                Font brandFont = new Font("Calibri", (float)1.875);
                 Image fakeImage = new Bitmap(1, 1);
                 Graphics graphics = Graphics.FromImage(fakeImage);
                 SizeF brandSize = graphics.MeasureString(lines, brandFont);

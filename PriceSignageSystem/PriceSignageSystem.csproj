@@ -472,6 +472,7 @@
     <Compile Include="Models\Dto\CentralizedSTRPRCDto.cs" />
     <Compile Include="Models\Dto\AuditDto.cs" />
     <Compile Include="Models\Dto\ScanResultDto.cs" />
+    <Compile Include="Models\Dto\SkuUpdatesAuditDto.cs" />
     <Compile Include="Models\Dto\STRPRCDto.cs" />
     <Compile Include="Models\Dto\STRPRCLogDto.cs" />
     <Compile Include="Models\Dto\UserDto.cs" />

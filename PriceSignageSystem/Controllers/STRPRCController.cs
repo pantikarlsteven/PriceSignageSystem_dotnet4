@@ -516,7 +516,7 @@ namespace PriceSignageSystem.Controllers
                 item.CategoryName = item.CategoryId == 1 ? "Appliance"
                                     : item.CategoryId == 2 ? "Non-Appliance"
                                     : "Non-Appliance";
-                item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
+                item.IsPrinted = item.IsPrinted == "True" || item.IsPrinted == "Yes" ? "Yes" : "No";
                 item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
                 item.IsNotRequired = item.IsNotRequired == "Y" ? "Yes" : "No";
 
@@ -536,7 +536,7 @@ namespace PriceSignageSystem.Controllers
                     item.CategoryName = item.CategoryId == 1 ? "Appliance"
                                         : item.CategoryId == 2 ? "Non-Appliance"
                                         : "Non-Appliance";
-                    item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
+                    item.IsPrinted = item.IsPrinted == "True" || item.IsPrinted == "Yes" ? "Yes" : "No";
                     item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
                     item.IsNotRequired = item.IsNotRequired == "Y" ? "Yes" : "No";
 
@@ -553,7 +553,7 @@ namespace PriceSignageSystem.Controllers
                     item.CategoryName = item.CategoryId == 1 ? "Appliance"
                                         : item.CategoryId == 2 ? "Non-Appliance"
                                         : "Non-Appliance";
-                    item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
+                    item.IsPrinted = item.IsPrinted == "True" || item.IsPrinted == "Yes" ? "Yes" : "No";
                     item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
                     item.IsNotRequired = item.IsNotRequired == "Y" ? "Yes" : "No";
 

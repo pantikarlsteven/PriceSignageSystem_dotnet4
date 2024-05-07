@@ -327,7 +327,7 @@
                     </div>
                     <div class="yesOrNoBtns modal-footer d-flex justify-content-between">
                         <button type="button" class="btn btn-primary" onclick="notRequireTagging()">Not Required</button>
-                        <button type="button" class="btn btn-success" onclick="notRequireTagging()">Required</button>
+                        <button type="button" class="btn btn-success" onclick="RequireTagging()">Required</button>
                     </div>
                 </div>
             </div>
@@ -1400,6 +1400,9 @@
                  if (result.NewFlag != null)
                      changesList += `- Flag <br>`;
 
+                 if (result.NewTuom != null)
+                     changesList += `- UOM <br>`;
+
                  var count = changesList.length;
 
                  if (count <= 51)
@@ -1485,16 +1488,31 @@
     function postSku() {
         scanResultModalContainer.style.display = 'none';
         var sku = document.querySelector("#scanResultModal .sku").textContent;
+        var selectedRemarks = 'Matched';
+        //$.ajax({
+        //    url: '/Audit/Post',
+        //    type: 'POST',
+        //    data: { sku: sku },
+        //    success: function (result) {
+        //        if (result) {
+        //            successModalContainer.style.display = 'block';
+        //        }
+        //        document.querySelector("#scanResultModal .sku").textContent = "";
+        //    },
+        //    error: function () {
+        //    }
+        //});
 
         $.ajax({
-            url: '/Audit/Post',
+            url: '/Audit/PostWithRemarks',
             type: 'POST',
-            data: { sku: sku },
+            data: { sku: sku, remarks: selectedRemarks },
             success: function (result) {
                 if (result) {
                     successModalContainer.style.display = 'block';
                 }
                 document.querySelector("#scanResultModal .sku").textContent = "";
+
             },
             error: function () {
             }
@@ -1509,14 +1527,36 @@
 
     function notRequireTagging() {
         var sku = document.querySelector("#UnprintedModal .sku").textContent;
-        var isChecked = document.querySelector("#UnprintedModal .isChecked").textContent;
+        //var isChecked = document.querySelector("#UnprintedModal .isChecked").textContent;
+        var checkbox = $(`input[data-id="${sku}"]`);
+        checkbox.prop('checked', true);
 
         $.ajax({
             url: '/Audit/NotRequireTagging',
             type: 'POST',
-            data: { sku: sku, isChecked: isChecked },
+            data: { sku: sku, isChecked: "true" },
             success: function (result) {
                 if(result == 1)
+                    unprintedModal.style.display = 'none';
+                document.querySelector("#UnprintedModal .sku").textContent = "";
+            },
+            error: function () {
+            }
+        });
+    }
+
+    function RequireTagging() {
+        var sku = document.querySelector("#UnprintedModal .sku").textContent;
+        //var isChecked = document.querySelector("#UnprintedModal .isChecked").textContent;
+        var checkbox = $(`input[data-id="${sku}"]`);
+        checkbox.prop('checked', false);
+
+        $.ajax({
+            url: '/Audit/NotRequireTagging',
+            type: 'POST',
+            data: { sku: sku, isChecked: "false" },
+            success: function (result) {
+                if (result == 1)
                     unprintedModal.style.display = 'none';
                 document.querySelector("#UnprintedModal .sku").textContent = "";
             },

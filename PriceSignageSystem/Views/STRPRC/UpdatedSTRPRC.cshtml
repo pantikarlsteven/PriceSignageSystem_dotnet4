@@ -420,8 +420,18 @@
                     for (var i = 0; i < data.length; i++) {
 
                         var dateString = data[i].DateUpdated;
-                        var formattedDate = moment(dateString).format("MM-DD-YYYY");
+                        var date = new Date(dateString);
+
+                        var year = date.getFullYear().toString().substr(2);
+                        var month = ('0' + (date.getMonth() + 1)).slice(-2);
+                        var day = ('0' + date.getDate()).slice(-2);
+
+                        var formattedDate = year + month + day;
+
                         data[i].DateUpdated = formattedDate;
+
+                        //var formattedDate = moment(dateString).format("MM-DD-YYYY");
+                        //data[i].DateUpdated = formattedDate;
                     }
 
                     GetDataTable(data.filter(row => row.Inv == 'Y' && (row.O3TYPE != 'CO' || row.O3TYPE == null)));

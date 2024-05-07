@@ -163,6 +163,9 @@ namespace PriceSignageSystem.Models.Repository
 
                             else if (item.ColumnName == "O3TRB3")
                                 result.NewFlag = item.ToValue;
+
+                            else if (item.ColumnName == "O3TUOM")
+                                result.NewTuom = item.ToValue;
                         }
                     }
                     else if (logs == null) // Check if edited
@@ -216,6 +219,9 @@ namespace PriceSignageSystem.Models.Repository
 
                             else if (item.ColumnName == "O3TRB3")
                                 result.NewFlag = item.ToValue;
+
+                            else if (item.ColumnName == "O3TUOM")
+                                result.NewTuom = item.ToValue;
                         }
                     }
                     else
@@ -332,6 +338,15 @@ namespace PriceSignageSystem.Models.Repository
             {
 
             }
+
+            return result;
+        }
+
+        public SkuUpdatesAuditDto CheckIfExisting(decimal sku)
+        {
+            var result = _db.Database.SqlQuery<SkuUpdatesAuditDto>("EXEC sp_CheckIfExistingInAudit @Sku",
+                new SqlParameter("@Sku", sku))
+                .FirstOrDefault();
 
             return result;
         }
