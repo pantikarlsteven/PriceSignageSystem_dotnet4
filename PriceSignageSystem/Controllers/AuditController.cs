@@ -73,7 +73,10 @@ namespace PriceSignageSystem.Controllers
                         if (auditData.IsAudited == "Y")
                         {
                             auditList.PrintedList.RemoveAll(a => a.O3SKU == item.O3SKU);
-                            auditList.AuditedList.Add(item);
+
+                            if (item.O3SKU != auditData.O3SKU)
+                                auditList.AuditedList.Add(item);
+
                         }
 
                     }

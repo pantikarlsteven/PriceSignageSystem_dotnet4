@@ -38,10 +38,10 @@ namespace PriceSignageSystem.Code
             switch (sizeId)
             {
                 case ReportConstants.Size.OneEight:
-                    brandFont = new Font("Calibri", (float)1.875, FontStyle.Bold);
-                    descFont = new Font("Calibri", (float)1.875, FontStyle.Bold);
-                    brandMaxWidth = 20.5855275;
-                    descMaxWidth = 18.5982761;
+                    brandFont = new Font("Calibri", (float)1.625, FontStyle.Bold);
+                    descFont = new Font("Calibri", (float)1.625, FontStyle.Bold);
+                    brandMaxWidth = 18.5982762;
+                    descMaxWidth = 18.5982762;
                     break;
                 case ReportConstants.Size.Jewelry:
                     brandFont = new Font("Calibri", (float)1.125, FontStyle.Bold );
@@ -113,8 +113,8 @@ namespace PriceSignageSystem.Code
                 else
                     lines = word;
 
-                var brandMaxWidth = 18.5982761;
-                Font brandFont = new Font("Calibri", (float)1.875);
+                var brandMaxWidth = 18.5982762;
+                Font brandFont = new Font("Calibri", (float)1.625);
                 Image fakeImage = new Bitmap(1, 1);
                 Graphics graphics = Graphics.FromImage(fakeImage);
                 SizeF brandSize = graphics.MeasureString(lines, brandFont);

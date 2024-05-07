@@ -261,6 +261,9 @@ namespace PriceSignageSystem.Controllers
                         item.IsSLBrand = textToImage.IsSLBrand;
                         item.IsSLDescription = textToImage.IsSLDescription;
                         item.IsBiggerFont = textToImage.IsBiggerFont;
+                        item.OneEightDescTotalLines = textToImage.OneEightDescTotalLines;
+                        if (item.IsSLBrand && item.IsSLDescription)
+                            item.IsSingleLines = true;
                         item.O3SDSC = _sTRPRCRepository.GetSubClassDescription(item.O3SKU);
 
                         if (item.TypeId == 2 && item.O3POSU > item.O3REG)
@@ -490,6 +493,9 @@ namespace PriceSignageSystem.Controllers
             skuModel.IsSLBrand = textToImage.IsSLBrand;
             skuModel.IsSLDescription = textToImage.IsSLDescription;
             skuModel.IsBiggerFont = textToImage.IsBiggerFont;
+            skuModel.OneEightDescTotalLines = textToImage.OneEightDescTotalLines;
+            if (skuModel.IsSLBrand && skuModel.IsSLDescription)
+                skuModel.IsSingleLines = true;
 
             report.SetDataSource(ConversionHelper.ConvertObjectToDataTable(skuModel));
             Stream stream = report.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
