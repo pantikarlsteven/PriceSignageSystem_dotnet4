@@ -444,6 +444,7 @@ namespace PriceSignageSystem.Models.Repository
                             CategoryId = (int)reader["CategoryId"],
                             DepartmentName = reader["DPTNAM"].ToString(),
                             IsReverted = reader["O3FLAG1"].ToString(),
+                            IsCCReverted = reader["IsCCReverted"].ToString(),
                             HasInventory = reader["INV2"].ToString(),
                             IsExemp = reader["IsExemp"].ToString(),
                             NegativeSave = reader["NegativeSave"].ToString(),
@@ -472,7 +473,7 @@ namespace PriceSignageSystem.Models.Repository
                     connection.Close();
                 }
 
-                var exemptions = data.Where(w => w.IsExemp == "Y").ToList();
+                var exemptions = data.Where(w => w.IsExemp == "Y" || w.IsCCReverted != "Y").ToList();
 
                 var dataExemp = new List<ExemptionDto>();
                 using (var connection = new SqlConnection(connStringCentralizedExemptions))
