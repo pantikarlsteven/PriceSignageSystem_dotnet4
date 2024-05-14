@@ -502,7 +502,8 @@ namespace PriceSignageSystem.Controllers
             var NegativeSaveList = rawData.Where(a => a.NegativeSave == "Y" && a.IBHAND > 0).ToList(); // Negative save with positive onhand
             data.WithInventoryList.AddRange(NegativeSaveList);
             data.ExcemptionList = rawData.Where(a => a.HasInventory == "" || a.IsExemp == "Y").ToList();
-            data.ConsignmentList = rawData.Where(a => a.HasInventory == "Y" && a.IsExemp == "N" && a.O3TYPE == "CO").ToList();
+            //data.ConsignmentList = rawData.Where(a => a.HasInventory == "Y" && a.IsExemp == "N" && a.O3TYPE == "CO").ToList();
+            data.ConsignmentList = rawData.Where(a => a.IsCCReverted == "Y").ToList();
 
             foreach (var item in data.WithInventoryList)
             {
@@ -769,6 +770,14 @@ namespace PriceSignageSystem.Controllers
                 result = await _sTRPRCRepository.CheckCentralizedExemptionStatus();
                 _sTRPRCRepository.UpdateCentralizedExemptionStatus(result, false); //update ongoingupdate to false here and dateupdated to datetime.now;
             }
+        }
+
+        [HttpPost]
+        public ActionResult Sync()
+        {
+            var result = _sTRPRCRepository.SyncFromNew();
+
+            return Json(result);
         }
     }
 }

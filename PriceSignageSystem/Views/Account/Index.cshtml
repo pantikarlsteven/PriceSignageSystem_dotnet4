@@ -1,0 +1,321 @@
+﻿@using PriceSignageSystem.Models.Dto;
+@model UserDto
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <script src="~/Scripts/jquery-3.6.0.min.js"></script>
+
+    <style>
+        .form-container {
+            margin-top: 20px;
+            margin-left: 20px;
+        }
+
+        .form-box {
+            margin-top: 100px;
+            border: 1px solid #ccc;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper bg-white px-3">
+        <div class="row">
+            <div class="card elevation-3  px-0 ">
+                <ul class="nav nav-tabs bg-primary1 px-2 pt-2">
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-tab active" style="color:white;" data-toggle="tab" href="#register">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-tab" style="color:white;" data-toggle="tab" href="#updateAccount">Update Account</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div id="register" class="tab-pane active mx-2">
+                        <h3 class="text-center mt-2">Account Registration</h3>
+
+                        @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { id = "registerForm" }))
+                        {
+                            <div class="form-group">
+                                <label for="empid">Employee ID</label>
+                                <input type="text" class="form-control" id="empid" name="empid" />
+                            </div>
+                            <div class="form-group">
+                                <label for="username">Username</label>
+                                <input type="text" class="form-control" id="username" name="username" />
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" class="form-control" id="password" name="password" />
+                            </div>
+                            <div class="form-group">
+                                <label for="roleList">Role</label>
+                                <select class="form-control custom-select" id="roleList" name="roleList">
+                                    <option value="">Loading...</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        }
+                    </div>
+
+                    <div id="updateAccount" class="tab-pane fade mx-2">
+                        <h3 class="text-center mt-2">Account Update</h3>
+
+                        <form class="form-container">
+                            <div class="form-group row">
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="usernameInput" name="usernameInput" placeholder="Enter Username" />
+                                </div>
+                                <div class="col-sm-2">
+                                    <button class="btn btn-primary form-control" id="search">Search</button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div class="form-box">
+                            @using (Html.BeginForm("UpdateAccount", "Account", FormMethod.Post, new { id = "updateForm" }))
+                            {
+
+                                <div class="userDetails">
+                                    <div class="form-group row">
+                                        <label for="empId" class="col-sm-2 col-form-label">Employee ID</label>
+                                        <div class="col-sm-5">
+                                            <input type="text" class="form-control" id="empId" name="empId" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="userName" class="col-sm-2 col-form-label">Username</label>
+                                        <div class="col-sm-5">
+                                            <input type="text" class="form-control-plaintext" id="userName" name="userName" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="newPassword" class="col-sm-2 col-form-label">New Password</label>
+                                        <div class="col-sm-5">
+                                            <input type="password" class="form-control" id="newPassword" name="newPassword" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="role" class="col-sm-2 col-form-label">Role</label>
+                                        <div class="col-sm-5">
+                                            <select class="form-control custom-select" id="role" name="role">
+                                                <option value="">Loading...</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="status" class="col-sm-2 col-form-label">Status</label>
+                                        <div class="col-sm-5">
+                                            <select class="form-control custom-select" id="status" name="status">
+                                                <option value="1">Active</option>
+                                                <option value="0">Inactive</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-2 col-form-label">
+
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <button type="submit" class="btn btn-success" style="width: 100%">Update</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration Modal -->
+    <div id="registerModal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-message">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Account Modal -->
+    <div id="updateModal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-message">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+<script>
+    var registerModal = document.getElementById('registerModal');
+    var updateModal = document.getElementById('updateModal');
+
+    // GET USER ROLES FOR REGISTRATION
+    fetch('/Account/GetRoles')
+        .then(response => response.json())
+        .then(data => {
+            const selectElement = document.getElementById('roleList');
+            selectElement.innerHTML = '';
+
+            data.forEach(option => {
+                const optionElement = document.createElement('option');
+                optionElement.value = option.Value;
+                optionElement.textContent = option.Text;
+                selectElement.appendChild(optionElement);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
+
+    // GET USER ROLES FOR UPDATE ACCOUNT
+    fetch('/Account/GetRoles')
+        .then(response => response.json())
+        .then(data => {
+            const selectElement = document.getElementById('role');
+            selectElement.innerHTML = '';
+
+            data.forEach(option => {
+                const optionElement = document.createElement('option');
+                optionElement.value = option.Value;
+                optionElement.textContent = option.Text;
+                selectElement.appendChild(optionElement);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
+
+    $('.form-box').hide();
+
+    function closeModal() {
+        registerModal.style.display = 'none';
+        document.querySelector("#registerModal .modal-title").textContent = "";
+        document.querySelector("#registerModal .modal-message").textContent = "";
+        document.querySelector("#updateModal .modal-title").textContent = "";
+        window.location.href = '/Account/Index';
+    }
+
+
+    $(document).ready(function () {
+
+        // REGISTER FORM SUBMIT EVENT
+        $('#registerForm').submit(function (event) {
+            event.preventDefault();
+
+            var formData = $(this).serialize();
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: formData,
+                success: function (response) {
+
+                    document.querySelector("#registerModal .modal-title").textContent = response.message;
+                    document.querySelector("#registerModal .modal-message").textContent = response.exceptionDetails;
+                    registerModal.style.display = 'block';
+                },
+                error: function (error) {
+
+                }
+            });
+
+        });
+
+        // SEARCH BUTTON EVENT
+        $('#search').click(function (event) {
+            event.preventDefault();
+
+            var username = $('#usernameInput').val();
+            var currentTab = $('.nav-link.active').attr('href'); // Get current active tab
+
+            $.ajax({
+                url: '/Account/SearchAccount',
+                type: 'GET',
+                data: { username: username },
+                success: function (response) {
+
+                    // Set the current tab back to active after showing the form
+                    $('.nav-link[href="' + currentTab + '"]').tab('show');
+
+                    if (response != null) {
+
+                        $('#empId').val(response.EmployeeId);
+                        $('#userName').val(response.UserName);
+                        $('#role').val(response.RoleId);
+                        $('#status').val(response.IsActive);
+                        $('.form-box').show();
+
+                    }
+                    else {
+                        alert("Username does not exist!")
+                    }
+                },
+                error: function (error) {
+
+                }
+            });
+
+        });
+
+        // UPDATE FORM SUBMIT EVENT
+        $('#updateForm').submit(function (event) {
+            event.preventDefault();
+
+            var formData = $(this).serialize();
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: formData,
+                success: function (response) {
+                    if (response.isSuccess) {
+                        document.querySelector("#updateModal .modal-title").textContent = "Updated Successfully!";
+                    }
+                    else {
+                        document.querySelector("#updateModal .modal-title").textContent = "No Changes were made.";
+                    }
+
+                    updateModal.style.display = 'block';
+
+                },
+                error: function (error) {
+
+                }
+            });
+
+        });
+    });
+</script>
+

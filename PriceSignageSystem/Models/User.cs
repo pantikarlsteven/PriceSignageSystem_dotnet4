@@ -23,5 +23,6 @@ namespace PriceSignageSystem.Models
         [Required(ErrorMessage = "Password is required.")]
         public string Password { get; set; }
         public int IsActive { get; set; }
+        public string EmployeeId { get; set; }
     }
 }

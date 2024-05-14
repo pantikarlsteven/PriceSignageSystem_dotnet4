@@ -113,6 +113,7 @@ namespace PriceSignageSystem.Models.Dto
         public decimal ZeroInvInTransit { get; set; }
         public string IsNotRequired { get; set; }
         public string PrintedOn { get; set; }
+        public string IsCCReverted { get; set; }
     }
 
 }

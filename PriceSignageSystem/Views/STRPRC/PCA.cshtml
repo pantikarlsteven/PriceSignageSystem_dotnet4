@@ -842,9 +842,10 @@
                     var $zeroInventory = $('<option>').text('Zero Inventory').val('zero');
                     var $saveZero = $('<option>').text('Save Zero').val('saveZero');
                     var $negativeSave = $('<option>').text('Negative Save').val('negativeSave');
+                    var $noCC = $('<option>').text('No CO Contract').val('noCC');
 
                     // Append options to the select element
-                    $select.append($All, $negativeInventory, $zeroInventory, $saveZero, $negativeSave);
+                    $select.append($All, $negativeInventory, $zeroInventory, $saveZero, $negativeSave, $noCC);
 
                     $select.on('change', function () {
 
@@ -881,6 +882,9 @@
                                 tableNewExemption.column(6).search("").draw();
                                 tableNewExemption.column(5).search("Y", true, false).draw();
                                 tableNewExemption.column(20).search("Y", true, false).draw();
+
+                            }
+                            else if ($select.val() == "noCC") {
 
                             }
                             else {

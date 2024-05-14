@@ -58,6 +58,7 @@ namespace PriceSignageSystem.Controllers
                 {
                     if(user.IsActive == UserStatusConstants.Inactive)
                     {
+                        TempData["ErrorMessage"] = "User is Inactive.";
                         ModelState.AddModelError("", "User is inactive.");
                         return View(model);
                     }
@@ -97,7 +98,7 @@ namespace PriceSignageSystem.Controllers
             return list;
         }
 
-        public ActionResult Register()
+        public ActionResult Register_Old()
         {
             var user = new UserDto();
             user.RoleList = _userRepository.GetRoles().Select(a => new SelectListItem 
@@ -110,7 +111,7 @@ namespace PriceSignageSystem.Controllers
         }
 
         [HttpPost]
-        public ActionResult Register(UserDto user)
+        public ActionResult Register_Old(UserDto user)
         {
             user.RoleList = _userRepository.GetRoles().Select(a => new SelectListItem
             {
@@ -165,6 +166,93 @@ namespace PriceSignageSystem.Controllers
             }
 
             return Json(new{success = false });
+        }
+
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Register(FormCollection form)
+        {
+            var empid = form["empid"];
+            var username = form["username"];
+            var pw = form["password"];
+            var role = form["roleList"];
+            var exceptionDetails = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(empid))
+                exceptionDetails += "- Employee ID \n";
+            if (string.IsNullOrWhiteSpace(username))
+                exceptionDetails += "- Username \n";
+            if (string.IsNullOrWhiteSpace(pw))
+                exceptionDetails += "- Password \n";
+            if(!string.IsNullOrEmpty(exceptionDetails))
+                return Json(new { isSuccess = false, message = "Please enter following required fields:\n" , exceptionDetails });
+
+            var existingUser = _userRepository.GetAll().FirstOrDefault(a => a.UserName == username);
+
+            if(existingUser == null)
+            {
+                var encryptedPassword = EncryptionHelper.Encrypt(pw);
+                var newUser = new User();
+                newUser.EmployeeId = empid;
+                newUser.UserName = username;
+                newUser.Password = encryptedPassword;
+                newUser.IsActive = UserStatusConstants.Active;
+                newUser.RoleId = Convert.ToInt32(role);
+
+                var data = _userRepository.AddUser(newUser);
+
+                if(data != null)
+                    return Json(new { isSuccess = true , message = "Registration Successful!" });
+            }
+            else
+            {
+                return Json(new { isSuccess = false, message = "Error!\n", exceptionDetails = "Username already exists!" });
+            }
+
+            return Json(null);
+        }
+
+        public ActionResult GetRoles()
+        {
+            var roles = _userRepository.GetRoles().Select(a => new SelectListItem
+            {
+                Value = a.Id.ToString(),
+                Text = a.Name
+            }).ToList();
+
+            if (User.IsInRole("Manager"))
+                roles.RemoveAt(0); // Administrator
+
+            return Json(roles, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult SearchAccount(string username)
+        {
+            var result = _userRepository.SearchAccount(username);
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult UpdateAccount(FormCollection form)
+        {
+            var empid = form["empId"];
+            var username = form["userName"];
+            var newpw = form["newPassword"];
+            var role = Convert.ToInt32(form["role"]);
+            var status = Convert.ToInt32(form["status"]);
+
+
+            var result =_userRepository.UpdateAccount(empid, newpw, username, role, status);
+
+            if(result == 1)
+                return Json(new { isSuccess = true });
+            else
+                return Json(new { isSuccess = false });
+
         }
     }
 }

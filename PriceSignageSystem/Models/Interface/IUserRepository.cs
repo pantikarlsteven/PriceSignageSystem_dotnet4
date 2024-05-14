@@ -14,5 +14,7 @@ namespace PriceSignageSystem.Models.Interface
         User AddUser(User user);
         List<Role> GetRoles();
         int UpdatePassword(string username, string newPassword);
+        User SearchAccount(string username);
+        int UpdateAccount(string empid, string newpw, string username, int role, int status);
     }
 }

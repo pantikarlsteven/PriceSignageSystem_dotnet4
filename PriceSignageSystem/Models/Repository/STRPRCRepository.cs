@@ -376,7 +376,8 @@ namespace PriceSignageSystem.Models.Repository
                         IBHAND = (decimal)reader["IBHAND"],
                         ZeroInvDCOnHand = (decimal)reader["ZeroInvDCOnHand"],
                         ZeroInvInTransit = (decimal)reader["ZeroInvInTransit"],
-                        IsNotRequired = reader["IsNotRequired"].ToString()
+                        IsNotRequired = reader["IsNotRequired"].ToString(),
+                        IsCCReverted = reader["IsCCReverted"].ToString()
                     };
 
                     //if ((decimal)reader["O3RSDT"] == startDate)
@@ -1493,6 +1494,39 @@ namespace PriceSignageSystem.Models.Repository
                     }
                 }
             }
+        }
+
+        public int SyncFromNew()
+        {
+            var store = int.Parse(ConfigurationManager.AppSettings["StoreID"]);
+            var result = 0;
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand("sp_SyncPCA", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.CommandTimeout = commandTimeoutInSeconds;
+                        // Add any required parameters to the command if needed
+                        command.Parameters.AddWithValue("@Store", store);
+
+                        connection.Open();
+
+                        result = (int)command.ExecuteScalar();
+
+                        connection.Close();
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error executing stored procedure: " + ex.Message);
+            }
+
+            return result;
         }
     }
 }

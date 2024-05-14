@@ -42,7 +42,7 @@ namespace PriceSignageSystem.Models.Repository
 
         public List<Role> GetRoles()
         {
-            return _db.Roles.ToList();
+            return _db.Roles.OrderByDescending(a => a.Id).ToList();
         }
 
         public int UpdatePassword(string username, string newPassword)
@@ -56,6 +56,36 @@ namespace PriceSignageSystem.Models.Repository
             }
             
             var result = _db.SaveChanges();
+            return result;
+        }
+
+        public User SearchAccount(string username)
+        {
+            var result = _db.Users.Where(u => u.UserName == username).FirstOrDefault();
+
+            return result;
+        }
+
+        public int UpdateAccount(string empid, string newpw, string username, int role, int status)
+        {
+            var user = _db.Users.Where(a => a.UserName == username).FirstOrDefault();
+            var encryptedNewPw = string.Empty;
+
+            if (!string.IsNullOrWhiteSpace(newpw))
+                encryptedNewPw = EncryptionHelper.Encrypt(newpw);
+            
+
+            if (empid != user.EmployeeId)
+                user.EmployeeId = empid;
+            if (!string.IsNullOrEmpty(encryptedNewPw) && encryptedNewPw != user.Password)
+                user.Password = encryptedNewPw;
+            if (role != user.RoleId)
+                user.RoleId = role;
+            if (status != user.IsActive)
+                user.IsActive = status;
+
+            var result = _db.SaveChanges();
+
             return result;
         }
     }
