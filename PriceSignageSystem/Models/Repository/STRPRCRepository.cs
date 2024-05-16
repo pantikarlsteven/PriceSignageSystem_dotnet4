@@ -473,7 +473,7 @@ namespace PriceSignageSystem.Models.Repository
                     connection.Close();
                 }
 
-                var exemptions = data.Where(w => w.IsExemp == "Y" || w.IsCCReverted != "Y").ToList();
+                var exemptions = data.Where(w => w.IsExemp == "Y" || (w.IsCCReverted != "Y" && w.O3TYPE == "CO")).ToList();
 
                 var dataExemp = new List<ExemptionDto>();
                 using (var connection = new SqlConnection(connStringCentralizedExemptions))

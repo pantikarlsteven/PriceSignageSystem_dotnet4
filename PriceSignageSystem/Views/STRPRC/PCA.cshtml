@@ -209,12 +209,13 @@
                                     <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
                                     <th>Reverted?</th>
                                     <th>Negative Save</th>
+                                    <th>O3Type</th>
                                     @*<th><button class="printAllBtnNewExemption btn btn-secondary px-3">Print Selected</button></th>*@
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="20" style="text-align: center;">Please enter start date</td>
+                                    <td colspan="22" style="text-align: center;">Please enter start date</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -744,7 +745,7 @@
                 pageLength: -1,
                 data: data,
                 columnDefs: [
-                    { targets: [/*3,*/5,6,7,8,20], visible: false },
+                    { targets: [/*3,*/5,6,7,8,20, 21], visible: false },
                     //{ targets: [4,5], visible: false },
                     { targets: [0, 1, 10,11,12, 18], orderable: false },
                 ],
@@ -808,7 +809,7 @@
                     { data: 'DepartmentName', name: 'DepartmentName' },
                     { data: 'IsReverted', name: 'IsReverted' },
                     { data: 'NegativeSave', name: 'NegativeSave' },
-
+                    { data: 'O3TYPE', name: 'O3TYPE' },
 
                     //{
                     //    data: null,
@@ -851,10 +852,11 @@
 
                         $('#loadingContainer').show();
                         setTimeout(function () {
-                                                                        // 5-IsExemp | 20-neg save
+                                                                        // 5-IsExemp | 20-neg save | 21 - o3type
                             tableNewExemption.column(6).visible(true); // ON HAND
                             tableNewExemption.column(7).visible(false); // DC ONHAND FOR ZERO INV
                             tableNewExemption.column(8).visible(false); // IN TRANSIT FOR ZERO INV
+                            tableNewExemption.column(21).search("", true, false).draw();
 
                             // Log the selected value to the console
                             if ($select.val() == "negative") {
@@ -885,7 +887,9 @@
 
                             }
                             else if ($select.val() == "noCC") {
-
+                                tableNewExemption.column(5).search("Y", true, false).draw();
+                                tableNewExemption.column(21).search("CO", true, false).draw(); 
+                                tableNewExemption.column(20).search("N", true, false).draw();
                             }
                             else {
                                 tableNewExemption.column(6).search("").draw();

@@ -90,7 +90,7 @@
                 @if (User.IsInRole("Administrator"))
                 {
                     <li class="nav-item">
-                        <button class="nav-link" id="syncLink"> Sync PCA</button>
+                        <button class="btn nav-link" id="syncLink"> Sync PCA</button>
                     </li>
                 }
                 @if (User.IsInRole("Manager") || User.IsInRole("Administrator"))
@@ -227,6 +227,8 @@
 
                     if (response != 0)
                         alert('Done Syncing PCA.');
+                    else
+                        alert('No Changes.')
                 },
                 error: function () {
 
