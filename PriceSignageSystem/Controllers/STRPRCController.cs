@@ -504,7 +504,7 @@ namespace PriceSignageSystem.Controllers
             data.WithInventoryList.AddRange(NegativeSaveList);
             data.ExcemptionList = rawData.Where(a => a.HasInventory == "" || a.IsExemp == "Y").ToList();
             //data.ConsignmentList = rawData.Where(a => (a.HasInventory == "Y" && a.IsExemp == "N" && a.O3TYPE == "CO") || a.IsCCReverted == "Y").ToList();
-            data.ConsignmentList = consignmentList.Where(f => f.O3FLAG3 == "Y").ToList();
+            data.ConsignmentList = consignmentList.OrderByDescending(o => o.O3SDT).Where(f => f.O3FLAG3 == "Y").ToList();
 
             var ExempCoList = consignmentList.Where(a => a.O3FLAG3 != "Y").ToList();
             data.ExcemptionList.AddRange(ExempCoList);
