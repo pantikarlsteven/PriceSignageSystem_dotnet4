@@ -496,14 +496,18 @@ namespace PriceSignageSystem.Controllers
             var result = _sTRPRCRepository.GetLatestUpdate();
             var data = new STRPRCDto();
             var rawData = await _sTRPRCRepository.GetDataByStartDate(result.LatestDate);
+            var consignmentList = await _sTRPRCRepository.GetAllConsignment();
 
             data.LatestDate = result.LatestDate;
             data.WithInventoryList = rawData.Where(a => a.HasInventory == "Y" && a.IsExemp == "N" && a.O3TYPE != "CO").ToList();
             var NegativeSaveList = rawData.Where(a => a.NegativeSave == "Y" && a.IBHAND > 0).ToList(); // Negative save with positive onhand
             data.WithInventoryList.AddRange(NegativeSaveList);
             data.ExcemptionList = rawData.Where(a => a.HasInventory == "" || a.IsExemp == "Y").ToList();
-            //data.ConsignmentList = rawData.Where(a => a.HasInventory == "Y" && a.IsExemp == "N" && a.O3TYPE == "CO").ToList();
-            data.ConsignmentList = rawData.Where(a => (a.HasInventory == "Y" && a.IsExemp == "N" && a.O3TYPE == "CO") || a.IsCCReverted == "Y").ToList();
+            //data.ConsignmentList = rawData.Where(a => (a.HasInventory == "Y" && a.IsExemp == "N" && a.O3TYPE == "CO") || a.IsCCReverted == "Y").ToList();
+            data.ConsignmentList = consignmentList.Where(f => f.O3FLAG3 == "Y").ToList();
+
+            var ExempCoList = consignmentList.Where(a => a.O3FLAG3 != "Y").ToList();
+            data.ExcemptionList.AddRange(ExempCoList);
 
             foreach (var item in data.WithInventoryList)
             {

@@ -1529,5 +1529,13 @@ namespace PriceSignageSystem.Models.Repository
 
             return result;
         }
+
+        public async Task<List<STRPRCDto>> GetAllConsignment()
+        {
+            var result = await _db.Database.SqlQuery<STRPRCDto>("EXEC sp_GetAllConsignment")
+               .ToListAsync();
+
+            return result;
+        }
     }
 }

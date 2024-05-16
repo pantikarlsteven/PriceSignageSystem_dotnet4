@@ -44,5 +44,6 @@ namespace PriceSignageSystem.Models.Interface
         void UpdateCentralizedExemptionStatus(CentralizedExemptionStatusDto data, bool onGoingUpdate);
         ReportDto GetPrintedLogPerSku(string sku);
         int SyncFromNew();
+        Task<List<STRPRCDto>> GetAllConsignment();
     }
 }

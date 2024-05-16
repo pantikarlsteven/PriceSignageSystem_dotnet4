@@ -114,6 +114,9 @@ namespace PriceSignageSystem.Models.Dto
         public string IsNotRequired { get; set; }
         public string PrintedOn { get; set; }
         public string IsCCReverted { get; set; }
+        public string O3FLAG1 { get; set; }
+        public string O3FLAG2 { get; set; }
+        public string O3FLAG3 { get; set; }
     }
 
 }
