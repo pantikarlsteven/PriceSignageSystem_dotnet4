@@ -350,5 +350,21 @@ namespace PriceSignageSystem.Models.Repository
 
             return result;
         }
+
+        public List<ExportAuditDto> GetAllAuditToExport()
+        {
+            var result = new List<ExportAuditDto>();
+            try
+            {
+                result = _db.Database.SqlQuery<ExportAuditDto>("EXEC sp_GetAllAudits")
+                            .ToList();
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return result;
+        }
     }
 }

@@ -1,9 +1,12 @@
-﻿using PriceSignageSystem.Code.CustomValidations;
+﻿using ClosedXML.Excel;
+using PriceSignageSystem.Code.CustomValidations;
+using PriceSignageSystem.Helper;
 using PriceSignageSystem.Models;
 using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -251,6 +254,7 @@ namespace PriceSignageSystem.Controllers
             list.Add(new AuditRemark { Id = 1, Name = "NOF" });
             list.Add(new AuditRemark { Id = 2, Name = "Damaged" });
             list.Add(new AuditRemark { Id = 3, Name = "Marked Down" });
+            list.Add(new AuditRemark { Id = 4, Name = "Expired" });
 
             return Json(list.ToArray());
         }
@@ -262,6 +266,85 @@ namespace PriceSignageSystem.Controllers
             var result = _auditRepo.TagWrongSign(sku, username);
 
             return Json(result);
+        }
+
+        [HttpGet]
+        public FileResult ExportDataTableToExcel(string filter)
+        {
+            var dataTable = new DataTable();
+            var auditedList = _auditRepo.GetAllAuditToExport().Where(a => a.IsAudited == "Y");
+
+            if (filter == "all")
+                auditedList = auditedList.ToList();
+            else if (filter == "nof")
+                auditedList = auditedList.Where(a => a.Remarks == "NOF").ToList();
+            else if (filter == "damaged")
+                auditedList = auditedList.Where(a => a.Remarks == "Damaged").ToList();
+            else if (filter == "markeddown")
+                auditedList = auditedList.Where(a => a.Remarks == "Marked Down").ToList();
+            else if (filter == "expired")
+                auditedList = auditedList.Where(a => a.Remarks == "Expired").ToList();
+
+            dataTable = ConversionHelper.ConvertListToDataTable(auditedList);
+
+            using (XLWorkbook workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("Sheet1");
+
+                // Set the column headers
+                for (int i = 0; i < dataTable.Columns.Count; i++)
+                {
+                    var cell = worksheet.Cell(1, i + 1);
+                    cell.Value = dataTable.Columns[i].ColumnName;
+
+                    // Set the cell style to bold
+                    var style = cell.Style;
+                    style.Font.Bold = true;
+                }
+
+                // Populate the data rows
+                for (int row = 0; row < dataTable.Rows.Count; row++)
+                {
+                    for (int col = 0; col < dataTable.Columns.Count; col++)
+                    {
+                        worksheet.Cell(row + 2, col + 1).Value = dataTable.Rows[row][col].ToString();
+                    }
+                }
+
+                // Apply table styles for striped rows
+                var tableRange = worksheet.Range(1, 1, dataTable.Rows.Count + 1, dataTable.Columns.Count);
+                tableRange.Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                tableRange.Style.Alignment.SetVertical(XLAlignmentVerticalValues.Center);
+                tableRange.Style.Border.SetInsideBorder(XLBorderStyleValues.Thin);
+                tableRange.Style.Border.SetOutsideBorder(XLBorderStyleValues.Thin);
+                tableRange.Style.Border.InsideBorderColor = XLColor.Gray;
+                tableRange.Style.Border.OutsideBorderColor = XLColor.Gray;
+                tableRange.Style.Fill.SetBackgroundColor(XLColor.White);
+                tableRange.Style.Fill.SetPatternType(XLFillPatternValues.Solid);
+
+                // Apply striped row style
+                var rows = tableRange.RowsUsed();
+                for (int i = 1; i <= rows.Count(); i++)
+                {
+                    if (i % 2 == 0)
+                    {
+                        rows.ElementAt(i - 1).Style.Fill.SetBackgroundColor(XLColor.LightGray);
+                    }
+                }
+
+                // Save the Excel file to a memory stream
+                using (var memoryStream = new System.IO.MemoryStream())
+                {
+                    workbook.SaveAs(memoryStream);
+
+
+                    var fileContents = memoryStream.ToArray();
+                    var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    var fileName =  filter + "_" + DateTime.Today.ToShortDateString() + ".xlsx";
+
+                    return File(fileContents, contentType, fileName);
+                }
+            }
         }
     }
 }

@@ -518,7 +518,7 @@
                     [10, 25, 50, -1],
                     [10, 25, 50, 'All']
                 ],
-                pageLength: -1,
+                pageLength: 50,
                 data: data,
                 columnDefs: [
                     { targets: [2, 3, 4, 5, 11], orderable: false },
@@ -550,6 +550,61 @@
                     { data: 'AuditedRemarks', name: 'AuditedRemarks' },
                 ],
                 "dom": '<"top"lfB>rt<"bottom"ip>',
+
+                initComplete: function () {
+         
+                    var $button = $('<button>')
+                        .addClass('custom-button')
+                        .text('Export')
+                        .on('click', function () {
+                            window.location.href = '/Audit/ExportDataTableToExcel?&filter=' + $select.val();
+                        });
+
+
+                    var $select = $('<select style="margin-left: 20px; padding: 4px;">');
+
+                    var $All = $('<option>').text('All').val('all');
+                    var $Nof = $('<option>').text('NOF').val('nof');
+                    var $Damaged = $('<option>').text('Damaged').val('damaged');
+                    var $MarkedDown = $('<option>').text('Marked Down').val('markeddown');
+                    var $Expired = $('<option>').text('Expired').val('expired');
+
+                    $select.append($All, $Nof, $Damaged, $MarkedDown, $Expired);
+
+                    $select.on('change', function () {
+
+                        $('#loadingContainer').show();
+                        setTimeout(function () {
+                          
+                    
+                            if ($select.val() == "nof") {
+                                tableForAudited.column(15).search("NOF").draw();
+                            }
+                            else if ($select.val() == "damaged") {
+
+                                tableForAudited.column(15).search("Damaged").draw();
+                            }
+                            else if ($select.val() == "markeddown") {
+                                tableForAudited.column(15).search("Marked Down").draw();
+                            }
+                            else if ($select.val() == "expired") {
+                                tableForAudited.column(15).search("Expired").draw();
+                            }
+                            else {
+                                tableForAudited.column(15).search("").draw();
+                            }
+
+                            $("#loadingContainer").hide();
+
+                        }, 300);
+
+                    });
+
+                    var dataTableWrapper = $('#audited-pca-table').closest('.dataTables_wrapper');
+                    dataTableWrapper.find('.dataTables_filter').before($button);
+                    dataTableWrapper.find('.dataTables_filter').before($select);
+
+                }
             });
         }
 
@@ -563,7 +618,7 @@
                     [10, 25, 50, -1],
                     [10, 25, 50, 'All']
                 ],
-                pageLength: -1,
+                pageLength: 50,
                 data: data,
                 order: [],
                 columnDefs: [

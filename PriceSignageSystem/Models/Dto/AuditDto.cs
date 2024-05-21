@@ -109,9 +109,9 @@ namespace PriceSignageSystem.Models.Dto
         public decimal ZeroInvInTransit { get; set; }
         public string AuditedRemarks { get; set; }
         public string AuditedBy { get; set; }
-        public DateTime? DateAudited { get; set; }
+        public DateTime DateAudited { get; set; }
         public string TaggedBy { get; set; }
-        public DateTime? DateTagged { get; set; }
+        public DateTime DateTagged { get; set; }
         public string ColumnName { get; set; }
         public string FromValue { get; set; }
         public string ToValue { get; set; }

@@ -8,6 +8,7 @@ using PriceSignageSystem.Models.Constants;
 using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Globalization;
@@ -503,10 +504,9 @@ namespace PriceSignageSystem.Controllers
             var NegativeSaveList = rawData.Where(a => a.NegativeSave == "Y" && a.IBHAND > 0).ToList(); // Negative save with positive onhand
             data.WithInventoryList.AddRange(NegativeSaveList);
             data.ExcemptionList = rawData.Where(a => a.HasInventory == "" || a.IsExemp == "Y").ToList();
-            //data.ConsignmentList = rawData.Where(a => (a.HasInventory == "Y" && a.IsExemp == "N" && a.O3TYPE == "CO") || a.IsCCReverted == "Y").ToList();
             data.ConsignmentList = consignmentList.OrderByDescending(o => o.O3SDT).Where(f => f.O3FLAG3 == "Y").ToList();
 
-            var ExempCoList = consignmentList.Where(a => a.O3FLAG3 != "Y").ToList();
+            var ExempCoList = consignmentList.Where(a => a.O3FLAG3 != "Y" || a.O3FLAG3 == null).ToList();
             data.ExcemptionList.AddRange(ExempCoList);
 
             foreach (var item in data.WithInventoryList)
@@ -614,28 +614,35 @@ namespace PriceSignageSystem.Controllers
         {
             var decimalDate = ConversionHelper.ToDecimal(date);
             var dataTable = new DataTable();
+            var noccList = new List<ExportPCAExemptionDto>();
             if (tab == "NewExemptionInventory") { 
                var toExportRawData = _sTRPRCRepository.PCAToExportExemption().ToList();
                 if (tab == "WithInventory")
                 {
-                    toExportRawData = toExportRawData.Where(a => a.WithInventory == "Yes" && a.IsExemption == "No").ToList();
+                    toExportRawData = toExportRawData.Where(a => a.WithInventory == "Yes" && a.IsExemp == "No").ToList();
                 }
                 else
                 {
-                    //toExportRawData = toExportRawData.Where(a => a.IsExemption == "Yes" || a.WithInventory == "No").ToList();
-                    if(filter == "all")
-                        toExportRawData = toExportRawData.Where(a => a.IsExemption == "Yes" || a.WithInventory == "No").ToList();
+               
+                    if (filter == "all")
+                        toExportRawData = toExportRawData.Where(a => a.IsExemp == "Yes" || a.WithInventory == "No").ToList();
                     else if (filter == "saveZero")
-                        toExportRawData = toExportRawData.Where(a => (a.IsExemption == "Yes" || a.WithInventory == "No") && a.ExemptionType == "Save Zero").ToList();
-                    else if(filter == "negative")
-                        toExportRawData = toExportRawData.Where(a => (a.IsExemption == "Yes" || a.WithInventory == "No") && a.ExemptionType == "Negative Inventory").ToList();
-                    else if(filter == "zero")
-                        toExportRawData = toExportRawData.Where(a => (a.IsExemption == "Yes" || a.WithInventory == "No") && a.ExemptionType == "Zero Inventory").ToList();
+                        toExportRawData = toExportRawData.Where(a => (a.IsExemp == "Yes" || a.WithInventory == "No") && a.ExemptionType == "Save Zero").ToList();
+                    else if (filter == "negative")
+                        toExportRawData = toExportRawData.Where(a =>  a.WithInventory == "No" && a.IBHAND < 0).ToList();
+                    else if (filter == "zero")
+                        toExportRawData = toExportRawData.Where(a =>  a.WithInventory == "No" && a.IBHAND == 0).ToList();
                     else if (filter == "negativeSave")
-                        toExportRawData = toExportRawData.Where(a => (a.IsExemption == "Yes" || a.WithInventory == "No") && a.ExemptionType == "Negative Save").ToList();
+                        toExportRawData = toExportRawData.Where(a => (a.IsExemp == "Yes" || a.WithInventory == "No") && a.ExemptionType == "Negative Save").ToList();
+                    else if (filter == "noCC")
+                        noccList = _sTRPRCRepository.GetAllNoConsignmentContract();
                 }
 
-                dataTable = ConversionHelper.ConvertListToDataTable(toExportRawData);
+                if (filter != "noCC")
+                    dataTable = ConversionHelper.ConvertListToDataTable(toExportRawData);
+                else
+                    dataTable = ConversionHelper.ConvertListToDataTable(noccList);
+
             }
             else
             {
@@ -648,10 +655,6 @@ namespace PriceSignageSystem.Controllers
                 {
                     toExportRawData = toExportRawData.Where(a => a.WithInventory == "Yes" && a.IsExemption == "No" && a.O3TYPE == "CO").ToList();
                 }
-                //else if (tab == "WithoutInventory")
-                //{
-                //    toExportRawData = toExportRawData.Where(a => a.WithInventory == "No" && a.IsExemption == "No").ToList();
-                //}
                 else
                 {
                     toExportRawData = toExportRawData.Where(a => a.IsExemption == "Yes" || a.WithInventory == "No").ToList();

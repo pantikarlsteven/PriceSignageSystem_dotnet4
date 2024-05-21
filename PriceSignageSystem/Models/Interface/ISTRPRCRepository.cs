@@ -45,5 +45,6 @@ namespace PriceSignageSystem.Models.Interface
         ReportDto GetPrintedLogPerSku(string sku);
         int SyncFromNew();
         Task<List<STRPRCDto>> GetAllConsignment();
+        List<ExportPCAExemptionDto> GetAllNoConsignmentContract();
     }
 }

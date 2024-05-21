@@ -469,6 +469,7 @@
     <Compile Include="Models\Dto\CentralizedExemptionStatusDto.cs" />
     <Compile Include="Models\Dto\CountryDto.cs" />
     <Compile Include="Models\Dto\ExemptionDto.cs" />
+    <Compile Include="Models\Dto\ExportAuditDto.cs" />
     <Compile Include="Models\Dto\ExportPCADto.cs" />
     <Compile Include="Models\Dto\ExportPCAExemptionDto.cs" />
     <Compile Include="Models\Dto\ItemQueueDto.cs" />

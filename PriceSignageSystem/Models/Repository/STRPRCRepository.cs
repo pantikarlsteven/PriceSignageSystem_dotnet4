@@ -1248,8 +1248,9 @@ namespace PriceSignageSystem.Models.Repository
                         DepartmentName = reader["DPTNAM"].ToString(),
                         IsPrinted = reader["IsPrintedYN"].ToString(),
                         WithInventory = reader["INVYN"].ToString(),
-                        IsExemption = reader["IsExemp"].ToString(),
-                        ExemptionType = reader["ExemptionType"].ToString()
+                        IsExemp = reader["IsExemp"].ToString(),
+                        ExemptionType = reader["ExemptionType"].ToString(),
+                        IBHAND = (decimal)reader["IBHAND"]
                     };
 
                     data.Add(record);
@@ -1534,6 +1535,15 @@ namespace PriceSignageSystem.Models.Repository
         {
             var result = await _db.Database.SqlQuery<STRPRCDto>("EXEC sp_GetAllConsignment")
                .ToListAsync();
+
+            return result;
+        }
+
+        public List<ExportPCAExemptionDto> GetAllNoConsignmentContract()
+        {
+            var result = _db.Database.SqlQuery<ExportPCAExemptionDto>("EXEC sp_GetAllConsignmentToExport")
+               .Where(a => a.O3FLAG3 != "Y" || a.O3FLAG3 == null)
+               .ToList();
 
             return result;
         }

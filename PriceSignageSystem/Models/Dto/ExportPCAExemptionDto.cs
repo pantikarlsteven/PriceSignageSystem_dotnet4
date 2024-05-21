@@ -24,7 +24,9 @@ namespace PriceSignageSystem.Models.Dto
         public string Size { get; set; }
         public string Category { get; set; }
         public string WithInventory { get; set; }
-        public string IsExemption { get; set; }
+        public string IsExemp { get; set; }
         public string ExemptionType { get; set; }
+        public string O3FLAG3 { get; set; }
+        public decimal IBHAND { get; set; }
     }
 }
