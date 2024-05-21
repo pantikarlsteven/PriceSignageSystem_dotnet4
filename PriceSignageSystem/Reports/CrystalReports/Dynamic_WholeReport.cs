@@ -16,14 +16,14 @@ namespace PriceSignageSystem.Reports.CrystalReports {
     using CrystalDecisions.CrystalReports.Engine;
     
     
-    public class Dynamic_JewelryReport : ReportClass {
+    public class Dynamic_WholeReport : ReportClass {
         
-        public Dynamic_JewelryReport() {
+        public Dynamic_WholeReport() {
         }
         
         public override string ResourceName {
             get {
-                return "Dynamic_JewelryReport.rpt";
+                return "Dynamic_WholeReport.rpt";
             }
             set {
                 // Do nothing
@@ -41,7 +41,7 @@ namespace PriceSignageSystem.Reports.CrystalReports {
         
         public override string FullResourceName {
             get {
-                return "PriceSignageSystem.Reports.CrystalReports.Dynamic_JewelryReport.rpt";
+                return "PriceSignageSystem.Reports.CrystalReports.Dynamic_WholeReport.rpt";
             }
             set {
                 // Do nothing
@@ -66,7 +66,7 @@ namespace PriceSignageSystem.Reports.CrystalReports {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section Section3 {
+        public CrystalDecisions.CrystalReports.Engine.Section DetailSection5 {
             get {
                 return this.ReportDefinition.Sections[2];
             }
@@ -82,7 +82,7 @@ namespace PriceSignageSystem.Reports.CrystalReports {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section DetailSection5 {
+        public CrystalDecisions.CrystalReports.Engine.Section DetailSection2 {
             get {
                 return this.ReportDefinition.Sections[4];
             }
@@ -90,7 +90,7 @@ namespace PriceSignageSystem.Reports.CrystalReports {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section DetailSection6 {
+        public CrystalDecisions.CrystalReports.Engine.Section DetailSection3 {
             get {
                 return this.ReportDefinition.Sections[5];
             }
@@ -98,7 +98,7 @@ namespace PriceSignageSystem.Reports.CrystalReports {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section Section4 {
+        public CrystalDecisions.CrystalReports.Engine.Section DetailSection6 {
             get {
                 return this.ReportDefinition.Sections[6];
             }
@@ -106,17 +106,33 @@ namespace PriceSignageSystem.Reports.CrystalReports {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section Section5 {
+        public CrystalDecisions.CrystalReports.Engine.Section DetailSection7 {
             get {
                 return this.ReportDefinition.Sections[7];
+            }
+        }
+        
+        [Browsable(false)]
+        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+        public CrystalDecisions.CrystalReports.Engine.Section Section4 {
+            get {
+                return this.ReportDefinition.Sections[8];
+            }
+        }
+        
+        [Browsable(false)]
+        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+        public CrystalDecisions.CrystalReports.Engine.Section Section5 {
+            get {
+                return this.ReportDefinition.Sections[9];
             }
         }
     }
     
     [System.Drawing.ToolboxBitmapAttribute(typeof(CrystalDecisions.Shared.ExportOptions), "report.bmp")]
-    public class CachedDynamic_JewelryReport : Component, ICachedReport {
+    public class CachedDynamic_WholeReport : Component, ICachedReport {
         
-        public CachedDynamic_JewelryReport() {
+        public CachedDynamic_WholeReport() {
         }
         
         [Browsable(false)]
@@ -153,7 +169,7 @@ namespace PriceSignageSystem.Reports.CrystalReports {
         }
         
         public virtual CrystalDecisions.CrystalReports.Engine.ReportDocument CreateReport() {
-            Dynamic_JewelryReport rpt = new Dynamic_JewelryReport();
+            Dynamic_WholeReport rpt = new Dynamic_WholeReport();
             rpt.Site = this.Site;
             return rpt;
         }

@@ -134,6 +134,7 @@ namespace PriceSignageSystem.Controllers
                 ReportDocument report = new ReportDocument();
                 var path = string.Empty;
 
+
                 switch (model.SizeId)
                 {
                     case ReportConstants.Size.Whole:
@@ -150,10 +151,12 @@ namespace PriceSignageSystem.Controllers
                 report.Load(path);
                 var skuModel = _sTRPRCRepository.GetReportData(model.O3SKU);
                 skuModel.TypeId = model.TypeId;
+                //skuModel.TypeId = 2;
                 skuModel.CategoryId = model.CategoryId;
                 skuModel.UserName = User.Identity.Name;
                 skuModel.O3SDSC = _sTRPRCRepository.GetSubClassDescription(model.O3SKU);
-                skuModel.O3REGU = model.O3REGU != 0 ? model.O3REGU: skuModel.O3REGU;
+                skuModel.O3REGU = model.O3REGU != 0 ? model.O3REGU : skuModel.O3REGU;
+                //skuModel.O3POS = skuModel.O3REGU - 99;
                 skuModel.O3POS = model.O3POS != 0 ? model.O3POS : skuModel.O3POS;
                 skuModel.O3IDSC = !string.IsNullOrEmpty(model.O3IDSC) ? model.O3IDSC : skuModel.O3IDSC;
                 skuModel.O3FNAM = !string.IsNullOrEmpty(model.O3FNAM) ? model.O3FNAM : skuModel.O3FNAM;
@@ -162,10 +165,16 @@ namespace PriceSignageSystem.Controllers
                 skuModel.O3TUOM = !string.IsNullOrEmpty(model.O3TUOM) ? model.O3TUOM : skuModel.O3TUOM;
 
                 var textToImage = new TextToImage();
+                //skuModel.O3FNAM = "HAMALTON BEACH";
+                //skuModel.O3IDSC = "COMMERCIAL";
                 textToImage.GetImageWidth(skuModel.O3FNAM, skuModel.O3IDSC, model.SizeId);
+                //skuModel.IsSLBrand = true;
                 skuModel.IsSLBrand = textToImage.IsSLBrand;
                 skuModel.IsSLDescription = textToImage.IsSLDescription;
                 skuModel.IsBiggerFont = textToImage.IsBiggerFont;
+                skuModel.OneEightDescTotalLines = textToImage.OneEightDescTotalLines;
+                if (skuModel.IsSLBrand && skuModel.IsSLDescription)
+                    skuModel.IsSingleLines = true;
 
                 report.SetDataSource(ConversionHelper.ConvertObjectToDataTable(skuModel));
                 Stream stream = report.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
@@ -244,7 +253,6 @@ namespace PriceSignageSystem.Controllers
                 {
                     List<decimal> o3skus = selectedIds[0].Split(',').Select(decimal.Parse).ToList();
                     var data = _sTRPRCRepository.GetReportDataList(o3skus);
-                    //var dataTest = _sTRPRCRepository.GetReportData(11656);
                     foreach (var item in data)
                     {
                         item.UserName = User.Identity.Name;
@@ -253,15 +261,16 @@ namespace PriceSignageSystem.Controllers
                         item.IsSLBrand = textToImage.IsSLBrand;
                         item.IsSLDescription = textToImage.IsSLDescription;
                         item.IsBiggerFont = textToImage.IsBiggerFont;
+                        item.OneEightDescTotalLines = textToImage.OneEightDescTotalLines;
+                        if (item.IsSLBrand && item.IsSLDescription)
+                            item.IsSingleLines = true;
                         item.O3SDSC = _sTRPRCRepository.GetSubClassDescription(item.O3SKU);
-                        //item.country_img = dataTest.country_img;
 
                         if (item.TypeId == 2 && item.O3POSU > item.O3REG)
                         {
                             item.TypeId = 1;
                             item.O3REG = item.O3POS;
                         }
-
                     }
                     var dataTable = ConversionHelper.ConvertListToDataTable(data);
                     var reportPath = string.Empty;
@@ -282,19 +291,6 @@ namespace PriceSignageSystem.Controllers
                     ReportDocument report = new ReportDocument();
                     report.Load(reportPath);
                     report.SetDataSource(dataTable);
-
-                    #region Export report to PDF
-                    //// Set up export options
-                    //string pdfPath = Server.MapPath("~/Reports/PDFs");
-                    //Guid guid = Guid.NewGuid();
-                    //var pdf = pdfPath + "\\" + guid + ".pdf";
-                    //ExportOptions exportOptions = report.ExportOptions;
-                    //exportOptions.ExportFormatType = ExportFormatType.PortableDocFormat;
-                    //exportOptions.ExportDestinationType = ExportDestinationType.DiskFile;
-                    //exportOptions.DestinationOptions = new DiskFileDestinationOptions { DiskFileName = pdf };
-                    //// Export the report to PDF
-                    //report.Export();
-                    #endregion
 
                     Stream stream = report.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
                     var pdfBytes = new byte[stream.Length];

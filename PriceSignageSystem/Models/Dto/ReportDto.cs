@@ -64,5 +64,9 @@ namespace PriceSignageSystem.Models.Dto
         public string qDivisor { get; set; }
         public int qTypeId { get; set; }
         public string qTuom { get; set; }
+        public string PrintedOn { get; set; }
+        public bool IsSingleLines { get; set; } = false;
+        public int OneEightDescTotalLines { get; set; }
+
     }
 }

@@ -102,13 +102,14 @@ namespace PriceSignageSystem.Controllers
                 var data = _queueRepository.GetQueueListPerUser(username).Where(a => a.SizeId == sizeId);
                 foreach (var item in data)
                 {
-                    
+
                     item.UserName = User.Identity.Name;
                     var textToImage = new TextToImage();
                     textToImage.GetImageWidth(item.O3FNAM, item.O3IDSC, sizeId);
                     item.IsSLBrand = textToImage.IsSLBrand;
                     item.IsSLDescription = textToImage.IsSLDescription;
                     item.IsBiggerFont = textToImage.IsBiggerFont;
+                    item.OneEightDescTotalLines = textToImage.OneEightDescTotalLines;
                     item.O3SDSC = _sTRPRCRepository.GetSubClassDescription(item.O3SKU);
                     item.O3REGU = item.qRegularPrice != 0 ? item.qRegularPrice : item.O3REGU;
                     item.O3POS = item.qCurrentPrice != 0 ? item.qCurrentPrice : item.O3POS;
@@ -191,6 +192,7 @@ namespace PriceSignageSystem.Controllers
                 stream.Read(pdfBytes, 0, pdfBytes.Length);
 
                 _queueRepository.UpdateStatus(data);
+
                 Response.AppendHeader("Content-Disposition", "inline; filename=QueueReport.pdf");
                 report.Close();
                 report.Dispose();
