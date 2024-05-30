@@ -110,11 +110,11 @@
                         <a class="nav-link nav-link-tab" style="color:white;" data-toggle="tab" href="#notprinted-pca">Unprinted</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link nav-link-tab" style="color:white;" data-toggle="tab" href="#graph">Graph</a>
+                        <a id="graph-tab" class="nav-link nav-link-tab" style="color:white;" data-toggle="tab" href="#graph">Graph</a>
                     </li>
                 </ul>
 
-                <div class="tab-content">
+                <div class="tab-content table-responsive">
                     <div id="printed-pca" class="tab-pane active mx-2">
                         <h3 class="text-center mt-2">Printed Sign</h3>
                         <div class="row align-items-center justify-content-center">
@@ -390,6 +390,7 @@
         var NOFListCount = 0;
         var DisposalListCount = 0;
         var MarkDownListCount = 0;
+        var ExpiredListCount = 0;
 
         function InitLoad() {
             $("#loadingContainer").show();
@@ -419,12 +420,12 @@
                     unPrintedCount = data.NotPrintedList.length;
 
                     var notRequiredY = data.NotPrintedList.filter(function (item) {
-                        return item.IsNotRequired === 'Y';
+                        return item.IsNotRequired === 'Yes';
                     });
                     notRequiredYCount = notRequiredY.length;
 
                     var notRequiredN = data.NotPrintedList.filter(function (item) {
-                        return item.IsNotRequired === 'N';
+                        return item.IsNotRequired === 'No';
                     });
                     notRequiredNCount = notRequiredN.length;
 
@@ -442,6 +443,11 @@
                         return item.AuditedRemarks === "Marked Down";
                     });
                     MarkDownListCount = MarkDownList.length;
+
+                    var ExpiredList = data.AuditedList.filter(function (item) {
+                        return item.AuditedRemarks === "Expired";
+                    });
+                    ExpiredListCount = ExpiredList.length;
 
                     RenderGraph();
 
@@ -627,7 +633,7 @@
                 columns: [
                     {
                         data: null, render: function (data, type, row) {
-                            if (row.IsNotRequired === 'Y') {
+                            if (row.IsNotRequired === 'Yes') {
                                 return '<input type="checkbox" class="rowCheckboxNotPrinted" data-id="' + data.O3SKU + '" checked>';
                             } else {
                                 return '<input type="checkbox" class="rowCheckboxNotPrinted" data-id="' + data.O3SKU + '">';
@@ -823,7 +829,7 @@
 
             // 2nd GRAPH -- AUDITED VS UNAUDITED
             var auditedUnauditedSum = auditedCount + printedCount;
-            var auditedWithoutRemarksCount = auditedCount - NOFListCount - DisposalListCount - MarkDownListCount;
+            var auditedWithoutRemarksCount = auditedCount - NOFListCount - DisposalListCount - MarkDownListCount - ExpiredListCount;
             var text = document.querySelector('#graph .graph2Count').textContent.concat(auditedUnauditedSum);
             document.querySelector('#graph .graph2Count').textContent = text;
 
@@ -832,6 +838,7 @@
             var nofPercentage = ((NOFListCount / auditedUnauditedSum) * 100).toFixed(2);
             var disposalPercentage = ((DisposalListCount / auditedUnauditedSum) * 100).toFixed(2);
             var markdownPercentage = ((MarkDownListCount / auditedUnauditedSum) * 100).toFixed(2);
+            var expiredPercentage = ((ExpiredListCount / auditedUnauditedSum) * 100).toFixed(2);
 
             var data2 = `<div class="graphcontainer">
                             <div class="graphrow">
@@ -848,8 +855,12 @@
                                     <label>Marked Down: </label> ${MarkDownListCount} - ${markdownPercentage}%
                                 </div>
                                 <div class="graphcolumn">
+                                    <label>Expired: </label> ${ExpiredListCount} - ${expiredPercentage}%
+                                </div>
+                                <div class="graphcolumn">
                                     <label>Unaudited: </label> ${printedCount} - ${unauditedPercentage}%
                                 </div>
+                           </div>
                         </div>`;
 
             document.querySelector('#graph .graph2Data').innerHTML = data2;
@@ -860,6 +871,7 @@
                 "NOF": NOFListCount,
                 "Damaged": DisposalListCount,
                 "Marked Down": MarkDownListCount,
+                "Expired": ExpiredListCount,
                 "Unaudited": printedCount
             };
 
@@ -878,10 +890,12 @@
                             "#FFDEB4",
                             "#79AC78",
                             "#967E76",
+                            "#8338ec",
                             "#E97777"
 
                         ],
                         borderColor: [
+                            "rgb(255,255,255)",
                             "rgb(255,255,255)",
                             "rgb(255,255,255)",
                             "rgb(255,255,255)",
@@ -922,6 +936,9 @@
                                     }
                                     else if (label == "Marked Down") {
                                         label += ' - ' + value + ' (' + markdownPercentage + '%)';
+                                    }
+                                    else if (label == "Expired") {
+                                        label += ' - ' + value + ' (' + expiredPercentage + '%)';
                                     }
 
                                     return label;
@@ -1436,49 +1453,52 @@
                  var details = `<b>SKU:</b> ${result.Sku} <br> <b>Description:</b> ${result.Desc} <br> <b>Current Price:</b> ${result.CurrentPrice} <br><br><br>`;
 
                  var changesList = "<label style='color:red;'>Changes On:</label> <br> ";
-                 
-                 if (result.NewBrand != null)
-                     changesList += `- Brand<br>`;
 
-                 if (result.NewModel != null)
-                     changesList += `- Model <br>`;
+                 if (result.IsSKUUpdate == "Yes") {
+                     var changesArray = result.ChangedOn.split(",");
 
-                 if (result.NewDiv != null)
-                     changesList += `- Divisor <br>`;
+                     changesArray.forEach(function (changes) {
 
-                 if (result.NewUPC != null)
-                     changesList += `- UPC <br>`;
+                         if (changes == "O3MODL")
+                             changes = "Model";
+                         else if (changes == "O3IDSC")
+                             changes = "Description";
+                         else if (changes == "O3DEPT")
+                             changes = "Department";
+                         else if (changes = "O3FNAM")
+                             changes = "Brand";
+                         else if (changes == "O3UPC")
+                             changes = "UPC";
+                         else if (changes == "O3TUOM")
+                             changes = "TUOM";
 
-                 if (result.NewDept != null)
-                     changesList += `- Department <br>`;
-
-                 if (result.NewFlag != null)
-                     changesList += `- Flag <br>`;
-
-                 if (result.NewTuom != null)
-                     changesList += `- UOM <br>`;
-
-                 var count = changesList.length;
-
-                 if (count <= 51)
+                         changesList += `- ${changes}<br>`;
+                     });
+                 } else {
                      changesList = "";
+                 }
 
+                 
                  var printPreview = `<iframe src="@Url.Action("PreviewSignage", "Report")?sku=${result.Sku}#toolbar=0&navpanes=0&scrollbar=0&zoom=80" style="width: 100%; height: 600px;" frameborder="0"></iframe>` + changesList;
                  @*var printPreview = `<iframe src="@Url.Action("PreviewSignage", "Report")?sku=${result.Sku}#toolbar=0&navpanes=0&scrollbar=0&zoom=150" style="width: 70%; height: 420px; margin: 100px;" frameborder="0"></iframe>`;*@
 
-                 if (result.IsItemExisting && result.DoesItemBelongToCurrentPCA) {
-                     if (result.IsAudited == "Y") {
+                 if (result.IsItemExisting == "Yes") {
+                     if (result.IsAudited == "Yes") {
                          document.querySelector("#scanResultModal .scanResultTitle").textContent = "Item Found";
                          document.querySelector("#scanResult .resultDetails").innerHTML = details;
                          document.querySelector("#scanResult .resultDesc").textContent = "Item is already audited.";
                          document.querySelector("#scanResultModal .yesOrNoBtns").style.display = "none";
                          scanResultModalContainer.style.display = 'block';
                      } else {
-                         if (result.IsPrinted) {
+                         if (result.IsPrinted == "Yes") {
 
                              document.querySelector("#scanResultModal .scanResultTitle").textContent = "Item Found";
                              document.querySelector("#scanResult .resultDetails").innerHTML = printPreview;
-                             document.querySelector("#scanResult .resultDesc").textContent = "";
+                             if (result.IsPCA == "Yes") {
+                                 document.querySelector("#scanResult .resultDesc").textContent = "";
+                             } else {
+                                 document.querySelector("#scanResult .resultDesc").textContent = "Item does not belong to current PCA.";
+                             }
                              document.querySelector("#scanResultModal .yesOrNoBtns").style.display = "block";
                              scanResultModalContainer.style.display = 'block';
                          } else {
@@ -1489,14 +1509,6 @@
                              scanResultModalContainer.style.display = 'block';
                          }
                      }
-                 }
-                 else if (result.IsItemExisting && !result.DoesItemBelongToCurrentPCA) {
-
-                     document.querySelector("#scanResultModal .scanResultTitle").textContent = "Item Found";
-                     document.querySelector("#scanResult .resultDetails").innerHTML = details;
-                     document.querySelector("#scanResult .resultDesc").textContent = "Item does not belong to current PCA.";
-                     document.querySelector("#scanResultModal .yesOrNoBtns").style.display = "none";
-                     scanResultModalContainer.style.display = 'block';
                  }
                  else {
                      document.querySelector("#scanResultModal .scanResultTitle").textContent = "Item Not Found";
@@ -1688,4 +1700,46 @@
             }
         });
     }
+
+
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const graphTab = document.getElementById('graph-tab');
+
+        graphTab.addEventListener('click', function (e) {
+            e.preventDefault();
+            // Store the active tab in localStorage
+            localStorage.setItem('activeTab', '#graph');
+            // Reload the page
+            window.location.reload();
+        });
+
+        // Check localStorage for the active tab
+        const activeTab = localStorage.getItem('activeTab');
+        if (activeTab) {
+            // Remove the active class from all tabs
+            document.querySelectorAll('.nav-link-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Add the active class to the stored active tab
+            const activeTabElement = document.querySelector(`[href="${activeTab}"]`);
+            if (activeTabElement) {
+                activeTabElement.classList.add('active');
+            }
+
+            // Remove the active class from all tab contents
+            document.querySelectorAll('.tab-pane').forEach(pane => {
+                pane.classList.remove('active', 'show');
+            });
+
+            // Add the active class to the corresponding tab content
+            const activePane = document.querySelector(activeTab);
+            if (activePane) {
+                activePane.classList.add('active', 'show');
+            }
+
+            // Clear the stored active tab from localStorage
+            localStorage.removeItem('activeTab');
+        }
+    });
 </script>

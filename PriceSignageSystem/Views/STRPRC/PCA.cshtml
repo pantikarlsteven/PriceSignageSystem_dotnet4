@@ -118,7 +118,7 @@
                 </ul>
 
                 <!-- Tab panes -->
-                <div class="tab-content">
+                <div class="tab-content table-responsive">
                     <div id="with-inventory" class="tab-pane active mx-2">
                         <h3 class="text-center mt-2">With Inventory</h3>
                         <table id="with-inventory-table" class="table table-sm table-hover" style="width: 100%; text-align: center;">
@@ -419,7 +419,7 @@
                 data: data,
                 columnDefs: [
                     { targets: [0, 1, 6, 7, 8, 14, 17], orderable: false },
-                    { targets: [3], visible: false },
+                    //{ targets: [3], visible: false },
                     //{
                     //    "targets": 7, // column "O3REG"
                     //    "render": function (data, type, row, meta) {
@@ -506,7 +506,18 @@
                         .addClass('custom-button')
                         .text('Export')
                         .on('click', function () {
-                            window.location.href = '/STRPRC/ExportDataTableToExcel?tab=WithInventory&date=' + date;
+
+                            var selectedRows = [];
+                            $('.rowCheckboxWith:checked').each(function () {
+                                var rowId = $(this).data('id');
+                                selectedRows.push(rowId);
+                            });
+
+                            var encodedSelectedRows = '';
+                            if (selectedRows.length > 0)
+                                encodedSelectedRows = encodeURIComponent(selectedRows);
+
+                            window.location.href = '/STRPRC/ExportDataTableToExcel?tab=WithInventory&date=' + date + '&selectedRows=' + encodedSelectedRows;
                         });
 
                     var $queueButton = $('<button>')
@@ -745,7 +756,7 @@
                 pageLength: 50,
                 data: data,
                 columnDefs: [
-                    { targets: [3,5,6,7,8,20, 21], visible: false },
+                    { targets: [/*3,*/5,6,7,8,20, 21], visible: false },
                     //{ targets: [4,5], visible: false },
                     { targets: [0, 1, 10,11,12, 18], orderable: false },
                 ],
@@ -830,7 +841,18 @@
                         .addClass('custom-button')
                         .text('Export')
                         .on('click', function () {
-                            window.location.href = '/STRPRC/ExportDataTableToExcel?tab=NewExemptionInventory&date=' + date + '&filter=' + $select.val();
+
+                            var selectedRows = [];
+                            $('.rowCheckboxNewExemption:checked').each(function () {
+                                var rowId = $(this).data('id');
+                                selectedRows.push(rowId);
+                            });
+
+                            var encodedSelectedRows = '';
+                            if (selectedRows.length > 0)
+                                encodedSelectedRows = encodeURIComponent(selectedRows);
+
+                            window.location.href = '/STRPRC/ExportDataTableToExcel?tab=NewExemptionInventory&date=' + date + '&filter=' + $select.val() + '&selectedRows=' + encodedSelectedRows;
 
                         });
 
@@ -1132,7 +1154,7 @@
                 data: data,
                 columnDefs: [
                     { targets: [0, 1, 6, 7, 8, 14, 17], orderable: false },
-                    { targets: [3], visible: false },
+                    //{ targets: [3], visible: false },
                     {
                         "targets": 7, // column "O3REG"
                         "render": function (data, type, row, meta) {
@@ -1213,13 +1235,25 @@
                 "dom": '<"top"lfB>rt<"bottom"ip>',
 
                 initComplete: function () {
+
                     var date = $('#startDate').val();
                     // Create the button element
                     var $button = $('<button>')
                         .addClass('custom-button')
                         .text('Export')
                         .on('click', function () {
-                            window.location.href = '/STRPRC/ExportDataTableToExcel?tab=Consignment&date=' + date;
+
+                            var selectedRows = [];
+                            $('.rowCheckboxCo:checked').each(function () {
+                                var rowId = $(this).data('id');
+                                selectedRows.push(rowId);
+                            });
+
+                            var encodedSelectedRows = '';
+                            if (selectedRows.length > 0)
+                                encodedSelectedRows = encodeURIComponent(selectedRows);
+
+                            window.location.href = '/STRPRC/ExportDataTableToExcel?tab=Consignment&date=' + date + '&selectedRows=' + encodedSelectedRows;
                         });
 
                     var $queueButton = $('<button>')

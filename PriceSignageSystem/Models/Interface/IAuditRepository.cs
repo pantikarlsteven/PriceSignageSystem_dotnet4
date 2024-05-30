@@ -21,5 +21,8 @@ namespace PriceSignageSystem.Models.Interface
         List<AuditDto> GetAll();
         SkuUpdatesAuditDto CheckIfExisting(decimal sku);
         List<ExportAuditDto> GetAllAuditToExport();
+        Task<List<AuditDto>> GetAllPrinted();
+        Task<List<AuditDto>> GetAllUnprinted();
+
     }
 }

@@ -610,8 +610,16 @@ namespace PriceSignageSystem.Controllers
         }
 
         [HttpGet]
-        public FileResult ExportDataTableToExcel(string tab, DateTime date, string filter)
+        public FileResult ExportDataTableToExcel(string tab, DateTime date, string filter, string selectedRows )
         {
+            var selectedSkus = new decimal[] { };
+            if (!string.IsNullOrEmpty(selectedRows))
+            {
+                string[] selectedRowsArray = selectedRows.Split(',');
+                selectedSkus = selectedRowsArray.Select(decimal.Parse).ToArray();
+            }
+
+
             var decimalDate = ConversionHelper.ToDecimal(date);
             var dataTable = new DataTable();
             var noccList = new List<ExportPCAExemptionDto>();
@@ -623,19 +631,51 @@ namespace PriceSignageSystem.Controllers
                 }
                 else
                 {
-               
+
                     if (filter == "all")
-                        toExportRawData = toExportRawData.Where(a => a.IsExemp == "Yes" || a.WithInventory == "No").ToList();
+                    {
+                        if (string.IsNullOrEmpty(selectedRows))
+                            toExportRawData = toExportRawData.Where(a => a.IsExemp == "Yes" || a.WithInventory == "No").ToList();
+                        else
+                            toExportRawData = toExportRawData.Where(item => selectedSkus.Contains(item.SKU)).ToList();
+                    }
+
                     else if (filter == "saveZero")
-                        toExportRawData = toExportRawData.Where(a => (a.IsExemp == "Yes" || a.WithInventory == "No") && a.ExemptionType == "Save Zero").ToList();
+                    {
+                        if (string.IsNullOrEmpty(selectedRows))
+                            toExportRawData = toExportRawData.Where(a => (a.IsExemp == "Yes" || a.WithInventory == "No") && a.ExemptionType == "Save Zero").ToList();
+                        else
+                            toExportRawData = toExportRawData.Where(item => selectedSkus.Contains(item.SKU)).ToList();
+                    }
                     else if (filter == "negative")
-                        toExportRawData = toExportRawData.Where(a =>  a.WithInventory == "No" && a.IBHAND < 0).ToList();
+                    {
+                        if (string.IsNullOrEmpty(selectedRows))
+                            toExportRawData = toExportRawData.Where(a => a.WithInventory == "No" && a.IBHAND < 0).ToList();
+                        else
+                            toExportRawData = toExportRawData.Where(item => selectedSkus.Contains(item.SKU)).ToList();
+                    }
                     else if (filter == "zero")
-                        toExportRawData = toExportRawData.Where(a =>  a.WithInventory == "No" && a.IBHAND == 0).ToList();
+                    {
+                        if (string.IsNullOrEmpty(selectedRows))
+                            toExportRawData = toExportRawData.Where(a => a.WithInventory == "No" && a.IBHAND == 0).ToList();
+                        else
+                            toExportRawData = toExportRawData.Where(item => selectedSkus.Contains(item.SKU)).ToList();
+                    }
                     else if (filter == "negativeSave")
-                        toExportRawData = toExportRawData.Where(a => (a.IsExemp == "Yes" || a.WithInventory == "No") && a.ExemptionType == "Negative Save").ToList();
+                    {
+                        if (string.IsNullOrEmpty(selectedRows))
+                            toExportRawData = toExportRawData.Where(a => (a.IsExemp == "Yes" || a.WithInventory == "No") && a.ExemptionType == "Negative Save").ToList();
+                        else
+                            toExportRawData = toExportRawData.Where(item => selectedSkus.Contains(item.SKU)).ToList();
+                    }
                     else if (filter == "noCC")
-                        noccList = _sTRPRCRepository.GetAllNoConsignmentContract();
+                    {
+                        if (string.IsNullOrEmpty(selectedRows))
+                            noccList = _sTRPRCRepository.GetAllNoConsignmentContract();
+                        else
+                            noccList = _sTRPRCRepository.GetAllNoConsignmentContract().Where(item => selectedSkus.Contains(item.SKU)).ToList();
+
+                    }
                 }
 
                 if (filter != "noCC")
@@ -647,13 +687,18 @@ namespace PriceSignageSystem.Controllers
             else
             {
                 var toExportRawData = _sTRPRCRepository.PCAToExport().ToList();
+                var consignmentData = new List<ExportPCADto>();
                 if (tab == "WithInventory")
                 {
-                    toExportRawData = toExportRawData.Where(a => a.WithInventory == "Yes" && a.IsExemption == "No" && a.O3TYPE != "CO").ToList();
+                    if (string.IsNullOrEmpty(selectedRows))
+                        toExportRawData = toExportRawData.Where(a => a.WithInventory == "Yes" && a.IsExemption == "No" && a.O3TYPE != "CO").ToList();
+                    else
+                        toExportRawData = toExportRawData.Where(item => selectedSkus.Contains(item.SKU)).ToList();
+
                 }
                 else if (tab == "Consignment")
                 {
-                    toExportRawData = toExportRawData.Where(a => a.WithInventory == "Yes" && a.IsExemption == "No" && a.O3TYPE == "CO").ToList();
+                    consignmentData = _sTRPRCRepository.GetConsignmentToExport(selectedSkus);
                 }
                 else
                 {
@@ -661,7 +706,10 @@ namespace PriceSignageSystem.Controllers
 
                 }
 
-                dataTable = ConversionHelper.ConvertListToDataTable(toExportRawData);
+                if (tab == "Consignment")
+                    dataTable = ConversionHelper.ConvertListToDataTable(consignmentData);
+                else
+                    dataTable = ConversionHelper.ConvertListToDataTable(toExportRawData);
             }
 
            
@@ -709,6 +757,9 @@ namespace PriceSignageSystem.Controllers
                         rows.ElementAt(i - 1).Style.Fill.SetBackgroundColor(XLColor.LightGray);
                     }
                 }
+
+                // HIDE COLUMNS
+                worksheet.Columns("Q:T").Delete();
 
                 // Save the Excel file to a memory stream
                 using (var memoryStream = new System.IO.MemoryStream())

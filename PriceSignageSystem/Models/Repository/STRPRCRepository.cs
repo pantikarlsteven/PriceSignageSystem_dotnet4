@@ -1547,5 +1547,33 @@ namespace PriceSignageSystem.Models.Repository
 
             return result;
         }
+
+        public List<ExportPCADto> GetConsignmentToExport(decimal[] selectedSkus)
+        {
+            #region -- TABLE VALUED PARAMETER
+            var table = new DataTable();
+            table.Columns.Add("Value", typeof(decimal));
+
+            foreach (var sku in selectedSkus)
+            {
+                table.Rows.Add(sku);
+            }
+
+            var parameter = new SqlParameter
+            {
+                ParameterName = "@SelectedSkus",
+                SqlDbType = SqlDbType.Structured,
+                TypeName = "dbo.DecimalArray",
+                Value = table
+            };
+
+            #endregion
+
+            var result = _db.Database.SqlQuery<ExportPCADto>("EXEC sp_GetAllConsignmentToExport @SelectedSkus", parameter)
+                .Where(a => a.O3FLAG3 == "Y")
+               .ToList();
+
+            return result;
+        }
     }
 }

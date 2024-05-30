@@ -46,5 +46,6 @@ namespace PriceSignageSystem.Models.Interface
         int SyncFromNew();
         Task<List<STRPRCDto>> GetAllConsignment();
         List<ExportPCAExemptionDto> GetAllNoConsignmentContract();
+        List<ExportPCADto> GetConsignmentToExport(decimal[] selectedSkus);
     }
 }
