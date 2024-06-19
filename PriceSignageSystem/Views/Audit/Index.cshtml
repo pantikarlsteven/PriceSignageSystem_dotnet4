@@ -120,6 +120,10 @@
                         <div class="row align-items-center justify-content-center">
                             <div class="col-auto" id="barcodeContainer">
                                 <button id="barcodeScan" class="btn btn-primary" onclick="Scan()">Scan Bar Code</button>
+
+                            </div>
+                            <div class="col-auto" id="scaleTicket">
+                                <input type="checkbox" name="ScaleTicket" id="scaleTicket" /> Scale Ticket
                             </div>
                         </div>
                         <table id="printed-pca-table" class="table table-sm table-hover" style="width: 100%; text-align: center;">
@@ -1424,7 +1428,7 @@
                 rememberLastUsedCamera: true,
                 showZoomSliderIfSupported: true,
                 defaultZoomValueIfSupported: 2,
-                formatsToSupport: [9, 10, 14, 15], // EAN-13, EAN-8, UPC-A, UPC-E respectively
+                formatsToSupport: [5, 9, 10, 14, 15], // Code-128, EAN-13, EAN-8, UPC-A, UPC-E respectively
                 //videoConstraints: {
                 //    facingMode: { exact: "environment" },
                 //},
@@ -1439,13 +1443,14 @@
         html5QrcodeScanner.clear();
         modalContainer.style.display = 'none';
         localStorage.setItem("isScanUsed", true);
+        var isScaleTicket =  document.querySelector("#scaleTicket #scaleTicket").checked;
 
         codeFormat = decodedResult.result.format.toString().toUpperCase();
 
          $.ajax({
              url: '@Url.Action("ScanBarcode", "Audit")',
              type: 'POST',
-             data: { code: decodedText, codeFormat: codeFormat},
+             data: { code: decodedText, codeFormat: codeFormat, isScaleTicket: isScaleTicket},
              success: function (result) {
 
                  document.querySelector("#scanResultModal .sku").textContent = result.Sku;
@@ -1534,6 +1539,7 @@
         localStorage.setItem("isScanUsed", false);
     }
     function closeScanResultModal() {
+        document.querySelector("#scaleTicket #scaleTicket").checked = false;
         scanResultModalContainer.style.display = 'none';
         document.querySelector("#scanResultModal .sku").textContent = "";
         Scan();
@@ -1553,6 +1559,7 @@
     }
 
     function postSku() {
+        document.querySelector("#scaleTicket #scaleTicket").checked = false;
         scanResultModalContainer.style.display = 'none';
         var sku = document.querySelector("#scanResultModal .sku").textContent;
         var selectedRemarks = 'Matched';
@@ -1683,6 +1690,8 @@
     }
 
     function tagWrongSign() {
+        document.querySelector("#scaleTicket #scaleTicket").checked = false;
+
         scanResultModalContainer.style.display = 'none';
         var sku = document.querySelector("#scanResultModal .sku").textContent;
 

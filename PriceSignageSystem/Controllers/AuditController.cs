@@ -36,11 +36,19 @@ namespace PriceSignageSystem.Controllers
             var printedList = await _auditRepo.GetAllPrinted(); 
             var unprintedList = await _auditRepo.GetAllUnprinted();
             var auditList = new AuditDto();
+            var dateToday = ConversionHelper.ToDecimal(DateTime.Now);
 
             auditList.PrintedList = printedList.Where(a => a.IsPrinted == "Yes" && a.IsAudited == "No").ToList();
             auditList.NotPrintedList = unprintedList.OrderByDescending(o => o.IsNotRequired).ToList();
             auditList.AuditedList = printedList.Where(a => a.IsAudited == "Yes").ToList();
             
+            foreach(var item in auditList.NotPrintedList)
+            {
+                if (item.IsReverted == "Yes" && item.O3EDT == 999999)
+                    item.O3SDT = dateToday;
+            }
+
+
             string jsonData = Newtonsoft.Json.JsonConvert.SerializeObject(auditList);
 
             // Compress the JSON data using Gzip compression
@@ -64,9 +72,9 @@ namespace PriceSignageSystem.Controllers
         }
 
         [HttpPost]
-        public ActionResult ScanBarcode(string code, string codeFormat)
+        public ActionResult ScanBarcode(string code, string codeFormat, bool isScaleTicket)
         {
-            var data = _auditRepo.ScanBarcode(code, codeFormat);
+            var data = _auditRepo.ScanBarcode(code, codeFormat, isScaleTicket);
             return Json(data);
         }
 

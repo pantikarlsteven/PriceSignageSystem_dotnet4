@@ -32,5 +32,17 @@ namespace PriceSignageSystem.Helper
         {
             return input.TrimStart('0');
         }
+
+        public static string InHouseUPC(string input)
+        {
+            var result = string.Empty;
+
+            if (input[0] == '0')
+                result = input.Substring(0, input.Length - 1);
+            else if (input.Substring(0, 3) == "270")
+                result = input.Substring(3, 4);
+
+            return result;
+        }
     }
 }

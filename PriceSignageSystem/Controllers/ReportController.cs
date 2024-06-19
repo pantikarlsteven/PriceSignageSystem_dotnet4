@@ -151,7 +151,7 @@ namespace PriceSignageSystem.Controllers
                 report.Load(path);
                 var skuModel = _sTRPRCRepository.GetReportData(model.O3SKU);
                 skuModel.TypeId = model.TypeId;
-                //skuModel.TypeId = 2;
+                //skuModel.TypeId = 1;
                 skuModel.CategoryId = model.CategoryId;
                 skuModel.UserName = User.Identity.Name;
                 skuModel.O3SDSC = _sTRPRCRepository.GetSubClassDescription(model.O3SKU);

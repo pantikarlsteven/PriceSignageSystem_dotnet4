@@ -506,7 +506,10 @@ namespace PriceSignageSystem.Controllers
             data.ExcemptionList = rawData.Where(a => a.HasInventory == "" || a.IsExemp == "Y").ToList();
             data.ConsignmentList = consignmentList.OrderByDescending(o => o.O3SDT).Where(f => f.O3FLAG3 == "Y").ToList();
 
-            var ExempCoList = consignmentList.Where(a => a.O3FLAG3 != "Y" || a.O3FLAG3 == null).ToList();
+            var commonIds = data.ExcemptionList.Select(x => x.O3SKU).Intersect(consignmentList.Select(x => x.O3SKU)).ToList();
+            var coList = consignmentList.Where(x => !commonIds.Contains(x.O3SKU)).ToList();
+
+            var ExempCoList = coList.Where(a => a.O3FLAG3 != "Y" || a.O3FLAG3 == null).ToList();
             data.ExcemptionList.AddRange(ExempCoList);
 
             foreach (var item in data.WithInventoryList)
