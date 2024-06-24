@@ -67,5 +67,6 @@ namespace PriceSignageSystem.Models.Dto
         public string PrintedOn { get; set; }
         public bool IsSingleLines { get; set; } = false;
         public int OneEightDescTotalLines { get; set; }
+        public decimal PromoVal { get; set; }
     }
 }

@@ -174,7 +174,6 @@ namespace PriceSignageSystem.Controllers
                 skuModel.OneEightDescTotalLines = textToImage.OneEightDescTotalLines;
                 if (skuModel.IsSLBrand && skuModel.IsSLDescription)
                     skuModel.IsSingleLines = true;
-              
                 report.SetDataSource(ConversionHelper.ConvertObjectToDataTable(skuModel));
                 Stream stream = report.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
                 var pdfBytes = new byte[stream.Length];

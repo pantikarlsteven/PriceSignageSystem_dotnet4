@@ -29,6 +29,10 @@ namespace PriceSignageSystem.Models.Constants
         {
             public const int Regular = 1;
             public const int Save = 2;
+            public const int B1T1 = 3;
+            public const int B1T1M = 4;
+            public const int B1_A = 5;
+            public const int B1_P = 6;
         }
 
         public static class Status

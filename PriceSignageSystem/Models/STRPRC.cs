@@ -46,5 +46,6 @@ namespace PriceSignageSystem.Models
         public int SizeId { get; set; }
         public int CategoryId { get; set; }
         public bool IsPrinted { get; set; }
+        public decimal PromoVal { get; set; }
     }
 }
