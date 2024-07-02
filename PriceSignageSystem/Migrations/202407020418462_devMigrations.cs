@@ -3,7 +3,7 @@
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class STRPRC_AddPromoVal : DbMigration
+    public partial class devMigrations : DbMigration
     {
         public override void Up()
         {
