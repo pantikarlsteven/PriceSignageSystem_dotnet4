@@ -7,13 +7,13 @@ namespace PriceSignageSystem.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.4.4")]
-    public sealed partial class devMigrations : IMigrationMetadata
+    public sealed partial class STRPRC_AddPromoVal : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(devMigrations));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(STRPRC_AddPromoVal));
         
         string IMigrationMetadata.Id
         {
-            get { return "202407020418462_devMigrations"; }
+            get { return "202406210136046_STRPRC_AddPromoVal"; }
         }
         
         string IMigrationMetadata.Source

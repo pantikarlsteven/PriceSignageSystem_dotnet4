@@ -462,9 +462,9 @@
     <Compile Include="Migrations\202405080531355_addEmpIdField_Users.designer.cs">
       <DependentUpon>202405080531355_addEmpIdField_Users.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202407020418462_devMigrations.cs" />
-    <Compile Include="Migrations\202407020418462_devMigrations.designer.cs">
-      <DependentUpon>202407020418462_devMigrations.cs</DependentUpon>
+    <Compile Include="Migrations\202406210136046_STRPRC_AddPromoVal.cs" />
+    <Compile Include="Migrations\202406210136046_STRPRC_AddPromoVal.designer.cs">
+      <DependentUpon>202406210136046_STRPRC_AddPromoVal.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AuditRemark.cs" />
@@ -804,8 +804,8 @@
     <EmbeddedResource Include="Migrations\202405080531355_addEmpIdField_Users.resx">
       <DependentUpon>202405080531355_addEmpIdField_Users.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202407020418462_devMigrations.resx">
-      <DependentUpon>202407020418462_devMigrations.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202406210136046_STRPRC_AddPromoVal.resx">
+      <DependentUpon>202406210136046_STRPRC_AddPromoVal.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Dynamic_OneEightReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
