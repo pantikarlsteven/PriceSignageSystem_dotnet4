@@ -282,6 +282,7 @@
         var tableExcemption = null;
         var tableConsignment = null;
         var printedOn = "PCA - Multiple";
+        var latestDate = "";
 
         function formatDateToYYMMDD() {
             const date = new Date();
@@ -319,7 +320,7 @@
                         }
                     });
 
-                    var latestDate = data.LatestDate;
+                    latestDate = data.LatestDate;
                     const day = latestDate.toString().substr(4, 2);
                     const month = latestDate.toString().substr(2, 2);
                     const year = latestDate.toString().substr(0, 2);
@@ -879,6 +880,8 @@
                             tableNewExemption.column(6).visible(true); // ON HAND
                             tableNewExemption.column(7).visible(false); // DC ONHAND FOR ZERO INV
                             tableNewExemption.column(8).visible(false); // IN TRANSIT FOR ZERO INV
+                            tableNewExemption.column(13).search("", true, false).draw();
+                            tableNewExemption.column(20).search("", true, false).draw();
 
                             // Log the selected value to the console
                             if ($select.val() == "negative") {
@@ -917,6 +920,8 @@
                                 tableNewExemption.column(5).search("Y", true, false).draw();
                                 tableNewExemption.column(21).search("CO", true, false).draw(); 
                                 tableNewExemption.column(20).search("", true, false).draw();
+                                tableNewExemption.column(13).search(latestDate, true, false).draw();
+
                             }
                             else {
                                 tableNewExemption.column(6).search("").draw();

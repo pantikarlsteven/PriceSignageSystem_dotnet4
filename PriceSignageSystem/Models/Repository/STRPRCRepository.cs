@@ -444,7 +444,7 @@ namespace PriceSignageSystem.Models.Repository
                             CategoryId = (int)reader["CategoryId"],
                             DepartmentName = reader["DPTNAM"].ToString(),
                             IsReverted = reader["O3FLAG1"].ToString(),
-                            IsCCReverted = reader["IsCCReverted"].ToString(),
+                            O3FLAG3 = reader["O3FLAG3"].ToString(),
                             HasInventory = reader["INV2"].ToString(),
                             IsExemp = reader["IsExemp"].ToString(),
                             NegativeSave = reader["NegativeSave"].ToString(),
@@ -473,7 +473,7 @@ namespace PriceSignageSystem.Models.Repository
                     connection.Close();
                 }
 
-                var exemptions = data.Where(w => w.IsExemp == "Y" || (w.IsCCReverted != "Y" && w.O3TYPE == "CO")).ToList();
+                var exemptions = data.Where(w => w.IsExemp == "Y" || ((w.O3FLAG3 != "Y" || w.O3FLAG3 == null) && w.O3TYPE == "CO")).ToList();
 
                 var dataExemp = new List<ExemptionDto>();
                 using (var connection = new SqlConnection(connStringCentralizedExemptions))
@@ -525,9 +525,9 @@ namespace PriceSignageSystem.Models.Repository
                 }
 
                 string insertQuery = "INSERT INTO Exemptions (IsPrinted, O3SKU, O3UPC, O3IDSC, o3type, O3REG," +
-                                    " O3POS, O3SDT, O3EDT, O3RSDT, O3REDT, TypeId, SizeId, CategoryId, DPTNAM, O3FLAG1, INV2, IsExemp, NegativeSave, IBHAND, StoreID) " +
+                                    " O3POS, O3SDT, O3EDT, O3RSDT, O3REDT, TypeId, SizeId, CategoryId, DPTNAM, O3FLAG1, INV2, IsExemp, NegativeSave, IBHAND, StoreID, HasCoContract) " +
                                      "VALUES (@IsPrinted, @O3SKU, @O3UPC, @O3IDSC, @o3type, @O3REG," +
-                                    " @O3POS, @O3SDT, @O3EDT, @O3RSDT, @O3REDT, @TypeId, @SizeId, @CategoryId, @DPTNAM, @O3FLAG1, @INV2, @IsExemp, @NegativeSave, @IBHAND, @StoreID)";
+                                    " @O3POS, @O3SDT, @O3EDT, @O3RSDT, @O3REDT, @TypeId, @SizeId, @CategoryId, @DPTNAM, @O3FLAG1, @INV2, @IsExemp, @NegativeSave, @IBHAND, @StoreID, @HasCoContract)";
 
                 var listOfIds = new List<int>();
 
@@ -564,6 +564,8 @@ namespace PriceSignageSystem.Models.Repository
                             command.Parameters.AddWithValue("@NegativeSave", exemption.NegativeSave);
                             command.Parameters.AddWithValue("@IBHAND", exemption.IBHAND);
                             command.Parameters.AddWithValue("@StoreID", exemption.StoreID);
+                            command.Parameters.AddWithValue("@HasCoContract", exemption.O3FLAG3);
+
 
                             // Execute the SQL command
                             command.ExecuteNonQuery();
