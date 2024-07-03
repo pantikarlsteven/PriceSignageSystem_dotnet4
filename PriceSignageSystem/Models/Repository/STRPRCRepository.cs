@@ -473,7 +473,7 @@ namespace PriceSignageSystem.Models.Repository
                     connection.Close();
                 }
 
-                var exemptions = data.Where(w => w.IsExemp == "Y" || (w.HasCoContract != "Y" && w.O3TYPE == "CO")).ToList();
+                var exemptions = data.Where(w => w.IsExemp == "Y" || (w.IsCCReverted != "Y" && w.O3TYPE == "CO")).ToList();
 
                 var dataExemp = new List<ExemptionDto>();
                 using (var connection = new SqlConnection(connStringCentralizedExemptions))
@@ -564,7 +564,6 @@ namespace PriceSignageSystem.Models.Repository
                             command.Parameters.AddWithValue("@NegativeSave", exemption.NegativeSave);
                             command.Parameters.AddWithValue("@IBHAND", exemption.IBHAND);
                             command.Parameters.AddWithValue("@StoreID", exemption.StoreID);
-                            command.Parameters.AddWithValue("@HasCoContract", exemption.HasCoContract);
 
                             // Execute the SQL command
                             command.ExecuteNonQuery();
