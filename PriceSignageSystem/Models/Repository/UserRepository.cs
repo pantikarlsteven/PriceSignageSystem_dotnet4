@@ -88,5 +88,14 @@ namespace PriceSignageSystem.Models.Repository
 
             return result;
         }
+
+        public int UpdateInfo(UserStoreDto user)
+        {
+            var record = _db.Users.Where(a => a.UserName == user.UserName).FirstOrDefault();
+            record.EmployeeId = user.EmployeeId;
+
+            var result = _db.SaveChanges();
+            return result;
+        }
     }
 }

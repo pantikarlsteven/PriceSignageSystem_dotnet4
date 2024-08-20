@@ -1459,7 +1459,7 @@
 
                  var changesList = "<label style='color:red;'>Changes On:</label> <br> ";
 
-                 if (result.IsSKUUpdate == "Yes") {
+                 if (result.IsSKUUpdate == "Yes" && result.ChangedOn != null) {
                      var changesArray = result.ChangedOn.split(",");
 
                      changesArray.forEach(function (changes) {

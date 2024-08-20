@@ -440,6 +440,7 @@ namespace PriceSignageSystem.Controllers
                     if (isUpdated)
                     {
                         _sTRPRCRepository.UpdateSTRPRCTable(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
+                        result = _sTRPRCRepository.GetLatestUpdate();
                         await _sTRPRCRepository.UpdateCentralizedExemptions(result.LatestDate);
                         _sTRPRCRepository.GetLatestInventory(ConfigurationManager.AppSettings["StoreID"].ToString());
                     }
@@ -448,6 +449,7 @@ namespace PriceSignageSystem.Controllers
                     {
                         await _sTRPRCRepository.UpdateSTRPRC151(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
                         _sTRPRCRepository.UpdateSTRPRCTable(int.Parse(ConfigurationManager.AppSettings["StoreID"]));
+                        result = _sTRPRCRepository.GetLatestUpdate();
                         await _sTRPRCRepository.UpdateCentralizedExemptions(result.LatestDate);
                         _sTRPRCRepository.GetLatestInventory(ConfigurationManager.AppSettings["StoreID"].ToString());
                     }
@@ -482,7 +484,7 @@ namespace PriceSignageSystem.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult> LoadPCA()
+        public async Task<ActionResult> LoadPCA(/*string dateFilter*/)
         {
             var dateToday = ConversionHelper.ToDecimal(DateTime.Now);
             DateTime currentTime = DateTime.Now;
@@ -496,15 +498,43 @@ namespace PriceSignageSystem.Controllers
 
             var result = _sTRPRCRepository.GetLatestUpdate();
             var data = new STRPRCDto();
-            var rawData = await _sTRPRCRepository.GetDataByStartDate(result.LatestDate);
-            var consignmentList = await _sTRPRCRepository.GetAllConsignment();
+            //decimal dateFilterInDecimal = 0;
+            //if (!string.IsNullOrEmpty(dateFilter))
+            //{
+            //    DateTime date = DateTime.Parse(dateFilter);
+            //    dateFilterInDecimal = date.Year % 100 * 10000 + date.Month * 100 + date.Day;
+            //}
+            List<STRPRCDto> rawData;
+            List<STRPRCDto> consignmentList;
+            //if (string.IsNullOrEmpty(dateFilter) || dateFilterInDecimal == result.LatestDate)
+            //{
+            //    rawData = await _sTRPRCRepository.GetDataByStartDate(result.LatestDate);
+            //    consignmentList = await _sTRPRCRepository.GetAllConsignment(result.LatestDate);
+            //}
+            //else
+            //{
+            //    result.LatestDate = dateFilterInDecimal;
+            //    rawData = await _sTRPRCRepository.GetDataByPCAHistory(dateFilter);
+            //    consignmentList = await _sTRPRCRepository.GetDataByConsignmentHistory(dateFilter);
+            //}
+
+            rawData = await _sTRPRCRepository.GetDataByStartDate(result.LatestDate);
+            consignmentList = await _sTRPRCRepository.GetAllConsignment(result.LatestDate);
+
+            foreach(var item in rawData)
+            {
+                item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
+                if (item.IsReverted == "Yes" && item.O3EDT == 999999)
+                    item.O3SDT = dateToday;
+            }
 
             data.LatestDate = result.LatestDate;
+            rawData = rawData.Where(a => a.O3SDT == result.LatestDate).ToList();
             data.WithInventoryList = rawData.Where(a => a.HasInventory == "Y" && a.IsExemp == "N" && a.O3TYPE != "CO").ToList();
             var NegativeSaveList = rawData.Where(a => a.NegativeSave == "Y" && a.IBHAND > 0).ToList(); // Negative save with positive onhand
             data.WithInventoryList.AddRange(NegativeSaveList);
-            data.ExcemptionList = rawData.Where(a => a.HasInventory == "" || a.IsExemp == "Y").ToList();
-            data.ConsignmentList = consignmentList.OrderByDescending(o => o.O3SDT).Where(f => f.O3FLAG3 == "Y" && f.O3SDT == result.LatestDate).ToList();
+            data.ExcemptionList = rawData.Where(a => (a.HasInventory == "" || a.IsExemp == "Y") && a.O3SKU.ToString().Length != 4 ).ToList(); // REMOVE FRESH SKUS
+            data.ConsignmentList = consignmentList.OrderByDescending(o => o.O3SDT).Where(f => f.O3FLAG3 == "Y").ToList();
 
             var commonIds = data.ExcemptionList.Select(x => x.O3SKU).Intersect(consignmentList.Select(x => x.O3SKU)).ToList();
             var coList = consignmentList.Where(x => !commonIds.Contains(x.O3SKU)).ToList();
@@ -512,83 +542,34 @@ namespace PriceSignageSystem.Controllers
             var ExempCoList = coList.Where(a => (a.O3FLAG3 != "Y" || a.O3FLAG3 == null) && a.O3SDT == result.LatestDate).ToList();
             data.ExcemptionList.AddRange(ExempCoList);
 
-            foreach (var item in data.WithInventoryList)
-            {
-                item.TypeName = item.TypeId == 2 ? "Save"
-                                : item.TypeId == 1 ? "Regular"
-                                : "Save";
-                item.SizeName = item.SizeId == 1 ? "Whole"
-                                : item.SizeId == 2 ? "1/8"
-                                : item.SizeId == 3 ? "Jewelry"
-                                : "Whole";
-                item.CategoryName = item.CategoryId == 1 ? "Appliance"
-                                    : item.CategoryId == 2 ? "Non-Appliance"
-                                    : "Non-Appliance";
-                item.IsPrinted = item.IsPrinted == "True" || item.IsPrinted == "Yes" ? "Yes" : "No";
-                item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
-                item.IsNotRequired = item.IsNotRequired == "Y" ? "Yes" : "No";
+            //foreach (var item in data.WithInventoryList)
+            //{
+            //    item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
+            //    if (item.IsReverted == "Yes" && item.O3EDT == 999999)
+            //        item.O3SDT = dateToday;
+            //}
 
-                if (item.IsReverted == "Yes" && item.O3EDT == 999999)
-                    item.O3SDT = dateToday;
-            }
+            //foreach (var item in data.ExcemptionList)
+            //{
+            //    if (item.IsExemp == "Y")
+            //    {
+            //        item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
+            //    }
+            //    else
+            //    {
+            //        item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
+            //    }
 
-            foreach (var item in data.ExcemptionList)
-            {
-                if (item.IsExemp == "Y")
-                {
-                    item.TypeName = item.O3EDT != 999999 ? "Save" : "Regular";
-                    item.SizeName = item.SizeId == 1 ? "Whole"
-                                    : item.SizeId == 2 ? "1/8"
-                                    : item.SizeId == 3 ? "Jewelry"
-                                    : "Whole";
-                    item.CategoryName = item.CategoryId == 1 ? "Appliance"
-                                        : item.CategoryId == 2 ? "Non-Appliance"
-                                        : "Non-Appliance";
-                    item.IsPrinted = item.IsPrinted == "True" || item.IsPrinted == "Yes" ? "Yes" : "No";
-                    item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
-                    item.IsNotRequired = item.IsNotRequired == "Y" ? "Yes" : "No";
-
-                }
-                else
-                {
-                    item.TypeName = item.TypeId == 2 ? "Save"
-                                    : item.TypeId == 1 ? "Regular"
-                                    : "Save";
-                    item.SizeName = item.SizeId == 1 ? "Whole"
-                                    : item.SizeId == 2 ? "1/8"
-                                    : item.SizeId == 3 ? "Jewelry"
-                                    : "Whole";
-                    item.CategoryName = item.CategoryId == 1 ? "Appliance"
-                                        : item.CategoryId == 2 ? "Non-Appliance"
-                                        : "Non-Appliance";
-                    item.IsPrinted = item.IsPrinted == "True" || item.IsPrinted == "Yes" ? "Yes" : "No";
-                    item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
-                    item.IsNotRequired = item.IsNotRequired == "Y" ? "Yes" : "No";
-
-                }
-
-                if (item.IsReverted == "Yes" && item.O3EDT == 999999)
-                    item.O3SDT = dateToday;
-            }
-            foreach (var item in data.ConsignmentList)
-            {
-                item.TypeName = item.TypeId == 2 ? "Save"
-                                : item.TypeId == 1 ? "Regular"
-                                : "Save";
-                item.SizeName = item.SizeId == 1 ? "Whole"
-                                : item.SizeId == 2 ? "1/8"
-                                : item.SizeId == 3 ? "Jewelry"
-                                : "Whole";
-                item.CategoryName = item.CategoryId == 1 ? "Appliance"
-                                    : item.CategoryId == 2 ? "Non-Appliance"
-                                    : "Non-Appliance";
-                item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
-                item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
-                item.IsNotRequired = item.IsNotRequired == "Y" ? "Yes" : "No";
-
-                if (item.IsReverted == "Yes" && item.O3EDT == 999999)
-                    item.O3SDT = dateToday;
-            }
+            //    if (item.IsReverted == "Yes" && item.O3EDT == 999999)
+            //        item.O3SDT = dateToday;
+            //}
+            //foreach (var item in data.ConsignmentList)
+            //{
+                
+            //    item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
+            //    if (item.IsReverted == "Yes" && item.O3EDT == 999999)
+            //        item.O3SDT = dateToday;
+            //}
 
             string jsonData = Newtonsoft.Json.JsonConvert.SerializeObject(data);
 
@@ -779,8 +760,9 @@ namespace PriceSignageSystem.Controllers
             }
         }
 
-        public ActionResult PCA()
+        public ActionResult PCA(/*string date*/)
         {
+            //ViewBag.DateFilter = date;
             return View();
         }
 
@@ -837,6 +819,14 @@ namespace PriceSignageSystem.Controllers
         public ActionResult Sync()
         {
             var result = _sTRPRCRepository.SyncFromNew();
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        public ActionResult UpdateUPC()
+        {
+            var result = _sTRPRCRepository.UpdateUPC();
 
             return Json(result);
         }

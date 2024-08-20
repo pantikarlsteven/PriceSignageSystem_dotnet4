@@ -87,6 +87,12 @@
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
+                @if (User.IsInRole("Manager") || User.IsInRole("Administrator"))
+                {
+                    <li class="nav-item">
+                        <button class="btn nav-link" id="updateUPC"> Update UPC</button>
+                    </li>
+                }
                 @if (User.IsInRole("Administrator"))
                 {
                     <li class="nav-item">
@@ -227,6 +233,26 @@
 
                     if (response != 0)
                         alert('Done Syncing PCA.');
+                    else
+                        alert('No Changes.')
+                },
+                error: function () {
+
+                }
+            });
+        });
+
+        $('#updateUPC').click(function () {
+            $('#inventoryUpdateLoadingContainer').show();
+
+            $.ajax({
+                url: '/STRPRC/UpdateUPC',
+                type: 'POST',
+                success: function (response) {
+                    $('#inventoryUpdateLoadingContainer').hide();
+
+                    if (response != 0)
+                        alert('Done Updating UPC.');
                     else
                         alert('No Changes.')
                 },

@@ -44,8 +44,11 @@ namespace PriceSignageSystem.Models.Interface
         void UpdateCentralizedExemptionStatus(CentralizedExemptionStatusDto data, bool onGoingUpdate);
         ReportDto GetPrintedLogPerSku(string sku);
         int SyncFromNew();
-        Task<List<STRPRCDto>> GetAllConsignment();
+        int UpdateUPC();
+        Task<List<STRPRCDto>> GetAllConsignment(decimal startDate);
         List<ExportPCAExemptionDto> GetAllNoConsignmentContract();
         List<ExportPCADto> GetConsignmentToExport(decimal[] selectedSkus);
+        Task<List<STRPRCDto>> GetDataByPCAHistory(string dateFilter);
+        Task<List<STRPRCDto>> GetDataByConsignmentHistory(string dateFilter);
     }
 }

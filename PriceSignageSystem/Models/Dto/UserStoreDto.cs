@@ -23,5 +23,7 @@ namespace PriceSignageSystem.Models.Dto
         public List<SelectListItem> StoreList { get; set; }
         public User User { get; set; }
         public int DataCount { get; set; }
+        [Display(Name = "Employee ID")]
+        public string EmployeeId { get; set; } 
     }
 }

@@ -13,7 +13,6 @@ using System.Web.Security;
 
 namespace PriceSignageSystem.Controllers
 {
-    [CustomAuthorize]
     public class AccountController : Controller
     {
         private readonly IUserRepository _userRepository;
@@ -62,13 +61,17 @@ namespace PriceSignageSystem.Controllers
                         ModelState.AddModelError("", "User is inactive.");
                         return View(model);
                     }
-                    FormsAuthentication.SetAuthCookie(user.UserName, false);
-                    //Session["UserId"] = user.UserId;
-                    //Session["Username"] = user.UserName;
-                    //Session["RoleId"] = user.RoleId;
-                    //return RedirectToAction("SearchByDate", "STRPRC");
+                    else if (String.IsNullOrEmpty(user.EmployeeId)) 
+                    {
+                        TempData["ErrorMessage"] = "Please update your Employee ID.";
+                        return RedirectToAction("UpdateInfo", new { userName = user.UserName });
 
-                    return (returnUrl != null ? Redirect(returnUrl) : Redirect("/STRPRC/PCA"));
+                    }
+                    else
+                    {
+                        FormsAuthentication.SetAuthCookie(user.UserName, false);
+                        return (returnUrl != null ? Redirect(returnUrl) : Redirect("/STRPRC/PCA"));
+                    }
                 }
                 else
                 {
@@ -253,6 +256,30 @@ namespace PriceSignageSystem.Controllers
             else
                 return Json(new { isSuccess = false });
 
+        }
+
+        public ActionResult UpdateInfo(string userName)
+        {
+            var model = new UserStoreDto();
+            model.UserName = userName;
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult UpdateInfoPost(UserStoreDto user)
+        {
+            if (!String.IsNullOrEmpty(user.EmployeeId))
+            {
+                var result = _userRepository.UpdateInfo(user);
+
+                if (result == 1)
+                {
+                    FormsAuthentication.SetAuthCookie(user.UserName, false);
+                    return Redirect("/STRPRC/PCA");
+                }
+            }
+                
+            return View();
         }
     }
 }

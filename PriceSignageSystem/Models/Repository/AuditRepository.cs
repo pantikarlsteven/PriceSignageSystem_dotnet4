@@ -111,31 +111,30 @@ namespace PriceSignageSystem.Models.Repository
 
         public ScanResultDto ScanBarcode(string code, string codeFormat, bool isScaleTicket)
         {
-            var formattedCode = string.Empty;
-            var result = new ScanResultDto();
+            string formattedCode = string.Empty;
+            ScanResultDto result = new ScanResultDto();
+            decimal parsedCode = default(decimal);
 
+            if (code.Contains("\r\n"))
+            {
+                code = code.Replace("\r\n", "");
+            }
             if (!isScaleTicket)
             {
-                
                 if (codeFormat == "UPC_A")
                 {
                     formattedCode = BarcodeHelper.GetNormalizedUPC_A(code);
                 }
                 else if (codeFormat == "UPC_E")
                 {
-                    formattedCode = BarcodeHelper.GetNormalizedUPC_E(code);
+                    formattedCode = BarcodeHelper.ConvertUPCEToUPCA(code);
                 }
-
-                formattedCode = formattedCode != string.Empty ? formattedCode : code;
-
-                var upc = _db.CompleteSTRPRCs.Where(f => f.IUPC.ToString() == formattedCode).FirstOrDefault();
-
+                parsedCode = ((formattedCode != string.Empty) ? decimal.Parse(formattedCode) : decimal.Parse(code));
+                var upc = _db.CompleteSTRPRCs.Where(f => f.IUPC == parsedCode).FirstOrDefault();
                 if (upc != null)
                 {
-                    result = _db.Database.SqlQuery<ScanResultDto>("EXEC sp_GetSkuForScanning @Sku", new SqlParameter("@Sku", upc.INUMBR)).FirstOrDefault(); // check if sku belongs to current pca 
-
+                    result = _db.Database.SqlQuery<ScanResultDto>("EXEC sp_GetSkuForScanning @Sku", new SqlParameter("@Sku", upc.INUMBR)).FirstOrDefault();
                     result.IsItemExisting = "Yes";
-
                 }
                 else
                 {
@@ -145,17 +144,17 @@ namespace PriceSignageSystem.Models.Repository
             else
             {
                 formattedCode = BarcodeHelper.InHouseUPC(code);
-                result = _db.Database.SqlQuery<ScanResultDto>("EXEC sp_GetSkuForScanning @Sku", new SqlParameter("@Sku", decimal.Parse(formattedCode))).FirstOrDefault(); // check if sku belongs to current pca 
-
+                parsedCode = decimal.Parse(formattedCode);
+                result = _db.Database.SqlQuery<ScanResultDto>("EXEC sp_GetSkuForScanning @Sku", new SqlParameter("@Sku", parsedCode)).FirstOrDefault();
                 if (result != null)
+                {
                     result.IsItemExisting = "Yes";
+                }
                 else
+                {
                     result.IsItemExisting = "No";
-
+                }
             }
-
-
-
             return result;
         }
 

@@ -16,5 +16,6 @@ namespace PriceSignageSystem.Models.Interface
         int UpdatePassword(string username, string newPassword);
         User SearchAccount(string username);
         int UpdateAccount(string empid, string newpw, string username, int role, int status);
+        int UpdateInfo(UserStoreDto user);
     }
 }
