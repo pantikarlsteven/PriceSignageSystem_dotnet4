@@ -102,12 +102,49 @@ namespace PriceSignageSystem.Controllers
                     dto.O3POS = decimal.Parse(dto.O3POS.ToString("F2"));
                     dto.O3POSU = decimal.Parse(dto.O3POSU.ToString("F2"));
 
-
-                    dto.Types = _typeRepository.GetAllTypes().Select(a => new SelectListItem
+                    // PROMO ENGINE
+                    var promo = _sTRPRCRepository.CheckIfSkuHasPromo(Convert.ToDecimal(query));
+                    if (!String.IsNullOrEmpty(promo.PromoType))
                     {
-                        Value = a.Id.ToString(),
-                        Text = a.Name
-                    }).ToList();
+                        if (promo.PromoType == "B1T1")
+                            dto.PromoTypeId = 3;
+
+                        else if (promo.PromoType == "B1T1M")
+                            dto.PromoTypeId = 4;
+
+                        else if (promo.PromoType == "B1_A")
+                            dto.PromoTypeId = 5;
+
+                        else if (promo.PromoType == "B1_P")
+                            dto.PromoTypeId = 6;
+
+                        if (dto.SelectedTypeId == ReportConstants.Type.Regular)
+                        {
+                            dto.Types = _typeRepository.GetAllTypes().Where(a => a.Name == promo.PromoType).Select(a => new SelectListItem
+                            {
+                                Value = a.Id.ToString(),
+                                Text = a.Name
+                            }).ToList();
+                        }
+                        else
+                        {
+                            dto.Types = _typeRepository.GetAllTypes().Where(a => a.Id == dto.SelectedTypeId || a.Name == promo.PromoType).Select(a => new SelectListItem
+                            {
+                                Value = a.Id.ToString(),
+                                Text = a.Name
+                            }).ToList();
+
+                            dto.SelectedTypeId = dto.PromoTypeId;
+                        }
+                    }
+                    else
+                    {
+                        dto.Types = _typeRepository.GetAllTypes().Where(a => a.Id == dto.SelectedTypeId).Select(a => new SelectListItem
+                        {
+                            Value = a.Id.ToString(),
+                            Text = a.Name
+                        }).ToList();
+                    }
 
                     dto.Categories = _categoryRepository.GetAllCategories().Select(a => new SelectListItem
                     {
@@ -241,10 +278,36 @@ namespace PriceSignageSystem.Controllers
         public JsonResult GetDataBySKU(decimal id)
         {
             var dto = _sTRPRCRepository.GetDataBySKU(id);
+            var promo = _sTRPRCRepository.CheckIfSkuHasPromo(id);
 
             dto.SizeArray = _sizeRepository.GetAllSizes().ToArray();
             dto.TypeArray = _typeRepository.GetAllTypes().ToArray();
             dto.CategoryArray = _categoryRepository.GetAllCategories().ToArray();
+
+            if (!String.IsNullOrEmpty(promo.PromoType))
+            {
+                if (dto.TypeId == ReportConstants.Type.Regular)
+                    dto.TypeArray = _typeRepository.GetAllTypes().Where(a => a.Name == promo.PromoType).ToArray();
+                else
+                    dto.TypeArray = _typeRepository.GetAllTypes().Where(a => a.Id == dto.TypeId || a.Name == promo.PromoType).ToArray();
+
+                if (promo.PromoType == "B1T1")
+                    dto.TypeId = 3;
+
+                else if (promo.PromoType == "B1T1M")
+                    dto.TypeId = 4;
+
+                else if (promo.PromoType == "B1_A")
+                    dto.TypeId = 5;
+
+                else if (promo.PromoType == "B1_P")
+                    dto.TypeId = 6;
+
+            }
+            else
+            {
+                dto.TypeArray = _typeRepository.GetAllTypes().Where(a => a.Id == dto.TypeId).ToArray();
+            }
 
             return Json(dto);
         }

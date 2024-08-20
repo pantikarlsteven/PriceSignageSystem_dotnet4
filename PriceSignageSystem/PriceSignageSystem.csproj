@@ -473,6 +473,7 @@
     <Compile Include="Models\Dto\ExportPCADto.cs" />
     <Compile Include="Models\Dto\ExportPCAExemptionDto.cs" />
     <Compile Include="Models\Dto\ItemQueueDto.cs" />
+    <Compile Include="Models\Dto\PromoEngineDto.cs" />
     <Compile Include="Models\Dto\ReportDto.cs" />
     <Compile Include="Models\Dto\CentralizedSTRPRCDto.cs" />
     <Compile Include="Models\Dto\AuditDto.cs" />

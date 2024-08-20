@@ -88,13 +88,13 @@
                             <div class="col-4">
                                 <div class="form-group ">
                                     @Html.LabelFor(m => m.SelectedTypeId, htmlAttributes: new { @class = "font-weight-bold" })
-                                    @Html.DropDownListFor(m => m.SelectedTypeId, Model.Types ?? new List<SelectListItem>(), "Select Type", new { @class = "form-control", disabled = true })
+                                    @Html.DropDownListFor(m => m.SelectedTypeId, Model.Types ?? new List<SelectListItem>(), new { @class = "form-control"})
                                 </div>
                             </div>
                             <div class="col-4">
                                 <div class="form-group ">
                                     @Html.LabelFor(m => m.SelectedSizeId, htmlAttributes: new { @class = "font-weight-bold" })
-                                    @Html.DropDownListFor(m => m.SelectedSizeId, Model.Sizes ?? new List<SelectListItem>(), "Select Size", new { @class = "form-control custom-select" })
+                                    @Html.DropDownListFor(m => m.SelectedSizeId, Model.Sizes ?? new List<SelectListItem>(), new { @class = "form-control custom-select" })
                                 </div>
                             </div>
                             <div class="col-4">

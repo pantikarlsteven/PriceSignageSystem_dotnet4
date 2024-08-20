@@ -50,5 +50,7 @@ namespace PriceSignageSystem.Models.Interface
         List<ExportPCADto> GetConsignmentToExport(decimal[] selectedSkus);
         Task<List<STRPRCDto>> GetDataByPCAHistory(string dateFilter);
         Task<List<STRPRCDto>> GetDataByConsignmentHistory(string dateFilter);
+        PromoEngineDto CheckIfSkuHasPromo(decimal sku);
+
     }
 }

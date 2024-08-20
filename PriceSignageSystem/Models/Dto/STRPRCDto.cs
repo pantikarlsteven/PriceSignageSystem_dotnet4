@@ -117,6 +117,8 @@ namespace PriceSignageSystem.Models.Dto
         public string O3FLAG1 { get; set; }
         public string O3FLAG2 { get; set; }
         public string O3FLAG3 { get; set; }
+        public int PromoTypeId { get; set; }
+
     }
 
 }
