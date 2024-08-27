@@ -111,31 +111,30 @@ namespace PriceSignageSystem.Models.Repository
 
         public ScanResultDto ScanBarcode(string code, string codeFormat, bool isScaleTicket)
         {
-            var formattedCode = string.Empty;
-            var result = new ScanResultDto();
+            string formattedCode = string.Empty;
+            ScanResultDto result = new ScanResultDto();
+            decimal parsedCode = default(decimal);
 
+            if (code.Contains("\r\n"))
+            {
+                code = code.Replace("\r\n", "");
+            }
             if (!isScaleTicket)
             {
-                
                 if (codeFormat == "UPC_A")
                 {
                     formattedCode = BarcodeHelper.GetNormalizedUPC_A(code);
                 }
                 else if (codeFormat == "UPC_E")
                 {
-                    formattedCode = BarcodeHelper.GetNormalizedUPC_E(code);
+                    formattedCode = BarcodeHelper.ConvertUPCEToUPCA(code);
                 }
-
-                formattedCode = formattedCode != string.Empty ? formattedCode : code;
-
-                var upc = _db.CompleteSTRPRCs.Where(f => f.IUPC.ToString() == formattedCode).FirstOrDefault();
-
+                parsedCode = ((formattedCode != string.Empty) ? decimal.Parse(formattedCode) : decimal.Parse(code));
+                var upc = _db.CompleteSTRPRCs.Where(f => f.IUPC == parsedCode).FirstOrDefault();
                 if (upc != null)
                 {
-                    result = _db.Database.SqlQuery<ScanResultDto>("EXEC sp_GetSkuForScanning @Sku", new SqlParameter("@Sku", upc.INUMBR)).FirstOrDefault(); // check if sku belongs to current pca 
-
+                    result = _db.Database.SqlQuery<ScanResultDto>("EXEC sp_GetSkuForScanning @Sku", new SqlParameter("@Sku", upc.INUMBR)).FirstOrDefault();
                     result.IsItemExisting = "Yes";
-
                 }
                 else
                 {
@@ -145,17 +144,17 @@ namespace PriceSignageSystem.Models.Repository
             else
             {
                 formattedCode = BarcodeHelper.InHouseUPC(code);
-                result = _db.Database.SqlQuery<ScanResultDto>("EXEC sp_GetSkuForScanning @Sku", new SqlParameter("@Sku", decimal.Parse(formattedCode))).FirstOrDefault(); // check if sku belongs to current pca 
-
+                parsedCode = decimal.Parse(formattedCode);
+                result = _db.Database.SqlQuery<ScanResultDto>("EXEC sp_GetSkuForScanning @Sku", new SqlParameter("@Sku", parsedCode)).FirstOrDefault();
                 if (result != null)
+                {
                     result.IsItemExisting = "Yes";
+                }
                 else
+                {
                     result.IsItemExisting = "No";
-
+                }
             }
-
-
-
             return result;
         }
 
@@ -296,12 +295,172 @@ namespace PriceSignageSystem.Models.Repository
 
             return result;
         }
-        public async Task<List<AuditDto>> GetAllUnprinted()
+        public async Task<List<AuditDto>> GetAllUnprinted(decimal latestDate)
         {
-            var result = await _db.Database.SqlQuery<AuditDto>("EXEC sp_GetAllUnprintedForAudit")
+            var result = await _db.Database.SqlQuery<AuditDto>("EXEC sp_GetAllUnprintedForAudit",
+                          new SqlParameter("@Date", latestDate))
                          .ToListAsync();
 
             return result;
+        }
+
+        public async Task<List<AuditDto>> GetAllPrintedByHistory(string dateFilter)
+        {
+            List<AuditDto> records = new List<AuditDto>();
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                try
+                {
+                    string query = "SELECT " +
+                        "A.Sku, " +
+                        "A.O3UPC, " +
+                        "A.O3FNAM, " +
+                        "A.O3IDSC, " +
+                        "A.O3REG, " +
+                        "A.O3POS, " +
+                        "A.O3SDT, " +
+                        "A.O3EDT, " +
+                        "A.O3TYPE, " +
+                        "A.DepartmentName, " +
+                        "A.TypeName, " +
+                        "A.SizeName, " +
+                        "A.CategoryName, " +
+                        "A.IsExemp, " +
+                        "A.IsReverted, " +
+                        "A.IsPrinted, " +
+                        "A.IsWrongSign, " +
+                        "A.IsNotRequired, " +
+                        "A.IsAudited, " +
+                        "A.HasInventory, " +
+                        "A.AuditedRemarks " +
+                        "FROM Audit_PrintedHistory A " +
+                        "WHERE A.DatePrinted = @dateFilter " +
+                        "ORDER BY A.O3SDT DESC ,A.O3DEPT, A.O3SDPT, A.O3CLAS, A.O3SCLS ASC ";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@dateFilter", dateFilter);
+
+                        using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                        {
+                            while (reader.Read())
+                            {
+                                AuditDto record = new AuditDto
+                                {
+                                    O3SKU = (decimal)reader["Sku"],
+                                    O3UPC = (decimal)reader["O3UPC"],
+                                    O3FNAM = reader["O3FNAM"].ToString(),
+                                    O3IDSC = reader["O3IDSC"].ToString(),
+                                    O3REG = (decimal)reader["O3REG"],
+                                    O3POS = (decimal)reader["O3POS"],
+                                    O3SDT = (decimal)reader["O3SDT"],
+                                    O3EDT = (decimal)reader["O3EDT"],
+                                    O3TYPE = reader["O3TYPE"].ToString(),
+                                    DepartmentName = reader["DepartmentName"].ToString(),
+                                    TypeName = reader["TypeName"].ToString(),
+                                    SizeName = reader["SizeName"].ToString(),
+                                    CategoryName = reader["CategoryName"].ToString(),
+                                    IsExemp = reader["IsExemp"].ToString(),
+                                    IsReverted = reader["IsReverted"].ToString(),
+                                    IsPrinted = reader["IsPrinted"].ToString(),
+                                    IsWrongSign = reader["IsWrongSign"].ToString(),
+                                    IsNotRequired = reader["IsNotRequired"].ToString(),
+                                    IsAudited = reader["IsAudited"].ToString(),
+                                    HasInventory = reader["HasInventory"].ToString(),
+                                    AuditedRemarks = reader["AuditedRemarks"].ToString()
+                                };
+                                records.Add(record);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+            return records;
+        }
+
+        public async Task<List<AuditDto>> GetAllUnPrintedByHistory(string dateFilter)
+        {
+            DateTime date = DateTime.Parse(dateFilter);
+            decimal dateFilterInDecimal = date.Year % 100 * 10000 + date.Month * 100 + date.Day;
+
+            List<AuditDto> records = new List<AuditDto>();
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                try
+                {
+                    string query = "SELECT " +
+                        "A.Sku, " +
+                        "A.O3UPC, " +
+                        "A.O3FNAM, " +
+                        "A.O3IDSC, " +
+                        "A.O3REG, " +
+                        "A.O3POS, " +
+                        "A.O3SDT, " +
+                        "A.O3EDT, " +
+                        "A.O3TYPE, " +
+                        "A.DepartmentName, " +
+                        "A.TypeName, " +
+                        "A.SizeName, " +
+                        "A.CategoryName, " +
+                        "A.IsExemp, " +
+                        "A.IsReverted, " +
+                        "A.IsPrinted, " +
+                        "A.IsWrongSign, " +
+                        "A.IsNotRequired, " +
+                        "A.IsAudited, " +
+                        "A.HasInventory, " +
+                        "A.AuditedRemarks " +
+                        "FROM Audit_UnprintedHistory A " +
+                        "WHERE A.DateUnprinted = @dateFilter AND A.O3SDT = @startDate " +
+                        "ORDER BY A.O3SDT DESC ,A.O3DEPT, A.O3SDPT, A.O3CLAS, A.O3SCLS ASC ";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@dateFilter", dateFilter);
+                        cmd.Parameters.AddWithValue("@startDate", dateFilterInDecimal);
+
+                        using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                        {
+                            while (reader.Read())
+                            {
+                                AuditDto record = new AuditDto
+                                {
+                                    O3SKU = (decimal)reader["Sku"],
+                                    O3UPC = (decimal)reader["O3UPC"],
+                                    O3FNAM = reader["O3FNAM"].ToString(),
+                                    O3IDSC = reader["O3IDSC"].ToString(),
+                                    O3REG = (decimal)reader["O3REG"],
+                                    O3POS = (decimal)reader["O3POS"],
+                                    O3SDT = (decimal)reader["O3SDT"],
+                                    O3EDT = (decimal)reader["O3EDT"],
+                                    O3TYPE = reader["O3TYPE"].ToString(),
+                                    DepartmentName = reader["DepartmentName"].ToString(),
+                                    TypeName = reader["TypeName"].ToString(),
+                                    SizeName = reader["SizeName"].ToString(),
+                                    CategoryName = reader["CategoryName"].ToString(),
+                                    IsExemp = reader["IsExemp"].ToString(),
+                                    IsReverted = reader["IsReverted"].ToString(),
+                                    IsPrinted = reader["IsPrinted"].ToString(),
+                                    IsWrongSign = reader["IsWrongSign"].ToString(),
+                                    IsNotRequired = reader["IsNotRequired"].ToString(),
+                                    IsAudited = reader["IsAudited"].ToString(),
+                                    HasInventory = reader["HasInventory"].ToString(),
+                                    AuditedRemarks = reader["AuditedRemarks"].ToString()
+                                };
+                                records.Add(record);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+            return records;
         }
     }
 }

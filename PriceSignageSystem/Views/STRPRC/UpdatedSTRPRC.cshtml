@@ -408,6 +408,7 @@
             $.ajax({
                 url: '@Url.Action("GetUpdatedData", "STRPRC")',
                 type: 'GET',
+                data: { dateFilter: "@ViewBag.DateFilter"},
                 dataType: 'json',
                 beforeSend: function (xhr) {
                     // Add the 'Accept-Encoding' header to let the server know that we can handle Gzip compression

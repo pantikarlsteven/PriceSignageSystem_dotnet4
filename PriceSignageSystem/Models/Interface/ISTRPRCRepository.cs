@@ -16,7 +16,7 @@ namespace PriceSignageSystem.Models.Interface
         IEnumerable<STRPRC> GetAllData();
         Task<List<STRPRCDto>> GetDataByStartDate(decimal startDate);
         STRPRCDto GetSKUDetails(decimal O3SKU);
-        List<STRPRCLogDto> GetUpdatedData(decimal sku = 0);
+        List<STRPRCLogDto> GetUpdatedData(string latestDate);
         STRPRCDto GetDataBySKU(decimal O3SKU);
         STRPRCDto GetLatestUpdate();
         bool GetLatestInventory(string storeId);
@@ -44,8 +44,11 @@ namespace PriceSignageSystem.Models.Interface
         void UpdateCentralizedExemptionStatus(CentralizedExemptionStatusDto data, bool onGoingUpdate);
         ReportDto GetPrintedLogPerSku(string sku);
         int SyncFromNew();
-        Task<List<STRPRCDto>> GetAllConsignment();
+        int UpdateUPC();
+        Task<List<STRPRCDto>> GetAllConsignment(decimal startDate);
         List<ExportPCAExemptionDto> GetAllNoConsignmentContract();
         List<ExportPCADto> GetConsignmentToExport(decimal[] selectedSkus);
+        Task<List<STRPRCDto>> GetDataByPCAHistory(string dateFilter);
+        Task<List<STRPRCDto>> GetDataByConsignmentHistory(string dateFilter);
     }
 }

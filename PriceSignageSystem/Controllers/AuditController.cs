@@ -20,21 +20,38 @@ namespace PriceSignageSystem.Controllers
     public class AuditController : Controller
     {
         public readonly IAuditRepository _auditRepo;
+        private readonly ISTRPRCRepository _sTRPRCRepository;
+
         // GET: Audit
-        public AuditController(IAuditRepository auditRepo)
+        public AuditController(IAuditRepository auditRepo, ISTRPRCRepository sTRPRCRepository)
         {
             _auditRepo = auditRepo;
+            _sTRPRCRepository = sTRPRCRepository;
         }
-        public ActionResult Index()
+        public ActionResult Index(string date)
         {
+            ViewBag.DateFilter = date;
             return View();
         }
 
         [HttpPost]
-        public async Task<ActionResult> LoadAudit()
+        public async Task<ActionResult> LoadAudit(string dateFilter)
         {
-            var printedList = await _auditRepo.GetAllPrinted(); 
-            var unprintedList = await _auditRepo.GetAllUnprinted();
+            var printedList = new List<AuditDto>();
+            var unprintedList = new List<AuditDto>();
+            var result = _sTRPRCRepository.GetLatestUpdate();
+           
+            if (!string.IsNullOrEmpty(dateFilter) && dateFilter != result.DateUpdated.ToString("yyyy-MM-dd"))
+            {
+                printedList = await _auditRepo.GetAllPrintedByHistory(dateFilter);
+                unprintedList = await _auditRepo.GetAllUnPrintedByHistory(dateFilter);
+            }
+            else
+            {
+                printedList = await _auditRepo.GetAllPrinted();
+                unprintedList = await _auditRepo.GetAllUnprinted(result.LatestDate);
+            }
+           
             var auditList = new AuditDto();
             var dateToday = ConversionHelper.ToDecimal(DateTime.Now);
 

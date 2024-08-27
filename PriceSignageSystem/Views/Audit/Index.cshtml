@@ -402,6 +402,7 @@
             $.ajax({
                 url: '/Audit/LoadAudit',
                 type: "POST",
+                data: { dateFilter: "@ViewBag.DateFilter"},
                 dataType: 'json',
                 success: function (data) {
 
@@ -562,7 +563,7 @@
                 "dom": '<"top"lfB>rt<"bottom"ip>',
 
                 initComplete: function () {
-         
+
                     var $button = $('<button>')
                         .addClass('custom-button')
                         .text('Export')
@@ -585,8 +586,8 @@
 
                         $('#loadingContainer').show();
                         setTimeout(function () {
-                          
-                    
+
+
                             if ($select.val() == "nof") {
                                 tableForAudited.column(15).search("NOF").draw();
                             }
@@ -712,7 +713,7 @@
         function RenderGraph() {
 
             // 1st GRAPH
-            
+
             var totalSku = printedCount + unPrintedCount + auditedCount;
 
             var text = document.querySelector('#graph .graph1Count').textContent.concat(totalSku);
@@ -1459,7 +1460,7 @@
 
                  var changesList = "<label style='color:red;'>Changes On:</label> <br> ";
 
-                 if (result.IsSKUUpdate == "Yes") {
+                 if (result.IsSKUUpdate == "Yes" && result.ChangedOn != null) {
                      var changesArray = result.ChangedOn.split(",");
 
                      changesArray.forEach(function (changes) {
@@ -1483,7 +1484,7 @@
                      changesList = "";
                  }
 
-                 
+
                  var printPreview = `<iframe src="@Url.Action("PreviewSignage", "Report")?sku=${result.Sku}#toolbar=0&navpanes=0&scrollbar=0&zoom=80" style="width: 100%; height: 600px;" frameborder="0"></iframe>` + changesList;
                  @*var printPreview = `<iframe src="@Url.Action("PreviewSignage", "Report")?sku=${result.Sku}#toolbar=0&navpanes=0&scrollbar=0&zoom=150" style="width: 70%; height: 420px; margin: 100px;" frameborder="0"></iframe>`;*@
 

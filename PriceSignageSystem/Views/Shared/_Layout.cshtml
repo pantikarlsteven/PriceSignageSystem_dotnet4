@@ -87,6 +87,12 @@
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
+                @if (User.IsInRole("Manager") || User.IsInRole("Administrator"))
+                {
+                    <li class="nav-item">
+                        <button class="btn nav-link" id="updateUPC"> Update UPC</button>
+                    </li>
+                }
                 @if (User.IsInRole("Administrator"))
                 {
                     <li class="nav-item">
@@ -153,7 +159,7 @@
                         @if (User.IsInRole("Manager") || User.IsInRole("Administrator"))
                         {
                             <li class="nav-item">
-                                <a href="@Url.Action("Index","Audit")" id="auditLink" class="nav-link text-white">
+                                <a href="@Url.Action("Index", "Audit")" id="auditLink" class="nav-link text-white">
                                     <img style="width: 22px;" src="~/Content/Images/audit.png" />
                                     <p>
                                         Audit
@@ -235,6 +241,74 @@
                 }
             });
         });
+
+        $('#updateUPC').click(function () {
+            $('#inventoryUpdateLoadingContainer').show();
+
+            $.ajax({
+                url: '/STRPRC/UpdateUPC',
+                type: 'POST',
+                success: function (response) {
+                    $('#inventoryUpdateLoadingContainer').hide();
+
+                    if (response != 0)
+                        alert('Done Updating UPC.');
+                    else
+                        alert('No Changes.')
+                },
+                error: function () {
+
+                }
+            });
+        });
+
+        document.getElementById("pcaLink").addEventListener("click", function(event) {
+            event.preventDefault();
+
+             const selectedDate = localStorage.getItem('selectedDate');
+             var url = '';
+
+             if (selectedDate != null) {
+                 url = '@Url.Action("PCA", "STRPRC")?date=' + selectedDate;
+             }
+             else {
+                url = '@Url.Action("PCA", "STRPRC")';
+             }
+
+            window.location.href = url;
+        });
+
+         document.getElementById("auditLink").addEventListener("click", function(event) {
+            event.preventDefault();
+
+             const selectedDate = localStorage.getItem('selectedDate');
+             var url = '';
+
+             if (selectedDate != null) {
+                 url = '@Url.Action("Index", "Audit")?date=' + selectedDate;
+             }
+             else {
+                url = '@Url.Action("Index", "Audit")';
+             }
+
+            window.location.href = url;
+         });
+
+        document.getElementById("UpdatedSTRPRCsLink").addEventListener("click", function(event) {
+            event.preventDefault();
+
+             const selectedDate = localStorage.getItem('selectedDate');
+             var url = '';
+
+             if (selectedDate != null) {
+                 url = '@Url.Action("UpdatedSTRPRC", "STRPRC")?date=' + selectedDate;
+             }
+             else {
+                url = '@Url.Action("UpdatedSTRPRC", "STRPRC")';
+             }
+
+            window.location.href = url;
+         });
     });
 
 </script>
