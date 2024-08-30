@@ -36,7 +36,6 @@ namespace PriceSignageSystem.Models.Interface
         void AddMultipleQueuedPrintingLog(IEnumerable<ReportDto> data, string user, int sizeId);
         void UpdateSingleStatus(decimal O3SKU);
         void AddInventoryPrintingLog(ReportDto model, string user);
-        List<STRPRCDto> GetLatestPCAData();
         List<ExportPCAExemptionDto> PCAToExportExemption();
         List<ExportPCADto> PCAToExport();
         string GetSubClassDescription(decimal O3SKU);

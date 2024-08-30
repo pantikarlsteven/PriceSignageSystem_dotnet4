@@ -121,6 +121,8 @@ namespace PriceSignageSystem.Models.Dto
         public string IsDoublePromo { get; set; }
         [Display(Name = "Promo Value")]
         public decimal PromoVal { get; set; }
+        public DateTime PCADate { get; set; }
+        public string HasCoContract { get; set; }
     }
 
 }

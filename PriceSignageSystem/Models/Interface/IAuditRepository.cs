@@ -22,7 +22,7 @@ namespace PriceSignageSystem.Models.Interface
         SkuUpdatesAuditDto CheckIfExisting(decimal sku);
         List<ExportAuditDto> GetAllAuditToExport();
         Task<List<AuditDto>> GetAllPrinted();
-        Task<List<AuditDto>> GetAllUnprinted(decimal latestDate);
+        Task<List<AuditDto>> GetAllUnprinted();
         Task<List<AuditDto>> GetAllPrintedByHistory(string date);
         Task<List<AuditDto>> GetAllUnPrintedByHistory(string date);
     }

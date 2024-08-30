@@ -49,7 +49,7 @@ namespace PriceSignageSystem.Controllers
             else
             {
                 printedList = await _auditRepo.GetAllPrinted();
-                unprintedList = await _auditRepo.GetAllUnprinted(result.LatestDate);
+                unprintedList = await _auditRepo.GetAllUnprinted();
             }
            
             var auditList = new AuditDto();

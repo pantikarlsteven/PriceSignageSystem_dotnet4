@@ -371,8 +371,8 @@ namespace PriceSignageSystem.Models.Repository
                         SizeId = (int)reader["SizeId"],
                         CategoryId = (int)reader["CategoryId"],
                         DepartmentName = reader["DPTNAM"].ToString(),
-                        IsReverted = reader["O3FLAG1"].ToString(),
-                        HasInventory = reader["INV2"].ToString(),
+                        IsReverted = reader["IsReverted"].ToString(),
+                        HasInventory = reader["HasInventory"].ToString(),
                         IsExemp = reader["IsExemp"].ToString(),
                         ExempType = reader["ExempType"].ToString(),
                         O3TYPE = reader["O3TYPE"].ToString(),
@@ -449,9 +449,9 @@ namespace PriceSignageSystem.Models.Repository
                             SizeId = (int)reader["SizeId"],
                             CategoryId = (int)reader["CategoryId"],
                             DepartmentName = reader["DPTNAM"].ToString(),
-                            IsReverted = reader["O3FLAG1"].ToString(),
+                            IsReverted = reader["IsReverted"].ToString(),
                             HasCoContract = reader["O3FLAG3"].ToString(),
-                            HasInventory = reader["INV2"].ToString(),
+                            HasInventory = reader["HasInventory"].ToString(),
                             IsExemp = reader["IsExemp"].ToString(),
                             NegativeSave = reader["NegativeSave"].ToString(),
                             O3TYPE = reader["O3TYPE"].ToString(),
@@ -1105,89 +1105,6 @@ namespace PriceSignageSystem.Models.Repository
             _db.SaveChanges();
         }
 
-        public List<STRPRCDto> GetLatestPCAData()
-        {
-            var sp = "sp_GetLatestPCAData";
-            var data = new List<STRPRCDto>();
-            // Set up the connection and command
-            using (var connection = new SqlConnection(connectionString))
-            using (var command = new SqlCommand(sp, connection))
-            {
-                command.CommandType = CommandType.StoredProcedure;
-                command.CommandTimeout = commandTimeoutInSeconds;
-
-                // Add parameters if required
-                //command.Parameters.AddWithValue("@Filter", filter);
-
-                // Open the connection and execute the command
-                connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-
-                // Process the result set
-                while (reader.Read())
-                {
-                    var record = new STRPRCDto
-                    {
-                        O3LOC = (decimal)reader["O3LOC"],
-                        O3CLAS = (decimal)reader["O3CLAS"],
-                        O3IDSC = reader["O3IDSC"].ToString(),
-                        O3SKU = (decimal)reader["O3SKU"],
-                        O3SCCD = reader["O3SCCD"].ToString(),
-                        O3UPC = (decimal)reader["O3UPC"],
-                        O3VNUM = (decimal)reader["O3VNUM"],
-                        O3TYPE = reader["O3TYPE"].ToString(),
-                        O3DEPT = (decimal)reader["O3DEPT"],
-                        O3SDPT = (decimal)reader["O3SDPT"],
-                        O3SCLS = (decimal)reader["O3SCLS"],
-                        O3POS = (decimal)reader["O3POS"],
-                        O3POSU = (decimal)reader["O3POSU"],
-                        O3REG = (decimal)reader["O3REG"],
-                        O3REGU = (decimal)reader["O3REGU"],
-                        O3ORIG = (decimal)reader["O3ORIG"],
-                        O3ORGU = (decimal)reader["O3ORGU"],
-                        O3EVT = (decimal)reader["O3EVT"],
-                        O3PMMX = (decimal)reader["O3PMMX"],
-                        O3PMTH = (decimal)reader["O3PMTH"],
-                        O3PDQT = (decimal)reader["O3PDQT"],
-                        O3PDPR = (decimal)reader["O3PDPR"],
-                        O3SDT = (decimal)reader["O3SDT"],
-                        O3EDT = (decimal)reader["O3EDT"],
-                        O3TRB3 = reader["O3TRB3"].ToString(),
-                        O3FGR = (decimal)reader["O3FGR"],
-                        O3FNAM = reader["O3FNAM"].ToString(),
-                        O3MODL = reader["O3MODL"].ToString(),
-                        O3LONG = reader["O3LONG"].ToString(),
-                        O3SLUM = reader["O3SLUM"].ToString(),
-                        O3DIV = reader["O3DIV"].ToString(),
-                        O3TUOM = reader["O3TUOM"].ToString(),
-                        O3DATE = (decimal)reader["O3DATE"],
-                        O3CURD = (decimal)reader["O3CURD"],
-                        O3USER = reader["O3USER"].ToString(),
-                        DateUpdated = (DateTime)reader["DateUpdated"],
-                        TypeId = (int)reader["Type_STRPRC"],
-                        SizeId = (int)reader["Size_STRPRC"],
-                        CategoryId = (int)reader["Category_STRPRC"],
-                        DepartmentName = reader["DPTNAM"].ToString(),
-                        IsReverted = reader["O3FLAG1"].ToString(),
-                        IsPrinted = reader["IsPrinted_STRPRC"].ToString(),
-                        LatestDate = (decimal)reader["LatestDate"],
-                        HasInventory = reader["INV2"].ToString(),
-                        IsExemp = reader["IsExemp"].ToString()
-
-                    };
-
-                    data.Add(record);
-                }
-
-                // Close the reader and connection
-                reader.Close();
-                connection.Close();
-            }
-
-            return data;
-
-        }
-
         public List<ExportPCAExemptionDto> PCAToExportExemption()
         {
             var sp = "sp_NewExportPCAData";
@@ -1549,80 +1466,11 @@ namespace PriceSignageSystem.Models.Repository
                 conn.Open();
                 try
                 {
-                    string query = @"SELECT [O3LOC]
-                                  ,[O3SKU]
-                                  ,[O3SCCD]
-                                  ,[O3IDSC]
-                                  ,[O3UPC]
-                                  ,[O3VNUM]
-                                  ,[O3TYPE]
-                                  ,[O3DEPT]
-                                  ,[O3SDPT]
-                                  ,[O3CLAS]
-                                  ,[O3SCLS]
-                                  ,[O3SDSC]
-                                  ,[O3POS]
-                                  ,[O3POSU]
-                                  ,[O3REG]
-                                  ,[O3REGU]
-                                  ,[O3ORIG]
-                                  ,[O3ORGU]
-                                  ,[O3EVT]
-                                  ,[O3REVT]
-                                  ,[O3PMMX]
-                                  ,[O3PMTH]
-                                  ,[O3PDQT]
-                                  ,[O3PDPR]
-                                  ,[O3SDT]
-                                  ,[O3EDT]
-                                  ,[O3RSDT]
-                                  ,[O3REDT]
-                                  ,[O3TRB3]
-                                  ,[O3FGR]
-                                  ,[O3FNAM]
-                                  ,[O3MSRP]
-                                  ,[O3MODL]
-                                  ,[O3LONG]
-                                  ,[O3SLUM]
-                                  ,[O3DIV]
-                                  ,[O3TUOM]
-                                  ,[O3DATE]
-                                  ,[O3CURD]
-                                  ,[O3USER]
-                                  ,[O3FLAG1]
-                                  ,[O3FLAG2]
-                                  ,[O3FLAG3]
-                                  ,[DateUpdated]
-                                  ,[TypeId]
-                                  ,[SizeId]
-                                  ,[CategoryId]
-                                  ,[TypeName] = (case 
-                            					when TypeId = 1 then 'Regular' 
-                            					when TypeId = 2 then 'Save' 
-                            					when TypeId = 3 then 'B1T1' 
-                            					when TypeId = 4 then 'B1T1_M' 
-                            					when TypeId = 5 then 'B1_A' 
-                            					when TypeId = 6 then 'B1_P' 
-                            				  end)
-                            	  ,[SizeName] = (case when SizeId = 1 then 'Whole'
-                            					   when SizeId = 2 then '1/8'
-                            					   else 'Jewelry' 
-                            				  end)
-                            	  ,[CategoryName] = (case when CategoryId = 1 then 'Appliance' else 'Non-Appliance' end)
-                                  ,[IsPrinted] = (case when IsPrinted = 1 then 'Yes' else 'No' end)
-                            	  ,[DepartmentName] = (SELECT D.DPTNAM FROM INVDPT D
-                            							WHERE D.IDEPT = O3DEPT
-                            							)
-                            	  ,[NegativeSave] = (case when O3REG < O3POS AND TypeId = 2 then 'Y' else 'N' end)
-                            	  ,[IsExemp] = (case when (O3REG = O3POS AND O3EDT != 999999) OR (O3REG < O3POS AND TypeId = 2) OR (O3FLAG3 <> 'Y' OR O3FLAG3 IS NULL AND O3TYPE= 'CO') then 'Y' else 'N' end)
-
-                              FROM [dbo].[STRPRCs]
-                            WHERE O3TYPE = 'CO' 
-                            AND O3SDT = @dateFilter 
-                            AND Len(O3SKU) <> 4";
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    string sp = "sp_GetAllConsignment";
+                   
+                    using (SqlCommand cmd = new SqlCommand(sp, conn))
                     {
-                        cmd.Parameters.AddWithValue("@dateFilter", startDate);
+                        cmd.Parameters.AddWithValue("@StartDate", startDate);
 
                         // Execute your command here
                         using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
@@ -1639,18 +1487,17 @@ namespace PriceSignageSystem.Models.Repository
                                     O3POS = (decimal)reader["O3POS"],
                                     O3SDT = (decimal)reader["O3SDT"],
                                     O3EDT = (decimal)reader["O3EDT"],
-                                    O3RSDT = (decimal)reader["O3RSDT"],
-                                    O3REDT = (decimal)reader["O3REDT"],
                                     TypeId = (int)reader["TypeId"],
                                     SizeId = (int)reader["SizeId"],
                                     CategoryId = (int)reader["CategoryId"],
                                     DepartmentName = reader["DepartmentName"].ToString(),
-                                    IsReverted = reader["O3FLAG1"].ToString(),
+                                    IsReverted = reader["IsReverted"].ToString(),
                                     IsExemp = reader["IsExemp"].ToString(),
                                     O3TYPE = reader["O3TYPE"].ToString(),
                                     SizeName = reader["SizeName"].ToString(),
                                     TypeName = reader["TypeName"].ToString(),
-                                    CategoryName = reader["CategoryName"].ToString()
+                                    CategoryName = reader["CategoryName"].ToString(),
+                                    HasCoContract = reader["HasCoContract"].ToString()
                                 };
                                 records.Add(record);
                             }
@@ -1709,24 +1556,7 @@ namespace PriceSignageSystem.Models.Repository
                 conn.Open();
                 try
                 {
-                    string query = @"SELECT
-                        s.*,
-                        [IsExemp] = (case when (s.O3REG = s.O3POS AND s.O3EDT != 999999) OR (s.O3REG < s.O3POS AND s.TypeId = 2) OR (s.O3FLAG3 !='Y' AND s.O3TYPE= 'CO') then 'Y' else 'N' end),
-                        [NegativeSave] = (case when s.O3REG < s.O3POS AND s.TypeId = 2 then 'Y' else 'N' end),
-                        [ZeroInvDCOnHand] = (case when zib.sum_dconhand IS NULL then 0 else zib.sum_dconhand end),
-                        [ZeroInvInTransit] = (case when zit.intransit IS NULL then 0 else zit.intransit end),
-                        [IsAudited] = (case when aud.IsAudited IS NULL then 'N' else 'Y' end),
-                        [IsNotRequired] = (case when aud.IsNotRequired IS NULL then 'N' else 'Y' end),                           
-                        [TypeName] = (case when s.TypeId = 1 then 'Regular' when s.TypeId = 2 then 'Save' when s.TypeId = 3 then 'B1T1' when s.TypeId = 4 then 'B1T1_M' when s.TypeId = 5 then 'B1_A' when s.TypeId = 6 then 'B1_P' end),
-                        [SizeName] = (case when s.SizeId = 1 then 'Whole' when s.SizeId = 2 then '1/8' else 'Jewelry' end),
-                        [CategoryName] = (case when s.CategoryId = 1 then 'Appliance' else 'Non-Appliance' end), 
-                        s.IBHAND,
-                        [IsPrintedYN] = (case when s.IsPrinted = 1 then 'Yes' else 'No' end)
-                        FROM PCAHistory s 
-                        LEFT JOIN INVBAL ib ON ib.INUMBR = s.O3SKU 
-                        LEFT JOIN ZEROINV_DCONHAND zib ON s.O3SKU = zib.INUMBR 
-                        LEFT JOIN ZEROINV_INTRANSIT zit ON s.O3SKU = zit.INUMBR
-                        LEFT JOIN Audit_PrintedHistory aud ON s.O3SKU = aud.Sku AND s.PCADate = aud.DatePrinted WHERE s.PCADate = @dateFilter";
+                    string query = @"SELECT * FROM PCAHistory WHERE PCADate = @dateFilter";
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@dateFilter", dateFilter);
@@ -1738,7 +1568,7 @@ namespace PriceSignageSystem.Models.Repository
                             {
                                 STRPRCDto record = new STRPRCDto
                                 {
-                                    IsPrinted = reader["IsPrintedYN"].ToString(),
+                                    IsPrinted = reader["IsPrinted"].ToString(),
                                     O3SKU = (decimal)reader["O3SKU"],
                                     O3UPC = (decimal)reader["O3UPC"],
                                     O3IDSC = reader["O3IDSC"].ToString(),
@@ -1753,8 +1583,9 @@ namespace PriceSignageSystem.Models.Repository
                                     CategoryId = (int)reader["CategoryId"],
                                     DepartmentName = reader["DPTNAM"].ToString(),
                                     IsReverted = reader["O3FLAG1"].ToString(),
-                                    HasInventory = reader["INV"].ToString(),
+                                    HasInventory = reader["HasInventory"].ToString(),
                                     IsExemp = reader["IsExemp"].ToString(),
+                                    ExempType = reader["ExempType"].ToString(),
                                     O3TYPE = reader["O3TYPE"].ToString(),
                                     IBHAND = (decimal)reader["IBHAND"],
                                     ZeroInvDCOnHand = (decimal)reader["ZeroInvDCOnHand"],
@@ -1762,7 +1593,9 @@ namespace PriceSignageSystem.Models.Repository
                                     IsNotRequired = reader["IsNotRequired"].ToString(),
                                     SizeName = reader["SizeName"].ToString(),
                                     TypeName = reader["TypeName"].ToString(),
-                                    CategoryName = reader["CategoryName"].ToString()
+                                    CategoryName = reader["CategoryName"].ToString(),
+                                    IsDoublePromo = reader["IsDoublePromo"].ToString(),
+                                    PCADate = (DateTime)reader["PCADate"]
                                 };
                                 records.Add(record);
                             }
@@ -1786,16 +1619,7 @@ namespace PriceSignageSystem.Models.Repository
                 conn.Open();
                 try
                 {
-                    string query = "SELECT" +
-                        "*" +
-                        ",[TypeName] = (case when TypeId = 1 then 'Regular' when TypeId = 2 then 'Save' when TypeId = 3 then 'B1T1' when TypeId = 4 then 'B1T1_M' when TypeId = 5 then 'B1_A' when TypeId = 6 then 'B1_P'end)," +
-                        "[SizeName] = (case when SizeId = 1 then 'Whole' when SizeId = 2 then '1/8' else 'Jewelry' end)," +
-                        "[CategoryName] = (case when CategoryId = 1 then 'Appliance' else 'Non-Appliance' end)," +
-                        "[IsPrinted] = (case when IsPrinted = 1 then 'Yes' else 'No' end)," +
-                        "[DepartmentName] = (SELECT D.DPTNAM FROM INVDPT D WHERE D.IDEPT = O3DEPT)," +
-                        "[NegativeSave] = (case when O3REG < O3POS AND TypeId = 2 then 'Y' else 'N' end)," +
-                        "[IsExemp] = (case when (O3REG = O3POS AND O3EDT != 999999) OR (O3REG < O3POS AND TypeId = 2) OR (O3FLAG3 <> 'Y' OR O3FLAG3 IS NULL AND O3TYPE= 'CO') then 'Y' else 'N' end)" +
-                        "FROM ConsignmentHistory WHERE HistoryDate = @dateFilter AND O3SDT = @dateFilterInDecimal";
+                    string query = @"SELECT * FROM ConsignmentHistory WHERE ConsignmentDate = @dateFilter";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -1816,19 +1640,17 @@ namespace PriceSignageSystem.Models.Repository
                                     O3POS = (decimal)reader["O3POS"],
                                     O3SDT = (decimal)reader["O3SDT"],
                                     O3EDT = (decimal)reader["O3EDT"],
-                                    O3RSDT = (decimal)reader["O3RSDT"],
-                                    O3REDT = (decimal)reader["O3REDT"],
                                     TypeId = (int)reader["TypeId"],
                                     SizeId = (int)reader["SizeId"],
                                     CategoryId = (int)reader["CategoryId"],
                                     DepartmentName = reader["DPTNAM"].ToString(),
-                                    IsReverted = reader["O3FLAG1"].ToString(),
+                                    IsReverted = reader["IsReverted"].ToString(),
                                     IsExemp = reader["IsExemp"].ToString(),
                                     O3TYPE = reader["O3TYPE"].ToString(),
                                     SizeName = reader["SizeName"].ToString(),
                                     TypeName = reader["TypeName"].ToString(),
                                     CategoryName = reader["CategoryName"].ToString(),
-                                    O3FLAG3 = reader["O3FLAG3"].ToString()
+                                    HasCoContract = reader["HasCoContract"].ToString()
                                 };
                                 records.Add(record);
                             }

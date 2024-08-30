@@ -295,10 +295,9 @@ namespace PriceSignageSystem.Models.Repository
 
             return result;
         }
-        public async Task<List<AuditDto>> GetAllUnprinted(decimal latestDate)
+        public async Task<List<AuditDto>> GetAllUnprinted()
         {
-            var result = await _db.Database.SqlQuery<AuditDto>("EXEC sp_GetAllUnprintedForAudit",
-                          new SqlParameter("@Date", latestDate))
+            var result = await _db.Database.SqlQuery<AuditDto>("EXEC sp_GetAllUnprintedForAudit")
                          .ToListAsync();
 
             return result;
@@ -313,30 +312,10 @@ namespace PriceSignageSystem.Models.Repository
                 try
                 {
                     string query = "SELECT " +
-                        "A.Sku, " +
-                        "A.O3UPC, " +
-                        "A.O3FNAM, " +
-                        "A.O3IDSC, " +
-                        "A.O3REG, " +
-                        "A.O3POS, " +
-                        "A.O3SDT, " +
-                        "A.O3EDT, " +
-                        "A.O3TYPE, " +
-                        "A.DepartmentName, " +
-                        "A.TypeName, " +
-                        "A.SizeName, " +
-                        "A.CategoryName, " +
-                        "A.IsExemp, " +
-                        "A.IsReverted, " +
-                        "A.IsPrinted, " +
-                        "A.IsWrongSign, " +
-                        "A.IsNotRequired, " +
-                        "A.IsAudited, " +
-                        "A.HasInventory, " +
-                        "A.AuditedRemarks " +
-                        "FROM Audit_PrintedHistory A " +
-                        "WHERE A.DatePrinted = @dateFilter " +
-                        "ORDER BY A.O3SDT DESC ,A.O3DEPT, A.O3SDPT, A.O3CLAS, A.O3SCLS ASC ";
+                        "* " +
+                        "FROM Audit_PrintedHistory " +
+                        "WHERE PrintedDate = @dateFilter " +
+                        "ORDER BY O3SDT DESC ,O3DEPT, O3SDPT, O3CLAS, O3SCLS ASC ";
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@dateFilter", dateFilter);
@@ -347,7 +326,7 @@ namespace PriceSignageSystem.Models.Repository
                             {
                                 AuditDto record = new AuditDto
                                 {
-                                    O3SKU = (decimal)reader["Sku"],
+                                    O3SKU = (decimal)reader["O3SKU"],
                                     O3UPC = (decimal)reader["O3UPC"],
                                     O3FNAM = reader["O3FNAM"].ToString(),
                                     O3IDSC = reader["O3IDSC"].ToString(),
@@ -393,31 +372,11 @@ namespace PriceSignageSystem.Models.Repository
                 try
                 {
                     string query = "SELECT " +
-                        "A.Sku, " +
-                        "A.O3UPC, " +
-                        "A.O3FNAM, " +
-                        "A.O3IDSC, " +
-                        "A.O3REG, " +
-                        "A.O3POS, " +
-                        "A.O3SDT, " +
-                        "A.O3EDT, " +
-                        "A.O3TYPE, " +
-                        "A.DepartmentName, " +
-                        "A.TypeName, " +
-                        "A.SizeName, " +
-                        "A.CategoryName, " +
-                        "A.IsExemp, " +
-                        "A.IsReverted, " +
-                        "A.IsPrinted, " +
-                        "A.IsWrongSign, " +
-                        "A.IsNotRequired, " +
-                        "A.IsAudited, " +
-                        "A.HasInventory, " +
-                        "A.AuditedRemarks " +
-                        "FROM Audit_UnprintedHistory A " +
-                        "WHERE A.DateUnprinted = @dateFilter AND A.O3SDT = @startDate " +
-                        "ORDER BY A.O3SDT DESC ,A.O3DEPT, A.O3SDPT, A.O3CLAS, A.O3SCLS ASC ";
-
+                       "* " +
+                       "FROM Audit_UnprintedHistory " +
+                       "WHERE UnprintedDate = @dateFilter " +
+                       "ORDER BY O3SDT DESC ,O3DEPT, O3SDPT, O3CLAS, O3SCLS ASC ";
+                   
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@dateFilter", dateFilter);
@@ -429,7 +388,7 @@ namespace PriceSignageSystem.Models.Repository
                             {
                                 AuditDto record = new AuditDto
                                 {
-                                    O3SKU = (decimal)reader["Sku"],
+                                    O3SKU = (decimal)reader["O3SKU"],
                                     O3UPC = (decimal)reader["O3UPC"],
                                     O3FNAM = reader["O3FNAM"].ToString(),
                                     O3IDSC = reader["O3IDSC"].ToString(),

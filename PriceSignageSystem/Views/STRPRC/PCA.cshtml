@@ -86,19 +86,16 @@
             }
         </center>
         <br />
-        <div class="row d-flex justify-content-center">
-            <div class="col-md-2">
-                <div class="form-group">
-                    <label for="startDate">Data as of:</label>
-                    <input type="text" id="startDate" name="startDate" class="form-control" disabled />
-                </div>
+        <div class="d-flex justify-content-center">
+            <div class="form-group ">
+                <label for="startDate">Data as of:</label>
+                <input type="date" id="startDate" name="startDate" class="form-control" style="background-color: #fff; cursor:pointer;" readonly />
+
             </div>
-            <div class="col-md-2">
-                <div class="form-group">
-                    <label class="text-white d-sm-none d-lg-block">_</label>
-                    <button class="btn btn-primary" id="updateInventory">Update Inventory</button>
-                    <button class="btn btn-primary" id="updatePCA" style="display: none">Update PCA</button>
-                </div>
+            <div class="form-group ml-2">
+                <label class="row text-light">:</label>
+                <button class="btn btn-primary" id="updateInventory">Update Inventory</button>
+                <button class="btn btn-primary" id="updatePCA" style="display: none">Update PCA</button>
             </div>
         </div>
         <div class="row">
@@ -481,7 +478,7 @@
                     },
                     {
                         data: 'IsNotRequired', name: 'IsNotRequired', render: function (data) {
-                            if (data === 'Yes') {
+                            if (data === 'Y') {
                                 return 'No';
                             } else {
                                 return 'Yes';
@@ -798,7 +795,7 @@
                     },
                     {
                         data: 'IsNotRequired', name: 'IsNotRequired', render: function (data) {
-                            if (data === 'Yes') {
+                            if (data === 'Y') {
                                 return 'No';
                             } else {
                                 return 'Yes';
@@ -832,7 +829,6 @@
                     { data: 'IsReverted', name: 'IsReverted' },
                     { data: 'ExempType', name: 'ExempType' },
                     { data: 'O3TYPE', name: 'O3TYPE' },
-                    { data: 'IsDoublePromo', name: 'IsDoublePromo' },
 
                     //{
                     //    data: null,
@@ -893,6 +889,7 @@
                             tableNewExemption.column(7).visible(false); // DC ONHAND FOR ZERO INV
                             tableNewExemption.column(8).visible(false); // IN TRANSIT FOR ZERO INV
                             tableNewExemption.column(13).search("", true, false).draw();
+                            tableNewExemption.column(20).search("").draw();
 
                             // Log the selected value to the console
                             if ($select.val() == "negative") {
@@ -1227,7 +1224,7 @@
                     },
                     {
                         data: 'IsNotRequired', name: 'IsNotRequired', render: function (data) {
-                            if (data === 'Yes') {
+                            if (data === 'Y') {
                                 return 'No';
                             } else {
                                 return 'Yes';

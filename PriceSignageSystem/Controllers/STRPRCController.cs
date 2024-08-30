@@ -192,90 +192,6 @@ namespace PriceSignageSystem.Controllers
         }
        
         [HttpPost]
-        public async Task<ActionResult> GetPCAByDate(DateTime startDate)
-        {
-            var startDateFormatted = ConversionHelper.ToDecimal(startDate);
-            var data = new STRPRCDto();
-            var rawData = await _sTRPRCRepository.GetDataByStartDate(startDateFormatted);
-
-            data.WithInventoryList = rawData.Where(a => a.HasInventory == "Y" && a.IsExemp == "N").ToList();
-            data.WithoutInventoryList = rawData.Where(a => a.HasInventory == ""  && a.IsExemp == "N").ToList();
-            data.ExcemptionList = rawData.Where(a => a.IsExemp == "Y").ToList();
-
-            foreach (var item in data.WithInventoryList)
-            {
-                item.TypeName = item.TypeId == 2 ? "Save"
-                                : item.TypeId == 1 ? "Regular"
-                                : "Save";
-                item.SizeName = item.SizeId == 1 ? "Whole"
-                                : item.SizeId == 2 ? "1/8"
-                                : item.SizeId == 3 ? "Jewelry"
-                                //: item.SizeId == 4 ? "Jewelry"
-                                : "Whole";
-                item.CategoryName = item.CategoryId == 1 ? "Appliance"
-                                    : item.CategoryId == 2 ? "Non-Appliance"
-                                    : "Non-Appliance";
-                item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
-                item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
-            }
-
-            foreach (var item in data.WithoutInventoryList)
-            {
-                item.TypeName = item.TypeId == 2 ? "Save"
-                                : item.TypeId == 1 ? "Regular"
-                                : "Save";
-                item.SizeName = item.SizeId == 1 ? "Whole"
-                                : item.SizeId == 2 ? "1/8"
-                                : item.SizeId == 3 ? "Jewelry"
-                                //: item.SizeId == 4 ? "Jewelry"
-                                : "Whole";
-                item.CategoryName = item.CategoryId == 1 ? "Appliance"
-                                    : item.CategoryId == 2 ? "Non-Appliance"
-                                    : "Non-Appliance";
-                item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
-                item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
-            }
-
-            foreach (var item in data.ExcemptionList)
-            {
-                item.TypeName = item.TypeId == 2 ? "Save"
-                                : item.TypeId == 1 ? "Regular"
-                                : "Save";
-                item.SizeName = item.SizeId == 1 ? "Whole"
-                                : item.SizeId == 2 ? "1/8"
-                                : item.SizeId == 3 ? "Jewelry"
-                                //: item.SizeId == 4 ? "Jewelry"
-                                : "Whole";
-                item.CategoryName = item.CategoryId == 1 ? "Appliance"
-                                    : item.CategoryId == 2 ? "Non-Appliance"
-                                    : "Non-Appliance";
-                item.IsPrinted = item.IsPrinted == "True" ? "Yes" : "No";
-                item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
-            }
-
-            string jsonData = Newtonsoft.Json.JsonConvert.SerializeObject(data);
-
-            // Compress the JSON data using Gzip compression
-            byte[] compressedData;
-            using (MemoryStream outputStream = new MemoryStream())
-            {
-                using (GZipStream gzipStream = new GZipStream(outputStream, CompressionMode.Compress))
-                {
-                    using (StreamWriter writer = new StreamWriter(gzipStream))
-                    {
-                        writer.Write(jsonData);
-                    }
-                }
-                compressedData = outputStream.ToArray();
-            }
-
-            Response.AppendHeader("Content-Encoding", "gzip");
-            Response.AppendHeader("Content-Length", compressedData.Length.ToString());
-
-            return File(compressedData, "application/json");
-        }
-
-        [HttpPost]
         public JsonResult GetDataBySKU(decimal id)
         {
             var dto = _sTRPRCRepository.GetDataBySKU(id);
@@ -590,25 +506,29 @@ namespace PriceSignageSystem.Controllers
             {
                 rawData = await _sTRPRCRepository.GetDataByStartDate(result.LatestDate);
                 consignmentList = await _sTRPRCRepository.GetAllConsignment(result.LatestDate);
+                rawData = rawData.Where(a => a.O3SDT == result.LatestDate).ToList();
             }
             else
             {
                 result.LatestDate = dateFilterInDecimal;
                 rawData = await _sTRPRCRepository.GetDataByPCAHistory(dateFilter);
                 consignmentList = await _sTRPRCRepository.GetDataByConsignmentHistory(dateFilter);
+                rawData = rawData.Where(a => a.PCADate.ToString("yyyy-MM-dd") == dateFilter).ToList();
             }
 
             data.LatestDate = result.LatestDate;
-            rawData = rawData.Where(a => a.O3SDT == result.LatestDate).ToList();
             data.WithInventoryList = rawData
                 .Where(a => (a.HasInventory == "Y" && a.IsExemp == "N" && a.O3TYPE != "CO")
                 || (a.ExempType == "Negative Save" && a.IBHAND > 0) // Negative save with positive onhand
                 || (a.IsDoublePromo == "Y")).ToList(); // Double promo
-            data.ExcemptionList = rawData.Where(a => (a.HasInventory == "" || a.IsExemp == "Y") && a.O3SKU.ToString().Length != 4).ToList(); // REMOVE FRESH SKUS
+            data.ExcemptionList = rawData
+                .Where(a => (a.HasInventory == "" || a.IsExemp == "Y")
+                && a.O3SKU.ToString().Length != 4 // REMOVE FRESH SKUS
+                && a.O3SDT == result.LatestDate).ToList(); 
             data.ConsignmentList = consignmentList.OrderByDescending(o => o.O3SDT).Where(f => f.O3FLAG3 == "Y").ToList();
             var commonIds = data.ExcemptionList.Select(x => x.O3SKU).Intersect(consignmentList.Select(x => x.O3SKU)).ToList();
             var coList = consignmentList.Where(x => !commonIds.Contains(x.O3SKU)).ToList();
-            var ExempCoList = coList.Where(a => (a.O3FLAG3 != "Y" || a.O3FLAG3 == null) && a.O3SDT == result.LatestDate).ToList();
+            var ExempCoList = coList.Where(a => a.O3FLAG3 != "Y" || a.O3FLAG3 == null).ToList();
             data.ExcemptionList.AddRange(ExempCoList);
 
             string jsonData = Newtonsoft.Json.JsonConvert.SerializeObject(data);
