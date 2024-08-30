@@ -374,16 +374,16 @@ namespace PriceSignageSystem.Models.Repository
                         IsReverted = reader["O3FLAG1"].ToString(),
                         HasInventory = reader["INV2"].ToString(),
                         IsExemp = reader["IsExemp"].ToString(),
-                        NegativeSave = reader["NegativeSave"].ToString(),
+                        ExempType = reader["ExempType"].ToString(),
                         O3TYPE = reader["O3TYPE"].ToString(),
                         IBHAND = (decimal)reader["IBHAND"],
                         ZeroInvDCOnHand = (decimal)reader["ZeroInvDCOnHand"],
                         ZeroInvInTransit = (decimal)reader["ZeroInvInTransit"],
                         IsNotRequired = reader["IsNotRequired"].ToString(),
-                        IsCCReverted = reader["IsCCReverted"].ToString(),
                         SizeName = reader["SizeName"].ToString(),
                         TypeName = reader["TypeName"].ToString(),
-                        CategoryName = reader["CategoryName"].ToString()
+                        CategoryName = reader["CategoryName"].ToString(),
+                        IsDoublePromo = reader["IsDoublePromo"].ToString()
                     };
 
                     //if ((decimal)reader["O3RSDT"] == startDate)
@@ -876,55 +876,65 @@ namespace PriceSignageSystem.Models.Repository
 
         public ReportDto GetReportData(decimal O3SKU)
         {
-            var data = (from a in _db.STRPRCs
-                        join b in _db.Countries on a.O3TRB3 equals b.iatrb3 into ab
-                        from c in ab.DefaultIfEmpty()
-                        where a.O3SKU == O3SKU
-                        select new ReportDto
-                        {
-                            O3LOC = a.O3LOC,
-                            O3CLAS = a.O3CLAS,
-                            O3IDSC = a.O3IDSC,
-                            O3SKU = a.O3SKU,
-                            O3SCCD = a.O3SCCD,
-                            O3UPC = a.O3UPC,
-                            O3VNUM = a.O3VNUM,
-                            O3TYPE = a.O3TYPE,
-                            O3DEPT = a.O3DEPT,
-                            O3SDPT = a.O3SDPT,
-                            O3SCLS = a.O3SCLS,
-                            O3POS = a.O3POS,
-                            O3POSU = a.O3POSU,
-                            O3REG = a.O3REG,
-                            O3REGU = a.O3REGU,
-                            O3ORIG = a.O3ORIG,
-                            O3ORGU = a.O3ORGU,
-                            O3EVT = a.O3EVT,
-                            O3PMMX = a.O3PMMX,
-                            O3PMTH = a.O3PMTH,
-                            O3PDQT = a.O3PDQT,
-                            O3PDPR = a.O3PDPR,
-                            O3SDT = a.O3SDT,
-                            O3EDT = a.O3EDT,
-                            O3TRB3 = a.O3TRB3,
-                            O3FGR = a.O3FGR,
-                            O3FNAM = a.O3FNAM,
-                            O3MODL = a.O3MODL,
-                            O3LONG = a.O3LONG,
-                            O3SLUM = a.O3SLUM,
-                            O3DIV = a.O3DIV,
-                            O3TUOM = a.O3TUOM,
-                            O3DATE = a.O3DATE,
-                            O3CURD = a.O3CURD,
-                            O3USER = a.O3USER,
-                            DateUpdated = a.DateUpdated,
-                            TypeId = a.TypeId,
-                            SizeId = a.SizeId,
-                            CategoryId = a.CategoryId,
-                            country_img = c.country_img
-                        }).FirstOrDefault();
+            var record = new ReportDto();
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                try
+                {
+                    string query = "SELECT * FROM STRPRCs A " +
+                        "LEFT JOIN Countries B ON A.O3TRB3 = B.iatrb3 " +
+                        "LEFT JOIN DailyPromos C ON A.O3SKU = C.O1SKU " +
+                        "WHERE A.O3SKU = @sku";
 
-            return data;
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@sku", O3SKU);
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                record = new ReportDto
+                                {
+                                    O3SKU = (decimal)reader["O3SKU"],
+                                    O3CLAS = (decimal)reader["O3CLAS"],
+                                    O3IDSC = reader["O3IDSC"].ToString(),
+                                    O3SCCD = reader["O3SCCD"].ToString(),
+                                    O3UPC = (decimal)reader["O3UPC"],
+                                    O3TYPE = reader["O3TYPE"].ToString(),
+                                    O3DEPT = (decimal)reader["O3DEPT"],
+                                    O3SDPT = (decimal)reader["O3SDPT"],
+                                    O3SCLS = (decimal)reader["O3SCLS"],
+                                    O3POS = (decimal)reader["O3POS"],
+                                    O3POSU = (decimal)reader["O3POSU"],
+                                    O3REG = (decimal)reader["O3REG"],
+                                    O3REGU = (decimal)reader["O3REGU"],
+                                    O3SDT = (decimal)reader["O3SDT"],
+                                    O3EDT = (decimal)reader["O3EDT"],
+                                    O3TRB3 = reader["O3TRB3"].ToString(),
+                                    O3FNAM = reader["O3FNAM"].ToString(),
+                                    O3MODL = reader["O3MODL"].ToString(),
+                                    O3LONG = reader["O3LONG"].ToString(),
+                                    O3DIV = reader["O3DIV"].ToString(),
+                                    O3TUOM = reader["O3TUOM"].ToString(),
+                                    O3DATE = (decimal)reader["O3DATE"],
+                                    TypeId = (int)reader["TypeId"],
+                                    SizeId = (int)reader["SizeId"],
+                                    CategoryId = (int)reader["CategoryId"],
+                                    country_img = reader["country_img"] != DBNull.Value ? (byte[])reader["country_img"] : null,
+                                    PromoVal = reader["O1VAL"] != DBNull.Value ? (decimal)reader["O1VAL"] : 0,
+                                    PromoType = reader["O1PTYP"].ToString(),
+                                };
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+            return record;
         }
 
         public List<ReportDto> GetReportDataList(List<decimal> O3SKUs)
@@ -1637,7 +1647,6 @@ namespace PriceSignageSystem.Models.Repository
                                     DepartmentName = reader["DepartmentName"].ToString(),
                                     IsReverted = reader["O3FLAG1"].ToString(),
                                     IsExemp = reader["IsExemp"].ToString(),
-                                    NegativeSave = reader["NegativeSave"].ToString(),
                                     O3TYPE = reader["O3TYPE"].ToString(),
                                     SizeName = reader["SizeName"].ToString(),
                                     TypeName = reader["TypeName"].ToString(),
@@ -1746,7 +1755,6 @@ namespace PriceSignageSystem.Models.Repository
                                     IsReverted = reader["O3FLAG1"].ToString(),
                                     HasInventory = reader["INV"].ToString(),
                                     IsExemp = reader["IsExemp"].ToString(),
-                                    NegativeSave = reader["NegativeSave"].ToString(),
                                     O3TYPE = reader["O3TYPE"].ToString(),
                                     IBHAND = (decimal)reader["IBHAND"],
                                     ZeroInvDCOnHand = (decimal)reader["ZeroInvDCOnHand"],
@@ -1816,7 +1824,6 @@ namespace PriceSignageSystem.Models.Repository
                                     DepartmentName = reader["DPTNAM"].ToString(),
                                     IsReverted = reader["O3FLAG1"].ToString(),
                                     IsExemp = reader["IsExemp"].ToString(),
-                                    NegativeSave = reader["NegativeSave"].ToString(),
                                     O3TYPE = reader["O3TYPE"].ToString(),
                                     SizeName = reader["SizeName"].ToString(),
                                     TypeName = reader["TypeName"].ToString(),
@@ -1833,6 +1840,50 @@ namespace PriceSignageSystem.Models.Repository
                 }
             }
             return records;
+        }
+
+        public PromoEngineDto CheckIfSkuHasPromo(decimal sku)
+        {
+            var record = new PromoEngineDto();
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                try
+                {
+                    string query = "SELECT " +
+                        "*," +
+                        "[TypeId] = (CASE WHEN O1PTYP = 'B1T1' THEN 3 " +
+                        "WHEN O1PTYP = 'B1T1M' THEN 4 " +
+                        "WHEN O1PTYP = 'B1_A' THEN 5 " +
+                        "WHEN O1PTYP = 'B1_P' THEN 6 END) " +
+                        "FROM DailyPromos WHERE O1SKU = @sku";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@sku", sku);
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                record = new PromoEngineDto
+                                {
+                                    Sku = (decimal)reader["O1SKU"],
+                                    StartDate = (decimal)reader["O1SDT"],
+                                    EndDate = (decimal)reader["O1EDT"],
+                                    PromoType = reader["O1PTYP"].ToString(),
+                                    PromoVal = (decimal)reader["O1VAL"],
+                                    TypeId = (int)reader["TypeId"]
+                                };
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+            return record;
         }
     }
 }

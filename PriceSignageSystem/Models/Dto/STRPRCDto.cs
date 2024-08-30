@@ -101,7 +101,7 @@ namespace PriceSignageSystem.Models.Dto
         public decimal LatestDate { get; set; }
         public string HasInventory { get; set; }
         public string IsExemp { get; set; }
-        public string NegativeSave { get; set; }
+        public string ExempType { get; set; }
         public decimal IBHAND { get; set; }
         public List<STRPRCDto> WithInventoryList { get; set; }
         public List<STRPRCDto> WithoutInventoryList { get; set; }
@@ -117,6 +117,10 @@ namespace PriceSignageSystem.Models.Dto
         public string O3FLAG1 { get; set; }
         public string O3FLAG2 { get; set; }
         public string O3FLAG3 { get; set; }
+        public int PromoTypeId { get; set; }
+        public string IsDoublePromo { get; set; }
+        [Display(Name = "Promo Value")]
+        public decimal PromoVal { get; set; }
     }
 
 }

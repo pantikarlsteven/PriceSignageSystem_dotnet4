@@ -86,16 +86,19 @@
             }
         </center>
         <br />
-        <div class="d-flex justify-content-center">
-            <div class="form-group ">
-                <label for="startDate">Data as of:</label>
-                <input type="date" id="startDate" name="startDate" class="form-control" style="background-color: #fff; cursor:pointer;" readonly />
-              
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label for="startDate">Data as of:</label>
+                    <input type="text" id="startDate" name="startDate" class="form-control" disabled />
+                </div>
             </div>
-            <div class="form-group ml-2">
-                <label class="row text-light">:</label>
-                <button class="btn btn-primary" id="updateInventory">Update Inventory</button>
-                <button class="btn btn-primary" id="updatePCA" style="display: none">Update PCA</button>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="text-white d-sm-none d-lg-block">_</label>
+                    <button class="btn btn-primary" id="updateInventory">Update Inventory</button>
+                    <button class="btn btn-primary" id="updatePCA" style="display: none">Update PCA</button>
+                </div>
             </div>
         </div>
         <div class="row">
@@ -205,7 +208,7 @@
                                     <th>Category</th>
                                     <th>Dept <i class="filter-icon bi bi-funnel-fill"></i></th>
                                     <th>Reverted?</th>
-                                    <th>Negative Save</th>
+                                    <th>Exemp Type</th>
                                     <th>Type</th>
                                     @*<th><button class="printAllBtnNewExemption btn btn-secondary px-3">Print Selected</button></th>*@
                                 </tr>
@@ -337,6 +340,15 @@
                     if (tableConsignment !== null) {
                         tableConsignment.destroy();
                     }
+
+                    //FOR DOUBLE PROMO, remove the save type
+                    var doublePromoList = data.WithInventoryList.filter(function (item) {
+                        return item.IsDoublePromo === "Y";
+                    });
+                    doublePromoList.forEach(function (item) {
+                        var parts = item.TypeName.split(',');
+                        item.TypeName = parts[0].trim();
+                    });
 
                     RenderDatatableWithInv(data.WithInventoryList);
                     RenderDatatableNewExemptionInv(data.ExcemptionList);
@@ -818,8 +830,9 @@
                     { data: 'CategoryName', name: 'CategoryName' },
                     { data: 'DepartmentName', name: 'DepartmentName' },
                     { data: 'IsReverted', name: 'IsReverted' },
-                    { data: 'NegativeSave', name: 'NegativeSave' },
+                    { data: 'ExempType', name: 'ExempType' },
                     { data: 'O3TYPE', name: 'O3TYPE' },
+                    { data: 'IsDoublePromo', name: 'IsDoublePromo' },
 
                     //{
                     //    data: null,
@@ -866,20 +879,20 @@
                     var $saveZero = $('<option>').text('Save Zero').val('saveZero');
                     var $negativeSave = $('<option>').text('Negative Save').val('negativeSave');
                     var $noCC = $('<option>').text('No CO Contract').val('noCC');
+                    var $doublePromo = $('<option>').text('Double Promo').val('doublePromo');
 
                     // Append options to the select element
-                    $select.append($All, $negativeInventory, $zeroInventory, $saveZero, $negativeSave, $noCC);
+                    $select.append($All, $negativeInventory, $zeroInventory, $saveZero, $negativeSave, $noCC, $doublePromo);
 
                     $select.on('change', function () {
 
                         $('#loadingContainer').show();
                         setTimeout(function () {
-                                                                        // 5-IsExemp | 20-neg save | 21 - o3type
+                                                                        // 5-IsExemp | 20-Exemp Type | 21 - o3type
                             tableNewExemption.column(6).visible(true); // ON HAND
                             tableNewExemption.column(7).visible(false); // DC ONHAND FOR ZERO INV
                             tableNewExemption.column(8).visible(false); // IN TRANSIT FOR ZERO INV
                             tableNewExemption.column(13).search("", true, false).draw();
-                            tableNewExemption.column(20).search("", true, false).draw();
 
                             // Log the selected value to the console
                             if ($select.val() == "negative") {
@@ -902,14 +915,14 @@
                             else if ($select.val() == "saveZero") {
                                 tableNewExemption.column(6).search("").draw();
                                 tableNewExemption.column(5).search("Y", true, false).draw();
-                                tableNewExemption.column(20).search("N", true, false).draw();
+                                tableNewExemption.column(20).search("Save Zero", true, false).draw();
                                 tableNewExemption.column(21).search("01", true, false).draw();
 
                             }
                             else if ($select.val() == "negativeSave") {
                                 tableNewExemption.column(6).search("").draw();
                                 tableNewExemption.column(5).search("Y", true, false).draw();
-                                tableNewExemption.column(20).search("Y", true, false).draw();
+                                tableNewExemption.column(20).search("Negative Save", true, false).draw();
                                 tableNewExemption.column(21).search("01", true, false).draw();
 
                             }
@@ -917,8 +930,14 @@
                                 tableNewExemption.column(6).search("").draw();
                                 tableNewExemption.column(5).search("Y", true, false).draw();
                                 tableNewExemption.column(21).search("CO", true, false).draw();
-                                tableNewExemption.column(20).search("", true, false).draw();
+                                tableNewExemption.column(20).search("No Co Contract", true, false).draw();
                                 tableNewExemption.column(13).search(latestDate, true, false).draw();
+                            }
+                            else if ($select.val() == "doublePromo") {
+                                tableNewExemption.column(6).search("").draw();
+                                tableNewExemption.column(5).search("Y", true, false).draw();
+                                tableNewExemption.column(21).search("01", true, false).draw();
+                                tableNewExemption.column(20).search("Double Promo", true, false).draw();
 
                             }
                             else {
@@ -1828,7 +1847,7 @@
                             '</div>' +
                             '<div class="form-group row col-md-12">' +
                             '<label class="col-sm-2 col-form-label" for="typeDropdown">Type:</label>' +
-                            '<select class="col-sm-9  ml-3 form-control" id="typeDropdown" disabled>' +
+                            '<select class="col-sm-9  ml-3 form-control" id="typeDropdown">' +
                             typeOptions +
                             '</select>' +
                             '</div>' +
@@ -1882,6 +1901,10 @@
                         $('#sizeDropdown').val(response.SizeId);
                         $('#typeDropdown').val(response.TypeId);
                         $('#categoryDropdown').val(response.CategoryId);
+
+                        if (response.TypeArray.length == 1) {
+                            $("#typeDropdown").prop("disabled", true);
+                        }
 
                         //Start for print preview single report
                         // Print button click event handler

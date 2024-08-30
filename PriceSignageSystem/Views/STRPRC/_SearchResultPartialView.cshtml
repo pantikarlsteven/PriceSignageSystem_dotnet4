@@ -60,10 +60,10 @@
                     <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3POS, new { @class = "form-control clear", @disabled = "disabled", @id = "currPrice" })</dd>
 
                     <dt class="col-sm-4">@Html.LabelFor(m => m.O3SDT)</dt>
-                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3SDT, new { @class = "form-control clear", @disabled = "disabled" })</dd>
+                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3SDT, new { @class = "form-control clear", @disabled = "disabled", @id = "startDate" })</dd>
 
                     <dt class="col-sm-4">@Html.LabelFor(m => m.O3EDT)</dt>
-                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3EDT, new { @class = "form-control clear", @disabled = "disabled" })</dd>
+                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3EDT, new { @class = "form-control clear", @disabled = "disabled", @id = "endDate" })</dd>
 
                     <dt class="col-sm-4">@Html.LabelFor(m => m.O3SLUM)</dt>
                     <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3SLUM, new { @class = "form-control clear", @disabled = "disabled" })</dd>
@@ -73,6 +73,9 @@
 
                     <dt class="col-sm-4">@Html.LabelFor(m => m.O3DIV)</dt>
                     <dd class="col-sm-8">@Html.TextBoxFor(m => m.O3DIV, new { @class = "form-control clear", @disabled = "disabled", @id = "divisor" })</dd>
+
+                    <dt class="col-sm-4">@Html.LabelFor(m => m.PromoVal)</dt>
+                    <dd class="col-sm-8">@Html.TextBoxFor(m => m.PromoVal, new { @class = "form-control clear", @disabled = "disabled", @id = "promoVal" })</dd>
                 </dl>
             </div>
         </div>
@@ -88,13 +91,21 @@
                             <div class="col-4">
                                 <div class="form-group ">
                                     @Html.LabelFor(m => m.SelectedTypeId, htmlAttributes: new { @class = "font-weight-bold" })
-                                    @Html.DropDownListFor(m => m.SelectedTypeId, Model.Types ?? new List<SelectListItem>(), "Select Type", new { @class = "form-control", disabled = true })
+                                    @if (Model.Types.Count == 1)
+                                    {
+                                        @Html.DropDownListFor(m => m.SelectedTypeId, Model.Types ?? new List<SelectListItem>(), new { @class = "form-control", disabled = true, @id = "SelectedTypeId" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownListFor(m => m.SelectedTypeId, Model.Types ?? new List<SelectListItem>(), new { @class = "form-control", @id = "SelectedTypeId" })
+
+                                    }
                                 </div>
                             </div>
                             <div class="col-4">
                                 <div class="form-group ">
                                     @Html.LabelFor(m => m.SelectedSizeId, htmlAttributes: new { @class = "font-weight-bold" })
-                                    @Html.DropDownListFor(m => m.SelectedSizeId, Model.Sizes ?? new List<SelectListItem>(), "Select Size", new { @class = "form-control custom-select" })
+                                    @Html.DropDownListFor(m => m.SelectedSizeId, Model.Sizes ?? new List<SelectListItem>(), new { @class = "form-control custom-select" })
                                 </div>
                             </div>
                             <div class="col-4">
@@ -312,9 +323,27 @@
                 convertedCurrPrice = Number(currPrice.val());
                 var typeId = $('#SelectedTypeId');
 
-                if (convertedCurrPrice >= convertedRegPrice) {
+                if (convertedCurrPrice >= convertedRegPrice && typeId.val() < 3) { // FOR SAVE AND REG ONLY
                     regPrice.val(currPrice.val());
                     typeId.val(1); //Regular
+                }
+
+                else if (typeId.val() == 5) { // FOR PROMO ENGINE B1_A
+                    var promoVal = @Model.PromoVal;
+                    var result = (convertedCurrPrice - promoVal) + convertedCurrPrice;
+                    if (result <= 0) {
+                        alert(`Cannot be printed! Current Price is ${result}`);
+                        return false;
+                    }
+                }
+                else if (typeId.val() == 6) { // FOR PROMO ENGINE B1_P
+                    var promoVal = @Model.PromoVal;
+                    var percent = 100 - (promoVal / 100);
+                    var result = (convertedCurrPrice * percent) + convertedCurrPrice;
+                    if (result <= 0) {
+                        alert(`Cannot be printed! Current Price is ${result}`);
+                        return false;
+                    }
                 }
 
                 var reportDto = {
@@ -354,10 +383,12 @@
 
                         var dropdownHtml = '<div class="form-row">' +
                             '<div class="form-group row col-12">' +
-                            '<label class="col-sm-2 col-form-label" for="remarksDropdown" style="color: red;">Remarks:</label>' +
-                            '<select class="col-sm-9  ml-3 form-control custom-select" id="remarksDropdown" >' +
+                            '<label class="col-sm-3 col-form-label" for="remarksDropdown" style="color: red;">Remarks:</label>' +
+                            '<select class="col-sm-8  ml-3 form-control custom-select" id="remarksDropdown" >' +
                             remarksOptions +
                             '</select>' +
+                            '<label id="expDateLabel" class="col-sm-3 col-form-label" for="expDate" style="color: red;">Exp. Date:</label>' +
+                            '<input type="date" id="expDate" name="expDate" class="col-sm-8  ml-3 form-control" style="background-color: #fff; cursor:pointer;" />' +
                             '</div>';
 
                         var printButtonHtml = '<button id="editPrintBtn" class="btn btn-primary">Print</button>' +
@@ -393,8 +424,27 @@
                             keyboard: false
                         });
 
+                        $("#remarksDropdown").change(function () {
+                            var selectedRemarks = this.value;
+
+                            if (selectedRemarks != "CER") {
+                                $("#expDate").css("display", "none");
+                                $("#expDateLabel").css("display", "none");
+
+                            } else {
+                                $("#expDate").css("display", "block");
+                                $("#expDateLabel").css("display", "block");
+
+                            }
+                        });
+
                         $('#editPrintBtn').click(function () {
-                            
+                            var expDate = $("#expDate").val();
+                            if (expDate == "") {
+                                alert("Exp. Date is required!");
+
+                                return false;
+                            }
                             var selectedRemarks= $('#remarksDropdown').val();
                             var newShortDesc = $('#shortDesc').val();
                             var newBrand = $('#brand').val();
@@ -432,7 +482,7 @@
                                 reportDto.O3FNAM = reportDto.O3FNAM.replace(/&/g, "\\u0026");
                                 reportDto.O3IDSC = reportDto.O3IDSC.replace(/&/g, "\\u0026");
                                 reportDto.TypeId = $('#SelectedTypeId').val();
-                                if (convertedRegPrice == convertedCurrPrice) {
+                                if (convertedRegPrice == convertedCurrPrice && reportDto.TypeId == 2) {
                                     reportDto.TypeId = 1; // Validation for Negative Save (Curr > Reg)
                                 }
                                 reportDto.CategoryId = $('#SelectedCategoryId').val();
@@ -803,6 +853,26 @@
             enterKeyEvent.keyCode = 13; // Enter key code
             $('#searchInput').trigger(enterKeyEvent);
             $(this).remove();
+        });
+
+        $("#SelectedTypeId").change(function () {
+
+            var typeId = this.value;
+            $.ajax({
+                url: '@Url.Action("OndemandTypeOnchange", "STRPRC")',
+                type: 'POST',
+                data: { sku: @Model.O3SKU, typeId: typeId},
+                success: function (response) {
+                    $('#startDate').val(response.O3SDT);
+                    $('#endDate').val(response.O3EDT);
+                    $('#promoVal').val(response.PromoVal);
+                },
+                error: function (err) { }
+            });
+        });
+
+        $("#expDate").datepicker({
+            dateFormat: 'yy-mm-dd'
         });
     });
 </script>

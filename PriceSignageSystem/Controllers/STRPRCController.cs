@@ -102,12 +102,50 @@ namespace PriceSignageSystem.Controllers
                     dto.O3POS = decimal.Parse(dto.O3POS.ToString("F2"));
                     dto.O3POSU = decimal.Parse(dto.O3POSU.ToString("F2"));
 
-
-                    dto.Types = _typeRepository.GetAllTypes().Select(a => new SelectListItem
+                    // PROMO ENGINE
+                    var promo = _sTRPRCRepository.CheckIfSkuHasPromo(Convert.ToDecimal(query));
+                    if (!String.IsNullOrEmpty(promo.PromoType))
                     {
-                        Value = a.Id.ToString(),
-                        Text = a.Name
-                    }).ToList();
+                        dto.Types = _typeRepository.GetAllTypes().Where(a => a.Id == dto.SelectedTypeId || a.Name == promo.PromoType).Select(a => new SelectListItem
+                        {
+                            Value = a.Id.ToString(),
+                            Text = a.Name
+                        }).ToList();
+
+                        if (dto.SelectedTypeId == ReportConstants.Type.Save)
+                        {
+                            if (promo.StartDate >= dto.O3SDT)
+                            {
+                                dto.O3SDT = promo.StartDate;
+                                dto.O3EDT = promo.EndDate;
+                                dto.SelectedTypeId = promo.TypeId;
+                                dto.PromoVal = promo.PromoVal;
+                            }
+
+                            dto.IsExemp = "Y";
+                        }
+                        else
+                        {
+                            dto.Types = _typeRepository.GetAllTypes().Where(a => a.Name == promo.PromoType).Select(a => new SelectListItem
+                            {
+                                Value = a.Id.ToString(),
+                                Text = a.Name
+                            }).ToList();
+
+                            dto.O3SDT = promo.StartDate;
+                            dto.O3EDT = promo.EndDate;
+                            dto.SelectedTypeId = promo.TypeId;
+                            dto.PromoVal = promo.PromoVal;
+                        }
+                    }
+                    else
+                    {
+                        dto.Types = _typeRepository.GetAllTypes().Where(a => a.Id == dto.SelectedTypeId).Select(a => new SelectListItem
+                        {
+                            Value = a.Id.ToString(),
+                            Text = a.Name
+                        }).ToList();
+                    }
 
                     dto.Categories = _categoryRepository.GetAllCategories().Select(a => new SelectListItem
                     {
@@ -241,10 +279,32 @@ namespace PriceSignageSystem.Controllers
         public JsonResult GetDataBySKU(decimal id)
         {
             var dto = _sTRPRCRepository.GetDataBySKU(id);
+            var promo = _sTRPRCRepository.CheckIfSkuHasPromo(id);
 
             dto.SizeArray = _sizeRepository.GetAllSizes().ToArray();
-            dto.TypeArray = _typeRepository.GetAllTypes().ToArray();
             dto.CategoryArray = _categoryRepository.GetAllCategories().ToArray();
+
+            if (!String.IsNullOrEmpty(promo.PromoType))
+            {
+                dto.TypeArray = _typeRepository.GetAllTypes().Where(a => a.Id == dto.TypeId || a.Name == promo.PromoType).ToArray();
+
+                if (dto.TypeId == ReportConstants.Type.Save)
+                {
+                    if (promo.StartDate >= dto.O3SDT)
+                    {
+                        dto.TypeId = promo.TypeId;
+                    }
+                }
+                else // regular with promo
+                {
+                    dto.TypeArray = _typeRepository.GetAllTypes().Where(a => a.Name == promo.PromoType).ToArray();
+                    dto.TypeId = promo.TypeId;
+                }
+            }
+            else
+            {
+                dto.TypeArray = _typeRepository.GetAllTypes().Where(a => a.Id == dto.TypeId).ToArray();
+            }
 
             return Json(dto);
         }
@@ -538,27 +598,16 @@ namespace PriceSignageSystem.Controllers
                 consignmentList = await _sTRPRCRepository.GetDataByConsignmentHistory(dateFilter);
             }
 
-            //rawData = await _sTRPRCRepository.GetDataByStartDate(result.LatestDate);
-            //consignmentList = await _sTRPRCRepository.GetAllConsignment(result.LatestDate);
-
-            foreach(var item in rawData)
-            {
-                item.IsReverted = item.IsReverted == "Y" ? "Yes" : "No";
-                if (item.IsReverted == "Yes" && item.O3EDT == 999999)
-                    item.O3SDT = dateToday;
-            }
-
             data.LatestDate = result.LatestDate;
             rawData = rawData.Where(a => a.O3SDT == result.LatestDate).ToList();
-            data.WithInventoryList = rawData.Where(a => a.HasInventory == "Y" && a.IsExemp == "N" && a.O3TYPE != "CO").ToList();
-            var NegativeSaveList = rawData.Where(a => a.NegativeSave == "Y" && a.IBHAND > 0).ToList(); // Negative save with positive onhand
-            data.WithInventoryList.AddRange(NegativeSaveList);
-            data.ExcemptionList = rawData.Where(a => (a.HasInventory == "" || a.IsExemp == "Y") && a.O3SKU.ToString().Length != 4 ).ToList(); // REMOVE FRESH SKUS
+            data.WithInventoryList = rawData
+                .Where(a => (a.HasInventory == "Y" && a.IsExemp == "N" && a.O3TYPE != "CO")
+                || (a.ExempType == "Negative Save" && a.IBHAND > 0) // Negative save with positive onhand
+                || (a.IsDoublePromo == "Y")).ToList(); // Double promo
+            data.ExcemptionList = rawData.Where(a => (a.HasInventory == "" || a.IsExemp == "Y") && a.O3SKU.ToString().Length != 4).ToList(); // REMOVE FRESH SKUS
             data.ConsignmentList = consignmentList.OrderByDescending(o => o.O3SDT).Where(f => f.O3FLAG3 == "Y").ToList();
-
             var commonIds = data.ExcemptionList.Select(x => x.O3SKU).Intersect(consignmentList.Select(x => x.O3SKU)).ToList();
             var coList = consignmentList.Where(x => !commonIds.Contains(x.O3SKU)).ToList();
-
             var ExempCoList = coList.Where(a => (a.O3FLAG3 != "Y" || a.O3FLAG3 == null) && a.O3SDT == result.LatestDate).ToList();
             data.ExcemptionList.AddRange(ExempCoList);
 
@@ -818,6 +867,28 @@ namespace PriceSignageSystem.Controllers
         public ActionResult UpdateUPC()
         {
             var result = _sTRPRCRepository.UpdateUPC();
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        public ActionResult OndemandTypeOnchange(decimal sku, int typeId)
+        {
+            var result = new STRPRCDto();
+
+            if (typeId == ReportConstants.Type.Save || typeId == ReportConstants.Type.Regular)
+            {
+                result = _sTRPRCRepository.GetDataBySKU(sku);
+                result.PromoVal = 0;
+            }
+            else
+            {
+                var promo = _sTRPRCRepository.CheckIfSkuHasPromo(sku);
+                result.O3SKU = promo.Sku;
+                result.O3SDT = promo.StartDate;
+                result.O3EDT = promo.EndDate;
+                result.PromoVal = promo.PromoVal;
+            }
 
             return Json(result);
         }
