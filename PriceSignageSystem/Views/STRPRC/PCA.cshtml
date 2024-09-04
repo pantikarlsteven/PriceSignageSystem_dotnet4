@@ -912,7 +912,7 @@
                             else if ($select.val() == "saveZero") {
                                 tableNewExemption.column(6).search("").draw();
                                 tableNewExemption.column(5).search("Y", true, false).draw();
-                                tableNewExemption.column(20).search("Save Zero", true, false).draw();
+                                tableNewExemption.column(20).search("Zero Save", true, false).draw();
                                 tableNewExemption.column(21).search("01", true, false).draw();
 
                             }
@@ -1498,209 +1498,6 @@
                 }
             });
         }
-        function RenderDatatableExcemption(data) {
-            tableExcemption = $('#excemption-table').DataTable({
-                scrollY: 500,
-                scrollX: true,
-                scroller: true,
-                deferRender: true,
-                lengthMenu: [
-                    [10, 25, 50, -1],
-                    [10, 25, 50, 'All']
-                ],
-                pageLength: -1,
-                data: data,
-                columnDefs: [
-                    { targets: [0, 1, 11, 12, 13], orderable: false },
-                ],
-                columns: [
-                    {
-                        data: null, orderable: false, searchable: false, render: function (data) {
-                            return '<input type="checkbox" class="rowCheckboxExcemption" data-id="' + data.O3SKU + '">';
-                        }
-                    },
-                    {
-                        "className": 'details-control',
-                        "orderable": false,
-                        "data": null,
-                        "defaultContent": '',
-                        "render": function () {
-                            return '<i class="fa-solid fa-square-caret-down"></i>';
-                        },
-                        width: "15px"
-                    },
-                    //{
-                    //    data: 'IsPrinted', name: 'IsPrinted', render: function (data) {
-                    //        if (data === 'Yes') {
-                    //            return '<span style="color: green;">' + data + '</span>';
-                    //        } else {
-                    //            return '<span style="color: red;">' + data + '</span>';
-                    //        }
-                    //    }
-                    //},
-                    { data: 'O3SKU', name: 'O3SKU' },
-                    { data: 'O3UPC', name: 'O3UPC' },
-                    { data: 'O3IDSC', name: 'O3IDSC', className: 'text-nowrap' },
-                    { data: 'O3REG', name: 'O3REG' },
-                    { data: 'O3POS', name: 'O3POS' },
-                    { data: 'O3SDT', name: 'O3SDT' },
-                    { data: 'O3EDT', name: 'O3EDT' },
-                    { data: 'TypeName', name: 'TypeName' },
-                    { data: 'SizeName', name: 'SizeName' },
-                    { data: 'CategoryName', name: 'CategoryName' },
-                    { data: 'DepartmentName', name: 'DepartmentName' },
-                    { data: 'IsReverted', name: 'IsReverted' }
-                    //{
-                    //    data: null,
-                    //    render: function (data, type, row) {
-                    //        return '<button class="printBtn btn btn-primary btn-sm" data-id="' + data.O3SKU + '">Print</button>';
-                    //    }
-                    //}
-                ],
-                "dom": '<"top"lfB>rt<"bottom"ip>',
-
-                initComplete: function () {
-                    var date = $('#startDate').val();
-                    // Create the button element
-                    var $button = $('<button>')
-                        .addClass('custom-button')
-                        .text('Export')
-                        .on('click', function () {
-                            window.location.href = '/STRPRC/ExportDataTableToExcel?tab=Exemption&date=' + date;
-                        });
-
-                    var dataTableWrapper = $('#excemption-table').closest('.dataTables_wrapper');
-                    dataTableWrapper.find('.dataTables_filter').before($button);
-                }
-            });
-
-
-            $('#selectAllExcemption').on('change', function () {
-                var isChecked = $(this).is(':checked');
-                $('.rowCheckboxExcemption').prop('checked', isChecked);
-            });
-
-            $('.printAllBtnExcemption').on('click', function () {
-
-                var selectedRows = [];
-                $('.rowCheckboxExcemption:checked').each(function () {
-                    var rowId = $(this).data('id');
-                    selectedRows.push(rowId);
-                });
-
-                if (selectedRows.length > 0) {
-                    console.log('Selected Row IDs:', selectedRows);
-
-                    // Build the HTML for the dropdowns
-                    var dropdownHtml = '<div class="form-row">' +
-                        '<div class="form-group row col-12">' +
-                        '<label class="col-sm-2 col-form-label" for="sizeDropdown">Size:</label>' +
-                        '<select class="col-sm-9  ml-3 form-control" id="sizeDropdown">' +
-                        '<option value="1">Whole</option>' +
-                        '<option value="2">1/8</option>' +
-                        '<option value="3">Jewelry</option>' +
-                        '</select>' +
-                        '</div>' +
-                        '</div>';
-                    // Build the HTML for the print button
-                    var buttonHtml = '<button id="printSelectedButtonExcemption" class="btn btn-primary">Print</button>' +
-                        '<button type="button" class="btn btn-secondary ml-2" data-dismiss="modal">Cancel</button>';
-                    // Create the modal content
-                    var modalContent = '<div class="modal-dialog modal-sm modal-dialog-centered">' +
-                        '<div class="modal-content">' +
-                        '<div class="modal-header">' +
-                        '<h5 class="modal-title">Print Report</h5>' +
-                        '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
-                        '<span aria-hidden="true">&times;</span>' +
-                        '</button>' +
-                        '</div>' +
-                        '<div class="modal-body">' +
-                        dropdownHtml +
-                        '</div>' +
-                        '<div class="modal-footer">' +
-                        buttonHtml +
-                        '</div>' +
-                        '</div>' +
-                        '</div>';
-                    // Remove any existing modals
-                    $('#modalView').remove();
-
-                    // Append the modal to the body
-                    $('body').append('<div id="modalView" class="modal">' + modalContent + '</div>');
-
-                    // Show the modal with fade-in effect from top
-                    $('#modalView').modal({
-                        show: true,
-                        backdrop: false,
-                        keyboard: false
-                    });
-
-                    // Set default values for the dropdowns
-                    $('#sizeDropdown').val(2); // 1/8
-
-
-                    //Start for print preview multiple report
-                    // PRINT MULTIPLE
-                    $('#printSelectedButtonExcemption').click(function () {
-                        $("#loadingContainer").show();
-                        var sizeId = $('#sizeDropdown').val();
-
-                        $("#reportIframe").attr("src", "/Report/PrintPreviewMultipleReport?selectedIds=" + selectedRows + "&sizeId=" + sizeId + "");
-
-                        var reportIframe = document.getElementById("reportIframe");
-                        if (reportIframe) {
-                            $('.rowCheckboxWith:checked').each(function () {
-                                var row = $(this).closest('tr');
-                                var table = row.closest('table');
-                                var rowIndex = table.DataTable().row(row).index();
-                                var specificRow = $('#with-inventory-table tbody tr:eq(' + rowIndex + ')');
-                                specificRow.find('td:eq(2)').text("Yes");
-                                specificRow.find('td:eq(2)').css('color', 'green');
-
-                            });
-                            reportIframe.onload = function () {
-                                $("#loadingContainer").hide();
-                                reportIframe.contentWindow.print();
-                            };
-                            reportIframe.src = $("#reportIframe").attr("src");
-                        }
-                        $('#modalView').modal('hide');
-                        $('input[type="checkbox"]').prop('checked', false);
-
-                        //var url = "/Report/PrintPreviewMultipleReport?selectedIds=" + encodeURIComponent(selectedRows.join(',')) + "&sizeId=" + sizeId + "";
-                        //$.ajax({
-                        //    url: url,
-                        //    type: 'GET',
-                        //    data: { selectedIds: selectedRows, sizeId: sizeId },
-                        //    success: function (data) {
-                        //        if (!data)
-                        //            alert("Error in printing.");
-                        //        else {
-                        //            $('.rowCheckboxExcemption:checked').each(function () {
-                        //                var row = $(this).closest('tr');
-                        //                var table = row.closest('table');
-                        //                var rowIndex = table.DataTable().row(row).index();
-                        //                var specificRow = $('#excemption-table tbody tr:eq(' + rowIndex + ')');
-                        //                specificRow.find('td:eq(2)').text("Yes");
-                        //                specificRow.find('td:eq(2)').css('color', 'green');
-
-                        //            });
-                        //        }
-
-
-                        //    }
-                        //});
-                        //$("#loadingContainer").hide();
-                        //$('#modalView').modal('hide');
-                        //$('input[type="checkbox"]').prop('checked', false);
-
-                    });
-
-                } else {
-                    alert('Please select items to print.');
-                }
-            });
-        }
         function format(d) {
             // `d` is the original data object for the row
             return '<div class="row">' +
@@ -1788,7 +1585,6 @@
 
                         RenderDatatableWithInv(data.WithInventoryList);
                         RenderDatatableNewExemptionInv(data.ExcemptionList);
-                        //RenderDatatableExcemption(data.ExcemptionList);
 
                         $("#loadingContainer").hide();
                     },
@@ -1801,10 +1597,11 @@
         $('#with-inventory-table').on('click', '.printBtn', function () {
             var rowId = $(this).data('id');
 
+
             $.ajax({
-                url: '@Url.Action("GetDataBySKU", "STRPRC")' ,
+                url: '@Url.Action("GetPCAData", "STRPRC")' ,
                 type: 'POST',
-                data: { id: rowId },
+                data: { id: rowId, dateFilter: "@ViewBag.DateFilter" },
                 success: function (response) {
 
                         // Create the dropdown options
@@ -1814,10 +1611,6 @@
 
                         if (response.CategoryId == 1 || response.TypeId == 2) { // if appliance, remove jewelry size
                             response.SizeArray.length = 2;
-                        }
-
-                        if (response.O3REG < response.O3POS) { // Validation for Negative Save
-                            response.TypeId = 1;
                         }
 
                         // Populate dropdown options from the server response
@@ -1914,6 +1707,7 @@
                             response.O3LONG = "";
                             response.O3FNAM = "";
                             response.O3MODL = "";
+                            response.IsEdited = "N";
                             response.PrintedOn = "PCA - Single";
                             $("#reportIframe").attr("src", "/Report/PrintPreviewSingleReport?response=" + JSON.stringify(response));
                             var reportIframe = document.getElementById("reportIframe");
@@ -1928,26 +1722,7 @@
                             var cell = tableWith.cell({ row: 0, column: 2 });
                             cell.data('Yes');
                             tableWith.draw();
-
-                            @*$.ajax({
-                                url: '@Url.Action("PrintPreviewSingleReport", "Report")',
-                                type: 'GET',
-                                data: { response: JSON.stringify(response)},
-                                success: function (data) {
-                                    if (!data)
-                                        alert("Error in printing.");
-                                    else {
-                                        var specificRow = $('#with-inventory-table tbody tr:eq(' + rowIndex + ')');
-                                        specificRow.find('td:eq(2)').text("Yes");
-                                        specificRow.find('td:eq(2)').css('color', 'green');
-                                    }
-
-                                }
-                            });
-                        $("#loadingContainer").hide();
-                        $('#modalView').modal('hide');*@
                         });
-                        //End for print preview single report
                 }
             });
         });
@@ -2070,25 +1845,7 @@
                         cell.data('Yes');
                         tableNewExemption.draw();
 
-                             @*$.ajax({
-                                url: '@Url.Action("PrintPreviewSingleReport", "Report")',
-                                type: 'GET',
-                                data: { response: JSON.stringify(response)},
-                                success: function (data) {
-                                    if (!data)
-                                        alert("Error in printing.");
-                                    else {
-                                        var specificRow = $('#new-exemption-table tbody tr:eq(' + rowIndex + ')');
-                                        specificRow.find('td:eq(2)').text("Yes");
-                                        specificRow.find('td:eq(2)').css('color', 'green');
-                                    }
-
-                                }
-                            });
-                        $("#loadingContainer").hide();
-                        $('#modalView').modal('hide');*@
                     });
-                        //End for print preview single report
                 }
             });
         });
@@ -2221,7 +1978,6 @@
                             tableConsignment.draw();
 
                         });
-                        //End for print preview single report
                 }
             });
         });

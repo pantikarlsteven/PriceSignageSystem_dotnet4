@@ -219,11 +219,18 @@ namespace PriceSignageSystem.Controllers
             }
             else
             {
+                if (dto.O3REG < dto.O3POS && dto.TypeId == 2) // Validation for Negative Save
+                { 
+                    dto.TypeId = 1;
+                }
+                
                 dto.TypeArray = _typeRepository.GetAllTypes().Where(a => a.Id == dto.TypeId).ToArray();
+                
             }
 
             return Json(dto);
         }
+
         [HttpPost]
         public ActionResult UpdateSTRPRCData()
         {
@@ -511,7 +518,7 @@ namespace PriceSignageSystem.Controllers
             else
             {
                 result.LatestDate = dateFilterInDecimal;
-                rawData = await _sTRPRCRepository.GetDataByPCAHistory(dateFilter);
+                rawData = await _sTRPRCRepository.GetDataByPCAHistory(dateFilter, dateFilterInDecimal);
                 consignmentList = await _sTRPRCRepository.GetDataByConsignmentHistory(dateFilter);
                 rawData = rawData.Where(a => a.PCADate.ToString("yyyy-MM-dd") == dateFilter).ToList();
             }
@@ -811,6 +818,58 @@ namespace PriceSignageSystem.Controllers
             }
 
             return Json(result);
+        }
+
+        [HttpPost]
+        public JsonResult GetPCAData(decimal id, string dateFilter)
+        {
+            string todayDate = DateTime.Now.ToString("yyyy-MM-dd");
+            var dto = new STRPRCDto();
+            var promo = new PromoEngineDto();
+
+            if (String.IsNullOrEmpty(dateFilter) || dateFilter == todayDate)
+            {
+                dto = _sTRPRCRepository.GetSkuFromPCA(id);
+                promo = _sTRPRCRepository.CheckIfSkuHasPromo(id);
+            }
+            else
+            {
+                dto = _sTRPRCRepository.GetSkuFromPCAHistory(id, dateFilter);
+                promo = _sTRPRCRepository.CheckIfSkuHasPromoHistory(id, dateFilter);
+            }
+
+            dto.SizeArray = _sizeRepository.GetAllSizes().ToArray();
+            dto.CategoryArray = _categoryRepository.GetAllCategories().ToArray();
+
+            if (!String.IsNullOrEmpty(promo.PromoType))
+            {
+                dto.TypeArray = _typeRepository.GetAllTypes().Where(a => a.Id == dto.TypeId || a.Name == promo.PromoType).ToArray();
+
+                if (dto.TypeId == ReportConstants.Type.Save)
+                {
+                    if (promo.StartDate >= dto.O3SDT)
+                    {
+                        dto.TypeId = promo.TypeId;
+                    }
+                }
+                else // regular with promo
+                {
+                    dto.TypeArray = _typeRepository.GetAllTypes().Where(a => a.Name == promo.PromoType).ToArray();
+                    dto.TypeId = promo.TypeId;
+                }
+            }
+            else
+            {
+                if (dto.O3REGU < dto.O3POS && dto.TypeId == 2) // Validation for Negative Save
+                {
+                    dto.TypeId = 1;
+                }
+
+                dto.TypeArray = _typeRepository.GetAllTypes().Where(a => a.Id == dto.TypeId).ToArray();
+
+            }
+
+            return Json(dto);
         }
     }
 }

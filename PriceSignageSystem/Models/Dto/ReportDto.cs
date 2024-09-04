@@ -69,5 +69,7 @@ namespace PriceSignageSystem.Models.Dto
         public int OneEightDescTotalLines { get; set; }
         public decimal PromoVal { get; set; }
         public string PromoType { get; set; }
+        public string ExpDateCER { get; set; }
+        public string IsEdited { get; set; }
     }
 }

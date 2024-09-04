@@ -1029,17 +1029,23 @@ namespace PriceSignageSystem.Models.Repository
 
         public void AddMultipleInventoryPrintingLog(List<decimal> o3skus, string user, int sizeId, string printedOn)
         {
-            foreach (var item in o3skus)
+            var SkuArray = o3skus.ToArray();
+
+            for(int i = 0; i < SkuArray.Length; i++)
             {
-                _db.InventoryPrintingLogs.Add(new InventoryPrintingLog()
+                var log = new InventoryPrintingLog()
                 {
-                    O3SKU = item,
+                    O3SKU = SkuArray[i],
                     PrintedBy = user,
                     DateCreated = DateTime.Now,
                     SizeId = sizeId,
-                    PrintedOn = printedOn
-                });
+                    PrintedOn = printedOn,
+                    IsEdited = "N"
+                };
+
+                _db.InventoryPrintingLogs.Add(log);
             }
+
             _db.SaveChanges();
         }
 
@@ -1061,6 +1067,8 @@ namespace PriceSignageSystem.Models.Repository
                     Divisor = item.O3DIV,
                     SizeId = sizeId,
                     TypeId = item.TypeId,
+                    IsEdited = item.IsEdited,
+                    ExpDateCER = item.ExpDateCER,
                     PrintedOn = "OnDemand - Queue"
                 });
             }
@@ -1099,6 +1107,8 @@ namespace PriceSignageSystem.Models.Repository
                 Divisor = model.O3DIV,
                 SizeId = model.SizeId,
                 TypeId = model.TypeId,
+                ExpDateCER = model.ExpDateCER,
+                IsEdited = model.IsEdited,
                 PrintedOn = model.PrintedOn
             };
             _db.InventoryPrintingLogs.Add(data);
@@ -1548,7 +1558,7 @@ namespace PriceSignageSystem.Models.Repository
             return result;
         }
 
-        public async Task<List<STRPRCDto>> GetDataByPCAHistory(string dateFilter)
+        public async Task<List<STRPRCDto>> GetDataByPCAHistory(string dateFilter, decimal dateFilterInDecimal)
         {
             List<STRPRCDto> records = new List<STRPRCDto>();
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -1556,10 +1566,11 @@ namespace PriceSignageSystem.Models.Repository
                 conn.Open();
                 try
                 {
-                    string query = @"SELECT * FROM PCAHistory WHERE PCADate = @dateFilter";
+                    string query = @"SELECT * FROM PCAHistory WHERE PCADate = @dateFilter AND O3SDT = @dateFilterInDecimal";
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@dateFilter", dateFilter);
+                        cmd.Parameters.AddWithValue("@dateFilterInDecimal", dateFilterInDecimal);
 
                         // Execute your command here
                         using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
@@ -1683,6 +1694,152 @@ namespace PriceSignageSystem.Models.Repository
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@sku", sku);
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                record = new PromoEngineDto
+                                {
+                                    Sku = (decimal)reader["O1SKU"],
+                                    StartDate = (decimal)reader["O1SDT"],
+                                    EndDate = (decimal)reader["O1EDT"],
+                                    PromoType = reader["O1PTYP"].ToString(),
+                                    PromoVal = (decimal)reader["O1VAL"],
+                                    TypeId = (int)reader["TypeId"]
+                                };
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+            return record;
+        }
+
+        public STRPRCDto GetSkuFromPCA(decimal sku)
+        {
+            var record = new STRPRCDto();
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                try
+                {
+                    string query = "SELECT * FROM DailyPCA_Compressed WHERE O3SKU = @sku";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@sku", sku);
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                record = new STRPRCDto
+                                {
+                                    O3SKU = (decimal)reader["O3SKU"],
+                                    O3UPC = (decimal)reader["O3UPC"],
+                                    O3SDT = (decimal)reader["O3SDT"],
+                                    O3EDT = (decimal)reader["O3EDT"],
+                                    O3IDSC = reader["O3IDSC"].ToString(),
+                                    O3FNAM = reader["O3FNAM"].ToString(),
+                                    O3MODL = reader["O3MODL"].ToString(),
+                                    O3REGU = (decimal)reader["O3REG"],
+                                    O3POS = (decimal)reader["O3POS"],
+                                    O3TYPE = reader["O3TYPE"].ToString(),
+                                    O3DEPT = (decimal)reader["O3DEPT"],
+                                    O3SDPT = (decimal)reader["O3SDPT"],
+                                    O3CLAS = (decimal)reader["O3CLAS"],
+                                    O3SCLS = (decimal)reader["O3SCLS"],
+                                    TypeId = (int)reader["TypeId"],
+                                    SizeId = (int)reader["SizeId"],
+                                    CategoryId = (int)reader["CategoryId"],
+                                    ExempType = reader["ExempType"].ToString(),
+                                };
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+            return record;
+        }
+
+        public STRPRCDto GetSkuFromPCAHistory(decimal sku, string dateFilter)
+        {
+            var record = new STRPRCDto();
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                try
+                {
+                    string query = "SELECT * FROM PCAHistory WHERE PCADate = @dateFilter AND O3SKU = @sku";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@sku", sku);
+                        cmd.Parameters.AddWithValue("@dateFilter", dateFilter);
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                record = new STRPRCDto
+                                {
+                                    O3SKU = (decimal)reader["O3SKU"],
+                                    O3UPC = (decimal)reader["O3UPC"],
+                                    O3SDT = (decimal)reader["O3SDT"],
+                                    O3EDT = (decimal)reader["O3EDT"],
+                                    O3IDSC = reader["O3IDSC"].ToString(),
+                                    O3FNAM = reader["O3FNAM"].ToString(),
+                                    O3MODL = reader["O3MODL"].ToString(),
+                                    O3REGU = (decimal)reader["O3REG"],
+                                    O3POS = (decimal)reader["O3POS"],
+                                    O3TYPE = reader["O3TYPE"].ToString(),
+                                    O3DEPT = (decimal)reader["O3DEPT"],
+                                    O3SDPT = (decimal)reader["O3SDPT"],
+                                    O3CLAS = (decimal)reader["O3CLAS"],
+                                    O3SCLS = (decimal)reader["O3SCLS"],
+                                    TypeId = (int)reader["TypeId"],
+                                    SizeId = (int)reader["SizeId"],
+                                    CategoryId = (int)reader["CategoryId"],
+                                    ExempType = reader["ExempType"].ToString(),
+                                };
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+            return record;
+        }
+
+        public PromoEngineDto CheckIfSkuHasPromoHistory(decimal sku, string dateFilter)
+        {
+            var record = new PromoEngineDto();
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                try
+                {
+                    string query = "SELECT " +
+                        "*," +
+                        "[TypeId] = (CASE WHEN O1PTYP = 'B1T1' THEN 3 " +
+                        "WHEN O1PTYP = 'B1T1M' THEN 4 " +
+                        "WHEN O1PTYP = 'B1_A' THEN 5 " +
+                        "WHEN O1PTYP = 'B1_P' THEN 6 END) " +
+                        "FROM DailyPromosHistory WHERE DateCreated = @dateFilter AND O1SKU = @sku";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@sku", sku);
+                        cmd.Parameters.AddWithValue("@dateFilter", dateFilter);
 
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {

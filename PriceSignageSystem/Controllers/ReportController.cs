@@ -125,7 +125,6 @@ namespace PriceSignageSystem.Controllers
         [HttpGet]
         public ActionResult PrintPreviewSingleReport(string response)
         {
-            //var isSuccess = true;
             try
             {
                 var model = JsonConvert.DeserializeObject<ReportDto>(response);
@@ -151,7 +150,6 @@ namespace PriceSignageSystem.Controllers
                 report.Load(path);
                 var skuModel = _sTRPRCRepository.GetReportData(model.O3SKU);
                 skuModel.TypeId = model.TypeId;
-                //skuModel.TypeId = 1;
                 skuModel.CategoryId = model.CategoryId;
                 skuModel.UserName = User.Identity.Name;
                 skuModel.O3SDSC = _sTRPRCRepository.GetSubClassDescription(model.O3SKU);
@@ -162,18 +160,17 @@ namespace PriceSignageSystem.Controllers
                 skuModel.O3MODL = !string.IsNullOrEmpty(model.O3MODL) ? model.O3MODL : skuModel.O3MODL;
                 skuModel.O3DIV = !string.IsNullOrEmpty(model.O3DIV) ? model.O3DIV : skuModel.O3DIV;
                 skuModel.O3TUOM = !string.IsNullOrEmpty(model.O3TUOM) ? model.O3TUOM : skuModel.O3TUOM;
+                if (skuModel.IsSLBrand && skuModel.IsSLDescription)
+                    skuModel.IsSingleLines = true;
+                skuModel.ExpDateCER = model.ExpDateCER;
 
                 var textToImage = new TextToImage();
-                //skuModel.O3FNAM = "HAMALTON BEACH";
-                //skuModel.O3IDSC = "COMMERCIAL";
                 textToImage.GetImageWidth(skuModel.O3FNAM, skuModel.O3IDSC, model.SizeId);
-                //skuModel.IsSLBrand = true;
                 skuModel.IsSLBrand = textToImage.IsSLBrand;
                 skuModel.IsSLDescription = textToImage.IsSLDescription;
                 skuModel.IsBiggerFont = textToImage.IsBiggerFont;
                 skuModel.OneEightDescTotalLines = textToImage.OneEightDescTotalLines;
-                if (skuModel.IsSLBrand && skuModel.IsSLDescription)
-                    skuModel.IsSingleLines = true;
+              
               
                 report.SetDataSource(ConversionHelper.ConvertObjectToDataTable(skuModel));
                 Stream stream = report.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);

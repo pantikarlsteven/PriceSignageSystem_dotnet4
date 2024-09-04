@@ -123,6 +123,8 @@ namespace PriceSignageSystem.Models.Dto
         public decimal PromoVal { get; set; }
         public DateTime PCADate { get; set; }
         public string HasCoContract { get; set; }
+        public string ExpDateCER { get; set; }
+        public string IsEdited { get; set; }
     }
 
 }

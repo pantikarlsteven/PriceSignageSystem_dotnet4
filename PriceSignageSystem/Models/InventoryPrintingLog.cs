@@ -24,6 +24,8 @@ namespace PriceSignageSystem.Models
         public string Remarks { get; set; }
         public int SizeId { get; set; }
         public int TypeId { get; set; }
+        public string ExpDateCER { get; set; }
+        public string IsEdited { get; set; }
         public string PrintedOn { get; set; }
     }
 }

@@ -39,9 +39,9 @@ namespace PriceSignageSystem.Controllers
         {
             var printedList = new List<AuditDto>();
             var unprintedList = new List<AuditDto>();
-            var result = _sTRPRCRepository.GetLatestUpdate();
-           
-            if (!string.IsNullOrEmpty(dateFilter) && dateFilter != result.DateUpdated.ToString("yyyy-MM-dd"))
+            string todayDate = DateTime.Now.ToString("yyyy-MM-dd");
+
+            if (!string.IsNullOrEmpty(dateFilter) && dateFilter != todayDate)
             {
                 printedList = await _auditRepo.GetAllPrintedByHistory(dateFilter);
                 unprintedList = await _auditRepo.GetAllUnPrintedByHistory(dateFilter);
@@ -59,13 +59,15 @@ namespace PriceSignageSystem.Controllers
             auditList.NotPrintedList = unprintedList.OrderByDescending(o => o.IsNotRequired).ToList();
             auditList.AuditedList = printedList.Where(a => a.IsAudited == "Yes").ToList();
             
-            foreach(var item in auditList.NotPrintedList)
+            if (dateFilter == todayDate)
             {
-                if (item.IsReverted == "Yes" && item.O3EDT == 999999)
-                    item.O3SDT = dateToday;
+                foreach (var item in auditList.NotPrintedList)
+                {
+                    if (item.IsReverted == "Yes" && item.O3EDT == 999999)
+                        item.O3SDT = dateToday;
+                }
             }
-
-
+            
             string jsonData = Newtonsoft.Json.JsonConvert.SerializeObject(auditList);
 
             // Compress the JSON data using Gzip compression

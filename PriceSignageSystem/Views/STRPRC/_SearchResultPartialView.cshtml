@@ -294,7 +294,6 @@
         });
 
 
-
         $("#currPrice").on("change", function () {
             var regPrice = $("#regPrice");
             var currPrice = $("#currPrice");
@@ -302,48 +301,49 @@
             convertedCurrPrice = Number(currPrice.val());
             var typeId = $('#SelectedTypeId');
 
-            if (convertedCurrPrice >= convertedRegPrice) {
-                regPrice.val($(this).val());
-                typeId.val(1); //Regular
+            if (typeId < 3) {
+                if (convertedCurrPrice >= convertedRegPrice) {
+                    regPrice.val($(this).val());
+                    typeId.val(1); //Regular
+                }
+                else if (convertedCurrPrice < convertedRegPrice) {
+                    typeId.val(2); //Save
+                }
             }
-            else if (convertedCurrPrice < convertedRegPrice) {
-                typeId.val(2); //Save
-            }
-
         });
 
         $(".newPrint").click(function () {
             debugger
             var isCurrDisabled = $('#currPrice').prop('disabled');
+            var regPrice = $("#regPrice");
+            var currPrice = $("#currPrice");
+            convertedRegPrice = Number(regPrice.val());
+            convertedCurrPrice = Number(currPrice.val());
+            var typeId = $('#SelectedTypeId');
+
+            if (typeId.val() == 5) { // FOR PROMO ENGINE B1_A
+                var promoVal = $('#promoVal').val();
+                var result = (convertedCurrPrice - promoVal) + convertedCurrPrice;
+                if (result <= 0) {
+                    alert(`Cannot be printed! Current Price is ${result}`);
+                    return false;
+                }
+            }
+            else if (typeId.val() == 6) { // FOR PROMO ENGINE B1_P
+                var promoVal = $('#promoVal').val();
+                var percent = 100 - (promoVal / 100);
+                var result = (convertedCurrPrice * percent) + convertedCurrPrice;
+                if (result <= 0) {
+                    alert(`Cannot be printed! Current Price is ${result}`);
+                    return false;
+                }
+            }
 
             if (isCurrDisabled && '@Model.IsExemp' != "Y") {
-                var regPrice = $("#regPrice");
-                var currPrice = $("#currPrice");
-                convertedRegPrice = Number(regPrice.val());
-                convertedCurrPrice = Number(currPrice.val());
-                var typeId = $('#SelectedTypeId');
-
+               
                 if (convertedCurrPrice >= convertedRegPrice && typeId.val() < 3) { // FOR SAVE AND REG ONLY
                     regPrice.val(currPrice.val());
                     typeId.val(1); //Regular
-                }
-
-                else if (typeId.val() == 5) { // FOR PROMO ENGINE B1_A
-                    var promoVal = @Model.PromoVal;
-                    var result = (convertedCurrPrice - promoVal) + convertedCurrPrice;
-                    if (result <= 0) {
-                        alert(`Cannot be printed! Current Price is ${result}`);
-                        return false;
-                    }
-                }
-                else if (typeId.val() == 6) { // FOR PROMO ENGINE B1_P
-                    var promoVal = @Model.PromoVal;
-                    var percent = 100 - (promoVal / 100);
-                    var result = (convertedCurrPrice * percent) + convertedCurrPrice;
-                    if (result <= 0) {
-                        alert(`Cannot be printed! Current Price is ${result}`);
-                        return false;
-                    }
                 }
 
                 var reportDto = {
@@ -352,6 +352,7 @@
                     TypeId: typeId.val(),
                     CategoryId: 0,
                     O3REGU: regPrice.val(),
+                    IsEdited: "N",
                     PrintedOn: "OnDemand"
                 };
 
@@ -475,8 +476,9 @@
                                     O3MODL: newModel != origModel ? newModel : origModel,
                                     O3DIV: newDivisor != origDivisor ? newDivisor : origDivisor,
                                     O3TUOM: newTuom != origTuom ? newTuom : origTuom,
+                                    ExpDateCER: expDate,
+                                    IsEdited: "Y",
                                     PrintedOn: "OnDemand"
-
                                 };
 
                                 reportDto.O3FNAM = reportDto.O3FNAM.replace(/&/g, "\\u0026");
@@ -516,7 +518,7 @@
         });
 
         $(".queuebtn").click(function () {
-
+            debugger
             var isCurrDisabled = $('#currPrice').prop('disabled');
             var newShortDesc = $('#shortDesc').val();
             var newBrand = $('#brand').val();
@@ -535,10 +537,23 @@
             if ((convertedRegPrice == convertedCurrPrice && typeId == 2 ) || (convertedRegPrice < convertedCurrPrice && typeId == 2)) {
                 typeId = 1; // Validation for Negative Save (Curr > Reg)
             }
-
-            @*if ('@Model.IsExemp' == "Y") {
-                typeId = 1;
-            }*@
+            else if (typeId == 5) { // FOR PROMO ENGINE B1_A
+                var promoVal = $('#promoVal').val();
+                var result = (convertedCurrPrice - promoVal) + convertedCurrPrice;
+                if (result <= 0) {
+                    alert(`Cannot be queued! Current Price is ${result}`);
+                    return false;
+                }
+            }
+            else if (typeId == 6) { // FOR PROMO ENGINE B1_P
+                var promoVal = $('#promoVal').val();
+                var percent = 100 - (promoVal / 100);
+                var result = (convertedCurrPrice * percent) + convertedCurrPrice;
+                if (result <= 0) {
+                    alert(`Cannot be queued! Current Price is ${result}`);
+                    return false;
+                }
+            }
 
             var dto = {};
 
@@ -547,7 +562,8 @@
                 dto = {
                     O3SKU: @Model.O3SKU,
                     TypeId: typeId,
-                    SizeId: sizeId
+                    SizeId: sizeId,
+                    IsEdited: "N"
                 };
 
                 $.ajax({
@@ -584,6 +600,7 @@
                     }
                 });
             } else {
+
                 $.ajax({
                     url: '@Url.Action("GetAllReasons", "STRPRC")',
                     type: 'POST',
@@ -601,6 +618,8 @@
                             '<select class="col-sm-9  ml-3 form-control custom-select" id="qremarksDropdown" >' +
                             remarksOptions +
                             '</select>' +
+                            '<label id="expDateLabel" class="col-sm-3 col-form-label" for="expDate" style="color: red;">Exp. Date:</label>' +
+                            '<input type="date" id="expDate" name="expDate" class="col-sm-8  ml-3 form-control" style="background-color: #fff; cursor:pointer;" />' +
                             '</div>';
 
                          // Build the HTML for the print button
@@ -639,7 +658,27 @@
                             keyboard: false
                         });
 
+                        $("#remarksDropdown").change(function () {
+                            var selectedRemarks = this.value;
+
+                            if (selectedRemarks != "CER") {
+                                $("#expDate").css("display", "none");
+                                $("#expDateLabel").css("display", "none");
+
+                            } else {
+                                $("#expDate").css("display", "block");
+                                $("#expDateLabel").css("display", "block");
+
+                            }
+                        });
+
                         $('#queuePrintBtn').click(function () {
+                            var expDate = $("#expDate").val();
+                            if (expDate == "") {
+                                alert("Exp. Date is required!");
+
+                                return false;
+                            }
 
                             var selectedRemarks = $('#qremarksDropdown').val();
 
@@ -659,7 +698,9 @@
                                 O3FNAM: newBrand != origBrand ? newBrand : origBrand,
                                 O3MODL: newModel != origModel ? newModel : origModel,
                                 O3DIV: newDivisor != origDivisor ? newDivisor : origDivisor,
-                                O3TUOM: newTuom != origTuom ? newTuom : origTuom
+                                O3TUOM: newTuom != origTuom ? newTuom : origTuom,
+                                ExpDateCER: expDate,
+                                IsEdited: "Y",
                             };
 
                             $.ajax({
@@ -874,5 +915,6 @@
         $("#expDate").datepicker({
             dateFormat: 'yy-mm-dd'
         });
+
     });
 </script>

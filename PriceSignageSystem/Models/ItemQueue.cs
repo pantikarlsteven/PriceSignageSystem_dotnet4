@@ -25,6 +25,8 @@ namespace PriceSignageSystem.Models
         public decimal RegularPrice { get; set; }
         public decimal CurrentPrice { get; set; }
         public string Remarks { get; set; }
+        public string ExpDateCER { get; set; }
+        public string IsEdited { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime? DateUpdated { get; set; }
     }

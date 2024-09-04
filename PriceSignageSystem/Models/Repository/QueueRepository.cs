@@ -36,7 +36,9 @@ namespace PriceSignageSystem.Models.Repository
             record.RegularPrice = model.O3REGU;
             record.CurrentPrice = model.O3POS;
             record.Tuom = model.O3TUOM;
-               
+            record.ExpDateCER = model.ExpDateCER;
+            record.IsEdited = model.IsEdited;
+            
             var data =  _db.ItemQueues.Add(record);
             _db.SaveChanges();
 
@@ -104,7 +106,9 @@ namespace PriceSignageSystem.Models.Repository
                             qRemarks = a.Remarks,
                             qTypeId = a.TypeId,
                             CategoryId = b.CategoryId,
-                            qTuom = a.Tuom
+                            qTuom = a.Tuom,
+                            IsEdited = a.IsEdited,
+                            ExpDateCER = a.ExpDateCER
                         }).ToList();
             return data;
         }
@@ -139,7 +143,7 @@ namespace PriceSignageSystem.Models.Repository
                 model.UserName = HttpContext.Current.User.Identity.Name;
                 model.Status = ReportConstants.Status.InQueue;
                 model.DateCreated = DateTime.Now;
-
+                model.IsEdited = "N";
                 _db.ItemQueues.Add(model);
                 _db.SaveChanges();
             }
