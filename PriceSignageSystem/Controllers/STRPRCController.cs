@@ -334,7 +334,7 @@ namespace PriceSignageSystem.Controllers
 
 
         [HttpGet]
-        public ActionResult GetUpdatedData(string dateFilter)
+        public async Task<ActionResult> GetUpdatedData(string dateFilter)
         {
             var result = _sTRPRCRepository.GetLatestUpdate();
             decimal dateFilterInDecimal = 0;
@@ -348,11 +348,11 @@ namespace PriceSignageSystem.Controllers
             List<STRPRCLogDto> data;
             if (string.IsNullOrEmpty(dateFilter) || dateFilterInDecimal == result.LatestDate)
             {
-                data = _sTRPRCRepository.GetUpdatedData(result.DateUpdated.ToString("yyyy-MM-dd"));
+                data = await _sTRPRCRepository.GetSKUUpdates(result.DateUpdated.ToString("yyyy-MM-dd"));
             }
             else
             {
-                data = _sTRPRCRepository.GetUpdatedData(dateFilter);
+                data = await _sTRPRCRepository.GetSKUUpdatesFromHistory(dateFilter);
             }
 
             string jsonData = Newtonsoft.Json.JsonConvert.SerializeObject(data);
@@ -594,28 +594,28 @@ namespace PriceSignageSystem.Controllers
                     else if (filter == "saveZero")
                     {
                         if (string.IsNullOrEmpty(selectedRows))
-                            toExportRawData = toExportRawData.Where(a => (a.IsExemp == "Yes" || a.WithInventory == "No") && a.ExemptionType == "Save Zero").ToList();
+                            toExportRawData = toExportRawData.Where(a => a.ExemptionType == "Zero Save").ToList();
                         else
                             toExportRawData = toExportRawData.Where(item => selectedSkus.Contains(item.SKU)).ToList();
                     }
                     else if (filter == "negative")
                     {
                         if (string.IsNullOrEmpty(selectedRows))
-                            toExportRawData = toExportRawData.Where(a => a.WithInventory == "No" && a.IBHAND < 0).ToList();
+                            toExportRawData = toExportRawData.Where(a => a.ExemptionType == "Negative Inventory").ToList();
                         else
                             toExportRawData = toExportRawData.Where(item => selectedSkus.Contains(item.SKU)).ToList();
                     }
                     else if (filter == "zero")
                     {
                         if (string.IsNullOrEmpty(selectedRows))
-                            toExportRawData = toExportRawData.Where(a => a.WithInventory == "No" && a.IBHAND == 0).ToList();
+                            toExportRawData = toExportRawData.Where(a => a.ExemptionType == "Zero Inventory").ToList();
                         else
                             toExportRawData = toExportRawData.Where(item => selectedSkus.Contains(item.SKU)).ToList();
                     }
                     else if (filter == "negativeSave")
                     {
                         if (string.IsNullOrEmpty(selectedRows))
-                            toExportRawData = toExportRawData.Where(a => (a.IsExemp == "Yes" || a.WithInventory == "No") && a.ExemptionType == "Negative Save").ToList();
+                            toExportRawData = toExportRawData.Where(a => a.ExemptionType == "Negative Save").ToList();
                         else
                             toExportRawData = toExportRawData.Where(item => selectedSkus.Contains(item.SKU)).ToList();
                     }
@@ -627,6 +627,15 @@ namespace PriceSignageSystem.Controllers
                             noccList = _sTRPRCRepository.GetAllNoConsignmentContract().Where(item => selectedSkus.Contains(item.SKU)).ToList();
 
                     }
+                    else if (filter == "doublePromo")
+                    {
+                        if (string.IsNullOrEmpty(selectedRows))
+                            toExportRawData = toExportRawData.Where(a => a.ExemptionType == "Double Promo").ToList();
+                        else
+                            toExportRawData = toExportRawData.Where(item => selectedSkus.Contains(item.SKU)).ToList();
+
+                    }
+                    
                 }
 
                 if (filter != "noCC")
@@ -642,7 +651,7 @@ namespace PriceSignageSystem.Controllers
                 if (tab == "WithInventory")
                 {
                     if (string.IsNullOrEmpty(selectedRows))
-                        toExportRawData = toExportRawData.Where(a => a.WithInventory == "Yes" && a.IsExemption == "No" && a.O3TYPE != "CO").ToList();
+                        toExportRawData = toExportRawData.Where(a => a.WithInventory == "Yes" || a.IsExemption == "No").ToList();
                     else
                         toExportRawData = toExportRawData.Where(item => selectedSkus.Contains(item.SKU)).ToList();
 

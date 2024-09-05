@@ -372,10 +372,11 @@ namespace PriceSignageSystem.Models.Repository
                 try
                 {
                     string query = "SELECT " +
-                       "* " +
-                       "FROM Audit_UnprintedHistory " +
-                       "WHERE UnprintedDate = @dateFilter " +
-                       "ORDER BY O3SDT DESC ,O3DEPT, O3SDPT, O3CLAS, O3SCLS ASC ";
+                       "a.* " +
+                       "FROM PCAHistory x " +
+                       "LEFT JOIN Audit_UnprintedHistory a on x.O3SKU = a.O3SKU and x.PCADate = a.UnprintedDate " +
+                       "WHERE x.PCADate = @dateFilter AND x.O3SDT = @startDate AND x.IsPrinted = 'No' " +
+                       "ORDER BY x.O3SDT DESC ,x.O3DEPT, x.O3SDPT, x.O3CLAS, x.O3SCLS ASC ";
                    
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {

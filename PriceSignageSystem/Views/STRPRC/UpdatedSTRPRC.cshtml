@@ -396,11 +396,11 @@
         });
 
         $("#withoutInventory").click(function () {
-            GetDataTable(data.filter(row => row.Inv == 'N'));
+            GetDataTable(data.filter(row => row.Inv == 'N' && row.O3TYPE != 'CO'));
         });
 
         $("#consignment").click(function () {
-            GetDataTable(data.filter(row => row.Inv == 'Y' && row.O3TYPE == 'CO' ));
+            GetDataTable(data.filter(row => row.O3TYPE == 'CO' ));
         });
 
         function InitLoad() {

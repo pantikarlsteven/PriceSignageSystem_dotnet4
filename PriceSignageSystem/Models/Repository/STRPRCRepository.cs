@@ -633,52 +633,119 @@ namespace PriceSignageSystem.Models.Repository
 
         }
 
-        public List<STRPRCLogDto> GetUpdatedData(string latestDate)
+        public async Task<List<STRPRCLogDto>> GetSKUUpdates(string dateFilter)
         {
-            var records = new List<STRPRCLogDto>();
+            var sp = "sp_GetSkuUpdates";
+            var data = new List<STRPRCLogDto>();
             using (var connection = new SqlConnection(connectionString))
-            using (var command = new SqlCommand("sp_GetUpdatedData", connection))
+            using (var command = new SqlCommand(sp, connection))
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandTimeout = commandTimeoutInSeconds;
-                command.Parameters.AddWithValue("@Date", latestDate);
+
+                command.Parameters.AddWithValue("@DateFilter", dateFilter);
+
                 connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-
-                while (reader.Read())
+                try
                 {
-                    var record = new STRPRCLogDto
+                    SqlDataReader reader = await command.ExecuteReaderAsync();
+
+                    while (reader.Read())
                     {
-                        O3SKU = (decimal)reader["O3SKU"],
-                        IsPrinted = (bool)reader["IsPrinted"] ? "Yes" : "No",
-                        O3IDSC = reader["O3IDSC"].ToString(),
-                        ColumnName = reader["ColumnName"].ToString(),
-                        DateUpdated = (DateTime)reader["DateUpdated"],
-                        O3FNAM = reader["O3FNAM"].ToString(),
-                        O3DEPT = (decimal)reader["O3DEPT"],
-                        DepartmentName = reader["DepartmentName"].ToString(),
-                        O3CLAS = (decimal)reader["O3CLAS"],
-                        O3SCCD = reader["O3SCCD"].ToString(),
-                        O3LONG = reader["O3LONG"].ToString(),
-                        O3MODL = reader["O3MODL"].ToString(),
-                        O3SDPT = (decimal)reader["O3SDPT"],
-                        O3SCLS = (decimal)reader["O3SCLS"],
-                        O3TRB3 = reader["O3TRB3"].ToString(),
-                        Inv = reader["INV2"].ToString(),
-                        TypeName = reader["TypeName"].ToString(),
-                        SizeName = reader["SizeName"].ToString(),
-                        CategoryName = reader["CategoryName"].ToString(),
-                        O3TYPE = reader["O3TYPE"].ToString()
-                    };
+                        var record = new STRPRCLogDto
+                        {
+                            O3SKU = (decimal)reader["O3SKU"],
+                            IsPrinted = reader["IsPrinted"].ToString(),
+                            O3IDSC = reader["O3IDSC"].ToString(),
+                            ColumnName = reader["ColumnName"].ToString(),
+                            DateUpdated = (DateTime)reader["DateUpdated"],
+                            O3FNAM = reader["O3FNAM"].ToString(),
+                            O3DEPT = (decimal)reader["O3DEPT"],
+                            DepartmentName = reader["DepartmentName"].ToString(),
+                            O3CLAS = (decimal)reader["O3CLAS"],
+                            O3SCCD = reader["O3SCCD"].ToString(),
+                            O3LONG = reader["O3LONG"].ToString(),
+                            O3MODL = reader["O3MODL"].ToString(),
+                            O3SDPT = (decimal)reader["O3SDPT"],
+                            O3SCLS = (decimal)reader["O3SCLS"],
+                            O3TRB3 = reader["O3TRB3"].ToString(),
+                            Inv = reader["Inv"].ToString(),
+                            TypeName = reader["TypeName"].ToString(),
+                            SizeName = reader["SizeName"].ToString(),
+                            CategoryName = reader["CategoryName"].ToString(),
+                            O3TYPE = reader["O3TYPE"].ToString()
+                        };
 
-                    records.Add(record);
+                        data.Add(record);
+                    }
+
+                    reader.Close();
+                    connection.Close();
                 }
+                catch(Exception ex)
+                {
 
-                reader.Close();
-                connection.Close();
+                }
+                
             }
 
-            return records;
+            return data;
+
+        }
+
+        public async Task<List<STRPRCLogDto>> GetSKUUpdatesFromHistory(string dateFilter)
+        {
+            var data = new List<STRPRCLogDto>();
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                try
+                {
+                    string query = "SELECT * FROM SkuUpdatesHistory WHERE DateUpdated = @dateFilter";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@DateFilter", dateFilter);
+
+                        using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                        {
+                            while (reader.Read())
+                            {
+                                var record = new STRPRCLogDto
+                                {
+                                    O3SKU = (decimal)reader["O3SKU"],
+                                    IsPrinted = reader["IsPrinted"].ToString(),
+                                    O3IDSC = reader["O3IDSC"].ToString(),
+                                    ColumnName = reader["ColumnName"].ToString(),
+                                    DateUpdated = (DateTime)reader["DateUpdated"],
+                                    O3FNAM = reader["O3FNAM"].ToString(),
+                                    O3DEPT = (decimal)reader["O3DEPT"],
+                                    DepartmentName = reader["DepartmentName"].ToString(),
+                                    O3CLAS = (decimal)reader["O3CLAS"],
+                                    O3SCCD = reader["O3SCCD"].ToString(),
+                                    O3LONG = reader["O3LONG"].ToString(),
+                                    O3MODL = reader["O3MODL"].ToString(),
+                                    O3SDPT = (decimal)reader["O3SDPT"],
+                                    O3SCLS = (decimal)reader["O3SCLS"],
+                                    O3TRB3 = reader["O3TRB3"].ToString(),
+                                    Inv = reader["Inv"].ToString(),
+                                    TypeName = reader["TypeName"].ToString(),
+                                    SizeName = reader["SizeName"].ToString(),
+                                    CategoryName = reader["CategoryName"].ToString(),
+                                    O3TYPE = reader["O3TYPE"].ToString()
+                                };
+                                data.Add(record);
+                            }
+                            reader.Close();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                }
+                conn.Close();
+            }
+            return data;
         }
 
         public STRPRCDto GetDataBySKU(decimal O3SKU)
@@ -927,12 +994,14 @@ namespace PriceSignageSystem.Models.Repository
                                     PromoType = reader["O1PTYP"].ToString(),
                                 };
                             }
+                            reader.Close();
                         }
                     }
                 }
                 catch (Exception ex)
                 {
                 }
+                conn.Close();
             }
             return record;
         }
@@ -1120,21 +1189,18 @@ namespace PriceSignageSystem.Models.Repository
             var sp = "sp_NewExportPCAData";
 
             var data = new List<ExportPCAExemptionDto>();
-            // Set up the connection and command
+
             using (var connection = new SqlConnection(connectionString))
             using (var command = new SqlCommand(sp, connection))
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandTimeout = commandTimeoutInSeconds;
 
-                // Add parameters if required
                 //command.Parameters.AddWithValue("@SearchDate", date);
 
-                // Open the connection and execute the command
                 connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
 
-                // Process the result set
                 while (reader.Read())
                 {
                     var record = new ExportPCAExemptionDto
@@ -1142,22 +1208,22 @@ namespace PriceSignageSystem.Models.Repository
                         SKU = (decimal)reader["O3SKU"],
                         UPC = (decimal)reader["O3UPC"],
                         CurrentPrice = (decimal)reader["O3POS"],
-                        RegularPrice = (decimal)reader["O3REGU"],
+                        RegularPrice = (decimal)reader["O3REG"],
                         StartDate = (decimal)reader["O3SDT"],
                         EndDate = (decimal)reader["O3EDT"],
                         Brand = reader["O3FNAM"].ToString(),
                         Model = reader["O3MODL"].ToString(),
                         LongDesc = reader["O3LONG"].ToString(),
                         ItemDesc = reader["O3IDSC"].ToString(),
-                        Type = reader["Type"].ToString(),
-                        Size = reader["Size"].ToString(),
-                        Category = reader["Category"].ToString(),
-                        DepartmentName = reader["DPTNAM"].ToString(),
-                        IsPrinted = reader["IsPrintedYN"].ToString(),
-                        WithInventory = reader["INVYN"].ToString(),
+                        Type = reader["TypeName"].ToString(),
+                        Size = reader["SizeName"].ToString(),
+                        Category = reader["CategoryName"].ToString(),
+                        DepartmentName = reader["DeptName"].ToString(),
+                        IsPrinted = reader["IsPrinted"].ToString(),
+                        WithInventory = reader["HasInventory"].ToString(),
                         IsExemp = reader["IsExemp"].ToString(),
-                        ExemptionType = reader["ExemptionType"].ToString(),
-                        IBHAND = (decimal)reader["IBHAND"]
+                        ExemptionType = reader["ExempType"].ToString(),
+                        Onhand = (decimal)reader["IBHAND"]
                     };
 
                     data.Add(record);
@@ -1198,21 +1264,22 @@ namespace PriceSignageSystem.Models.Repository
                         SKU = (decimal)reader["O3SKU"],
                         UPC = (decimal)reader["O3UPC"],
                         CurrentPrice = (decimal)reader["O3POS"],
-                        RegularPrice = (decimal)reader["O3REGU"],
+                        RegularPrice = (decimal)reader["O3REG"],
                         StartDate = (decimal)reader["O3SDT"],
                         EndDate = (decimal)reader["O3EDT"],
                         Brand = reader["O3FNAM"].ToString(),
                         Model = reader["O3MODL"].ToString(),
                         LongDesc = reader["O3LONG"].ToString(),
                         ItemDesc = reader["O3IDSC"].ToString(),
-                        Type = reader["Type"].ToString(),
-                        Size = reader["Size"].ToString(),
-                        Category = reader["Category"].ToString(),
-                        DepartmentName = reader["DPTNAM"].ToString(),
-                        IsPrinted = reader["IsPrintedYN"].ToString(),
-                        WithInventory = reader["INVYN"].ToString(),
+                        Type = reader["TypeName"].ToString(),
+                        Size = reader["SizeName"].ToString(),
+                        Category = reader["CategoryName"].ToString(),
+                        DepartmentName = reader["DeptName"].ToString(),
+                        IsPrinted = reader["IsPrinted"].ToString(),
+                        WithInventory = reader["HasInventory"].ToString(),
                         IsExemption = reader["IsExemp"].ToString(),
-                        O3TYPE = reader["O3TYPE"].ToString()
+                        O3TYPE = reader["O3TYPE"].ToString(),
+                        IsReverted = reader["IsReverted"].ToString()
                     };
 
                     data.Add(record);
@@ -1476,7 +1543,7 @@ namespace PriceSignageSystem.Models.Repository
                 conn.Open();
                 try
                 {
-                    string sp = "sp_GetAllConsignment";
+                    string sp = "sp_GetAllConsignment @StartDate";
                    
                     using (SqlCommand cmd = new SqlCommand(sp, conn))
                     {
@@ -1511,12 +1578,14 @@ namespace PriceSignageSystem.Models.Repository
                                 };
                                 records.Add(record);
                             }
+                            reader.Close();
                         }
                     }
                 }
                 catch (Exception ex)
                 {
                 }
+                conn.Close();
             }
             return records;
         }
@@ -1610,12 +1679,16 @@ namespace PriceSignageSystem.Models.Repository
                                 };
                                 records.Add(record);
                             }
+
+                            reader.Close();
                         }
                     }
                 }
                 catch (Exception ex)
                 {
                 }
+
+                conn.Close();
             }
             return records;
         }
@@ -1665,12 +1738,15 @@ namespace PriceSignageSystem.Models.Repository
                                 };
                                 records.Add(record);
                             }
+                            reader.Close();
                         }
                     }
                 }
                 catch (Exception ex)
                 {
                 }
+
+                conn.Close();
             }
             return records;
         }
@@ -1709,12 +1785,14 @@ namespace PriceSignageSystem.Models.Repository
                                     TypeId = (int)reader["TypeId"]
                                 };
                             }
+                            reader.Close();
                         }
                     }
                 }
                 catch (Exception ex)
                 {
                 }
+                conn.Close();
             }
             return record;
         }
@@ -1759,12 +1837,15 @@ namespace PriceSignageSystem.Models.Repository
                                     ExempType = reader["ExempType"].ToString(),
                                 };
                             }
+                            reader.Close();
                         }
                     }
                 }
                 catch (Exception ex)
                 {
                 }
+
+                conn.Close();
             }
             return record;
         }
@@ -1810,12 +1891,16 @@ namespace PriceSignageSystem.Models.Repository
                                     ExempType = reader["ExempType"].ToString(),
                                 };
                             }
+
+                            reader.Close();
                         }
                     }
                 }
                 catch (Exception ex)
                 {
                 }
+
+                conn.Close();
             }
             return record;
         }
@@ -1855,12 +1940,15 @@ namespace PriceSignageSystem.Models.Repository
                                     TypeId = (int)reader["TypeId"]
                                 };
                             }
+                            reader.Close();
                         }
                     }
                 }
                 catch (Exception ex)
                 {
                 }
+
+                conn.Close();
             }
             return record;
         }

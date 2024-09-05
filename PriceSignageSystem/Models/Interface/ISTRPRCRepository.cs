@@ -16,7 +16,8 @@ namespace PriceSignageSystem.Models.Interface
         IEnumerable<STRPRC> GetAllData();
         Task<List<STRPRCDto>> GetDataByStartDate(decimal startDate);
         STRPRCDto GetSKUDetails(decimal O3SKU);
-        List<STRPRCLogDto> GetUpdatedData(string latestDate);
+        Task<List<STRPRCLogDto>> GetSKUUpdates(string dateFilter);
+        Task<List<STRPRCLogDto>> GetSKUUpdatesFromHistory(string dateFilter);
         STRPRCDto GetDataBySKU(decimal O3SKU);
         STRPRCDto GetLatestUpdate();
         bool GetLatestInventory(string storeId);

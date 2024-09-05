@@ -18,15 +18,14 @@ namespace PriceSignageSystem.Models.Dto
         public decimal StartDate { get; set; }
         public decimal EndDate { get; set; }
         public string DepartmentName { get; set; }
-        public string IsReverted { get; set; }
         public string IsPrinted { get; set; }
         public string Type { get; set; }
         public string Size { get; set; }
         public string Category { get; set; }
+        public decimal Onhand { get; set; }
         public string WithInventory { get; set; }
         public string IsExemp { get; set; }
         public string ExemptionType { get; set; }
         public string O3FLAG3 { get; set; }
-        public decimal IBHAND { get; set; }
     }
 }
