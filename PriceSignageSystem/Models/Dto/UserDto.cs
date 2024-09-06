@@ -26,5 +26,7 @@ namespace PriceSignageSystem.Models.Dto
         public int IsActive { get; set; }
         public List<SelectListItem> RoleList { get; set; }
         public string SelectedRoleId { get; set; }
+        public string EmployeeId { get; set; }
+        public string RoleName { get; set; }
     }
 }

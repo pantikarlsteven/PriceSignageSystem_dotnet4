@@ -665,8 +665,9 @@
     <Content Include="Views\Account\UpdatePassword.cshtml" />
     <Content Include="Views\Audit\Index.cshtml" />
     <Content Include="Views\Shared\MaintenanceError.cshtml" />
-    <Content Include="Views\Account\Index.cshtml" />
+    <Content Include="Views\Account\Index_OLD.cshtml" />
     <Content Include="Views\Account\UpdateInfo.cshtml" />
+    <Content Include="Views\Account\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

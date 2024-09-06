@@ -171,9 +171,24 @@ namespace PriceSignageSystem.Controllers
             return Json(new{success = false });
         }
 
+        [CustomAuthorize]
         public ActionResult Index()
         {
             return View();
+        }
+
+        [HttpPost]
+        public ActionResult GetUserInformation()
+        {
+            var users = new List<UserDto>();
+            if (User.IsInRole("Administrator"))
+                users = _userRepository.GetUsersInfo();
+            
+            else if (User.IsInRole("Manager"))
+                users = _userRepository.GetUsersInfo().Where(a => a.RoleName != "Administrator").ToList();
+
+
+            return Json(users);
         }
 
         [HttpPost]
@@ -233,6 +248,16 @@ namespace PriceSignageSystem.Controllers
             return Json(roles, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult GetRoleList()
+        {
+            var roles = _userRepository.GetRoles();
+
+            if (User.IsInRole("Manager"))
+                roles.RemoveAt(0); // Administrator
+
+            return Json(roles, JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult SearchAccount(string username)
         {
             var result = _userRepository.SearchAccount(username);
@@ -280,6 +305,30 @@ namespace PriceSignageSystem.Controllers
             }
                 
             return View();
+        }
+
+        [HttpPost]
+        public ActionResult DeleteUserById(int id)
+        {
+            var result = _userRepository.DeleteUser(id);
+
+            if (result == 1)
+                return Json(new { success = true });
+            else
+                return Json(new { success = false });
+
+        }
+
+        [HttpPost]
+        public ActionResult UpdateUserInfo(UserDto dto)
+        {
+            var result = _userRepository.UpdateUserInfo(dto);
+
+            if (result == 1)
+                return Json(new { success = true });
+            else
+                return Json(new { success = false });
+
         }
     }
 }

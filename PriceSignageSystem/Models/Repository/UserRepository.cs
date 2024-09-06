@@ -97,5 +97,39 @@ namespace PriceSignageSystem.Models.Repository
             var result = _db.SaveChanges();
             return result;
         }
+
+        public List<UserDto> GetUsersInfo()
+        {
+            var result = (from a in _db.Users
+                         join b in _db.Roles on a.RoleId equals b.Id
+                         select new UserDto
+                         {
+                             EmployeeId = a.EmployeeId ?? "",
+                             UserId = a.UserId,
+                             UserName = a.UserName,
+                             RoleId = a.RoleId,
+                             RoleName = b.Name
+                         }).ToList();
+            return result;
+        }
+
+        public int DeleteUser(int id)
+        {
+            var user = _db.Users.Where(a => a.UserId == id).FirstOrDefault();
+            _db.Users.Remove(user);
+            var result = _db.SaveChanges();
+
+            return result;
+        }
+
+        public int UpdateUserInfo(UserDto dto)
+        {
+            var user = _db.Users.Where(a => a.UserId == dto.UserId).FirstOrDefault();
+            user.EmployeeId = dto.EmployeeId;
+            user.RoleId = dto.RoleId;
+
+            var result = _db.SaveChanges();
+            return result;
+        }
     }
 }
