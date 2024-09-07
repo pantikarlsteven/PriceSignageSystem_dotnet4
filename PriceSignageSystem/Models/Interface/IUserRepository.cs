@@ -11,7 +11,7 @@ namespace PriceSignageSystem.Models.Interface
     {
         IQueryable<User> GetAll();
         List<User> GetUsers();
-        User AddUser(User user);
+        int AddUser(UserDto newUser);
         List<Role> GetRoles();
         int UpdatePassword(string username, string newPassword);
         User SearchAccount(string username);
@@ -20,5 +20,6 @@ namespace PriceSignageSystem.Models.Interface
         List<UserDto> GetUsersInfo();
         int DeleteUser(int id);
         int UpdateUserInfo(UserDto dto);
+        StoreDto GetStoreName(int storeId);
     }
 }

@@ -78,7 +78,6 @@
                     <div class="row">
                         <div class="col">
                             <button type="submit" class="btn btn-default btn-block text-bold btn-block">Login</button>
-                            @*<u> @Html.ActionLink("Register", "Register", "Account", null, new { @class = "btn text-white btn-block" }) </u>*@
                         </div>
                     </div>
                 </div>
@@ -90,34 +89,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
-        //InitLoad();
         localStorage.removeItem('selectedDate');
-
-        function InitLoad() {
-            $("#loadingCheckCEM").show();
-            $.ajax({
-                url: '/STRPRC/CheckCentralizedExemptionStatus',
-                type: "GET",
-                success: function (isUpdated) {
-                    localStorage.setItem("isScanUsed", false);
-                    $("#loadingCheckCEM").hide();
-                    if (!isUpdated) {
-                        $("#loadingCEM").show();
-                        $.ajax({
-                            url: '/STRPRC/UpdateCentralizedExemption',
-                            type: "POST",
-                            dataType: 'json',
-                            success: function () {
-                                $("#loadingCEM").hide();
-                            },
-                            error: function (error) {
-                                $("#loadingCEM").hide();
-                            }
-                        });
-                    }
-                }
-            });
-        }
     </script>
 </body>
 </html>

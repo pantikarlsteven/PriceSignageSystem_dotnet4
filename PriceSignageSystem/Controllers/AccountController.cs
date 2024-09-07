@@ -27,15 +27,6 @@ namespace PriceSignageSystem.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
-            DateTime currentTime = DateTime.Now;
-            DateTime startTime = DateTime.Today.AddHours(4);
-            DateTime endTime = DateTime.Today.AddHours(4).AddMinutes(15);
-
-            if (currentTime >= startTime && currentTime < endTime)
-            {
-                return View("MaintenanceError");
-            }
-
             ViewBag.returnUrl = returnUrl;
             var model = new UserStoreDto
             {
@@ -101,55 +92,6 @@ namespace PriceSignageSystem.Controllers
             return list;
         }
 
-        public ActionResult Register_Old()
-        {
-            var user = new UserDto();
-            user.RoleList = _userRepository.GetRoles().Select(a => new SelectListItem 
-                        {
-                            Value = a.Id.ToString(),
-                            Text = a.Name.ToString()
-                        }).ToList();
-
-            return View(user);
-        }
-
-        [HttpPost]
-        public ActionResult Register_Old(UserDto user)
-        {
-            user.RoleList = _userRepository.GetRoles().Select(a => new SelectListItem
-            {
-                Value = a.Id.ToString(),
-                Text = a.Name.ToString()
-            }).ToList();
-
-            if (ModelState.IsValid)
-            {
-                var existingUser = _userRepository.GetAll().FirstOrDefault(a => a.UserName == user.UserName);
-               
-                if (existingUser != null)
-                {
-                    ModelState.AddModelError("UserName", "Username must be unique.");
-                    return View(user); // Return to the view with the validation error
-                }
-
-                var encryptedPassword = EncryptionHelper.Encrypt(user.Password);
-                var newUser = new User();
-                newUser.UserName = user.UserName;
-                newUser.Password = encryptedPassword;
-                newUser.IsActive = 1;
-                newUser.RoleId = Convert.ToInt32(user.SelectedRoleId);
-
-                //user.Password = encryptedPassword;
-                //user.IsActive = 1;
-
-                var data = _userRepository.AddUser(newUser);
-
-                TempData["RegistrationSuccessMessage"] = "Registration successful!";
-                return RedirectToAction("PCA", "STRPRC");
-            }
-            return View(user);
-        }
-
         public ActionResult UpdatePassword(string username)
         {
             new UserDto();
@@ -192,60 +134,15 @@ namespace PriceSignageSystem.Controllers
         }
 
         [HttpPost]
-        public ActionResult Register(FormCollection form)
+        public ActionResult AddUser(UserDto newUser)
         {
-            var empid = form["empid"];
-            var username = form["username"];
-            var pw = form["password"];
-            var role = form["roleList"];
-            var exceptionDetails = string.Empty;
+            var result = _userRepository.AddUser(newUser);
 
-            if (string.IsNullOrWhiteSpace(empid))
-                exceptionDetails += "- Employee ID \n";
-            if (string.IsNullOrWhiteSpace(username))
-                exceptionDetails += "- Username \n";
-            if (string.IsNullOrWhiteSpace(pw))
-                exceptionDetails += "- Password \n";
-            if(!string.IsNullOrEmpty(exceptionDetails))
-                return Json(new { isSuccess = false, message = "Please enter following required fields:\n" , exceptionDetails });
-
-            var existingUser = _userRepository.GetAll().FirstOrDefault(a => a.UserName == username);
-
-            if(existingUser == null)
-            {
-                var encryptedPassword = EncryptionHelper.Encrypt(pw);
-                var newUser = new User();
-                newUser.EmployeeId = empid;
-                newUser.UserName = username;
-                newUser.Password = encryptedPassword;
-                newUser.IsActive = UserStatusConstants.Active;
-                newUser.RoleId = Convert.ToInt32(role);
-
-                var data = _userRepository.AddUser(newUser);
-
-                if(data != null)
-                    return Json(new { isSuccess = true , message = "Registration Successful!" });
-            }
+            if (result > 0)
+                return Json(new { success = true });
             else
-            {
-                return Json(new { isSuccess = false, message = "Error!\n", exceptionDetails = "Username already exists!" });
-            }
+                return Json(new { success = false });
 
-            return Json(null);
-        }
-
-        public ActionResult GetRoles()
-        {
-            var roles = _userRepository.GetRoles().Select(a => new SelectListItem
-            {
-                Value = a.Id.ToString(),
-                Text = a.Name
-            }).ToList();
-
-            if (User.IsInRole("Manager"))
-                roles.RemoveAt(0); // Administrator
-
-            return Json(roles, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult GetRoleList()
@@ -253,7 +150,7 @@ namespace PriceSignageSystem.Controllers
             var roles = _userRepository.GetRoles();
 
             if (User.IsInRole("Manager"))
-                roles.RemoveAt(0); // Administrator
+                roles.RemoveAt(0); // remove Administrator
 
             return Json(roles, JsonRequestBehavior.AllowGet);
         }
@@ -329,6 +226,13 @@ namespace PriceSignageSystem.Controllers
             else
                 return Json(new { success = false });
 
+        }
+
+        public ActionResult GetStore()
+        {
+            var storeId = int.Parse(ConfigurationManager.AppSettings["StoreID"]);
+            var store = _userRepository.GetStoreName(storeId);
+            return Json(store.Name, JsonRequestBehavior.AllowGet);
         }
     }
 }

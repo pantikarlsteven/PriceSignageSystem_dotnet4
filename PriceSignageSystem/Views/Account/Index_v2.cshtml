@@ -33,13 +33,14 @@
                                 <tr>
                                     <th>Employee ID</th>
                                     <th>Username</th>
+                                    <th>New Password</th>
                                     <th>Role</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td colspan="4" style="text-align: center;">This data is hidden</td>
+                                    <td colspan="5" style="text-align: center;">This data is hidden</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -49,7 +50,26 @@
         </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
+    <!-- Update Modal -->
+    <div class="modal" id="updateUserModal" tabindex="-1" aria-labelledby="updateUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateUserModalLabel">Confirm Update</h5>
+                    <button type="button" class="btn-close cancelUpdateBtn" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to update this user?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary cancelUpdateBtn">Cancel</button>
+                    <button type="button" class="btn btn-success" id="confirmUpdateBtn">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Modal -->
     <div class="modal" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -79,12 +99,12 @@
                 <div class="modal-body">
                     <form id="addUserForm">
                         <div class="mb-3">
-                            <label for="employeeId" class="form-label">Employee ID</label>
-                            <input type="text" class="form-control" id="employeeId" required>
-                        </div>
-                        <div class="mb-3">
                             <label for="username" class="form-label">Username</label>
                             <input type="text" class="form-control" id="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="employeeId" class="form-label">Employee ID</label>
+                            <input type="text" class="form-control" id="employeeId" required>
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
@@ -106,49 +126,6 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary cancelAddUserBtn">Cancel</button>
                     <button type="button" class="btn btn-success" id="confirmAddUserBtn">Add</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Update Modal -->
-    <div class="modal" id="updateInfoModal" tabindex="-1" aria-labelledby="updateInfoModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="updateInfoModalLabel">Update User</h5>
-                    <button type="button" class="btn-close cancelUpdateInfoBtn" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="updateInfoForm">
-                        <div class="mb-3">
-                            <label for="employeeId" class="form-label">Employee ID</label>
-                            <input type="text" class="form-control" id="updateEmployeeId" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="updateUsername" readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">New Password</label>
-                            <div class="input-group">
-                                <input type="password" class="form-control" id="updatePassword">
-                                <button type="button" class="btn btn-outline-secondary" onclick="togglePasswordForUpdateuser()">
-                                    <i class="fa fa-eye" id="update-eye-icon"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="UpdateRoleList" class="form-label">Role</label>
-                            <select class="form-control custom-select" id="UpdateRoleList">
-                                <option value="">Loading...</option>
-                            </select>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary cancelUpdateInfoBtn">Cancel</button>
-                    <button type="button" class="btn btn-success" id="confirmUpdateInfoBtn">Update</button>
                 </div>
             </div>
         </div>
@@ -217,10 +194,33 @@
                     [10, 25, 50, 'All']
                 ],
                 pageLength: -1,
+                columnDefs: [
+                    { targets: [4], orderable: false },
+                ],
                 columns: [
-                    { data: 'EmployeeId', name: 'EmployeeId' },
+                    {
+                        data: null, orderable: false, searchable: false, render: function (data) {
+                            return '<input type="text" class="form-control" id="empId-'+ data.UserId +'" value="'+data.EmployeeId +'">';
+                        }
+                    },
                     { data: 'UserName', name: 'UserName' },
-                    { data: 'RoleName', name: 'RoleName' },
+                    {
+                        data: null, orderable: false, searchable: false, render: function (data) {
+                            return '<div class="input-group">' +
+                                '<input type="password" class="form-control" id="pw-' + data.UserId + '" value="' + data.Password + '">' +
+                                '<button type="button" class="btn btn-outline-secondary" onclick="togglePassword(' + data.UserId + ')">' +
+                                '<i class="fa fa-eye" id="eye-icon-' + data.UserId + '"></i>' +
+                                '</button>' +
+                                '</div>';
+                        }
+                    },
+                    {
+                        data: null, orderable: false, searchable: false, render: function (data) {
+                            return '<select class="form-control custom-select role-select" id="role-select-' + data.UserId +'-'+ data.RoleId+ '">' +
+                                    '<option value=""> Loading...</option>'+
+                                    '</select>';
+                        }
+                    },
                     {
                         data: null,
                         render: function (data, type, row) {
@@ -239,6 +239,7 @@
                         openAddUserModal();
                     });
 
+                    populateRoleSelects();
                 }
             });
         }
@@ -250,6 +251,24 @@
             roles = data;
         });
        
+    function populateRoleSelects() {
+       
+        $('.role-select').each(function () {
+            const selectElement = $(this);
+            const userId = selectElement.attr('id').split('-')[2];
+            const roleId = selectElement.attr('id').split('-')[3];
+
+            selectElement.empty();
+
+            roles.forEach(role => {
+                selectElement.append('<option value="' + role.Id + '">' + role.Name + '</option>');
+            });
+
+            // selected Val
+            selectElement.val(roleId);
+        });
+    }
+
     function deleteUser(id) {
         const modal = new bootstrap.Modal(document.getElementById('deleteUserModal'));
         modal.show();
@@ -277,47 +296,32 @@
     }
 
     function updateUser(data) {
-        const modal = new bootstrap.Modal(document.getElementById('updateInfoModal'));
+        var empId = $(`#empId-${data.UserId}`).val();
+        var roleId = $(`#role-select-${data.UserId}-${data.RoleId}`).val();
+        var pw = $(`#pw-${data.UserId}`).val();
+
+        var message = [];
+        if (empId === '') {
+            message.push("Employee ID must not be blank.");
+        }
+        if (message.length > 0) {
+            alert(message.join('\n'));
+            return false;
+        }
+
+        var dto = {
+            UserId: data.UserId,
+            EmployeeId: empId,
+            RoleId: roleId,
+            Password: pw
+        };
+
+        const modal = new bootstrap.Modal(document.getElementById('updateUserModal'));
         modal.show();
 
-        $('#updateUsername').val(data.UserName);
-        $('#updateEmployeeId').val(data.EmployeeId);
-
-        const selectElement = document.getElementById('UpdateRoleList');
-        selectElement.innerHTML = '';
-        roles.forEach(option => {
-            const optionElement = document.createElement('option');
-            optionElement.value = option.Id;
-            optionElement.textContent = option.Name;
-            selectElement.appendChild(optionElement);
-        });
-
-        $('#UpdateRoleList').val(data.RoleId);
-
-
-        document.getElementById('confirmUpdateInfoBtn').addEventListener('click', function () {
-
-            var empId = $('#updateEmployeeId').val();
-            var roleId = $('#UpdateRoleList').val();
-            var pw = $('#UpdatePassword').val();
-            
-            var message = [];
-            if (empId === '') {
-                message.push("Employee ID must not be blank.");
-            }
-            if (message.length > 0) {
-                alert(message.join('\n'));
-                return;
-            }
-
-            var dto = {
-                UserId: data.UserId,
-                EmployeeId: empId,
-                RoleId: roleId,
-                Password: pw
-            };
-
+        document.getElementById('confirmUpdateBtn').addEventListener('click', function () {
             modal.hide();
+
             $.ajax({
                 url: "/Account/UpdateUserInfo",
                 type: "POST",
@@ -338,9 +342,9 @@
         cancelButtons(modal);
     }
 
-    function togglePasswordForAdduser() {
-        const passwordInput = document.getElementById('password');
-        const eyeIcon = document.getElementById('eye-icon');
+    function togglePassword(userId) {
+        const passwordInput = document.getElementById('pw-' + userId);
+        const eyeIcon = document.getElementById('eye-icon-' + userId);
 
         if (passwordInput.type === 'password') {
             passwordInput.type = 'text';  // Show the password
@@ -353,9 +357,9 @@
         }
     }
 
-    function togglePasswordForUpdateuser() {
-        const passwordInput = document.getElementById('updatePassword');
-        const eyeIcon = document.getElementById('update-eye-icon');
+    function togglePasswordForAdduser(userId) {
+        const passwordInput = document.getElementById('password');
+        const eyeIcon = document.getElementById('eye-icon');
 
         if (passwordInput.type === 'password') {
             passwordInput.type = 'text';  // Show the password
@@ -418,7 +422,6 @@
                 })
             } else {
                 alert('Please fill in all fields.');
-                return;
             }
         });
 
@@ -426,7 +429,7 @@
 
     function cancelButtons(modal) {
         const cancelDeleteButtons = document.getElementsByClassName('cancelDeleteBtn');
-        const cancelUpdateButtons = document.getElementsByClassName('cancelUpdateInfoBtn');
+        const cancelUpdateButtons = document.getElementsByClassName('cancelUpdateBtn');
         const cancelAddUserButtons = document.getElementsByClassName('cancelAddUserBtn');
 
         for (let i = 0; i < cancelDeleteButtons.length; i++) {

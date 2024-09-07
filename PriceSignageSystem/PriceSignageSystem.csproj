@@ -483,6 +483,7 @@
     <Compile Include="Models\Dto\AuditDto.cs" />
     <Compile Include="Models\Dto\ScanResultDto.cs" />
     <Compile Include="Models\Dto\SkuUpdatesAuditDto.cs" />
+    <Compile Include="Models\Dto\StoreDto.cs" />
     <Compile Include="Models\Dto\STRPRCDto.cs" />
     <Compile Include="Models\Dto\STRPRCLogDto.cs" />
     <Compile Include="Models\Dto\UserDto.cs" />
@@ -665,8 +666,8 @@
     <Content Include="Views\Account\UpdatePassword.cshtml" />
     <Content Include="Views\Audit\Index.cshtml" />
     <Content Include="Views\Shared\MaintenanceError.cshtml" />
-    <Content Include="Views\Account\Index_OLD.cshtml" />
     <Content Include="Views\Account\UpdateInfo.cshtml" />
+    <Content Include="Views\Account\Index_v2.cshtml" />
     <Content Include="Views\Account\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

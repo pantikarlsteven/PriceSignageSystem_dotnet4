@@ -1,4 +1,5 @@
 ﻿using PriceSignageSystem.Helper;
+using PriceSignageSystem.Models.Constants;
 using PriceSignageSystem.Models.DatabaseContext;
 using PriceSignageSystem.Models.Dto;
 using PriceSignageSystem.Models.Interface;
@@ -16,9 +17,11 @@ namespace PriceSignageSystem.Models.Repository
     public class UserRepository : IUserRepository
     {
         private readonly ApplicationDbContext _db;
+        private readonly string connectionString;
         public UserRepository(ApplicationDbContext db)
         {
             _db = db;
+            connectionString = ConfigurationManager.ConnectionStrings["MyConnectionString"].ConnectionString;
         }
 
         public IQueryable<User> GetAll()
@@ -32,12 +35,27 @@ namespace PriceSignageSystem.Models.Repository
             return users;
         }
 
-        public User AddUser(User user)
+        public int AddUser(UserDto newUser)
         {
-            var data = _db.Users.Add(user);
-            _db.SaveChanges();
-            return data;
+            var existingUser = _db.Users.Where(a => a.UserName == newUser.UserName).FirstOrDefault();
+            var result = 0;
+            if (existingUser == null)
+            {
+                var encryptedPw = EncryptionHelper.Encrypt(newUser.Password);
+                var user = new User()
+                {
+                    EmployeeId = newUser.EmployeeId,
+                    UserName = newUser.UserName,
+                    Password = encryptedPw,
+                    RoleId = newUser.RoleId,
+                    IsActive = UserStatusConstants.Active
+                };
 
+                _db.Users.Add(user);
+                result = _db.SaveChanges();
+            }
+
+            return result;
         }
 
         public List<Role> GetRoles()
@@ -107,6 +125,7 @@ namespace PriceSignageSystem.Models.Repository
                              EmployeeId = a.EmployeeId ?? "",
                              UserId = a.UserId,
                              UserName = a.UserName,
+                             Password = "",
                              RoleId = a.RoleId,
                              RoleName = b.Name
                          }).ToList();
@@ -124,12 +143,56 @@ namespace PriceSignageSystem.Models.Repository
 
         public int UpdateUserInfo(UserDto dto)
         {
+
             var user = _db.Users.Where(a => a.UserId == dto.UserId).FirstOrDefault();
             user.EmployeeId = dto.EmployeeId;
             user.RoleId = dto.RoleId;
+            if (!String.IsNullOrEmpty(dto.Password))
+            {
+                var encryptedPw = EncryptionHelper.Encrypt(dto.Password);
+                user.Password = encryptedPw;
+            }
+
 
             var result = _db.SaveChanges();
             return result;
+        }
+
+        public StoreDto GetStoreName(int storeId)
+        {
+            var record = new StoreDto();
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                try
+                {
+                    string query = "SELECT * FROM StoreLocations WHERE Id = @storeId";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@storeId", storeId);
+                     
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                record = new StoreDto
+                                {
+                                    Id = (int)reader["Id"],
+                                    Name = reader["Name"].ToString(),
+                                };
+                            }
+                            reader.Close();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                }
+
+                conn.Close();
+            }
+            return record;
         }
     }
 }
