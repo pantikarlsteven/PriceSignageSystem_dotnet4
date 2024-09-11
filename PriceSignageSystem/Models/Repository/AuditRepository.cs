@@ -295,12 +295,62 @@ namespace PriceSignageSystem.Models.Repository
 
             return result;
         }
+       
         public async Task<List<AuditDto>> GetAllUnprinted()
         {
-            var result = await _db.Database.SqlQuery<AuditDto>("EXEC sp_GetAllUnprintedForAudit")
-                         .ToListAsync();
+            var sp = "sp_GetAllUnprintedForAudit";
 
-            return result;
+            var data = new List<AuditDto>();
+
+            using (var connection = new SqlConnection(connectionString))
+            using (var command = new SqlCommand(sp, connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandTimeout = commandTimeoutInSeconds;
+
+                connection.Open();
+                SqlDataReader reader = await command.ExecuteReaderAsync();
+
+                while (reader.Read())
+                {
+                    var record = new AuditDto
+                    {
+                        O3SKU = (decimal)reader["O3SKU"],
+                        O3UPC = (decimal)reader["O3UPC"],
+                        O3POS = (decimal)reader["O3POS"],
+                        O3REG = (decimal)reader["O3REG"],
+                        O3SDT = (decimal)reader["O3SDT"],
+                        O3EDT = (decimal)reader["O3EDT"],
+                        O3FNAM = reader["O3FNAM"].ToString(),
+                        O3IDSC = reader["O3IDSC"].ToString(),
+                        O3TYPE = reader["O3TYPE"].ToString(),
+                        O3DEPT = (decimal)reader["O3DEPT"],
+                        O3SDPT = (decimal)reader["O3SDPT"],
+                        O3CLAS = (decimal)reader["O3CLAS"],
+                        O3SCLS = (decimal)reader["O3SCLS"],
+                        TypeName = reader["TypeName"].ToString(),
+                        SizeName = reader["SizeName"].ToString(),
+                        CategoryName = reader["CategoryName"].ToString(),
+                        DepartmentName = reader["DepartmentName"].ToString(),
+                        IsPrinted = reader["IsPrinted"].ToString(),
+                        IsReverted = reader["IsReverted"].ToString(),
+                        IsWrongSign = reader["IsWrongSign"].ToString(),
+                        IsNotRequired = reader["IsNotRequired"].ToString(),
+                        IsAudited = reader["IsAudited"].ToString(),
+                        HasInventory = reader["HasInventory"].ToString(),
+                        AuditedRemarks = reader["AuditedRemarks"].ToString(),
+                        IsExemp = reader["IsExemp"].ToString()
+                    };
+
+                    data.Add(record);
+                }
+
+                // Close the reader and connection
+                reader.Close();
+                connection.Close();
+            }
+
+            return data;
         }
 
         public async Task<List<AuditDto>> GetAllPrintedByHistory(string dateFilter)
@@ -374,7 +424,7 @@ namespace PriceSignageSystem.Models.Repository
                     string query = "SELECT " +
                        "a.* " +
                        "FROM PCAHistory x " +
-                       "LEFT JOIN Audit_UnprintedHistory a on x.O3SKU = a.O3SKU and x.PCADate = a.UnprintedDate " +
+                       "INNER JOIN Audit_UnprintedHistory a on x.O3SKU = a.O3SKU and x.PCADate = a.UnprintedDate " +
                        "WHERE x.PCADate = @dateFilter AND x.O3SDT = @startDate AND x.IsPrinted = 'No' " +
                        "ORDER BY x.O3SDT DESC ,x.O3DEPT, x.O3SDPT, x.O3CLAS, x.O3SCLS ASC ";
                    

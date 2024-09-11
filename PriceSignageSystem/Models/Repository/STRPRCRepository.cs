@@ -450,26 +450,15 @@ namespace PriceSignageSystem.Models.Repository
                             CategoryId = (int)reader["CategoryId"],
                             DepartmentName = reader["DPTNAM"].ToString(),
                             IsReverted = reader["IsReverted"].ToString(),
-                            HasCoContract = reader["O3FLAG3"].ToString(),
                             HasInventory = reader["HasInventory"].ToString(),
                             IsExemp = reader["IsExemp"].ToString(),
-                            NegativeSave = reader["NegativeSave"].ToString(),
+                            ExempType = reader["ExempType"].ToString(),
                             O3TYPE = reader["O3TYPE"].ToString(),
                             IBHAND = (decimal)reader["IBHAND"],
                             ZeroInvDCOnHand = (decimal)reader["ZeroInvDCOnHand"],
                             ZeroInvInTransit = (decimal)reader["ZeroInvInTransit"],
                             StoreID = store
                         };
-
-                        //if ((decimal)reader["O3RSDT"] == startDate)
-                        //{
-                        //    if ((int)reader["TypeId"] == ReportConstants.Type.Regular)
-                        //    {
-                        //        record.O3SDT = (decimal)reader["O3RSDT"];
-                        //        record.O3EDT = (decimal)reader["O3REDT"];
-                        //    }
-                        //    else continue;
-                        //}
 
                         data.Add(record);
                     }
@@ -479,7 +468,7 @@ namespace PriceSignageSystem.Models.Repository
                     connection.Close();
                 }
 
-                var exemptions = data.Where(w => w.IsExemp == "Y" || ((w.HasCoContract != "Y" || w.HasCoContract == null) && w.O3TYPE == "CO")).ToList();
+                var exemptions = data.Where(w => w.IsExemp == "Y").ToList();
 
                 var dataExemp = new List<ExemptionDto>();
                 using (var connection = new SqlConnection(connStringCentralizedExemptions))
@@ -531,9 +520,9 @@ namespace PriceSignageSystem.Models.Repository
                 }
 
                 string insertQuery = "INSERT INTO Exemptions (IsPrinted, O3SKU, O3UPC, O3IDSC, o3type, O3REG," +
-                                    " O3POS, O3SDT, O3EDT, O3RSDT, O3REDT, TypeId, SizeId, CategoryId, DPTNAM, O3FLAG1, INV2, IsExemp, NegativeSave, IBHAND, StoreID, HasCoContract, DateExemption) " +
+                                    " O3POS, O3SDT, O3EDT, O3RSDT, O3REDT, TypeId, SizeId, CategoryId, DPTNAM, IsReverted, HasInventory, IsExemp, ExempType, IBHAND, StoreID, DateExemption) " +
                                      "VALUES (@IsPrinted, @O3SKU, @O3UPC, @O3IDSC, @o3type, @O3REG," +
-                                    " @O3POS, @O3SDT, @O3EDT, @O3RSDT, @O3REDT, @TypeId, @SizeId, @CategoryId, @DPTNAM, @O3FLAG1, @INV2, @IsExemp, @NegativeSave, @IBHAND, @StoreID, @HasCoContract, @DateExemption)";
+                                    " @O3POS, @O3SDT, @O3EDT, @O3RSDT, @O3REDT, @TypeId, @SizeId, @CategoryId, @DPTNAM, @IsReverted, @HasInventory, @IsExemp, @ExempType, @IBHAND, @StoreID, @DateExemption)";
 
                 var listOfIds = new List<int>();
 
@@ -564,13 +553,12 @@ namespace PriceSignageSystem.Models.Repository
                             command.Parameters.AddWithValue("@SizeId", exemption.SizeId);
                             command.Parameters.AddWithValue("@CategoryId", exemption.CategoryId);
                             command.Parameters.AddWithValue("@DPTNAM", exemption.DepartmentName);
-                            command.Parameters.AddWithValue("@O3FLAG1", exemption.IsReverted);
-                            command.Parameters.AddWithValue("@INV2", exemption.HasInventory);
+                            command.Parameters.AddWithValue("@IsReverted", exemption.IsReverted);
+                            command.Parameters.AddWithValue("@HasInventory", exemption.HasInventory);
                             command.Parameters.AddWithValue("@IsExemp", exemption.IsExemp);
-                            command.Parameters.AddWithValue("@NegativeSave", exemption.NegativeSave);
+                            command.Parameters.AddWithValue("@ExempType", exemption.ExempType);
                             command.Parameters.AddWithValue("@IBHAND", exemption.IBHAND);
                             command.Parameters.AddWithValue("@StoreID", exemption.StoreID);
-                            command.Parameters.AddWithValue("@HasCoContract", exemption.HasCoContract);
                             command.Parameters.AddWithValue("@DateExemption", DateTime.Now);
 
                             // Execute the SQL command
@@ -1008,55 +996,86 @@ namespace PriceSignageSystem.Models.Repository
 
         public List<ReportDto> GetReportDataList(List<decimal> O3SKUs)
         {
-            var data = (from a in _db.STRPRCs
-                        join b in _db.Countries on a.O3TRB3 equals b.iatrb3 into ab
-                        from c in ab.DefaultIfEmpty()
-                        where O3SKUs.Contains(a.O3SKU)
-                        select new ReportDto
-                        {
-                            O3LOC = a.O3LOC,
-                            O3CLAS = a.O3CLAS,
-                            O3IDSC = a.O3IDSC,
-                            O3SKU = a.O3SKU,
-                            O3SCCD = a.O3SCCD,
-                            O3UPC = a.O3UPC,
-                            O3VNUM = a.O3VNUM,
-                            O3TYPE = a.O3TYPE,
-                            O3DEPT = a.O3DEPT,
-                            O3SDPT = a.O3SDPT,
-                            O3SCLS = a.O3SCLS,
-                            O3POS = a.O3POS,
-                            O3POSU = a.O3POSU,
-                            O3REG = a.O3REG,
-                            O3REGU = a.O3REGU,
-                            O3ORIG = a.O3ORIG,
-                            O3ORGU = a.O3ORGU,
-                            O3EVT = a.O3EVT,
-                            O3PMMX = a.O3PMMX,
-                            O3PMTH = a.O3PMTH,
-                            O3PDQT = a.O3PDQT,
-                            O3PDPR = a.O3PDPR,
-                            O3SDT = a.O3SDT,
-                            O3EDT = a.O3EDT,
-                            O3TRB3 = a.O3TRB3,
-                            O3FGR = a.O3FGR,
-                            O3FNAM = a.O3FNAM,
-                            O3MODL = a.O3MODL,
-                            O3LONG = a.O3LONG,
-                            O3SLUM = a.O3SLUM,
-                            O3DIV = a.O3DIV,
-                            O3TUOM = a.O3TUOM,
-                            O3DATE = a.O3DATE,
-                            O3CURD = a.O3CURD,
-                            O3USER = a.O3USER,
-                            DateUpdated = a.DateUpdated,
-                            TypeId = a.TypeId,
-                            SizeId = a.SizeId,
-                            CategoryId = a.CategoryId,
-                            country_img = c.country_img
-                        }).ToList();
+            var skus = String.Empty;
 
-            return data;
+            if (O3SKUs.Count > 1)
+                skus = string.Join(",", O3SKUs);
+            else
+                skus = O3SKUs.First().ToString();
+
+            var records = new List<ReportDto>();
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                try
+                {
+                    string query = "SELECT " +
+                         "p.*, " +
+                         "s.O3TRB3, " +
+                         "s.O3LONG, " +
+                         "s.O3TUOM, " +
+                         "s.O3DIV, " +
+                         "s.O3SCCD, " +
+                         "s.O3DATE, " +
+                         "s.O3REGU, " +
+                         "s.O3POSU, " +
+                         "[country_img] = (SELECT c.country_img FROM Countries c WHERE c.iatrb3 = s.O3TRB3), " +
+                         "d.O1VAL, " +
+                         "d.O1PTYP " +
+                         "FROM DailyPCA_Compressed p " +
+                         "LEFT JOIN STRPRCs s ON p.O3SKU = s.O3SKU " +
+                         "LEFT JOIN DailyPromos d ON p.O3SKU = d.O1SKU " +
+                        $"WHERE p.O3SKU in ({@skus})";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var record = new ReportDto
+                                {
+                                    O3SKU = (decimal)reader["O3SKU"],
+                                    O3CLAS = (decimal)reader["O3CLAS"],
+                                    O3IDSC = reader["O3IDSC"].ToString(),
+                                    O3SCCD = reader["O3SCCD"].ToString(),
+                                    O3UPC = (decimal)reader["O3UPC"],
+                                    O3TYPE = reader["O3TYPE"].ToString(),
+                                    O3DEPT = (decimal)reader["O3DEPT"],
+                                    O3SDPT = (decimal)reader["O3SDPT"],
+                                    O3SCLS = (decimal)reader["O3SCLS"],
+                                    O3POS = (decimal)reader["O3POS"],
+                                    O3POSU = (decimal)reader["O3POSU"],
+                                    O3REG = (decimal)reader["O3REG"],
+                                    O3REGU = (decimal)reader["O3REGU"],
+                                    O3SDT = (decimal)reader["O3SDT"],
+                                    O3EDT = (decimal)reader["O3EDT"],
+                                    O3TRB3 = reader["O3TRB3"].ToString(),
+                                    O3FNAM = reader["O3FNAM"].ToString(),
+                                    O3MODL = reader["O3MODL"].ToString(),
+                                    O3LONG = reader["O3LONG"].ToString(),
+                                    O3DIV = reader["O3DIV"].ToString(),
+                                    O3TUOM = reader["O3TUOM"].ToString(),
+                                    O3DATE = (decimal)reader["O3DATE"],
+                                    TypeId = (int)reader["TypeId"],
+                                    SizeId = (int)reader["SizeId"],
+                                    CategoryId = (int)reader["CategoryId"],
+                                    country_img = reader["country_img"] != DBNull.Value ? (byte[])reader["country_img"] : null,
+                                    PromoVal = reader["O1VAL"] != DBNull.Value ? (decimal)reader["O1VAL"] : 0,
+                                    PromoType = reader["O1PTYP"].ToString(),
+                                };
+                                records.Add(record);
+                            }
+                            reader.Close();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                }
+                conn.Close();
+            }
+            return records;
         }
 
         public void UpdateSelection(decimal startDate, decimal endDate)

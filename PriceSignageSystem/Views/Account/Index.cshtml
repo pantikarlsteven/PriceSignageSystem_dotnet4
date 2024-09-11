@@ -116,7 +116,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="updateInfoModalLabel">Update User</h5>
+                    <h5 class="modal-title" id="updateInfoModalLabel">Edit User</h5>
                     <button type="button" class="btn-close cancelUpdateInfoBtn" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -325,10 +325,10 @@
                 data: JSON.stringify({ dto: dto  }),
                 success: function (response) {
                     window.location.reload();
-                    if (response) {
-                        alert('User Updated Succesfully!')
+                    if (response.success) {
+                        alert(response.message)
                     } else {
-                        alert('Action Denied!')
+                        alert(response.message)
                     }
                 },
                 error: function () { }

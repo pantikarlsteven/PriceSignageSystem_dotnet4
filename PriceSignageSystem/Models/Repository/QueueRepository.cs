@@ -5,7 +5,9 @@ using PriceSignageSystem.Models.Interface;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 
@@ -14,10 +16,12 @@ namespace PriceSignageSystem.Models.Repository
     public class QueueRepository : IQueueRepository
     {
         private readonly ApplicationDbContext _db;
+        private readonly string connectionString;
 
         public QueueRepository(ApplicationDbContext db)
         {
             _db = db;
+            connectionString = ConfigurationManager.ConnectionStrings["MyConnectionString"].ConnectionString;
         }
         public ItemQueue AddItemQueue(STRPRCDto model)
         {
@@ -126,24 +130,80 @@ namespace PriceSignageSystem.Models.Repository
 
         public void QueueMultipleItems(int sizeId, decimal[] skus)
         {
-            var list = new List<STRPRC>();
-           
-            foreach(var sku in skus)
+            var toQueueList = new List<STRPRC>();
+            var promoList = new List<PromoEngineDto>();
+            string skuString;
+
+            if (skus.Length > 1)
+                skuString = string.Join(",", skus);
+            else
+                skuString = skus.First().ToString();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                var eachData = _db.STRPRCs.Where(a => a.O3SKU == sku).FirstOrDefault();
-                list.Add(eachData);
+                conn.Open();
+                try
+                {
+                    string query = "SELECT " +
+                        "*," +
+                        "[TypeId] = (CASE WHEN O1PTYP = 'B1T1' THEN 3 " +
+                        "WHEN O1PTYP = 'B1T1M' THEN 4 " +
+                        "WHEN O1PTYP = 'B1_A' THEN 5 " +
+                        "WHEN O1PTYP = 'B1_P' THEN 6 END) " +
+                        $"FROM DailyPromos WHERE O1SKU in ({skuString})";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var record = new PromoEngineDto
+                                {
+                                    Sku = (decimal)reader["O1SKU"],
+                                    StartDate = (decimal)reader["O1SDT"],
+                                    EndDate = (decimal)reader["O1EDT"],
+                                    PromoType = reader["O1PTYP"].ToString(),
+                                    PromoVal = (decimal)reader["O1VAL"],
+                                    TypeId = (int)reader["TypeId"]
+                                };
+                                promoList.Add(record);
+                            }
+                            reader.Close();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                }
+
+                conn.Close();
             }
 
-            foreach(var item in list)
+            toQueueList = _db.STRPRCs.Where(a => skus.Contains(a.O3SKU)).ToList();
+
+            foreach (var item in toQueueList)
             {
+                var skuPromo = promoList.Where(a => a.Sku == item.O3SKU).FirstOrDefault();
+
                 var model = new ItemQueue();
                 model.O3SKU = item.O3SKU;
-                model.TypeId = item.O3REG < item.O3POS ? ReportConstants.Type.Regular : item.TypeId; // Validation for Negative Save
                 model.SizeId = sizeId;
                 model.UserName = HttpContext.Current.User.Identity.Name;
                 model.Status = ReportConstants.Status.InQueue;
                 model.DateCreated = DateTime.Now;
                 model.IsEdited = "N";
+
+                if (skuPromo != null)
+                {
+                    if (skuPromo.StartDate > item.O3SDT)
+                        model.TypeId = skuPromo.TypeId;
+                }
+                else
+                {
+                    model.TypeId = item.TypeId;
+                }
+
                 _db.ItemQueues.Add(model);
                 _db.SaveChanges();
             }

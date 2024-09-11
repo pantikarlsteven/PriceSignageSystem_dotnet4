@@ -21,5 +21,6 @@ namespace PriceSignageSystem.Models.Interface
         int DeleteUser(int id);
         int UpdateUserInfo(UserDto dto);
         StoreDto GetStoreName(int storeId);
+        bool CheckIfEmpIdExisting(string empId);
     }
 }

@@ -194,5 +194,12 @@ namespace PriceSignageSystem.Models.Repository
             }
             return record;
         }
+
+        public bool CheckIfEmpIdExisting(string empId)
+        {
+            var result = _db.Users.Where(a => a.EmployeeId == empId).FirstOrDefault();
+
+            return result != null;
+        }
     }
 }
