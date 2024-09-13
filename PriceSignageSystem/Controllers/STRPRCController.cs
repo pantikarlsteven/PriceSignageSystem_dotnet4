@@ -140,7 +140,7 @@ namespace PriceSignageSystem.Controllers
                     }
                     else
                     {
-                        dto.Types = _typeRepository.GetAllTypes().Where(a => a.Id == dto.SelectedTypeId).Select(a => new SelectListItem
+                        dto.Types = _typeRepository.GetAllTypes().Where(a => a.Id == 1 || a.Id == 2).Select(a => new SelectListItem
                         {
                             Value = a.Id.ToString(),
                             Text = a.Name
@@ -500,6 +500,7 @@ namespace PriceSignageSystem.Controllers
             }
 
             var result = _sTRPRCRepository.GetLatestUpdate();
+
             var data = new STRPRCDto();
             decimal dateFilterInDecimal = 0;
             if (!string.IsNullOrEmpty(dateFilter))

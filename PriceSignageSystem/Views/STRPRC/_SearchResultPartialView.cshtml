@@ -294,14 +294,19 @@
         });
 
 
+        if ($('#SelectedTypeId').val() == 1 || $('#SelectedTypeId').val() == 2) {
+            $('#SelectedTypeId').prop("disabled", true);
+        }
+
         $("#currPrice").on("change", function () {
+            
             var regPrice = $("#regPrice");
             var currPrice = $("#currPrice");
             convertedRegPrice = Number(regPrice.val());
             convertedCurrPrice = Number(currPrice.val());
             var typeId = $('#SelectedTypeId');
 
-            if (typeId < 3) {
+            if (typeId.val() < 3) {
                 if (convertedCurrPrice >= convertedRegPrice) {
                     regPrice.val($(this).val());
                     typeId.val(1); //Regular
