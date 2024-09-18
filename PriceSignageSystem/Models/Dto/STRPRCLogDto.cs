@@ -109,35 +109,27 @@ namespace PriceSignageSystem.Models.Dto
 
                 foreach (var item in value.Split(',').ToList())
                 {
-                    switch (item)
+                    if (item == "O3IDSC")
+                        listText.Add("Description");
+                    else if (item == "O3FNAM")
+                        listText.Add("Brand");
+                    else if (item == "O3MODL")
+                        listText.Add("Model");
+                    else if (item == "O3TUOM")
+                        listText.Add("To UOM");
+                    else if (item == "O3SCCD")
+                        listText.Add("Item Status");
+                    else if (item == "O3UPC")
+                        listText.Add("UPC");
+                    else if (item == "O3TRB3")
+                        listText.Add("FLAG");
+                    else if (item == "O3LONG")
+                        listText.Add("Long Description");
+
+                    else if (item == "O3DEPT" || item == "O3SDPT" || item == "O3CLAS" || item == "O3SCLS")
                     {
-                        case "O3IDSC":
-                            listText.Add("Description");
-                            break;
-                        case "O3FNAM":
-                            listText.Add("Brand");
-                            break;
-                        case "O3MODL":
-                            listText.Add("Model");
-                            break;
-                        case "O3TUOM":
-                            listText.Add("To UOM");
-                            break;
-                        case "O3SCCD":
-                            listText.Add("Item Status");
-                            break;
-                        case "O3UPC":
-                            listText.Add("UPC");
-                            break;
-                        case "O3TRB3":
-                            listText.Add("FLAG");
-                            break;
-                        case "O3LONG":
-                            listText.Add("Long Description");
-                            break;
-                        case "O3DEPT":
+                        if (!listText.Contains("Hierarchy"))
                             listText.Add("Hierarchy");
-                            break;
                     }
                 }
 

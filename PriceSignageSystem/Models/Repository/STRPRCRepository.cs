@@ -468,7 +468,7 @@ namespace PriceSignageSystem.Models.Repository
                     connection.Close();
                 }
 
-                var exemptions = data.Where(w => w.IsExemp == "Y").ToList();
+                var exemptions = data.Where(w => w.IsExemp == "Y" && (w.ExempType != "Zero Inventory" && w.ExempType != "Negative Inventory")).ToList();
 
                 var dataExemp = new List<ExemptionDto>();
                 using (var connection = new SqlConnection(connStringCentralizedExemptions))
