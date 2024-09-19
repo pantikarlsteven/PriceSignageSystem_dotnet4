@@ -113,15 +113,13 @@ namespace PriceSignageSystem.Controllers
                     item.O3SDSC = _sTRPRCRepository.GetSubClassDescription(item.O3SKU);
                     item.O3REGU = item.qRegularPrice != 0 ? item.qRegularPrice : item.O3REGU;
                     item.O3POS = item.qCurrentPrice != 0 ? item.qCurrentPrice : item.O3POS;
-                    item.O3IDSC = item.qItemDesc != null ? item.qItemDesc : item.O3IDSC;
-                    item.O3FNAM = item.qBrand != null ? item.qBrand : item.O3FNAM;
-                    item.O3MODL = item.qModel != null ? item.qModel : item.O3MODL;
-                    item.O3DIV = item.qDivisor != null ? item.qDivisor : item.O3DIV;
+                    item.O3IDSC = !string.IsNullOrEmpty(item.qItemDesc) ? item.qItemDesc : item.O3IDSC;
+                    item.O3FNAM = !string.IsNullOrEmpty(item.qBrand) ? item.qBrand : item.O3FNAM;
+                    item.O3MODL = !string.IsNullOrEmpty(item.qModel) ? item.qModel : item.O3MODL;
+                    item.O3DIV = !string.IsNullOrEmpty(item.qDivisor) ? item.qDivisor : item.O3DIV;
                     item.TypeId = item.qTypeId != 0 ? item.qTypeId : item.TypeId;
                     item.O3TUOM = !string.IsNullOrEmpty(item.qTuom) ? item.qTuom : item.O3TUOM;
 
-                    if (item.O3REGU < item.O3POS) // Validation for Negative Save
-                        item.O3REGU = item.O3POS;
                 }
 
                 var dataTable = ConversionHelper.ConvertListToDataTable(data);
@@ -197,7 +195,6 @@ namespace PriceSignageSystem.Controllers
                 {
                     var o3skus = data.Select(s => s.O3SKU).ToList();
                     _sTRPRCRepository.UpdateMultipleStatus(o3skus);
-                    //_sTRPRCRepository.AddMultipleInventoryPrintingLog(o3skus, User.Identity.Name, sizeId);
                     _sTRPRCRepository.AddMultipleQueuedPrintingLog(data, User.Identity.Name, sizeId);
 
                 }

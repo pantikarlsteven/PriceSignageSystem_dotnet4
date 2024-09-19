@@ -51,70 +51,111 @@ namespace PriceSignageSystem.Models.Repository
         }
         public List<ReportDto> GetQueueListPerUser(string username)
         {
-            var data = (from a in _db.ItemQueues
-                        join b in _db.STRPRCs on a.O3SKU equals b.O3SKU
-                        join c in _db.Countries on b.O3TRB3 equals c.iatrb3 into bc
-                        from d in bc.DefaultIfEmpty()
-                        where a.UserName == username && a.Status == ReportConstants.Status.InQueue
-                        select new ReportDto
+            var status = ReportConstants.Status.InQueue;
+            var records = new  List<ReportDto>();
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                try
+                {
+                    string query = "SELECT b.*, c.country_img," +
+                        "a.Id, " +
+                        "a.UserName, " +
+                        "a.TypeId as QueueTypeId, " +
+                        "a.SizeId as QueueSizeId, " +
+                        "a.Status, " +
+                        "a.CurrentPrice, " +
+                        "a.RegularPrice, " +
+                        "a.Brand, " +
+                        "a.Model, " +
+                        "a.Divisor, " +
+                        "a.ItemDesc, " +
+                        "a.Remarks, " +
+                        "a.Tuom, " +
+                        "a.IsEdited, " +
+                        "a.ExpDateCER, " +
+                        "d.O1VAL, " +
+                        "d.O1PTYP " +
+                        "FROM ItemQueues a " +
+                        "LEFT JOIN STRPRCs b ON a.O3SKU = b.O3SKU " +
+                        "LEFT JOIN Countries c ON b.O3TRB3 = c.iatrb3 " +
+                        "LEFT JOIN DailyPromos d ON a.O3SKU = d.O1SKU " +
+                        "WHERE a.UserName = @username AND a.Status = @status ";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@username", username);
+                        cmd.Parameters.AddWithValue("@status", status);
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
                         {
-                            O3LOC = b.O3LOC,
-                            O3CLAS = b.O3CLAS,
-                            O3IDSC = b.O3IDSC,
-                            O3SKU = b.O3SKU,
-                            O3SCCD = b.O3SCCD,
-                            O3UPC = b.O3UPC,
-                            O3VNUM = b.O3VNUM,
-                            O3TYPE = b.O3TYPE,
-                            O3DEPT = b.O3DEPT,
-                            O3SDPT = b.O3SDPT,
-                            O3SCLS = b.O3SCLS,
-                            O3POS = b.O3POS,
-                            O3POSU = b.O3POSU,
-                            O3REG = b.O3REG,
-                            O3REGU = b.O3REGU,
-                            O3ORIG = b.O3ORIG,
-                            O3ORGU = b.O3ORGU,
-                            O3EVT = b.O3EVT,
-                            O3PMMX = b.O3PMMX,
-                            O3PMTH = b.O3PMTH,
-                            O3PDQT = b.O3PDQT,
-                            O3PDPR = b.O3PDPR,
-                            O3SDT = b.O3SDT,
-                            O3EDT = b.O3EDT,
-                            O3TRB3 = b.O3TRB3,
-                            O3FGR = b.O3FGR,
-                            O3FNAM = b.O3FNAM,
-                            O3MODL = b.O3MODL,
-                            O3LONG = b.O3LONG,
-                            O3SLUM = b.O3SLUM,
-                            O3DIV = b.O3DIV,
-                            O3TUOM = b.O3TUOM,
-                            O3DATE = b.O3DATE,
-                            O3CURD = b.O3CURD,
-                            O3USER = b.O3USER,
-                            DateUpdated = b.DateUpdated,
-                            UserName = a.UserName,
-                            TypeId = a.TypeId,
-                            SizeId = a.SizeId,
-                            Status = a.Status,
-                            iatrb3 = d.iatrb3,
-                            country_img = d.country_img,
-                            ItemQueueId = a.Id,
-                            qCurrentPrice = a.CurrentPrice,
-                            qRegularPrice = a.RegularPrice,
-                            qBrand = a.Brand,
-                            qModel = a.Model,
-                            qDivisor = a.Divisor,
-                            qItemDesc = a.ItemDesc,
-                            qRemarks = a.Remarks,
-                            qTypeId = a.TypeId,
-                            CategoryId = b.CategoryId,
-                            qTuom = a.Tuom,
-                            IsEdited = a.IsEdited,
-                            ExpDateCER = a.ExpDateCER
-                        }).ToList();
-            return data;
+                            while (reader.Read())
+                            {
+                                var record = new ReportDto
+                                {
+                                    O3LOC = (decimal)reader["O3LOC"],
+                                    O3CLAS = (decimal)reader["O3CLAS"],
+                                    O3IDSC = reader["O3IDSC"].ToString(),
+                                    O3SKU = (decimal)reader["O3SKU"],
+                                    O3SCCD = reader["O3SCCD"].ToString(),
+                                    O3UPC = (decimal)reader["O3UPC"],
+                                    O3VNUM = (decimal)reader["O3VNUM"],
+                                    O3TYPE = reader["O3TYPE"].ToString(),
+                                    O3DEPT = (decimal)reader["O3DEPT"],
+                                    O3SDPT = (decimal)reader["O3SDPT"],
+                                    O3SCLS = (decimal)reader["O3SCLS"],
+                                    O3POS = (decimal)reader["O3POS"],
+                                    O3POSU = (decimal)reader["O3POSU"],
+                                    O3REG = (decimal)reader["O3REG"],
+                                    O3REGU = (decimal)reader["O3REGU"],
+                                    O3SDT = (decimal)reader["O3SDT"],
+                                    O3EDT = (decimal)reader["O3EDT"],
+                                    O3TRB3 = reader["O3TRB3"].ToString(),
+                                    O3FNAM = reader["O3FNAM"].ToString(),
+                                    O3MODL = reader["O3MODL"].ToString(),
+                                    O3LONG = reader["O3LONG"].ToString(),
+                                    O3SLUM = reader["O3SLUM"].ToString(),
+                                    O3DIV = reader["O3DIV"].ToString(),
+                                    O3TUOM = reader["O3TUOM"].ToString(),
+                                    O3DATE = (decimal)reader["O3DATE"],
+                                    O3CURD = (decimal)reader["O3CURD"],
+                                    O3USER = reader["O3USER"].ToString(),
+                                    UserName = reader["UserName"].ToString(),
+                                    TypeId = (int)reader["QueueTypeId"],
+                                    SizeId = (int)reader["QueueSizeId"],
+                                    Status = reader["Status"].ToString(),
+                                    country_img = reader["country_img"] != DBNull.Value ? (byte[])reader["country_img"] : null,
+                                    ItemQueueId = (int)reader["Id"],
+                                    qCurrentPrice = (decimal)reader["CurrentPrice"],
+                                    qRegularPrice = (decimal)reader["RegularPrice"],
+                                    qBrand = reader["Brand"].ToString(),
+                                    qModel = reader["Model"].ToString(),
+                                    qDivisor = reader["Divisor"].ToString(),
+                                    qItemDesc = reader["ItemDesc"].ToString(),
+                                    qRemarks = reader["Remarks"].ToString(),
+                                    qTypeId = (int)reader["QueueTypeId"],
+                                    CategoryId = (int)reader["CategoryId"],
+                                    qTuom = reader["Tuom"].ToString(),
+                                    IsEdited = reader["IsEdited"].ToString(),
+                                    ExpDateCER = reader["ExpDateCER"].ToString(),
+                                    PromoVal = reader["O1VAL"] != DBNull.Value ? (decimal)reader["O1VAL"] : 0,
+                                    PromoType = reader["O1PTYP"].ToString()
+                                };
+                                records.Add(record);
+                            }
+                            reader.Close();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                }
+
+                conn.Close();
+            }
+
+            return records;
+            
         }
 
         public void UpdateStatus(IEnumerable<ReportDto> data)

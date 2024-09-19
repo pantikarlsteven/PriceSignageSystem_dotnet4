@@ -1,5 +1,6 @@
 ﻿using CrystalDecisions.CrystalReports.Engine;
 using CrystalDecisions.Shared;
+using ImageMagick;
 using Microsoft.Reporting.WebForms;
 using Microsoft.Win32;
 using Newtonsoft.Json;
@@ -494,14 +495,32 @@ namespace PriceSignageSystem.Controllers
                 skuModel.IsSingleLines = true;
 
             report.SetDataSource(ConversionHelper.ConvertObjectToDataTable(skuModel));
-            Stream stream = report.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
-            var pdfBytes = new byte[stream.Length];
-            stream.Read(pdfBytes, 0, pdfBytes.Length);
-            Response.AppendHeader("Content-Disposition", "inline; filename=" + skuLog.O3SKU.ToString() + ".pdf");
-            report.Close();
-            report.Dispose();
+            // Export PDF to memory stream
+            using (Stream stream = report.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat))
+            {
+                report.Close();
+                report.Dispose();
 
-            return File(pdfBytes, "application/pdf");
+                // Convert PDF to image using Magick.NET
+                using (MagickImageCollection images = new MagickImageCollection())
+                {
+                    images.Read(stream); // Reads the PDF
+
+                    // Convert first page to image (you can loop for multiple pages)
+                    var image = images[0];
+                    image.Format = MagickFormat.Png; // Specify the output format, e.g., PNG
+
+                    // Convert to byte array
+                    using (MemoryStream imageStream = new MemoryStream())
+                    {
+                        image.Write(imageStream);
+                        var imageBytes = imageStream.ToArray();
+
+                        // Return the image
+                        return File(imageBytes, "image/png");
+                    }
+                }
+            }
 
         }
 

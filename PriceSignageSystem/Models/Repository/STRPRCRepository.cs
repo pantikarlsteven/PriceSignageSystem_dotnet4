@@ -1160,6 +1160,7 @@ namespace PriceSignageSystem.Models.Repository
                     PrintedOn = "OnDemand - Queue"
                 });
             }
+
             _db.SaveChanges();
         }
 
