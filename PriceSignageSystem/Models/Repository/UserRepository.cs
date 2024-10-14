@@ -195,11 +195,11 @@ namespace PriceSignageSystem.Models.Repository
             return record;
         }
 
-        public bool CheckIfEmpIdExisting(string empId)
+        public User CheckIfEmpIdExisting(UserDto user)
         {
-            var result = _db.Users.Where(a => a.EmployeeId == empId).FirstOrDefault();
+            var result = _db.Users.Where(a => a.EmployeeId == user.EmployeeId).FirstOrDefault();
 
-            return result != null;
+            return result;
         }
     }
 }

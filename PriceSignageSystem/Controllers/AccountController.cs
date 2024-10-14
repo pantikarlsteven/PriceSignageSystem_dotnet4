@@ -219,8 +219,9 @@ namespace PriceSignageSystem.Controllers
         [HttpPost]
         public ActionResult UpdateUserInfo(UserDto dto)
         {
-            var isExisting = _userRepository.CheckIfEmpIdExisting(dto.EmployeeId);
-            if (isExisting)
+            var data = _userRepository.CheckIfEmpIdExisting(dto);
+
+            if (data != null && data.UserId != dto.UserId)
                 return Json(new { success = false, message = "Employee ID already exists!" });
 
             var result = _userRepository.UpdateUserInfo(dto);

@@ -445,12 +445,16 @@
                         });
 
                         $('#editPrintBtn').click(function () {
+                            debugger
+                            var selectedRemarks = $('#remarksDropdown').val();
                             var expDate = $("#expDate").val();
-                            if (expDate == "") {
+
+                            if (selectedRemarks === "CER" && expDate === "") {
                                 alert("Exp. Date is required!");
 
                                 return false;
                             }
+
                             var selectedRemarks= $('#remarksDropdown').val();
                             var newShortDesc = $('#shortDesc').val();
                             var newBrand = $('#brand').val();
@@ -464,14 +468,19 @@
                             }
 
                             $("#loadingContainer").show();
-                            var newtypeId = $('#SelectedTypeId').val();
+                            //var newtypeId = $('#SelectedTypeId').val();
 
                             if (selectedRemarks !== '') {
+
+                                if (convertedCurrPrice >= convertedRegPrice && typeId.val() < 3) { // FOR SAVE AND REG ONLY
+                                    regPrice.val(currPrice.val());
+                                    typeId.val(1); //Regular
+                                }
 
                                 var reportDto = {
                                     O3SKU: @Model.O3SKU,
                                     SizeId: 0,
-                                    TypeId: newtypeId,
+                                    TypeId: typeId.val(),
                                     CategoryId: 0,
                                     O3REGU: convertedRegPrice,
                                     O3POS: convertedCurrPrice,
@@ -523,7 +532,7 @@
         });
 
         $(".queuebtn").click(function () {
-            debugger
+            
             var isCurrDisabled = $('#currPrice').prop('disabled');
             var newShortDesc = $('#shortDesc').val();
             var newBrand = $('#brand').val();
@@ -663,7 +672,8 @@
                             keyboard: false
                         });
 
-                        $("#remarksDropdown").change(function () {
+                        $("#qremarksDropdown").change(function () {
+                            debugger
                             var selectedRemarks = this.value;
 
                             if (selectedRemarks != "CER") {
@@ -678,14 +688,14 @@
                         });
 
                         $('#queuePrintBtn').click(function () {
+                            var selectedRemarks = $('#qremarksDropdown').val();
                             var expDate = $("#expDate").val();
-                            if (expDate == "") {
+
+                            if (selectedRemarks === "CER" && expDate === "") {
                                 alert("Exp. Date is required!");
 
                                 return false;
                             }
-
-                            var selectedRemarks = $('#qremarksDropdown').val();
 
                             if (selectedRemarks === '0') {
                                 alert('Please select a valid option for Remarks.');
