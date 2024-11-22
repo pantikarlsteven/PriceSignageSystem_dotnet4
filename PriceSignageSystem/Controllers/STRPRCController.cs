@@ -114,7 +114,7 @@ namespace PriceSignageSystem.Controllers
 
                         if (dto.SelectedTypeId == ReportConstants.Type.Save)
                         {
-                            if (promo.StartDate >= dto.O3SDT)
+                            if (dto.O3SDT >= promo.StartDate && dto.O3SDT <= promo.EndDate )
                             {
                                 dto.O3SDT = promo.StartDate;
                                 dto.O3EDT = promo.EndDate;
