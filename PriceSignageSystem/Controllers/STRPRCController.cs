@@ -114,15 +114,12 @@ namespace PriceSignageSystem.Controllers
 
                         if (dto.SelectedTypeId == ReportConstants.Type.Save)
                         {
-                            if (dto.O3SDT >= promo.StartDate && dto.O3SDT <= promo.EndDate )
-                            {
-                                dto.O3SDT = promo.StartDate;
-                                dto.O3EDT = promo.EndDate;
-                                dto.SelectedTypeId = promo.TypeId;
-                                dto.PromoVal = promo.PromoVal;
-                            }
-
+                            dto.O3SDT = promo.StartDate;
+                            dto.O3EDT = promo.EndDate;
+                            dto.SelectedTypeId = promo.TypeId;
+                            dto.PromoVal = promo.PromoVal;
                             dto.IsExemp = "Y";
+
                         }
                         else
                         {
@@ -489,6 +486,8 @@ namespace PriceSignageSystem.Controllers
         [HttpPost]
         public async Task<ActionResult> LoadPCA(string dateFilter)
         {
+            await _sTRPRCRepository.UpdateCentralizedExemptions(241127);
+
             var dateToday = ConversionHelper.ToDecimal(DateTime.Now);
             DateTime currentTime = DateTime.Now;
             DateTime startTime = DateTime.Today.AddHours(4);
